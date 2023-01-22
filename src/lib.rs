@@ -221,6 +221,7 @@ impl Contract {
         description: Option<String>,
         start_date: Option<U64>,
     ) {
+        self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
         let key = (entity_id, contributor_id);
         let request = self.requests.get(&key).expect("ERR_NO_REQUEST");
         let description = description.unwrap_or(request.unwrap().description);
@@ -251,6 +252,7 @@ impl Contract {
         contributor_id: AccountId,
         end_date: U64,
     ) {
+        self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
         let key = (entity_id, contributor_id);
         let mut contributor = self
             .contributions
@@ -275,6 +277,22 @@ impl Contract {
             env::predecessor_account_id(),
             "{}",
             "ERR_ONLY_MODERATOR"
+        );
+    }
+
+    /// Checks if given account has permissions of a manager or higher for given entity.
+    fn assert_manager_or_higher(&self, entity_id: &AccountId, account_id: &AccountId) {
+        if account_id == &self.moderator_id {
+            return;
+        }
+        let contribution = self
+            .contributions
+            .get(&(entity_id.clone(), account_id.clone()))
+            .expect("ERR_NO_CONTRIBUTION")
+            .unwrap();
+        assert!(
+            contribution.permissions.contains(&Permission::Admin),
+            "ERR_NO_PERMISSION"
         );
     }
 
