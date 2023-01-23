@@ -3,7 +3,10 @@ use std::collections::HashSet;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{env, near_bindgen, serde_json, sys, AccountId, BorshStorageKey, Gas, Timestamp};
+use near_sdk::{
+    env, near_bindgen, require, serde_json, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault,
+    Timestamp,
+};
 
 use crate::utils::{option_u64_dec_format, u64_dec_format};
 use near_sdk::json_types::U64;
@@ -54,6 +57,9 @@ impl Events {
     }
 }
 
+/// An entity can be in different states because it can potentially have an end (through different
+/// ways - legal issues, no funding...).
+/// This is represented by the EntityStatus.
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub enum EntityStatus {
@@ -61,6 +67,7 @@ pub enum EntityStatus {
     Flagged,
 }
 
+/// An entity can take different shapes, and currently we can categorize them in these types.
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub enum EntityKind {
@@ -92,6 +99,7 @@ pub enum Permission {
     Admin,
 }
 
+/// The story/description of a contribution to an entity.
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionDetail {
@@ -106,9 +114,11 @@ pub struct ContributionDetail {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Contribution {
+    // TODO: Do we want to store this in a UnorderedSet for lazy loading?
     permissions: HashSet<Permission>,
     current: ContributionDetail,
     /// If more than one contribution was made, previous ones are in history.
+    // TODO: Do we want to keep this stored in a Vector for lazy reading?
     history: Vec<ContributionDetail>,
 }
 
@@ -159,7 +169,7 @@ impl VersionedContributionRequest {
 }
 
 #[near_bindgen]
-#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(BorshSerialize, BorshDeserialize, PanicOnDefault)]
 pub struct Contract {
     moderator_id: AccountId,
     entities: UnorderedMap<AccountId, VersionedEntity>,
@@ -213,13 +223,15 @@ impl Contract {
         .emit();
     }
 
-    /// User requests to contribute to given entity.
+    /// User requests to contribute to a given entity.
     pub fn request_contribution(&mut self, entity_id: AccountId, description: String) {
         let key = (entity_id.clone(), env::predecessor_account_id());
-        assert!(
+        require!(
             description.len() < MAX_DESCRIPTION_LENGTH,
             "ERR_DESCRIPTION_TOO_LONG"
         );
+        // TODO: Check if this account already has a contribution request for this entity? Do we
+        // just overwrite or keep track of multiple requests.
         self.requests.insert(
             &key,
             &VersionedContributionRequest::Current(ContributionRequest {
@@ -234,6 +246,7 @@ impl Contract {
         .emit();
     }
 
+    /// Entity manager (or higher) approves a contribution request.
     pub fn approve_contribution(
         &mut self,
         entity_id: AccountId,
@@ -251,10 +264,14 @@ impl Contract {
             start_date: start_date.clone(),
             end_date: None,
         };
-        let contribution = if let Some(mut c) = self.contributions.get(&key).map(|c| c.unwrap()) {
-            c.history.push(c.current);
-            c.current = contribution_detail;
-            c
+        let contribution = if let Some(mut old_contribution) = self
+            .contributions
+            .get(&key)
+            .map(|existing_contribution| existing_contribution.unwrap())
+        {
+            old_contribution.history.push(old_contribution.current);
+            old_contribution.current = contribution_detail;
+            old_contribution
         } else {
             Contribution {
                 permissions: HashSet::new(),
@@ -269,9 +286,11 @@ impl Contract {
             contributor_id,
             description,
             start_date,
-        };
+        }
+        .emit();
     }
 
+    /// Entity manager (or higher) marks the contribution as finished/completed.
     pub fn finish_contribution(
         &mut self,
         entity_id: AccountId,
@@ -294,21 +313,21 @@ impl Contract {
             contributor_id,
             end_date,
         }
-        .emit()
+        .emit();
     }
 
+    /// Moderator updates the entity details.
     pub fn set_entity(&mut self, account_id: AccountId, entity: Entity) {
         self.assert_moderator();
         self.entities
             .insert(&account_id, &VersionedEntity::Current(entity));
     }
 
+    /// Checks if transaction was performed by moderator account.
     fn assert_moderator(&self) {
         // Errors::OnlyModerator.into()
-        assert_eq!(
-            self.moderator_id,
-            env::predecessor_account_id(),
-            "{}",
+        require!(
+            self.moderator_id == env::predecessor_account_id(),
             "ERR_ONLY_MODERATOR"
         );
     }
@@ -323,7 +342,7 @@ impl Contract {
             .get(&(entity_id.clone(), account_id.clone()))
             .expect("ERR_NO_CONTRIBUTION")
             .unwrap();
-        assert!(
+        require!(
             contribution.permissions.contains(&Permission::Admin),
             "ERR_NO_PERMISSION"
         );
@@ -331,6 +350,7 @@ impl Contract {
 
     /// Views
 
+    /// List out entities. By default list all of them.
     pub fn get_entities(
         &self,
         from_index: Option<u64>,
@@ -338,16 +358,15 @@ impl Contract {
     ) -> Vec<(AccountId, Entity)> {
         let from_index = from_index.unwrap_or(0);
         let limit = limit.unwrap_or(self.entities.len());
-        let keys = self.entities.keys_as_vector();
-        (from_index..std::cmp::min(from_index + limit, self.entities.len()))
-            .map(|index| {
-                let key = keys.get(index).unwrap();
-                let value = self.entities.get(&key).unwrap().unwrap();
-                (key, value)
-            })
+        self.entities
+            .into_iter()
+            .skip(from_index as usize)
+            .take(limit as usize)
+            .map(|(key, versioned_entity)| (key, versioned_entity.unwrap()))
             .collect()
     }
 
+    /// List single entity details.
     pub fn get_entity(&self, account_id: AccountId) -> Entity {
         self.entities
             .get(&account_id)
@@ -355,6 +374,7 @@ impl Contract {
             .unwrap()
     }
 
+    /// Get contribution details.
     pub fn get_contribution(
         &self,
         entity_id: AccountId,
@@ -362,9 +382,10 @@ impl Contract {
     ) -> Option<Contribution> {
         self.contributions
             .get(&(entity_id, contributor_id))
-            .map(|c| c.unwrap())
+            .map(|contribution| contribution.unwrap())
     }
 
+    /// Get contribution request details.
     pub fn get_contribution_request(
         &self,
         entity_id: AccountId,
@@ -372,7 +393,7 @@ impl Contract {
     ) -> Option<ContributionRequest> {
         self.requests
             .get(&(entity_id, contributor_id))
-            .map(|r| r.unwrap())
+            .map(|contribution_request| contribution_request.unwrap())
     }
 
     /// Should only be called by this contract on migration.
