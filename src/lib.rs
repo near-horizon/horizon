@@ -22,10 +22,26 @@ enum StorageKeys {
 #[derive(Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 enum Events {
+    AddEntity {
+        entity_id: AccountId,
+    },
     RequestContribution {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
+    },
+    ApproveContribution {
+        entity_id: AccountId,
+        contributor_id: AccountId,
+        description: String,
+        #[serde(with = "u64_dec_format")]
+        start_date: Timestamp,
+    },
+    FinishContribution {
+        entity_id: AccountId,
+        contributor_id: AccountId,
+        #[serde(with = "u64_dec_format")]
+        end_date: Timestamp,
     },
 }
 
@@ -180,7 +196,7 @@ impl Contract {
             }),
         );
         self.contributions.insert(
-            &(account_id, env::predecessor_account_id()),
+            &(account_id.clone(), env::predecessor_account_id()),
             &VersionedContribution::Current(Contribution {
                 permissions: HashSet::from([Permission::Admin]),
                 current: ContributionDetail {
@@ -191,6 +207,10 @@ impl Contract {
                 history: vec![],
             }),
         );
+        Events::AddEntity {
+            entity_id: account_id,
+        }
+        .emit();
     }
 
     /// User requests to contribute to given entity.
@@ -222,13 +242,13 @@ impl Contract {
         start_date: Option<U64>,
     ) {
         self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
-        let key = (entity_id, contributor_id);
+        let key = (entity_id.clone(), contributor_id.clone());
         let request = self.requests.get(&key).expect("ERR_NO_REQUEST");
         let description = description.unwrap_or(request.unwrap().description);
-        let start_date = start_date.unwrap_or(env::block_timestamp().into());
+        let start_date: Timestamp = start_date.unwrap_or(env::block_timestamp().into()).into();
         let contribution_detail = ContributionDetail {
-            description,
-            start_date: start_date.into(),
+            description: description.clone(),
+            start_date: start_date.clone(),
             end_date: None,
         };
         let contribution = if let Some(mut c) = self.contributions.get(&key).map(|c| c.unwrap()) {
@@ -244,6 +264,12 @@ impl Contract {
         };
         self.contributions
             .insert(&key, &VersionedContribution::Current(contribution));
+        Events::ApproveContribution {
+            entity_id,
+            contributor_id,
+            description,
+            start_date,
+        };
     }
 
     pub fn finish_contribution(
@@ -253,15 +279,22 @@ impl Contract {
         end_date: U64,
     ) {
         self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
-        let key = (entity_id, contributor_id);
+        let key = (entity_id.clone(), contributor_id.clone());
         let mut contributor = self
             .contributions
             .get(&key)
             .expect("ERR_NO_CONTRIBUTION")
             .unwrap();
-        contributor.current.end_date = Some(end_date.into());
+        let end_date: Timestamp = end_date.into();
+        contributor.current.end_date = Some(end_date);
         self.contributions
             .insert(&key, &VersionedContribution::Current(contributor));
+        Events::FinishContribution {
+            entity_id,
+            contributor_id,
+            end_date,
+        }
+        .emit()
     }
 
     pub fn set_entity(&mut self, account_id: AccountId, entity: Entity) {
@@ -316,7 +349,6 @@ impl Contract {
     }
 
     pub fn get_entity(&self, account_id: AccountId) -> Entity {
-        // Errors::NoEntity.into()
         self.entities
             .get(&account_id)
             .expect("ERR_NO_ENTITY")
@@ -331,6 +363,16 @@ impl Contract {
         self.contributions
             .get(&(entity_id, contributor_id))
             .map(|c| c.unwrap())
+    }
+
+    pub fn get_contribution_request(
+        &self,
+        entity_id: AccountId,
+        contributor_id: AccountId,
+    ) -> Option<ContributionRequest> {
+        self.requests
+            .get(&(entity_id, contributor_id))
+            .map(|r| r.unwrap())
     }
 
     /// Should only be called by this contract on migration.
