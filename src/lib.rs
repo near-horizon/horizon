@@ -398,6 +398,22 @@ impl Contract {
             .collect()
     }
 
+    /// Get all the entity account IDs where contributor has Admin permissions.
+    pub fn get_contributor_admin_entities(&self, account_id: AccountId) -> HashSet<AccountId> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((entity, contributor), contribution)| {
+                (&account_id == contributor
+                    && contribution
+                        .clone()
+                        .unwrap()
+                        .permissions
+                        .contains(&Permission::Admin))
+                .then_some(entity.clone())
+            })
+            .collect()
+    }
+
     /// Get contribution details.
     pub fn get_contribution(
         &self,
