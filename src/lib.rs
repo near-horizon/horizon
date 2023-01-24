@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
+use near_sdk::store::UnorderedMap;
 use near_sdk::{
     env, near_bindgen, require, serde_json, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault,
     Timestamp,
@@ -60,7 +60,7 @@ impl Events {
 /// An entity can be in different states because it can potentially have an end (through different
 /// ways - legal issues, no funding...).
 /// This is represented by the EntityStatus.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub enum EntityStatus {
     Active,
@@ -68,7 +68,7 @@ pub enum EntityStatus {
 }
 
 /// An entity can take different shapes, and currently we can categorize them in these types.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub enum EntityKind {
     Project,
@@ -79,7 +79,7 @@ pub enum EntityKind {
 /// Entity is something that is beyond a single person.
 /// Something that has a start and potentially an end.
 /// Note, that all the basic information like name, description and social information is stored in the `socialdb`.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Entity {
     status: EntityStatus,
@@ -92,7 +92,7 @@ pub struct Entity {
 
 /// Permissions table for interaction between a contributor and an entity.
 #[derive(
-    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Hash,
+    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Hash, Clone,
 )]
 #[serde(crate = "near_sdk::serde")]
 pub enum Permission {
@@ -100,7 +100,7 @@ pub enum Permission {
 }
 
 /// The story/description of a contribution to an entity.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionDetail {
     description: String,
@@ -111,7 +111,7 @@ pub struct ContributionDetail {
 }
 
 /// Relation between entity and contributor. Managed by source account.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Contribution {
     // TODO: Do we want to store this in a UnorderedSet for lazy loading?
@@ -123,13 +123,13 @@ pub struct Contribution {
 }
 
 /// Request to contribute.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionRequest {
     description: String,
 }
 
-#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedEntity {
     Current(Entity),
 }
@@ -142,7 +142,7 @@ impl VersionedEntity {
     }
 }
 
-#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedContribution {
     Current(Contribution),
 }
@@ -155,7 +155,7 @@ impl VersionedContribution {
     }
 }
 
-#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedContributionRequest {
     Current(ContributionRequest),
 }
@@ -173,8 +173,8 @@ impl VersionedContributionRequest {
 pub struct Contract {
     moderator_id: AccountId,
     entities: UnorderedMap<AccountId, VersionedEntity>,
-    contributions: LookupMap<(AccountId, AccountId), VersionedContribution>,
-    requests: LookupMap<(AccountId, AccountId), VersionedContributionRequest>,
+    contributions: UnorderedMap<(AccountId, AccountId), VersionedContribution>,
+    requests: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
 }
 
 #[near_bindgen]
@@ -184,8 +184,8 @@ impl Contract {
         Self {
             moderator_id,
             entities: UnorderedMap::new(StorageKeys::Entities),
-            contributions: LookupMap::new(StorageKeys::Contributions),
-            requests: LookupMap::new(StorageKeys::Requests),
+            contributions: UnorderedMap::new(StorageKeys::Contributions),
+            requests: UnorderedMap::new(StorageKeys::Requests),
         }
     }
 
@@ -197,8 +197,8 @@ impl Contract {
     /// Add new entity and given user as founding contributor.
     pub fn add_entity(&mut self, account_id: AccountId, kind: EntityKind, start_date: U64) {
         self.entities.insert(
-            &account_id,
-            &VersionedEntity::Current(Entity {
+            account_id.clone(),
+            VersionedEntity::Current(Entity {
                 status: EntityStatus::Active,
                 kind,
                 start_date: start_date.into(),
@@ -206,8 +206,8 @@ impl Contract {
             }),
         );
         self.contributions.insert(
-            &(account_id.clone(), env::predecessor_account_id()),
-            &VersionedContribution::Current(Contribution {
+            (account_id.clone(), env::predecessor_account_id()),
+            VersionedContribution::Current(Contribution {
                 permissions: HashSet::from([Permission::Admin]),
                 current: ContributionDetail {
                     description: "".to_string(),
@@ -233,8 +233,8 @@ impl Contract {
         // TODO: Check if this account already has a contribution request for this entity? Do we
         // just overwrite or keep track of multiple requests.
         self.requests.insert(
-            &key,
-            &VersionedContributionRequest::Current(ContributionRequest {
+            key,
+            VersionedContributionRequest::Current(ContributionRequest {
                 description: description.clone(),
             }),
         );
@@ -257,7 +257,7 @@ impl Contract {
         self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
         let key = (entity_id.clone(), contributor_id.clone());
         let request = self.requests.get(&key).expect("ERR_NO_REQUEST");
-        let description = description.unwrap_or(request.unwrap().description);
+        let description = description.unwrap_or(request.clone().unwrap().description);
         let start_date: Timestamp = start_date.unwrap_or(env::block_timestamp().into()).into();
         let contribution_detail = ContributionDetail {
             description: description.clone(),
@@ -267,7 +267,7 @@ impl Contract {
         let contribution = if let Some(mut old_contribution) = self
             .contributions
             .get(&key)
-            .map(|existing_contribution| existing_contribution.unwrap())
+            .map(|existing_contribution| existing_contribution.clone().unwrap())
         {
             old_contribution.history.push(old_contribution.current);
             old_contribution.current = contribution_detail;
@@ -280,7 +280,7 @@ impl Contract {
             }
         };
         self.contributions
-            .insert(&key, &VersionedContribution::Current(contribution));
+            .insert(key, VersionedContribution::Current(contribution));
         Events::ApproveContribution {
             entity_id,
             contributor_id,
@@ -303,11 +303,12 @@ impl Contract {
             .contributions
             .get(&key)
             .expect("ERR_NO_CONTRIBUTION")
+            .clone()
             .unwrap();
         let end_date: Timestamp = end_date.into();
         contributor.current.end_date = Some(end_date);
         self.contributions
-            .insert(&key, &VersionedContribution::Current(contributor));
+            .insert(key, VersionedContribution::Current(contributor));
         Events::FinishContribution {
             entity_id,
             contributor_id,
@@ -320,7 +321,7 @@ impl Contract {
     pub fn set_entity(&mut self, account_id: AccountId, entity: Entity) {
         self.assert_moderator();
         self.entities
-            .insert(&account_id, &VersionedEntity::Current(entity));
+            .insert(account_id, VersionedEntity::Current(entity));
     }
 
     /// Checks if transaction was performed by moderator account.
@@ -341,6 +342,7 @@ impl Contract {
             .contributions
             .get(&(entity_id.clone(), account_id.clone()))
             .expect("ERR_NO_CONTRIBUTION")
+            .clone()
             .unwrap();
         require!(
             contribution.permissions.contains(&Permission::Admin),
@@ -357,12 +359,12 @@ impl Contract {
         limit: Option<u64>,
     ) -> Vec<(AccountId, Entity)> {
         let from_index = from_index.unwrap_or(0);
-        let limit = limit.unwrap_or(self.entities.len());
+        let limit = limit.unwrap_or(self.entities.len().into());
         self.entities
             .into_iter()
             .skip(from_index as usize)
             .take(limit as usize)
-            .map(|(key, versioned_entity)| (key, versioned_entity.unwrap()))
+            .map(|(key, versioned_entity)| (key.clone(), versioned_entity.clone().unwrap()))
             .collect()
     }
 
@@ -371,6 +373,7 @@ impl Contract {
         self.entities
             .get(&account_id)
             .expect("ERR_NO_ENTITY")
+            .clone()
             .unwrap()
     }
 
@@ -382,7 +385,17 @@ impl Contract {
     ) -> Option<Contribution> {
         self.contributions
             .get(&(entity_id, contributor_id))
-            .map(|contribution| contribution.unwrap())
+            .map(|contribution| contribution.clone().unwrap())
+    }
+
+    pub fn get_entity_contributions(&self, entity_id: AccountId) -> Vec<(AccountId, Contribution)> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
+                (key_entity_id == &entity_id)
+                    .then_some((account_id.clone(), versioned_contribution.clone().unwrap()))
+            })
+            .collect()
     }
 
     /// Get contribution request details.
@@ -393,7 +406,7 @@ impl Contract {
     ) -> Option<ContributionRequest> {
         self.requests
             .get(&(entity_id, contributor_id))
-            .map(|contribution_request| contribution_request.unwrap())
+            .map(|contribution_request| contribution_request.clone().unwrap())
     }
 
     /// Should only be called by this contract on migration.
