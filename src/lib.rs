@@ -388,6 +388,7 @@ impl Contract {
             .map(|contribution| contribution.clone().unwrap())
     }
 
+    /// Get all the contributions for this entity.
     pub fn get_entity_contributions(&self, entity_id: AccountId) -> Vec<(AccountId, Contribution)> {
         self.contributions
             .into_iter()
@@ -407,6 +408,20 @@ impl Contract {
         self.requests
             .get(&(entity_id, contributor_id))
             .map(|contribution_request| contribution_request.clone().unwrap())
+    }
+
+    /// Get all the requests for this entity.
+    pub fn get_entity_contribution_requests(
+        &self,
+        entity_id: AccountId,
+    ) -> Vec<(AccountId, ContributionRequest)> {
+        self.requests
+            .into_iter()
+            .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
+                (key_entity_id == &entity_id)
+                    .then_some((account_id.clone(), versioned_contribution.clone().unwrap()))
+            })
+            .collect()
     }
 
     /// Should only be called by this contract on migration.
