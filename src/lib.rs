@@ -1,15 +1,14 @@
-use std::collections::HashSet;
-
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::json_types::U64;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::store::UnorderedMap;
 use near_sdk::{
     env, near_bindgen, require, serde_json, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault,
     Timestamp,
 };
+use std::collections::{HashMap, HashSet};
 
 use crate::utils::{option_u64_dec_format, u64_dec_format};
-use near_sdk::json_types::U64;
 
 mod utils;
 
@@ -375,6 +374,28 @@ impl Contract {
             .expect("ERR_NO_ENTITY")
             .clone()
             .unwrap()
+    }
+
+    /// Get all contributor account IDs.
+    pub fn get_contributors(&self) -> HashSet<AccountId> {
+        self.contributions
+            .into_iter()
+            .map(|((_, contributor), _)| contributor.clone())
+            .collect()
+    }
+
+    /// Get all the contributions for a single contributor.
+    pub fn get_contributor_contributions(
+        &self,
+        account_id: AccountId,
+    ) -> HashMap<AccountId, Contribution> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((entity, contributor), contribution)| {
+                (&account_id == contributor)
+                    .then_some((entity.clone(), contribution.clone().unwrap()))
+            })
+            .collect()
     }
 
     /// Get contribution details.
