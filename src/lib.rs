@@ -351,6 +351,11 @@ impl Contract {
 
     /// Views
 
+    /// Check if given account ID is moderator.
+    pub fn check_is_moderator(&self, account_id: AccountId) -> bool {
+        self.moderator_id == account_id
+    }
+
     /// List out entities. By default list all of them.
     pub fn get_entities(
         &self,
