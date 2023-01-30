@@ -1,10 +1,10 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U64;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::store::UnorderedMap;
+use near_sdk::store::{UnorderedMap, UnorderedSet};
 use near_sdk::{
-    env, near_bindgen, require, serde_json, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault,
-    Timestamp,
+    assert_one_yocto, env, near_bindgen, require, serde_json, sys, AccountId, BorshStorageKey, Gas,
+    PanicOnDefault, Timestamp,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -19,6 +19,7 @@ enum StorageKeys {
     Entities,
     Contributions,
     Requests,
+    Contributors,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -26,6 +27,9 @@ enum StorageKeys {
 enum Events {
     AddEntity {
         entity_id: AccountId,
+    },
+    RegisterContributor {
+        contributor_id: AccountId,
     },
     RequestContribution {
         entity_id: AccountId,
@@ -174,6 +178,7 @@ pub struct Contract {
     entities: UnorderedMap<AccountId, VersionedEntity>,
     contributions: UnorderedMap<(AccountId, AccountId), VersionedContribution>,
     requests: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
+    contributors: UnorderedSet<AccountId>,
 }
 
 #[near_bindgen]
@@ -185,12 +190,24 @@ impl Contract {
             entities: UnorderedMap::new(StorageKeys::Entities),
             contributions: UnorderedMap::new(StorageKeys::Contributions),
             requests: UnorderedMap::new(StorageKeys::Requests),
+            contributors: UnorderedSet::new(StorageKeys::Contributors),
         }
     }
 
     pub fn set_moderator(&mut self, moderator_id: AccountId) {
         self.assert_moderator();
         self.moderator_id = moderator_id;
+    }
+
+    /// Register as a contributor.
+    #[payable]
+    pub fn register(&mut self) {
+        assert_one_yocto();
+        self.contributors.insert(env::signer_account_id());
+        Events::RegisterContributor {
+            contributor_id: env::signer_account_id(),
+        }
+        .emit();
     }
 
     /// Add new entity and given user as founding contributor.
@@ -383,10 +400,7 @@ impl Contract {
 
     /// Get all contributor account IDs.
     pub fn get_contributors(&self) -> HashSet<AccountId> {
-        self.contributions
-            .into_iter()
-            .map(|((_, contributor), _)| contributor.clone())
-            .collect()
+        self.contributors.into_iter().cloned().collect()
     }
 
     /// Get all the contributions for a single contributor.
