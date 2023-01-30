@@ -403,6 +403,11 @@ impl Contract {
         self.contributors.into_iter().cloned().collect()
     }
 
+    /// Check if account is registered as contributor.
+    pub fn check_is_contributor(&self, account_id: AccountId) -> bool {
+        self.contributors.contains(&account_id)
+    }
+
     /// Get all the contributions for a single contributor.
     pub fn get_contributor_contributions(
         &self,
