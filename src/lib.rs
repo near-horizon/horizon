@@ -1,15 +1,15 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::json_types::U64;
-use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::store::{UnorderedMap, UnorderedSet};
-use near_sdk::{
-    assert_one_yocto, env, near_bindgen, require, serde_json, sys, AccountId, BorshStorageKey, Gas,
-    PanicOnDefault, Timestamp,
-};
-use std::collections::{HashMap, HashSet};
+use near_sdk::store::UnorderedMap;
+use near_sdk::{env, near_bindgen, require, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault};
 
-use crate::utils::{option_u64_dec_format, u64_dec_format};
+use crate::contribution::{VersionedContribution, VersionedContributionRequest};
+use crate::contributor::VersionedContributor;
+use crate::entity::{Permission, VersionedEntity};
 
+mod contribution;
+mod contributor;
+mod entity;
+mod events;
 mod utils;
 
 const MAX_DESCRIPTION_LENGTH: usize = 420;
@@ -22,163 +22,14 @@ enum StorageKeys {
     Contributors,
 }
 
-#[derive(Deserialize, Serialize)]
-#[serde(crate = "near_sdk::serde")]
-enum Events {
-    AddEntity {
-        entity_id: AccountId,
-    },
-    RegisterContributor {
-        contributor_id: AccountId,
-    },
-    RequestContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: String,
-    },
-    ApproveContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: String,
-        #[serde(with = "u64_dec_format")]
-        start_date: Timestamp,
-    },
-    FinishContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        #[serde(with = "u64_dec_format")]
-        end_date: Timestamp,
-    },
-}
-
-impl Events {
-    pub(crate) fn emit(self) {
-        env::log_str(&format!(
-            "EVENT_JSON:{}",
-            &serde_json::to_string(&self).unwrap()
-        ));
-    }
-}
-
-/// An entity can be in different states because it can potentially have an end (through different
-/// ways - legal issues, no funding...).
-/// This is represented by the EntityStatus.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde")]
-pub enum EntityStatus {
-    Active,
-    Flagged,
-}
-
-/// An entity can take different shapes, and currently we can categorize them in these types.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde")]
-pub enum EntityKind {
-    Project,
-    Organization,
-    DAO,
-}
-
-/// Entity is something that is beyond a single person.
-/// Something that has a start and potentially an end.
-/// Note, that all the basic information like name, description and social information is stored in the `socialdb`.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde")]
-pub struct Entity {
-    status: EntityStatus,
-    kind: EntityKind,
-    #[serde(with = "u64_dec_format")]
-    start_date: Timestamp,
-    #[serde(with = "option_u64_dec_format")]
-    end_date: Option<Timestamp>,
-}
-
-/// Permissions table for interaction between a contributor and an entity.
-#[derive(
-    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, PartialOrd, Hash, Clone,
-)]
-#[serde(crate = "near_sdk::serde")]
-pub enum Permission {
-    Admin,
-}
-
-/// The story/description of a contribution to an entity.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde")]
-pub struct ContributionDetail {
-    description: String,
-    #[serde(with = "u64_dec_format")]
-    start_date: Timestamp,
-    #[serde(with = "option_u64_dec_format")]
-    end_date: Option<Timestamp>,
-}
-
-/// Relation between entity and contributor. Managed by source account.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde")]
-pub struct Contribution {
-    // TODO: Do we want to store this in a UnorderedSet for lazy loading?
-    permissions: HashSet<Permission>,
-    current: ContributionDetail,
-    /// If more than one contribution was made, previous ones are in history.
-    // TODO: Do we want to keep this stored in a Vector for lazy reading?
-    history: Vec<ContributionDetail>,
-}
-
-/// Request to contribute.
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde")]
-pub struct ContributionRequest {
-    description: String,
-}
-
-#[derive(BorshSerialize, BorshDeserialize, Clone)]
-pub enum VersionedEntity {
-    Current(Entity),
-}
-
-impl VersionedEntity {
-    pub fn unwrap(self) -> Entity {
-        match self {
-            VersionedEntity::Current(e) => e,
-        }
-    }
-}
-
-#[derive(BorshSerialize, BorshDeserialize, Clone)]
-pub enum VersionedContribution {
-    Current(Contribution),
-}
-
-impl VersionedContribution {
-    pub fn unwrap(self) -> Contribution {
-        match self {
-            VersionedContribution::Current(c) => c,
-        }
-    }
-}
-
-#[derive(BorshSerialize, BorshDeserialize, Clone)]
-pub enum VersionedContributionRequest {
-    Current(ContributionRequest),
-}
-
-impl VersionedContributionRequest {
-    pub fn unwrap(self) -> ContributionRequest {
-        match self {
-            VersionedContributionRequest::Current(cr) => cr,
-        }
-    }
-}
-
 #[near_bindgen]
-#[derive(BorshSerialize, BorshDeserialize, PanicOnDefault)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
     moderator_id: AccountId,
     entities: UnorderedMap<AccountId, VersionedEntity>,
     contributions: UnorderedMap<(AccountId, AccountId), VersionedContribution>,
     requests: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
-    contributors: UnorderedSet<AccountId>,
+    contributors: UnorderedMap<AccountId, VersionedContributor>,
 }
 
 #[near_bindgen]
@@ -190,154 +41,13 @@ impl Contract {
             entities: UnorderedMap::new(StorageKeys::Entities),
             contributions: UnorderedMap::new(StorageKeys::Contributions),
             requests: UnorderedMap::new(StorageKeys::Requests),
-            contributors: UnorderedSet::new(StorageKeys::Contributors),
+            contributors: UnorderedMap::new(StorageKeys::Contributors),
         }
     }
 
     pub fn set_moderator(&mut self, moderator_id: AccountId) {
         self.assert_moderator();
         self.moderator_id = moderator_id;
-    }
-
-    /// Register as a contributor.
-    #[payable]
-    pub fn register(&mut self) {
-        assert_one_yocto();
-        self.contributors.insert(env::signer_account_id());
-        Events::RegisterContributor {
-            contributor_id: env::signer_account_id(),
-        }
-        .emit();
-    }
-
-    /// Add new entity and given user as founding contributor.
-    pub fn add_entity(&mut self, account_id: AccountId, kind: EntityKind, start_date: U64) {
-        self.entities.insert(
-            account_id.clone(),
-            VersionedEntity::Current(Entity {
-                status: EntityStatus::Active,
-                kind,
-                start_date: start_date.into(),
-                end_date: None,
-            }),
-        );
-        self.contributions.insert(
-            (account_id.clone(), env::predecessor_account_id()),
-            VersionedContribution::Current(Contribution {
-                permissions: HashSet::from([Permission::Admin]),
-                current: ContributionDetail {
-                    description: "".to_string(),
-                    start_date: start_date.into(),
-                    end_date: None,
-                },
-                history: vec![],
-            }),
-        );
-        Events::AddEntity {
-            entity_id: account_id,
-        }
-        .emit();
-    }
-
-    /// User requests to contribute to a given entity.
-    pub fn request_contribution(&mut self, entity_id: AccountId, description: String) {
-        let key = (entity_id.clone(), env::predecessor_account_id());
-        require!(
-            description.len() < MAX_DESCRIPTION_LENGTH,
-            "ERR_DESCRIPTION_TOO_LONG"
-        );
-        // TODO: Check if this account already has a contribution request for this entity? Do we
-        // just overwrite or keep track of multiple requests.
-        self.requests.insert(
-            key,
-            VersionedContributionRequest::Current(ContributionRequest {
-                description: description.clone(),
-            }),
-        );
-        Events::RequestContribution {
-            entity_id,
-            contributor_id: env::predecessor_account_id(),
-            description,
-        }
-        .emit();
-    }
-
-    /// Entity manager (or higher) approves a contribution request.
-    pub fn approve_contribution(
-        &mut self,
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: Option<String>,
-        start_date: Option<U64>,
-    ) {
-        self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
-        let key = (entity_id.clone(), contributor_id.clone());
-        let request = self.requests.get(&key).expect("ERR_NO_REQUEST");
-        let description = description.unwrap_or(request.clone().unwrap().description);
-        let start_date: Timestamp = start_date.unwrap_or(env::block_timestamp().into()).into();
-        let contribution_detail = ContributionDetail {
-            description: description.clone(),
-            start_date: start_date.clone(),
-            end_date: None,
-        };
-        let contribution = if let Some(mut old_contribution) = self
-            .contributions
-            .get(&key)
-            .map(|existing_contribution| existing_contribution.clone().unwrap())
-        {
-            old_contribution.history.push(old_contribution.current);
-            old_contribution.current = contribution_detail;
-            old_contribution
-        } else {
-            Contribution {
-                permissions: HashSet::new(),
-                current: contribution_detail,
-                history: vec![],
-            }
-        };
-        self.contributions
-            .insert(key, VersionedContribution::Current(contribution));
-        Events::ApproveContribution {
-            entity_id,
-            contributor_id,
-            description,
-            start_date,
-        }
-        .emit();
-    }
-
-    /// Entity manager (or higher) marks the contribution as finished/completed.
-    pub fn finish_contribution(
-        &mut self,
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        end_date: U64,
-    ) {
-        self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
-        let key = (entity_id.clone(), contributor_id.clone());
-        let mut contributor = self
-            .contributions
-            .get(&key)
-            .expect("ERR_NO_CONTRIBUTION")
-            .clone()
-            .unwrap();
-        let end_date: Timestamp = end_date.into();
-        contributor.current.end_date = Some(end_date);
-        self.contributions
-            .insert(key, VersionedContribution::Current(contributor));
-        Events::FinishContribution {
-            entity_id,
-            contributor_id,
-            end_date,
-        }
-        .emit();
-    }
-
-    /// Moderator updates the entity details.
-    pub fn set_entity(&mut self, account_id: AccountId, entity: Entity) {
-        self.assert_moderator();
-        self.entities
-            .insert(account_id, VersionedEntity::Current(entity));
     }
 
     /// Checks if transaction was performed by moderator account.
@@ -371,118 +81,6 @@ impl Contract {
     /// Check if given account ID is moderator.
     pub fn check_is_moderator(&self, account_id: AccountId) -> bool {
         self.moderator_id == account_id
-    }
-
-    /// List out entities. By default list all of them.
-    pub fn get_entities(
-        &self,
-        from_index: Option<u64>,
-        limit: Option<u64>,
-    ) -> Vec<(AccountId, Entity)> {
-        let from_index = from_index.unwrap_or(0);
-        let limit = limit.unwrap_or(self.entities.len().into());
-        self.entities
-            .into_iter()
-            .skip(from_index as usize)
-            .take(limit as usize)
-            .map(|(key, versioned_entity)| (key.clone(), versioned_entity.clone().unwrap()))
-            .collect()
-    }
-
-    /// List single entity details.
-    pub fn get_entity(&self, account_id: AccountId) -> Entity {
-        self.entities
-            .get(&account_id)
-            .expect("ERR_NO_ENTITY")
-            .clone()
-            .unwrap()
-    }
-
-    /// Get all contributor account IDs.
-    pub fn get_contributors(&self) -> HashSet<AccountId> {
-        self.contributors.into_iter().cloned().collect()
-    }
-
-    /// Check if account is registered as contributor.
-    pub fn check_is_contributor(&self, account_id: AccountId) -> bool {
-        self.contributors.contains(&account_id)
-    }
-
-    /// Get all the contributions for a single contributor.
-    pub fn get_contributor_contributions(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<AccountId, Contribution> {
-        self.contributions
-            .into_iter()
-            .filter_map(|((entity, contributor), contribution)| {
-                (&account_id == contributor)
-                    .then_some((entity.clone(), contribution.clone().unwrap()))
-            })
-            .collect()
-    }
-
-    /// Get all the entity account IDs where contributor has Admin permissions.
-    pub fn get_contributor_admin_entities(&self, account_id: AccountId) -> HashSet<AccountId> {
-        self.contributions
-            .into_iter()
-            .filter_map(|((entity, contributor), contribution)| {
-                (&account_id == contributor
-                    && contribution
-                        .clone()
-                        .unwrap()
-                        .permissions
-                        .contains(&Permission::Admin))
-                .then_some(entity.clone())
-            })
-            .collect()
-    }
-
-    /// Get contribution details.
-    pub fn get_contribution(
-        &self,
-        entity_id: AccountId,
-        contributor_id: AccountId,
-    ) -> Option<Contribution> {
-        self.contributions
-            .get(&(entity_id, contributor_id))
-            .map(|contribution| contribution.clone().unwrap())
-    }
-
-    /// Get all the contributions for this entity.
-    pub fn get_entity_contributions(&self, entity_id: AccountId) -> Vec<(AccountId, Contribution)> {
-        self.contributions
-            .into_iter()
-            .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
-                (key_entity_id == &entity_id)
-                    .then_some((account_id.clone(), versioned_contribution.clone().unwrap()))
-            })
-            .collect()
-    }
-
-    /// Get contribution request details.
-    pub fn get_contribution_request(
-        &self,
-        entity_id: AccountId,
-        contributor_id: AccountId,
-    ) -> Option<ContributionRequest> {
-        self.requests
-            .get(&(entity_id, contributor_id))
-            .map(|contribution_request| contribution_request.clone().unwrap())
-    }
-
-    /// Get all the requests for this entity.
-    pub fn get_entity_contribution_requests(
-        &self,
-        entity_id: AccountId,
-    ) -> Vec<(AccountId, ContributionRequest)> {
-        self.requests
-            .into_iter()
-            .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
-                (key_entity_id == &entity_id)
-                    .then_some((account_id.clone(), versioned_contribution.clone().unwrap()))
-            })
-            .collect()
     }
 
     /// Should only be called by this contract on migration.
