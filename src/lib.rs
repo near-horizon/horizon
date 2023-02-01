@@ -2,7 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::store::UnorderedMap;
 use near_sdk::{env, near_bindgen, require, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault};
 
-use crate::contribution::{VersionedContribution, VersionedContributionRequest};
+use crate::contribution::{Contribution, VersionedContribution, VersionedContributionRequest};
 use crate::contributor::VersionedContributor;
 use crate::entity::{Permission, VersionedEntity};
 
@@ -64,12 +64,12 @@ impl Contract {
         if account_id == &self.moderator_id {
             return;
         }
-        let contribution = self
-            .contributions
-            .get(&(entity_id.clone(), account_id.clone()))
-            .expect("ERR_NO_CONTRIBUTION")
-            .clone()
-            .unwrap();
+        let contribution = Contribution::from(
+            self.contributions
+                .get(&(entity_id.clone(), account_id.clone()))
+                .expect("ERR_NO_CONTRIBUTION")
+                .clone(),
+        );
         require!(
             contribution.permissions.contains(&Permission::Admin),
             "ERR_NO_PERMISSION"

@@ -45,9 +45,9 @@ pub enum VersionedContribution {
     Current(Contribution),
 }
 
-impl VersionedContribution {
-    pub fn unwrap(self) -> Contribution {
-        match self {
+impl From<VersionedContribution> for Contribution {
+    fn from(value: VersionedContribution) -> Self {
+        match value {
             VersionedContribution::Current(c) => c,
         }
     }
@@ -58,10 +58,10 @@ pub enum VersionedContributionRequest {
     Current(ContributionRequest),
 }
 
-impl VersionedContributionRequest {
-    pub fn unwrap(self) -> ContributionRequest {
-        match self {
-            VersionedContributionRequest::Current(cr) => cr,
+impl From<VersionedContributionRequest> for ContributionRequest {
+    fn from(value: VersionedContributionRequest) -> Self {
+        match value {
+            VersionedContributionRequest::Current(c) => c,
         }
     }
 }
@@ -105,7 +105,8 @@ impl Contract {
         self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
         let key = (entity_id.clone(), contributor_id.clone());
         let request = self.requests.get(&key).expect("ERR_NO_REQUEST");
-        let description = description.unwrap_or(request.clone().unwrap().description);
+        let description =
+            description.unwrap_or(ContributionRequest::from(request.clone()).description);
         let start_date: Timestamp = start_date.unwrap_or(env::block_timestamp().into()).into();
         let contribution_detail = ContributionDetail {
             description: description.clone(),
@@ -115,7 +116,7 @@ impl Contract {
         let contribution = if let Some(mut old_contribution) = self
             .contributions
             .get(&key)
-            .map(|existing_contribution| existing_contribution.clone().unwrap())
+            .map(|existing_contribution| Contribution::from(existing_contribution.clone()))
         {
             old_contribution.history.push(old_contribution.current);
             old_contribution.current = contribution_detail;
@@ -150,12 +151,12 @@ impl Contract {
     ) {
         self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
         let key = (entity_id.clone(), contributor_id.clone());
-        let mut contributor = self
+        let mut contributor: Contribution = self
             .contributions
             .get(&key)
             .expect("ERR_NO_CONTRIBUTION")
             .clone()
-            .unwrap();
+            .into();
         let end_date: Timestamp = end_date.into();
         contributor.current.end_date = Some(end_date);
         self.contributions
@@ -179,7 +180,7 @@ impl Contract {
             .into_iter()
             .filter_map(|((entity, contributor), contribution)| {
                 (&account_id == contributor)
-                    .then_some((entity.clone(), contribution.clone().unwrap()))
+                    .then_some((entity.clone(), contribution.clone().into()))
             })
             .collect()
     }
@@ -190,9 +191,7 @@ impl Contract {
             .into_iter()
             .filter_map(|((entity, contributor), contribution)| {
                 (&account_id == contributor
-                    && contribution
-                        .clone()
-                        .unwrap()
+                    && Contribution::from(contribution.clone())
                         .permissions
                         .contains(&Permission::Admin))
                 .then_some(entity.clone())
@@ -208,7 +207,7 @@ impl Contract {
     ) -> Option<Contribution> {
         self.contributions
             .get(&(entity_id, contributor_id))
-            .map(|contribution| contribution.clone().unwrap())
+            .map(|contribution| contribution.clone().into())
     }
 
     /// Get all the contributions for this entity.
@@ -217,7 +216,7 @@ impl Contract {
             .into_iter()
             .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
                 (key_entity_id == &entity_id)
-                    .then_some((account_id.clone(), versioned_contribution.clone().unwrap()))
+                    .then_some((account_id.clone(), versioned_contribution.clone().into()))
             })
             .collect()
     }
@@ -230,7 +229,7 @@ impl Contract {
     ) -> Option<ContributionRequest> {
         self.requests
             .get(&(entity_id, contributor_id))
-            .map(|contribution_request| contribution_request.clone().unwrap())
+            .map(|contribution_request| contribution_request.clone().into())
     }
 
     /// Get all the requests for this entity.
@@ -242,7 +241,7 @@ impl Contract {
             .into_iter()
             .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
                 (key_entity_id == &entity_id)
-                    .then_some((account_id.clone(), versioned_contribution.clone().unwrap()))
+                    .then_some((account_id.clone(), versioned_contribution.clone().into()))
             })
             .collect()
     }

@@ -60,6 +60,14 @@ impl VersionedContributor {
     }
 }
 
+impl From<VersionedContributor> for Contributor {
+    fn from(value: VersionedContributor) -> Self {
+        match value {
+            VersionedContributor::Current(c) => c,
+        }
+    }
+}
+
 #[near_bindgen]
 impl Contract {
     /// Register as a contributor.
@@ -110,7 +118,7 @@ impl Contract {
     pub fn get_contributor(&self, account_id: AccountId) -> Option<Contributor> {
         self.contributors
             .get(&account_id)
-            .map(|contributor| contributor.clone().unwrap())
+            .map(|contributor| contributor.clone().into())
     }
 
     /// Get all contribution types.

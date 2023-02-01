@@ -35,6 +35,7 @@ pub enum EntityKind {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Entity {
+    name: String,
     status: EntityStatus,
     kind: EntityKind,
     #[serde(with = "u64_dec_format")]
@@ -57,9 +58,9 @@ pub enum VersionedEntity {
     Current(Entity),
 }
 
-impl VersionedEntity {
-    pub fn unwrap(self) -> Entity {
-        match self {
+impl From<VersionedEntity> for Entity {
+    fn from(value: VersionedEntity) -> Self {
+        match value {
             VersionedEntity::Current(e) => e,
         }
     }
@@ -68,10 +69,17 @@ impl VersionedEntity {
 #[near_bindgen]
 impl Contract {
     /// Add new entity and given user as founding contributor.
-    pub fn add_entity(&mut self, account_id: AccountId, kind: EntityKind, start_date: U64) {
+    pub fn add_entity(
+        &mut self,
+        account_id: AccountId,
+        name: String,
+        kind: EntityKind,
+        start_date: U64,
+    ) {
         self.entities.insert(
             account_id.clone(),
             VersionedEntity::Current(Entity {
+                name,
                 status: EntityStatus::Active,
                 kind,
                 start_date: start_date.into(),
@@ -120,7 +128,7 @@ impl Contract {
             .into_iter()
             .skip(from_index as usize)
             .take(limit as usize)
-            .map(|(key, versioned_entity)| (key.clone(), versioned_entity.clone().unwrap()))
+            .map(|(key, versioned_entity)| (key.clone(), versioned_entity.clone().into()))
             .collect()
     }
 
@@ -130,6 +138,6 @@ impl Contract {
             .get(&account_id)
             .expect("ERR_NO_ENTITY")
             .clone()
-            .unwrap()
+            .into()
     }
 }
