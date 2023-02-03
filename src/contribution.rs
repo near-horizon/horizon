@@ -402,4 +402,19 @@ impl Contract {
                 map
             })
     }
+
+    /// Checks whether the contributor with the provided contributor ID already proposed to the
+    /// need with the given entity ID and CID.
+    pub fn check_if_need_proposed(
+        &self,
+        entity_id: AccountId,
+        contributor_id: AccountId,
+        cid: String,
+    ) -> bool {
+        self.requests.iter().any(|((e_id, c_id), c)| {
+            e_id == &entity_id
+                && c_id == &contributor_id
+                && ContributionRequest::from(c.clone()).need == Some(cid.clone())
+        })
+    }
 }
