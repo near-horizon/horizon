@@ -1,6 +1,7 @@
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, serde_json, AccountId, Timestamp};
 
+use crate::contributor::ContributionType;
 use crate::utils::u64_dec_format;
 
 #[derive(Deserialize, Serialize)]
@@ -12,15 +13,23 @@ pub enum Events {
     RegisterContributor {
         contributor_id: AccountId,
     },
+    PostContributionNeed {
+        entity_id: AccountId,
+        cid: String,
+        description: String,
+        contribution_type: ContributionType,
+    },
     RequestContribution {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
+        contribution_type: ContributionType,
     },
     ApproveContribution {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
+        contribution_type: ContributionType,
         #[serde(with = "u64_dec_format")]
         start_date: Timestamp,
     },
@@ -29,6 +38,22 @@ pub enum Events {
         contributor_id: AccountId,
         #[serde(with = "u64_dec_format")]
         end_date: Timestamp,
+    },
+    InviteContributor {
+        entity_id: AccountId,
+        contributor_id: AccountId,
+        description: String,
+        contribution_type: ContributionType,
+        #[serde(with = "u64_dec_format")]
+        start_date: Timestamp,
+    },
+    AcceptInvite {
+        entity_id: AccountId,
+        contributor_id: AccountId,
+        description: String,
+        contribution_type: ContributionType,
+        #[serde(with = "u64_dec_format")]
+        start_date: Timestamp,
     },
 }
 

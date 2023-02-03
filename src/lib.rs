@@ -2,7 +2,10 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::store::UnorderedMap;
 use near_sdk::{env, near_bindgen, require, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault};
 
-use crate::contribution::{Contribution, VersionedContribution, VersionedContributionRequest};
+use crate::contribution::{
+    Contribution, VersionedContribution, VersionedContributionInvite, VersionedContributionNeed,
+    VersionedContributionRequest,
+};
 use crate::contributor::VersionedContributor;
 use crate::entity::{Permission, VersionedEntity};
 
@@ -20,6 +23,8 @@ enum StorageKeys {
     Contributions,
     Requests,
     Contributors,
+    Needs,
+    Invites,
 }
 
 #[near_bindgen]
@@ -30,6 +35,8 @@ pub struct Contract {
     contributions: UnorderedMap<(AccountId, AccountId), VersionedContribution>,
     requests: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
     contributors: UnorderedMap<AccountId, VersionedContributor>,
+    needs: UnorderedMap<(AccountId, String), VersionedContributionNeed>,
+    invites: UnorderedMap<(AccountId, AccountId), VersionedContributionInvite>,
 }
 
 #[near_bindgen]
@@ -42,6 +49,8 @@ impl Contract {
             contributions: UnorderedMap::new(StorageKeys::Contributions),
             requests: UnorderedMap::new(StorageKeys::Requests),
             contributors: UnorderedMap::new(StorageKeys::Contributors),
+            needs: UnorderedMap::new(StorageKeys::Needs),
+            invites: UnorderedMap::new(StorageKeys::Invites),
         }
     }
 
@@ -49,6 +58,8 @@ impl Contract {
         self.assert_moderator();
         self.moderator_id = moderator_id;
     }
+
+    /// Assertions.
 
     /// Checks if transaction was performed by moderator account.
     fn assert_moderator(&self) {
@@ -73,6 +84,14 @@ impl Contract {
         require!(
             contribution.permissions.contains(&Permission::Admin),
             "ERR_NO_PERMISSION"
+        );
+    }
+
+    /// Checks if given account is registered as a contributor.
+    fn assert_is_registered(&self, account_id: &AccountId) {
+        require!(
+            self.contributors.contains_key(account_id),
+            "ERR_NOT_REGISTERED"
         );
     }
 
