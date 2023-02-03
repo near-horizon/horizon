@@ -251,4 +251,15 @@ impl Contract {
             })
             .collect()
     }
+
+    /// Get invite details for entity and contributor with given IDs.
+    pub fn get_invite(
+        &self,
+        entity_id: AccountId,
+        contributor_id: AccountId,
+    ) -> Option<ContributionInvite> {
+        self.invites
+            .get(&(entity_id, contributor_id))
+            .map(|invite| invite.clone().into())
+    }
 }
