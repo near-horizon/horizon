@@ -1,0 +1,37 @@
+const ownerId = "contribut3.near";
+const search = props.search ?? "";
+
+const needs =
+  Near.view(ownerId, "get_contribution_needs", {}, "final", true) ?? {};
+
+const allNeeds = Object.keys(needs)
+  .reduce((list, accountId) => {
+    const entityNeeds = needs[accountId];
+    const needsList = Object.keys(entityNeeds).map((cid) => [
+      accountId,
+      cid,
+      entityNeeds[cid],
+    ]);
+
+    return [...list, ...needsList];
+  }, [])
+  .filter(
+    ([accountId, _, need]) =>
+      accountId.includes(search) ||
+      need.description.includes(search) ||
+      need.contribution_type.includes(search)
+  );
+
+if (!allNeeds || allNeeds.length === 0) {
+  return "No contribution needs found!";
+}
+
+return (
+  <>
+    {allNeeds.map(([accountId, cid]) => (
+      <div key={cid} className="mb-2">
+        <Widget src={`${ownerId}/widget/Need`} props={{ accountId, cid }} />
+      </div>
+    ))}
+  </>
+);
