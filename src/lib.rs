@@ -88,6 +88,7 @@ impl Contract {
     }
 
     /// Checks if given account is registered as a contributor.
+    #[allow(dead_code)]
     fn assert_is_registered(&self, account_id: &AccountId) {
         require!(
             self.contributors.contains_key(account_id),
