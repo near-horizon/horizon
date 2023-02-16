@@ -2,6 +2,16 @@
   "type": "module",
   "scripts": {
     "download": "near-social download contribut3.near network-config mainnet",
-    "deploy": "near-social deploy contribut3.near network-config mainnet sign-with-access-key-file ~/.near-credentials/mainnet/contribut3.near.json"
+    "deploy": "near-social deploy contribut3.near network-config mainnet sign-with-access-key-file ~/.near-credentials/mainnet/contribut3.near.json send",
+    "dev": "npm-watch"
+  },
+  "devDependencies": {
+    "npm-watch": "^0.11.0"
+  },
+  "watch": {
+    "deploy": {
+      "patterns": ["src"],
+      "extensions": "js,jsx"
+    }
   }
 }
