@@ -17,18 +17,6 @@ if (!entity) {
     : "Loading...";
 }
 
-const shareButton = isPreview ? null : (
-  <a
-    className="card-link"
-    href={`https://near.social/#/${ownerId}/widget/Entity?accountId=${accountId}`}
-    role="button"
-    target="_blank"
-    title="Open in new tab"
-  >
-    <div className="bi bi-share" />
-  </a>
-);
-
 const currentContributor = Near.view(
   ownerId,
   "get_contribution",
@@ -57,8 +45,7 @@ const invites = Near.view(
   ownerId,
   "get_entity_invites",
   { account_id: accountId },
-  "final",
-  true
+  "final"
 );
 
 const contributionsList = notStandalone ? null : (
@@ -68,11 +55,11 @@ const contributionsList = notStandalone ? null : (
     {!contributions
       ? "Loading..."
       : contributions.map(([contributorId]) => (
-          <Widget
-            src={`${ownerId}/widget/Contribution`}
-            props={{ entityId: accountId, contributorId, id: contributorId }}
-          />
-        ))}
+        <Widget
+          src={`${ownerId}/widget/Contribution`}
+          props={{ entityId: accountId, contributorId, id: contributorId }}
+        />
+      ))}
   </div>
 );
 
@@ -84,11 +71,11 @@ const requestsList =
       {!contributionRequests
         ? "Loading..."
         : contributionRequests.map(([contributorId]) => (
-            <Widget
-              src={`${ownerId}/widget/ContributionRequest`}
-              props={{ entityId: accountId, contributorId, id: contributorId }}
-            />
-          ))}
+          <Widget
+            src={`${ownerId}/widget/ContributionRequest`}
+            props={{ entityId: accountId, contributorId, id: contributorId }}
+          />
+        ))}
     </div>
   );
 
@@ -100,11 +87,11 @@ const inviteList =
       {!invites
         ? "Loading..."
         : Object.keys(invites).map((contributorId) => (
-            <Widget
-              src={`${ownerId}/widget/Invite`}
-              props={{ entityId: accountId, contributorId }}
-            />
-          ))}
+          <Widget
+            src={`${ownerId}/widget/Invite`}
+            props={{ entityId: accountId, contributorId }}
+          />
+        ))}
     </div>
   );
 
@@ -113,38 +100,133 @@ const needForm =
     <Widget src={`${ownerId}/widget/NeedForm`} props={{ accountId }} />
   );
 
-const header = (
-  <div className="card-header">
-    <div className="row justify-content-between">
-      <div className="col-4">
-        <Widget src={`mob.near/widget/ProfileLine`} props={{ accountId }} />
-      </div>
-      <div className="col-5">
-        <div className="d-flex justify-content-end">{shareButton}</div>
-      </div>
-    </div>
+const profile = Social.getr(`${accountId}/profile`);
+
+const name = entity.name || profile.name;
+const tags = Object.keys(profile.tags ?? {});
+const image = profile.image;
+const url =
+  (image.ipfs_cid
+    ? `https://ipfs.near.social/ipfs/${image.ipfs_cid}`
+    : image.url) || "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
+
+const circle = (
+  <div
+    className="profile-circle d-inline-block"
+    title={`${name} @${accountId}`}
+    style={{ width: "4em", height: "4em" }}
+  >
+    <img
+      className="rounded-circle w-100 h-100"
+      style={{ objectFit: "cover" }}
+      src={`https://i.near.social/thumbnail/${url}`}
+      alt="profile image"
+    />
   </div>
 );
 
 const body = (
-  <div className="card-body">
-    <div>Name: {entity.name}</div>
-    <div>Type: {entity.kind}</div>
-    <div>Status: {entity.status}</div>
-    <div>
-      Founded at: {new Date(Number(entity.start_date)).toLocaleDateString()}
+  <div
+    className="d-flex flex-row justify-content-between align-items-start"
+    id={accountId}
+  >
+    <div className="d-flex flex-row justify-content-start">
+      <div className="m-2">{circle}</div>
+      <div className="m-2 d-flex flex-column justify-content-between align-items-start">
+        <div>
+          <b>{name}</b>
+          <span className="text-muted">@{accountId}</span>
+        </div>
+        <div className="text-truncate text-muted">
+          {tags.length > 0 ? (
+            <>
+              {tags.map((tag) => (
+                <span
+                  className="d-inline-block mx-1 py-1 px-2 badge border border-secondary text-secondary text-muted text-center"
+                  key={tag}
+                >
+                  {tag}
+                </span>
+              ))}
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
     </div>
-    {needForm}
-    {contributionsList}
-    {requestsList}
-    {inviteList}
+    <div className="d-flex flex-row justify-content-end align-items-start">
+      <a
+        className="btn btn-outline-secondary me-2"
+        href={`https://near.social/#/${ownerId}/widget/Entity?accountId=${accountId}`}
+      >
+        View details
+      </a>
+      <a className="btn btn-outline-secondary">
+        <i className="bi-box-arrow-up-right" />
+      </a>
+    </div>
+  </div>
+);
+
+const details = (
+  <div className="text-truncate my-2" style={{ maxWidth: "70%" }}>
+    {profile.description}
+  </div>
+);
+
+const [[founder]] = (contributions ?? []).filter((contribution) => {
+  const [_, details] = contribution;
+  const all = [...details.history, details.current];
+  return all.some((detail) => detail.description === "");
+});
+
+const founderProfile = Social.getr(`${founder}/profile`);
+const founderImage = profile.image;
+const founderImageUrl =
+  (founderImage.ipfs_cid
+    ? `https://ipfs.near.social/ipfs/${founderImage.ipfs_cid}`
+    : founderImage.url) ||
+  "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
+
+const founderCircle = (
+  <div
+    className="profile-circle d-inline-block"
+    title={`${founderProfile.name} @${founder}`}
+    style={{ width: "1.5em", height: "1.5em" }}
+  >
+    <img
+      className="rounded-circle w-100 h-100"
+      style={{ objectFit: "cover" }}
+      src={`https://i.near.social/thumbnail/${founderImageUrl}`}
+      alt="profile image"
+    />
+  </div>
+);
+
+const footer = (
+  <div className="d-flex flex-row justify-content-start align-items-stretch text-muted">
+    <div className="d-flex flex-row justify-content-start align-items-center">
+      {founderCircle}
+      <span className="ms-1">{founderProfile.name}</span>
+    </div>
+    <div className="ms-3">
+      <i className="bi-play" />
+      <span className="ms-1">{entity.status}</span>
+    </div>
   </div>
 );
 
 return (
   <div className="card">
-    {header}
-    {body}
+    <div className="card-body p-3">
+      {body}
+      {details}
+      {footer}
+      {needForm}
+      {contributionsList}
+      {requestsList}
+      {inviteList}
+    </div>
   </div>
 );
-c;

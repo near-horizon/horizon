@@ -19,6 +19,8 @@ declare namespace context {
   const widgetSrc: string;
 }
 
+declare const state: Record<string, any>;
+
 declare namespace Near {
   type Transaction = {
     contractName: string;

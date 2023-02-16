@@ -3,6 +3,7 @@ const ownerId = "contribut3.near";
 initState({
   search: "",
   content: props.content ?? "entities",
+  tab: props.tab ?? "dashboard",
 });
 
 const isModerator = Near.view(
@@ -94,17 +95,17 @@ const controls = (
             {!isModerator
               ? null
               : control({
-                  formName: "ModeratorEntity",
-                  text: "Edit/Create Entity",
-                  icon: "bi-pencil-square",
-                })}
+                formName: "ModeratorEntity",
+                text: "Edit/Create Entity",
+                icon: "bi-pencil-square",
+              })}
             {!isModerator
               ? null
               : control({
-                  formName: "ModeratorSet",
-                  text: "Change moderator",
-                  icon: "bi-person-lock",
-                })}
+                formName: "ModeratorSet",
+                text: "Change moderator",
+                icon: "bi-person-lock",
+              })}
           </ul>
         </div>
       </div>
@@ -204,10 +205,24 @@ const content = {
   ),
 }[state.content];
 
+const tabContent = {
+  dashboard: <Widget src={`${ownerId}/widget/Dashboard`} />,
+}[state.tab];
+
 return (
-  <div>
-    {controls}
-    {navbar}
-    <div className="mt-2">{content}</div>
+  <div className="d-flex flex-row">
+    <div className="px-1">
+      <Widget
+        src={`${ownerId}/widget/Sidebar`}
+        props={{ tab: state.tab, update: (tab) => State.update({ tab }) }}
+      />
+    </div>
+    <div className="vr mx-2" />
+    <div className="w-100">
+      {tabContent}
+      {/* {controls} */}
+      {/* {navbar} */}
+      {/* <div className="mt-2">{content}</div> */}
+    </div>
   </div>
 );
