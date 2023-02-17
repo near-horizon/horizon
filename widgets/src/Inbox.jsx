@@ -1,57 +1,16 @@
 const ownerId = "contribut3.near";
 
 State.init({
-  content: props.content ?? "projects",
+  content: props.content ?? "proposals",
   search: props.search ?? "",
 });
 
 const header = (
   <div>
-    <h1 className="fs-2">Dashboard</h1>
+    <h1 className="fs-2">Inbox</h1>
     <p className="fw-semibold fs-5 text-muted">
-      Find projects, contributors or requests
+      Manage invitations and proposals
     </p>
-  </div>
-);
-
-const createNewButton = ({ id, text, icon }) => (
-  <li>
-    <a className="dropdown-item" id={id}>
-      <i className={icon} />
-      <span>{text}</span>
-    </a>
-  </li>
-);
-
-const createNewDropdown = (
-  <div className="dropdown">
-    <a
-      className="btn btn-info dropdown-toggle"
-      style={{ backgroundColor: "#7f56d9", borderColor: "#7f56d9" }}
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-    >
-      Create new...
-    </a>
-    <ul className="dropdown-menu">
-      {createNewButton({
-        id: "request",
-        text: "Contribution request",
-        icon: "bi-ui-checks-grid",
-      })}
-      <li>
-        <hr className="dropdown-divider" />
-      </li>
-      {createNewButton({ id: "project", text: "Project", icon: "bi-boxes" })}
-      <li>
-        <hr className="dropdown-divider" />
-      </li>
-      {createNewButton({
-        id: "organization",
-        text: "Organization",
-        icon: "bi-diagram-2",
-      })}
-    </ul>
   </div>
 );
 
@@ -71,19 +30,14 @@ const contentSelectButton = ({ id, text, icon }) => (
 const contentSelector = (
   <div className="btn-group" role="group" aria-label="Content Tab Selector">
     {contentSelectButton({
-      id: "projects",
-      text: "Projects",
-      icon: "bi-boxes",
+      id: "proposals",
+      text: "Proposals",
+      icon: "bi-person-plus",
     })}
     {contentSelectButton({
-      id: "contributors",
-      text: "Contributors",
-      icon: "bi-person",
-    })}
-    {contentSelectButton({
-      id: "requests",
-      text: "Requests",
-      icon: "bi-ui-checks-grid",
+      id: "invitations",
+      text: "Invitations",
+      icon: "bi-person-up",
     })}
   </div>
 );
@@ -110,21 +64,15 @@ const searchBar = (
 );
 
 const content = {
-  projects: (
+  proposals: (
     <Widget
-      src={`${ownerId}/widget/EntityList`}
+      src={`${ownerId}/widget/AdminList`}
       props={{ search: state.search, update: props.update }}
     />
   ),
-  contributors: (
+  invitations: (
     <Widget
-      src={`${ownerId}/widget/ContributorList`}
-      props={{ search: state.search, update: props.update }}
-    />
-  ),
-  requests: (
-    <Widget
-      src={`${ownerId}/widget/NeedList`}
+      src={`${ownerId}/widget/InviteList`}
       props={{ search: state.search, update: props.update }}
     />
   ),
@@ -135,7 +83,6 @@ return (
     <div className="mb-3 px-3">
       <div className="d-flex flex-row justify-content-between mb-3">
         {header}
-        {createNewDropdown}
       </div>
       <div className="d-flex flex-row justify-content-between">
         {contentSelector}

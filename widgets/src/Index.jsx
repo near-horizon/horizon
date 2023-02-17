@@ -205,8 +205,34 @@ const content = {
   ),
 }[state.content];
 
+const update = (tab) => State.update({ tab });
+
 const tabContent = {
-  dashboard: <Widget src={`${ownerId}/widget/Dashboard`} />,
+  dashboard: (
+    <Widget
+      src={`${ownerId}/widget/Dashboard`}
+      props={{ content: props.content, search: props.search, update }}
+    />
+  ),
+  profile: <Widget src={`${ownerId}/widget/Profile`} />,
+  inbox: (
+    <Widget
+      src={`${ownerId}/widget/Inbox`}
+      props={{ content: props.content, search: props.search, update }}
+    />
+  ),
+  entities: (
+    <Widget
+      src={`${ownerId}/widget/ManageEntities`}
+      props={{ content: props.content, search: props.search, update }}
+    />
+  ),
+  entity: (
+    <Widget
+      src={`${ownerId}/widget/EntityPage`}
+      props={{ accountId: props.accountId, update }}
+    />
+  ),
 }[state.tab];
 
 return (
@@ -214,15 +240,10 @@ return (
     <div className="px-1">
       <Widget
         src={`${ownerId}/widget/Sidebar`}
-        props={{ tab: state.tab, update: (tab) => State.update({ tab }) }}
+        props={{ tab: state.tab, update }}
       />
     </div>
     <div className="vr mx-2" />
-    <div className="w-100">
-      {tabContent}
-      {/* {controls} */}
-      {/* {navbar} */}
-      {/* <div className="mt-2">{content}</div> */}
-    </div>
+    <div className="w-100">{tabContent}</div>
   </div>
 );

@@ -23,7 +23,7 @@ return (
       <div key={accountId} className="mb-2">
         <Widget
           src={`${ownerId}/widget/Entity`}
-          props={{ accountId, notStandalone: true }}
+          props={{ accountId, notStandalone: false }}
         />
       </div>
     ))}

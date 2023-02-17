@@ -3,7 +3,7 @@ const accountId = context.accountId;
 const entityId = props.entityId;
 const contributorId = props.contributorId;
 
-initState({
+State.init({
   description: "",
   startDate: "",
 });
@@ -24,9 +24,9 @@ const isAuthorized = !!contributor && contributor.permissions.includes("Admin");
 const contributionRequest = props.isPreview
   ? props.contributionRequest
   : Near.view(ownerId, "get_contribution_request", {
-      entity_id: entityId,
-      contributor_id: contributorId,
-    });
+    entity_id: entityId,
+    contributor_id: contributorId,
+  });
 
 if (!contributionRequest) {
   return props.isPreview
@@ -34,121 +34,70 @@ if (!contributionRequest) {
     : "Loading...";
 }
 
-const shareButton = props.isPreview ? null : (
-  <a
-    className="card-link"
-    href={`https://near.social/#/${ownerId}/widget/ContributionRequest?entityId=${entityId}&contributorId=${contributorId}`}
-    role="button"
-    target="_blank"
-    title="Open in new tab"
-  >
-    <div className="bi bi-share" />
-  </a>
-);
-
-const header = (
-  <div className="card-header">
-    <small className="text-muted">
-      <div className="row justify-content-between">
-        <div className="col-4">
-          <Widget
-            src={`mob.near/widget/ProfileLine`}
-            props={{ accountId: contributorId }}
-          />
-        </div>
-        <div className="col-5">
-          <div className="d-flex justify-content-end">{shareButton}</div>
-        </div>
-      </div>
-    </small>
-  </div>
-);
-
-const entityLink = (
-  <Widget src={`mob.near/widget/ProfileLine`} props={{ accountId: entityId }} />
-);
-
-const postTitle = (
-  <h5 className="card-title">
-    <div className="row justify-content-between">
-      <div className="col-9">Contribution Request for {entityLink}</div>
-    </div>
-  </h5>
-);
-
 const description = isPreview
   ? props.contributionRequest.description
   : contributionRequest.description;
 
-const descriptionArea = <Markdown className="card-text" text={description} />;
+const descriptionArea = <Markdown text={description} />;
 
-const startDateInput = (
-  <div className="col-lg-6 mb-2">
-    Start date of contribution (optional):
-    <input
-      type="date"
-      value={state.startDate}
-      onChange={(e) => State.update({ startDate: e.target.value })}
+const contributorProfile = Social.getr(`${contributorId}/profile`);
+const imageUrl =
+  (contributorProfile.image.ipfs_cid
+    ? `https://ipfs.near.social/ipfs/${contributorProfile.image.ipfs_cid}`
+    : contributorProfile.image.url) ||
+  "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
+
+const contributorCircle = (
+  <div
+    className="profile-circle d-inline-block"
+    title={`${contributorProfile.name} @${contributorId}`}
+    style={{ width: "1.5em", height: "1.5em" }}
+  >
+    <img
+      className="rounded-circle w-100 h-100"
+      style={{ objectFit: "cover" }}
+      src={`https://i.near.social/thumbnail/${imageUrl}`}
+      alt="profile image"
     />
   </div>
 );
 
-const descriptionDiv = (
-  <div className="col-lg-12  mb-2">
-    Updated description (optional):
-    <br />
-    <textarea
-      value={state.description}
-      type="text"
-      rows={6}
-      className="form-control"
-      onChange={(event) => State.update({ description: event.target.value })}
-    />
+const header = (
+  <div className="d-flex flex-row justify-content-start align-items-center my-1">
+    {contriubutorCircle}
+    <span className="mx-1">{contributorProfile.name}</span>
+    <span className="text-muted">@{contributorId}</span>
   </div>
 );
 
-const body = (
-  <div className="card-body">
-    {postTitle}
-    {descriptionArea}
+const controls = isAuthorized ? (
+  <div className="d-flex flex-column justify-content-start align-items-stretch p-3">
+    <a
+      className="btn btn-success"
+    // href={`https://near.social/#/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
+    // onClick={() => props.update("entity")}
+    >
+      <i className="bi-check" />
+      <span>Accept</span>
+    </a>
+    <a className="btn btn-outline-danger mt-2">
+      <i className="bi-x" />
+      <span>Reject</span>
+    </a>
   </div>
+) : (
+  <></>
 );
-
-const footer =
-  !isAuthorized || isPreview ? null : (
-    <div className="card-footer">
-      <div>
-        {startDateInput}
-        {descriptionDiv}
-        <a
-          className="btn btn-outline-primary mb-2"
-          onClick={() => {
-            const args = {
-              entity_id: entityId,
-              contributor_id: contributorId,
-            };
-
-            if (state.description) {
-              args.description = state.description;
-            }
-
-            if (state.startDate) {
-              args.start_date = state.startDate;
-            }
-
-            Near.call(ownerId, "approve_contribution", args);
-          }}
-        >
-          Approve
-        </a>
-      </div>
-    </div>
-  );
 
 return (
-  <div className={`card my-2`}>
-    {header}
-    {body}
-    {footer}
+  <div className="card">
+    <div className="d-flex flex-row justify-content-start" id={accountId}>
+      <div className="flex-grow-1 p-3">
+        {header}
+        {descriptionArea}
+      </div>
+      <div className="vr mx-3" />
+      {controls}
+    </div>
   </div>
 );

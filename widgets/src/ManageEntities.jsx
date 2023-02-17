@@ -7,9 +7,9 @@ State.init({
 
 const header = (
   <div>
-    <h1 className="fs-2">Dashboard</h1>
+    <h1 className="fs-2">Manage entities</h1>
     <p className="fw-semibold fs-5 text-muted">
-      Find projects, contributors or requests
+      Crete or edit projects, organizations and contribution requests
     </p>
   </div>
 );
@@ -112,20 +112,20 @@ const searchBar = (
 const content = {
   projects: (
     <Widget
-      src={`${ownerId}/widget/EntityList`}
-      props={{ search: state.search, update: props.update }}
+      src={`${ownerId}/widget/AdminList`}
+      props={{ search: state.search }}
     />
   ),
   contributors: (
     <Widget
       src={`${ownerId}/widget/ContributorList`}
-      props={{ search: state.search, update: props.update }}
+      props={{ search: state.search }}
     />
   ),
   requests: (
     <Widget
       src={`${ownerId}/widget/NeedList`}
-      props={{ search: state.search, update: props.update }}
+      props={{ search: state.search }}
     />
   ),
 }[state.content];
