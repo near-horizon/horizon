@@ -1,11 +1,16 @@
 const ownerId = "contribut3.near";
 const search = props.search ?? "";
 const accountId = props.accountId;
+const cid = props.cid;
 
 const allContributors = (
   Near.view(
     ownerId,
-    accountId ? "get_entity_contributions" : "get_contributors",
+    accountId
+      ? cid
+        ? "get_need_contributions"
+        : "get_entity_contributions"
+      : "get_contributors",
     accountId ? { entity_id: accountId } : {},
     "final",
     true

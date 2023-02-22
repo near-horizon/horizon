@@ -55,7 +55,12 @@ return (
       <div key={cid} className="mb-2">
         <Widget
           src={`${ownerId}/widget/Need`}
-          props={{ accountId, cid, notStandalone: props.notStandalone }}
+          props={{
+            accountId,
+            cid,
+            notStandalone: props.notStandalone,
+            update: props.update,
+          }}
         />
       </div>
     ))}

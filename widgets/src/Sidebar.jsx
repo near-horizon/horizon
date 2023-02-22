@@ -64,7 +64,7 @@ return (
       icon: "bi-house",
       id: "dashboard",
     })}
-    {navItem({ text: "Profile", link: "#", icon: "bi-person", id: "profile" })}
+    {/* {navItem({ text: "Profile", link: "#", icon: "bi-person", id: "profile" })} */}
     {navItem({
       text: "Inbox",
       icon: "bi-envelope",

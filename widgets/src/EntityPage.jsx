@@ -7,8 +7,25 @@ if (!accountId) {
   return "Cannot show entity without account ID!";
 }
 
+const availableContent = [
+  "proposals",
+  "invitations",
+  "requests",
+  "contributions",
+  "contributors",
+];
+
+const getContent = (content) => {
+  if (!content || !availableContent.includes(content)) {
+    return "requests";
+  }
+
+  return content;
+};
+
 State.init({
-  content: props.content ?? "requests",
+  content: getContent(props.content),
+  search: props.search ?? "",
 });
 
 const entity = Near.view(
@@ -38,7 +55,7 @@ const [[founder]] = (contributions ?? []).filter((contribution) => {
   return all.some((detail) => detail.description === "");
 });
 
-const profile = Social.getr(`${entityId}/profile`);
+const profile = Social.getr(`${accountId}/profile`);
 
 const controls = isAuthorized ? (
   <div className="d-flex flex-row justify-content-between align-items-center">
@@ -179,7 +196,7 @@ const contentSelector = (
             id: "proposals",
             text: "Proposals",
             icon: "bi-person-down",
-            count: proposalsCount,
+            count: contributorsCount,
           }
           : null,
         isAuthorized
@@ -187,7 +204,7 @@ const contentSelector = (
             id: "invitations",
             text: "Invitations",
             icon: "bi-hourglass",
-            count: invitesCount,
+            count: contributorsCount,
           }
           : null,
         {

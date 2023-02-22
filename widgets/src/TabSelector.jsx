@@ -3,6 +3,7 @@ const buttons = props.buttons ?? [];
 const tab = props.tab;
 const accountId = props.accountId;
 const content = props.content;
+const cid = props.cid;
 
 return (
   <div className="btn-group" role="group" aria-label="Content Tab Selector">
@@ -11,7 +12,8 @@ return (
         className={`btn ${props.content === id ? "btn-secondary" : "btn-outline-secondary"
           }`}
         href={`https://near.social/#/${ownerId}/widget/Index?tab=${tab}&content=${id}${props.search ? "&search=" + props.search : ""
-          }${accountId ? "&accountId=" + accountId : ""}`}
+          }${accountId ? "&accountId=" + accountId : ""}${cid ? "&cid=" + cid : ""
+          }`}
         onClick={() => props.update(id)}
         key={id}
       >

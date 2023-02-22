@@ -1,7 +1,17 @@
 const ownerId = "contribut3.near";
 
+const availableContent = ["proposals", "invitations"];
+
+const getContent = (content) => {
+  if (!content || !availableContent.includes(content)) {
+    return "proposals";
+  }
+
+  return content;
+};
+
 State.init({
-  content: props.content ?? "proposals",
+  content: getContent(props.content),
   search: props.search ?? "",
 });
 

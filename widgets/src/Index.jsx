@@ -49,9 +49,21 @@ const tabContent = {
       src={`${ownerId}/widget/EntityPage`}
       props={{
         accountId: props.accountId,
-        update,
         search: props.search,
         content: props.content,
+        update,
+      }}
+    />
+  ),
+  need: (
+    <Widget
+      src={`${ownerId}/widget/NeedPage`}
+      props={{
+        accountId: props.accountId,
+        cid: props.cid,
+        search: props.search,
+        content: props.content,
+        update,
       }}
     />
   ),
