@@ -402,6 +402,45 @@ impl Contract {
         self.needs.get(&(account_id, cid)).map(|n| n.clone().into())
     }
 
+    /// Get all contribution requests for a specific need.
+    pub fn get_need_contribution_requests(
+        &self,
+        account_id: AccountId,
+        cid: String,
+    ) -> HashMap<AccountId, ContributionRequest> {
+        self.requests
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), r)| {
+                (entity_id == &account_id
+                    && ContributionRequest::from(r.clone()).need == Some(cid.clone()))
+                .then_some((contributor_id.clone(), ContributionRequest::from(r.clone())))
+            })
+            .collect()
+    }
+
+    /// Get all contributions for a specific need.
+    pub fn get_need_contributions(
+        &self,
+        account_id: AccountId,
+        cid: String,
+    ) -> HashMap<AccountId, Contribution> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), c)| {
+                if entity_id != &account_id {
+                    return None;
+                }
+                let contribution = Contribution::from(c.clone());
+                (contribution.current.need == Some(cid.clone())
+                    || contribution
+                        .history
+                        .iter()
+                        .any(|d| d.need == Some(cid.clone())))
+                .then_some((contributor_id.clone(), contribution))
+            })
+            .collect()
+    }
+
     /// Get all contribnution needs of entity.
     pub fn get_entity_contribution_needs(
         &self,
