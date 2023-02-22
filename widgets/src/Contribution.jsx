@@ -29,9 +29,13 @@ if (!contribution) {
   return "Loading...";
 }
 
-const isAuthorized =
-  !!currentAccountContribution &&
-  currentAccountContribution.permissions.includes("Admin");
+const isAuthorized = Near.view(
+  ownerId,
+  "check_is_manager_or_higher",
+  { account_id: accountId, entity_id: entityId },
+  "final",
+  true
+);
 
 const endDateInput = (
   <div className="col-lg-6 mb-2">

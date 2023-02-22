@@ -5,6 +5,26 @@ State.init({
   search: props.search ?? "",
 });
 
+const proposalsCount = (
+  Near.view(
+    ownerId,
+    "get_admin_contribution_requests",
+    { account_id: context.accountId },
+    "final",
+    true
+  ) ?? []
+).length;
+
+const invitesCount = Object.keys(
+  Near.view(
+    ownerId,
+    "get_contributor_invites",
+    { account_id: context.accountId },
+    "final",
+    true
+  ) ?? {}
+).length;
+
 const header = (
   <div>
     <h1 className="fs-2">Inbox</h1>
@@ -14,32 +34,30 @@ const header = (
   </div>
 );
 
-const contentSelectButton = ({ id, text, icon }) => (
-  <a
-    className={`btn ${state.content === id ? "btn-secondary" : "btn-outline-secondary"
-      }`}
-    href={`https://near.social/#/${ownerId}/widget/Index?tab=dashboard&content=${id}${props.search ? "&search=" + props.search : ""
-      }`}
-    onClick={() => State.update({ content: id })}
-  >
-    <i className={icon} />
-    <span>{text}</span>
-  </a>
-);
-
 const contentSelector = (
-  <div className="btn-group" role="group" aria-label="Content Tab Selector">
-    {contentSelectButton({
-      id: "proposals",
-      text: "Proposals",
-      icon: "bi-person-plus",
-    })}
-    {contentSelectButton({
-      id: "invitations",
-      text: "Invitations",
-      icon: "bi-person-up",
-    })}
-  </div>
+  <Widget
+    src={`${ownerId}/widget/TabSelector`}
+    props={{
+      tab: "inbox",
+      content: state.content,
+      search: state.search,
+      update: (content) => State.update({ content }),
+      buttons: [
+        {
+          id: "proposals",
+          text: "Proposals",
+          icon: "bi-person-plus",
+          count: proposalsCount,
+        },
+        {
+          id: "invitations",
+          text: "Invitations",
+          icon: "bi-person-up",
+          count: invitesCount,
+        },
+      ],
+    }}
+  />
 );
 
 const searchBar = (
@@ -66,7 +84,7 @@ const searchBar = (
 const content = {
   proposals: (
     <Widget
-      src={`${ownerId}/widget/AdminList`}
+      src={`${ownerId}/widget/ContributionRequestList`}
       props={{ search: state.search, update: props.update }}
     />
   ),

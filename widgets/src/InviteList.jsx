@@ -1,11 +1,12 @@
 const ownerId = "contribut3.near";
 const search = props.search ?? "";
+const accountId = props.accountId;
 
 const invites =
   Near.view(
     ownerId,
-    "get_contributor_invites",
-    { account_id: context.accountId },
+    accountId ? "get_entity_invites" : "get_contributor_invites",
+    { account_id: props.accountId ?? context.accountId },
     "final",
     true
   ) ?? {};
@@ -25,7 +26,14 @@ return (
   <>
     {allInvites.map((entityId) => (
       <div key={entityId} className="mb-2">
-        <Widget src={`${ownerId}/widget/Invite`} props={{ entityId }} />
+        <Widget
+          src={`${ownerId}/widget/Invite`}
+          props={{
+            entityId: accountId ?? entityId,
+            accountId: accountId ? entityId : null,
+            update: props.update,
+          }}
+        />
       </div>
     ))}
   </>

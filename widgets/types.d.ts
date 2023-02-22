@@ -1,25 +1,47 @@
-declare function useCache(
-  promiseGenerator: () => Promise<any>,
-  dataKey: string,
-  options?: { subscribe?: boolean }
-): null | unknown;
+import { StyledInterface } from "styled-components";
 
-declare function fetch(
-  url: string,
-  options?: { method?: string; headers?: Record<string, string>; body?: string }
-): null | unknown;
+declare global {
+  const styled: StyledInterface;
+  const state: Record<string, any>;
+  const context: {
+    accountId: string;
+    widgetSrc: string;
+  };
 
-declare function asyncFetch(
-  url: string,
-  options?: { method?: string; headers?: Record<string, string>; body?: string }
-): Promise<unknown>;
+  function useCache(
+    promiseGenerator: () => Promise<any>,
+    dataKey: string,
+    options?: { subscribe?: boolean }
+  ): null | unknown;
 
-declare namespace context {
-  const accountId: string;
-  const widgetSrc: string;
+  function fetch(
+    url: string,
+    options?: {
+      method?: string;
+      headers?: Record<string, string>;
+      body?: string;
+    }
+  ): null | unknown;
+
+  function asyncFetch(
+    url: string,
+    options?: {
+      method?: string;
+      headers?: Record<string, string>;
+      body?: string;
+    }
+  ): Promise<unknown>;
+
+  interface Storage {
+    set(key: string, value: any): void;
+
+    get(key: string, widgetSrc?: string): null | unknown;
+
+    privateSet(key: string, value: any): void;
+
+    privateGet(key: string): null | unknown;
+  }
 }
-
-declare const state: Record<string, any>;
 
 declare namespace Near {
   type Transaction = {
@@ -96,14 +118,4 @@ declare namespace State {
   function init(state: Record<string, any>): void;
 
   function update(state: Record<string, any>, init?: Record<string, any>): void;
-}
-
-interface Storage {
-  set(key: string, value: any): void;
-
-  get(key: string, widgetSrc?: string): null | unknown;
-
-  privateSet(key: string, value: any): void;
-
-  privateGet(key: string): null | unknown;
 }

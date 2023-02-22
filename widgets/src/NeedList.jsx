@@ -12,6 +12,14 @@ const needs = accountId
   )
   : Near.view(ownerId, "get_contribution_needs", {}, "final", true);
 
+if (!needs) {
+  return "Loading...";
+}
+
+if (Object.keys(needs).length === 0) {
+  return "Couldn't find any contribution needs!";
+}
+
 const allNeeds = Object.keys(needs)
   .reduce((list, accountIdOrCid) => {
     if (props.accountId) {
@@ -45,7 +53,10 @@ return (
   <>
     {allNeeds.map(([accountId, cid]) => (
       <div key={cid} className="mb-2">
-        <Widget src={`${ownerId}/widget/Need`} props={{ accountId, cid }} />
+        <Widget
+          src={`${ownerId}/widget/Need`}
+          props={{ accountId, cid, notStandalone: props.notStandalone }}
+        />
       </div>
     ))}
   </>

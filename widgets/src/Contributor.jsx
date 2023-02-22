@@ -9,7 +9,13 @@ if (!accountId) {
 
 const contributor = isPreview
   ? props.contributor
-  : Near.view(ownerId, "get_contributor", { account_id: accountId }, "final");
+  : Near.view(
+    ownerId,
+    "get_contributor",
+    { account_id: accountId },
+    "final",
+    true
+  );
 
 if (!contributor) {
   return isPreview
@@ -17,95 +23,125 @@ if (!contributor) {
     : "Loading...";
 }
 
+const isEntity = Near.view(
+  ownerId,
+  "check_is_entity",
+  { account_id: accountId },
+  "final",
+  true
+);
+
+const active = contributor.looking_for_work;
+
 const profile = Social.getr(`${accountId}/profile`);
 
-const tags = Object.keys(profile.tags ?? {});
-const image = profile.image;
-const url =
-  (image.ipfs_cid
-    ? `https://ipfs.near.social/ipfs/${image.ipfs_cid}`
-    : image.url) || "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
-
-const circle = (
-  <div
-    className="profile-circle d-inline-block"
-    title={`${profile.name} @${accountId}`}
-    style={{ width: "4em", height: "4em" }}
-  >
-    <img
-      className="rounded-circle w-100 h-100"
-      style={{ objectFit: "cover" }}
-      src={`https://i.near.social/thumbnail/${url}`}
-      alt="profile image"
-    />
-  </div>
+const contributionTypes = contributor.contribution_types.reduce(
+  (ob, contributionType) =>
+    typeof contributionType === "object"
+      ? { ...ob, [contributionType.Other]: "" }
+      : { ...ob, [contributionType]: "" },
+  {}
 );
 
-const contributorType = (
-  <div className="d-flex flex-row justify-content-start align-items-center my-1 text-body">
-    <i className="bi-person" />
-    <span>Individual contributor</span>
-  </div>
+if ("Other" in contributionTypes) {
+  contributionTypes[contributionTypes.Other] = "";
+  delete contributionTypes.Other;
+}
+
+const skills = contributor.skills.reduce(
+  (ob, skill) => ({ ...ob, [skill]: "" }),
+  {}
 );
+
+const tags = { ...skills, ...contributionTypes } || profile.tags;
 
 const body = (
   <div
     className="d-flex flex-row justify-content-start"
     id={accountId}
-    style={{ minHeight: "10em" }}
+    style={{ minHeight: "8em" }}
   >
     <div className="flex-grow-1 py-3">
-      <div className="d-flex flex-row justify-content-start">
-        <div className="m-2">{circle}</div>
-        <div className="d-flex flex-column justify-content-between align-items-start w-100">
-          <div className="w-100 d-flex flex-row justify-content-between align-items-start">
-            <div>
-              <b>{profile.name}</b>
-              <span className="text-muted">@{accountId}</span>
+      <Widget
+        src={`${ownerId}/widget/ProfileLine`}
+        props={{
+          accountId,
+          isEntity,
+          imageSize: "3em",
+          update: props.update,
+          additionalColumn: inboxView ? (
+            <></>
+          ) : (
+            <div className="d-flex flex-row justify-content-between align-items-center">
+              <Widget
+                src={`${ownerId}/widget/ActiveIndicator`}
+                props={{
+                  active,
+                  activeText: "Available",
+                  inactiveText: "Not avilable",
+                }}
+              />
+              <Widget
+                src={`${ownerId}/widget/CardMenu`}
+                props={{
+                  update: props.update,
+                  items: [
+                    {
+                      text: "Propose contribution",
+                      icon: "bi-person-up",
+                      id: "contribute",
+                    },
+                    {
+                      text: "Invite to contribute",
+                      icon: "bi-person-plus",
+                      id: "invite",
+                    },
+                    {
+                      text: "View details",
+                      icon: "bi-info-circle",
+                      id: "info",
+                    },
+                    {
+                      text: "Share",
+                      icon: "bi-arrow-up-right",
+                      id: "share",
+                    },
+                  ],
+                }}
+              />
             </div>
-            <div className="text-success">
-              <i className="bi-circle-fill" />
-              <span className="ms-1">Available</span>
-            </div>
-          </div>
-          {contributorType}
-          <div className="text-truncate text-muted">
-            {tags.length > 0 ? (
-              <>
-                {tags.map((tag) => (
-                  <span
-                    className="d-inline-block mx-1 py-1 px-2 badge border border-secondary text-secondary text-muted text-center"
-                    key={tag}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className="text-truncate my-2">{profile.description}</div>
-        </div>
-      </div>
-    </div>
-    <div className="vr mx-3" />
-    <div className="d-flex flex-row justify-content-end align-items-start py-3">
-      <a
-        className="btn btn-outline-secondary me-2"
-        href={`https://near.social/#/${ownerId}/widget/Contributor?accountId=${accountId}`}
-      >
-        View details
-      </a>
-      <a className="btn btn-outline-secondary">
-        <i className="bi-box-arrow-up-right" />
-      </a>
+          ),
+          additionalRow: (
+            <>
+              <div className="d-flex flex-row justify-content-between align-items-center">
+                <i
+                  className={`d-block ${isEntity ? "bi-diagram-2" : "bi-person"
+                    }`}
+                />
+                <span className="ms-2">
+                  {isEntity ? "Organization" : "Individual contributor"}
+                </span>
+              </div>
+              <Widget src={`${ownerId}/widget/Tags`} props={{ tags }} />
+              <Widget
+                src={`${ownerId}/widget/DescriptionArea`}
+                props={{
+                  description:
+                    contributor.resume ||
+                    entity?.description ||
+                    profile.description,
+                }}
+              />
+            </>
+          ),
+        }}
+      />
     </div>
   </div>
 );
 
 return (
-  <div className="card">
-    <div className="card-body px-3 py-0">{body}</div>
+  <div className="border-bottom border-secondary-subtle">
+    <div className="px-3 py-0">{body}</div>
   </div>
 );

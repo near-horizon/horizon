@@ -55,37 +55,33 @@ const createNewDropdown = (
   </div>
 );
 
-const contentSelectButton = ({ id, text, icon }) => (
-  <a
-    className={`btn ${state.content === id ? "btn-secondary" : "btn-outline-secondary"
-      }`}
-    href={`https://near.social/#/${ownerId}/widget/Index?tab=dashboard&content=${id}${props.search ? "&search=" + props.search : ""
-      }`}
-    onClick={() => State.update({ content: id })}
-  >
-    <i className={icon} />
-    <span>{text}</span>
-  </a>
-);
-
 const contentSelector = (
-  <div className="btn-group" role="group" aria-label="Content Tab Selector">
-    {contentSelectButton({
-      id: "projects",
-      text: "Projects",
-      icon: "bi-boxes",
-    })}
-    {contentSelectButton({
-      id: "contributors",
-      text: "Contributors",
-      icon: "bi-person",
-    })}
-    {contentSelectButton({
-      id: "requests",
-      text: "Requests",
-      icon: "bi-ui-checks-grid",
-    })}
-  </div>
+  <Widget
+    src={`${ownerId}/widget/TabSelector`}
+    props={{
+      tab: "dashboard",
+      content: state.content,
+      search: state.search,
+      update: (content) => State.update({ content }),
+      buttons: [
+        {
+          id: "projects",
+          text: "Projects",
+          icon: "bi-boxes",
+        },
+        {
+          id: "contributors",
+          text: "Contributors",
+          icon: "bi-person",
+        },
+        {
+          id: "requests",
+          text: "Requests",
+          icon: "bi-ui-checks-grid",
+        },
+      ],
+    }}
+  />
 );
 
 const searchBar = (
@@ -125,7 +121,11 @@ const content = {
   requests: (
     <Widget
       src={`${ownerId}/widget/NeedList`}
-      props={{ search: state.search, update: props.update }}
+      props={{
+        search: state.search,
+        update: props.update,
+        notStandalone: true,
+      }}
     />
   ),
 }[state.content];

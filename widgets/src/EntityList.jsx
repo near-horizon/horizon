@@ -14,7 +14,7 @@ if (!allEntities || allEntities.length === 0) {
 return (
   <>
     {allEntities.map(([accountId]) => (
-      <div key={accountId} className="mb-2">
+      <div key={accountId} className="mb-4">
         <Widget
           src={`${ownerId}/widget/Entity`}
           props={{ accountId, notStandalone: true, update: props.update }}
