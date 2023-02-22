@@ -25,6 +25,10 @@ pub enum Events {
         description: String,
         contribution_type: ContributionType,
     },
+    RejectContribution {
+        entity_id: AccountId,
+        contributor_id: AccountId,
+    },
     ApproveContribution {
         entity_id: AccountId,
         contributor_id: AccountId,

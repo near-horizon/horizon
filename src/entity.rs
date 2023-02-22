@@ -215,6 +215,23 @@ impl Contract {
             .collect()
     }
 
+    /// List out entities that account ID is admin for.
+    pub fn get_admin_entities(&self, account_id: AccountId) -> HashMap<AccountId, Entity> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), c)| {
+                (contributor_id == &account_id
+                    && Contribution::from(c.clone())
+                        .permissions
+                        .contains(&Permission::Admin))
+                .then_some((
+                    entity_id.clone(),
+                    self.entities.get(entity_id).unwrap().clone().into(),
+                ))
+            })
+            .collect()
+    }
+
     /// List single entity details.
     pub fn get_entity(&self, account_id: AccountId) -> Entity {
         self.entities
@@ -222,6 +239,11 @@ impl Contract {
             .expect("ERR_NO_ENTITY")
             .clone()
             .into()
+    }
+
+    /// Check if account ID is an entity.
+    pub fn check_is_entity(&self, account_id: AccountId) -> bool {
+        self.entities.contains_key(&account_id)
     }
 
     /// List invites sent by entity with given account ID.

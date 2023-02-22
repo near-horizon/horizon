@@ -216,6 +216,18 @@ impl Contract {
         .emit();
     }
 
+    /// Entity manager (or higher) rejects a contribution request.
+    pub fn reject_contribution(&mut self, entity_id: AccountId, contributor_id: AccountId) {
+        self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
+        let key = (entity_id.clone(), contributor_id.clone());
+        self.requests.remove(&key);
+        Events::RejectContribution {
+            entity_id,
+            contributor_id,
+        }
+        .emit();
+    }
+
     /// Entity manager (or higher) approves a contribution request.
     pub fn approve_contribution(
         &mut self,
@@ -363,6 +375,20 @@ impl Contract {
             .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
                 (key_entity_id == &entity_id)
                     .then_some((account_id.clone(), versioned_contribution.clone().into()))
+            })
+            .collect()
+    }
+
+    /// Get all contribution requests this account can manage.
+    pub fn get_admin_contribution_requests(
+        &self,
+        account_id: AccountId,
+    ) -> Vec<(AccountId, AccountId)> {
+        self.requests
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), _)| {
+                self.check_is_manager_or_higher(entity_id, &account_id)
+                    .then_some((entity_id.clone(), contributor_id.clone()))
             })
             .collect()
     }

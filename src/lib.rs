@@ -72,8 +72,19 @@ impl Contract {
 
     /// Checks if given account has permissions of a manager or higher for given entity.
     fn assert_manager_or_higher(&self, entity_id: &AccountId, account_id: &AccountId) {
+        require!(
+            self.check_is_manager_or_higher(entity_id, account_id),
+            "ERR_NO_PERMISSION"
+        );
+    }
+
+    pub fn check_is_manager_or_higher(
+        &self,
+        entity_id: &AccountId,
+        account_id: &AccountId,
+    ) -> bool {
         if account_id == &self.moderator_id {
-            return;
+            return true;
         }
         let contribution = Contribution::from(
             self.contributions
@@ -81,10 +92,7 @@ impl Contract {
                 .expect("ERR_NO_CONTRIBUTION")
                 .clone(),
         );
-        require!(
-            contribution.permissions.contains(&Permission::Admin),
-            "ERR_NO_PERMISSION"
-        );
+        contribution.permissions.contains(&Permission::Admin)
     }
 
     /// Checks if given account is registered as a contributor.
