@@ -344,12 +344,17 @@ impl Contract {
     }
 
     /// Get all the contributions for this entity.
-    pub fn get_entity_contributions(&self, entity_id: AccountId) -> Vec<(AccountId, Contribution)> {
+    pub fn get_entity_contributions(
+        &self,
+        account_id: AccountId,
+    ) -> HashMap<AccountId, Contribution> {
         self.contributions
             .into_iter()
-            .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
-                (key_entity_id == &entity_id)
-                    .then_some((account_id.clone(), versioned_contribution.clone().into()))
+            .filter_map(|((entity_id, contributor_id), versioned_contribution)| {
+                (entity_id == &account_id).then_some((
+                    contributor_id.clone(),
+                    versioned_contribution.clone().into(),
+                ))
             })
             .collect()
     }
