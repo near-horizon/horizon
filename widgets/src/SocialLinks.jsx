@@ -12,15 +12,11 @@ const supportedLinks = [
 const linksList = supportedLinks
   .filter(({ name }) => name in links)
   .map(({ name, url, icon }) => (
-    <li>
+    <li className="list-group-item border-0 p-2">
       <a href={`${url}${links[name]}`} target="_blank">
-        <i className={icon} />
+        <i className={`${icon} text-secondary fs-5`} />
       </a>
     </li>
   ));
 
-return (
-  <ul className="d-flex flex-row justify-content-between align-items-center">
-    {linksList}
-  </ul>
-);
+return <ul className="list-group list-group-horizontal">{linksList}</ul>;

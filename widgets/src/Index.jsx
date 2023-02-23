@@ -1,8 +1,8 @@
 const ownerId = "contribut3.near";
 
-initState({
-  search: "",
-  content: props.content ?? "entities",
+State.init({
+  search: props.search ?? "",
+  content: props.content,
   tab: props.tab ?? "dashboard",
 });
 
@@ -22,26 +22,36 @@ const isContributor = Near.view(
   true
 );
 
-const update = (tab) => State.update({ tab });
+const update = (state) => State.update(state);
 
 const tabContent = {
   dashboard: (
     <Widget
       src={`${ownerId}/widget/Dashboard`}
-      props={{ content: props.content, search: props.search, update }}
+      props={{ content: state.content, search: state.search, update }}
     />
   ),
-  profile: <Widget src={`${ownerId}/widget/Profile`} />,
+  contributor: (
+    <Widget
+      src={`${ownerId}/widget/Profile`}
+      props={{
+        content: state.content,
+        search: state.search,
+        accountId: props.accountId,
+        update,
+      }}
+    />
+  ),
   inbox: (
     <Widget
       src={`${ownerId}/widget/Inbox`}
-      props={{ content: props.content, search: props.search, update }}
+      props={{ content: state.content, search: state.search, update }}
     />
   ),
   entities: (
     <Widget
       src={`${ownerId}/widget/ManageEntities`}
-      props={{ content: props.content, search: props.search, update }}
+      props={{ content: state.content, search: state.search, update }}
     />
   ),
   entity: (
@@ -49,8 +59,8 @@ const tabContent = {
       src={`${ownerId}/widget/EntityPage`}
       props={{
         accountId: props.accountId,
-        search: props.search,
-        content: props.content,
+        search: state.search,
+        content: state.content,
         update,
       }}
     />
@@ -61,8 +71,29 @@ const tabContent = {
       props={{
         accountId: props.accountId,
         cid: props.cid,
-        search: props.search,
-        content: props.content,
+        search: state.search,
+        content: state.content,
+        update,
+      }}
+    />
+  ),
+  create: (
+    <Widget
+      src={`${ownerId}/widget/CreatePage`}
+      props={{
+        search: state.search,
+        content: state.content,
+        kind: props.kind,
+        update,
+      }}
+    />
+  ),
+  contributions: (
+    <Widget
+      src={`${ownerId}/widget/ContributionsPage`}
+      props={{
+        search: state.search,
+        content: state.content,
         update,
       }}
     />

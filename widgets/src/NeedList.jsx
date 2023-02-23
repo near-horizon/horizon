@@ -1,5 +1,5 @@
 const ownerId = "contribut3.near";
-const search = props.search ?? "";
+const search = props.search;
 const accountId = props.accountId;
 
 const needs = accountId
@@ -58,7 +58,6 @@ return (
           props={{
             accountId,
             cid,
-            notStandalone: props.notStandalone,
             update: props.update,
           }}
         />

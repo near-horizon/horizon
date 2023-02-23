@@ -11,6 +11,7 @@ const ownerId = "contribut3.near";
 const accountId = props.accountId ?? "";
 const kind = props.kind ? [{ name: props.kind }] : [];
 const startDate = props.startDate ?? createDate();
+const id = props.id;
 
 const allContributionTypes = (
   Near.view(ownerId, "get_contribution_types", {}, "final", true) ?? []
@@ -24,7 +25,7 @@ const convertType = (contributionType) => {
   return { Other: contributionType.name };
 };
 
-initState({
+State.init({
   entityId: [],
   accountId,
   permissions: [],
@@ -35,7 +36,23 @@ initState({
   forbiddenIds: new Set(),
 });
 
-const accountIdInput = (
+const accountIdInput = accountId ? (
+  <div>
+    <label htmlFor="account-id" className="text-muted fw-semibold">
+      You're inviting:
+    </label>
+    <div
+      className="rounded-3 bg-light"
+      style={{ height: "5em" }}
+      id="account-id"
+    >
+      <Widget
+        src={`${ownerId}/widget/ProfileLine`}
+        props={{ accountId, imageSize: "4em" }}
+      />
+    </div>
+  </div>
+) : (
   <div className="col-lg-12 mb-2">
     <Widget
       src={`${ownerId}/widget/ValidatedAccountIdInput`}
@@ -44,7 +61,7 @@ const accountIdInput = (
         value: state.accountId,
         update: (accountId, accountIdValid) =>
           State.update({ accountId, accountIdValid }),
-        forbiddenIds,
+        forbiddenIds: state.forbiddenIds,
       }}
     />
   </div>
@@ -56,6 +73,7 @@ const descriptionInput = (
       src={`${ownerId}/widget/DescriptionInput`}
       props={{
         description: state.description,
+        text: "Details:",
         update: (description) => State.update({ description }),
       }}
     />
@@ -109,12 +127,10 @@ const permissionsInput = (
 );
 
 const entityIdInput = (
-  <div className="col-lg-12 mb-2">
-    <label htmlFor="entity-id-input">Account ID of entity:</label>
-    <Typeahead
-      id="entity-id-input"
-      labelKey="name"
-      onChange={(entityId) => {
+  <Widget
+    src={`${ownerId}/widget/AdminEntityAccountIdInput`}
+    props={{
+      update: (entityId) => {
         State.update({ entityId });
         Near.asyncView(
           ownerId,
@@ -126,21 +142,11 @@ const entityIdInput = (
             forbiddenIds: new Set(Object.keys(invites)),
           })
         );
-      }}
-      options={(
-        Near.view(
-          ownerId,
-          "get_contributor_admin_entities",
-          { account_id: context.accountId },
-          "final",
-          true
-        ) ?? []
-      ).map((name) => ({ name }))}
-      placeholder="contribut3.near, social.near..."
-      selected={state.entityId}
-      positionFixed
-    />
-  </div>
+      },
+      accountId: context.accountId,
+      selected: state.entityId,
+    }}
+  />
 );
 
 const onSubmit = () => {
@@ -163,30 +169,32 @@ const onSubmit = () => {
 const header = <div className="card-header">Invite contributor</div>;
 
 const body = (
-  <div className="card-body">
-    <div className="row">
-      {entityIdInput}
-      {accountIdInput}
-      {contributionTypeInput}
-      {startDateInput}
-      {permissionsInput}
-      {descriptionInput}
-    </div>
-
-    <a
-      className={`btn ${
-        !state.accountIdValid ? "btn-secondary" : "btn-primary"
-      } mb-2`}
-      onClick={onSubmit}
-    >
-      Invite
-    </a>
+  <div className="row">
+    {accountIdInput}
+    {entityIdInput}
+    {contributionTypeInput}
+    {startDateInput}
+    {permissionsInput}
+    {descriptionInput}
   </div>
 );
 
 return (
-  <div className="card">
-    {header}
-    {body}
-  </div>
+  <Widget
+    src={`${ownerId}/widget/Modal`}
+    props={{
+      title: "Invite to contribute",
+      confirmText: (
+        <>
+          <i className="bi-send" />
+          <span>Send invitation</span>
+        </>
+      ),
+      onConfirm: onSubmit,
+      hidden: props.hidden,
+      onClose: props.onClose,
+      body,
+      id,
+    }}
+  />
 );

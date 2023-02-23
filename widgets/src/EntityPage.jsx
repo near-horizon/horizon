@@ -1,7 +1,5 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId;
-const notStandalone = props.notStandalone ?? false;
-const isPreview = props.isPreview ?? false;
 
 if (!accountId) {
   return "Cannot show entity without account ID!";
@@ -24,8 +22,7 @@ const getContent = (content) => {
 };
 
 State.init({
-  content: getContent(props.content),
-  search: props.search ?? "",
+  contributionFormHidden: false,
 });
 
 const entity = Near.view(
@@ -45,12 +42,12 @@ const isAuthorized = Near.view(
 const contributions = Near.view(
   ownerId,
   "get_entity_contributions",
-  { entity_id: accountId },
+  { account_id: accountId },
   "final"
 );
 
-const [[founder]] = (contributions ?? []).filter((contribution) => {
-  const [_, details] = contribution;
+const [founder] = Object.keys(contributions ?? {}).filter((contribution) => {
+  const details = contributions[contribution];
   const all = [...details.history, details.current];
   return all.some((detail) => detail.description === "");
 });
@@ -87,24 +84,22 @@ const controls = isAuthorized ? (
 ) : (
   <div className="d-flex flex-column justify-content-start align-items-stretch">
     <a
-      className="btn me-2 mb-2 text-light"
-      style={{
-        backgroundColor: "#6941C6",
-        borderColor: "#6941C6",
-      }}
-    // href={`https://near.social/#/${ownerId}/widget/Entity?accountId=${accountId}`}
-    >
-      <i className="bi-person-plus" />
-      <span className="text-nowrap">Invite to contribute</span>
-    </a>
-    <a
       className="btn btn-success me-2 text-light"
       style={{ width: "13em" }}
-    // href={`https://near.social/#/${ownerId}/widget/Entity?accountId=${accountId}`}
+      onClick={() => State.update({ contributionFormHidden: false })}
     >
       <i className="bi-person-up" />
       <span className="text-nowrap">Propose contribution</span>
     </a>
+    <Widget
+      src={`${ownerId}/widget/ContributionRequestForm`}
+      props={{
+        id: `${accountId}ContributionRequestForm`,
+        entity: accountId,
+        hidden: state.contributionFormHidden,
+        onClose: () => State.update({ contributionFormHidden: true }),
+      }}
+    />
   </div>
 );
 
@@ -125,11 +120,13 @@ const body = (
                 <div className="d-flex flex-row justify-content-start align-items-center">
                   <span className="text-muted me-2">
                     Created{" "}
-                    {new Date(Number(entity.start_date)).toLocaleDateString()}
+                    {new Date(
+                      Number(contributor.start_date)
+                    ).toLocaleDateString()}
                   </span>
                   <Widget
                     src={`${ownerId}/widget/ActiveIndicator`}
-                    props={{ active: entity.status === "Active" }}
+                    props={{ active: contributor.status === "Active" }}
                   />
                 </div>
                 <Widget
@@ -142,7 +139,10 @@ const body = (
         />
       </div>
     </div>
-    <Markdown text={profile.description || "s ".repeat(1000)} />
+    <Widget
+      src={`${ownerId}/widget/DescriptionArea`}
+      props={{ description: profile.description }}
+    />
     <div className="d-flex flex-row justify-content-between align-items-center">
       <Widget
         src={`${ownerId}/widget/SocialLinks`}
@@ -181,10 +181,10 @@ const contentSelector = (
     src={`${ownerId}/widget/TabSelector`}
     props={{
       tab: "entity",
-      content: state.content,
-      search: state.search,
+      content: getContent(props.content),
+      search: props.search,
       accountId: props.accountId,
-      update: (content) => State.update({ content }),
+      update: (content) => props.update({ content }),
       buttons: [
         {
           id: "requests",
@@ -233,9 +233,9 @@ const searchBar = (
           <input
             className="form-control border-0"
             type="search"
-            value={state.search}
+            value={props.search}
             placeholder="Search"
-            onChange={(e) => State.update({ search: e.target.value })}
+            onChange={(e) => props.update({ search: e.target.value })}
           />
         </div>
       </div>
@@ -247,37 +247,42 @@ const content = {
   requests: (
     <Widget
       src={`${ownerId}/widget/NeedList`}
-      props={{ accountId, search: state.search, update: props.update }}
+      props={{ accountId, search: props.search, update: props.update }}
     />
   ),
   proposals: (
     <Widget
       src={`${ownerId}/widget/ContributionRequestList`}
-      props={{ accountId, search: state.search, update: props.update }}
+      props={{ accountId, search: props.search, update: props.update }}
     />
   ),
   contributions: (
     <Widget
       src={`${ownerId}/widget/ContributionList`}
-      props={{ search: state.search, update: props.update }}
+      props={{
+        accountId,
+        isEntity: true,
+        search: props.search,
+        update: props.update,
+      }}
     />
   ),
   contributors: (
     <Widget
       src={`${ownerId}/widget/ContributorList`}
-      props={{ accountId, search: state.search, update: props.update }}
+      props={{ accountId, search: props.search, update: props.update }}
     />
   ),
   invitations: (
     <Widget
       src={`${ownerId}/widget/InviteList`}
-      props={{ accountId, search: state.search, update: props.update }}
+      props={{ accountId, search: props.search, update: props.update }}
     />
   ),
-}[state.content];
+}[getContent(props.content)];
 
 return (
-  <div className="">
+  <div>
     <div className="mb-5">{body}</div>
     <div className="d-flex flex-row justify-content-between ps-3">
       {contentSelector}

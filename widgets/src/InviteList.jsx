@@ -1,5 +1,5 @@
 const ownerId = "contribut3.near";
-const search = props.search ?? "";
+const search = props.search;
 const accountId = props.accountId;
 
 const invites =

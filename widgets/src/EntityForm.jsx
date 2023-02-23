@@ -17,7 +17,7 @@ const forbiddenIds = new Set(
   )
 );
 
-initState({
+State.init({
   accountId,
   name: props.name ?? "",
   accountIdValid: true,
@@ -30,7 +30,7 @@ const accountIdInput = (
     <Widget
       src={`${ownerId}/widget/ValidatedAccountIdInput`}
       props={{
-        label: "Account ID of entity:",
+        label: "Project account ID *",
         value: state.accountId,
         update: (accountId, accountIdValid) =>
           State.update({ accountId, accountIdValid }),
@@ -45,7 +45,7 @@ const nameInput = (
     <Widget
       src={`${ownerId}/widget/NameInput`}
       props={{
-        label: "Name of entity:",
+        label: "Project name *",
         value: state.name,
         update: (name) => State.update({ name }),
       }}
@@ -57,7 +57,11 @@ const kindInput = (
   <div className="col-lg-6  mb-2">
     <Widget
       src={`${ownerId}/widget/EntityTypeInput`}
-      props={{ kind: state.kind, update: (kind) => State.update({ kind }) }}
+      props={{
+        kind: state.kind,
+        update: (kind) => State.update({ kind }),
+        text: "Type of project *",
+      }}
     />
   </div>
 );
@@ -68,7 +72,7 @@ const startDateInput = (
       src={`${ownerId}/widget/DateInput`}
       props={{
         id: "start-date",
-        text: " Start date of entity:",
+        text: "Founding date",
         date: state.startDate,
         update: (startDate) => State.update({ startDate }),
       }}
@@ -91,53 +95,32 @@ const onSubmit = () => {
   Near.call(ownerId, "add_entity", args);
 };
 
-const header = <div className="card-header">Create an entity</div>;
-
-const body = (
-  <div className="card-body">
-    <div className="row">
-      {accountIdInput}
-      {nameInput}
-      {kindInput}
-      {startDateInput}
-    </div>
-
-    <a
-      className={`btn ${
-        !state.accountIdValid ? "btn-secondary" : "btn-primary"
-      } mb-2`}
-      onClick={onSubmit}
-    >
-      Submit
-    </a>
-  </div>
-);
-
-const footer = (
-  <div className="card-footer">
-    Preview:
-    {state.accountIdValid ? (
-      <Widget
-        src={`${ownerId}/widget/Entity`}
-        props={{
-          isPreview: true,
-          accountId: state.accountId,
-          notStandalone: true,
-          entity: {
-            entity: state.entity,
-            kind: state.kind[0].name,
-            start_date: `${new Date(state.startDate).getTime()}`,
-          },
-        }}
-      />
-    ) : null}
-  </div>
-);
-
 return (
-  <div className="card">
-    {header}
-    {body}
-    {footer}
+  <div className="px-3" style={{ maxWidth: "45em" }}>
+    <h1 className="fs-2 mb-3 pb-3">Create new project</h1>
+    <div className="bg-light mb-3 p-4 rounded-2">
+      <div className="row">
+        {nameInput}
+        {accountIdInput}
+        {kindInput}
+        {startDateInput}
+      </div>
+    </div>
+    <div className="d-flex flex-row justify-content-between">
+      <a
+        className="btn btn-outline-secondary"
+        href={`https://near.social/#/${ownerId}/widget/Index?tab=dashboard`}
+        onClick={() => props.update("dashboard")}
+      >
+        Cancel
+      </a>
+      <a
+        className={`btn ${!state.accountIdValid ? "btn-secondary" : "btn-primary"
+          }`}
+        onClick={onSubmit}
+      >
+        Create project
+      </a>
+    </div>
   </div>
 );

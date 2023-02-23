@@ -10,11 +10,6 @@ const getContent = (content) => {
   return content;
 };
 
-State.init({
-  content: getContent(props.content),
-  search: props.search ?? "",
-});
-
 const header = (
   <div>
     <h1 className="fs-2">Dashboard</h1>
@@ -24,9 +19,14 @@ const header = (
   </div>
 );
 
-const createNewButton = ({ id, text, icon }) => (
+const createNewButton = ({ id, text, icon, kind }) => (
   <li>
-    <a className="dropdown-item" id={id}>
+    <a
+      className="dropdown-item"
+      href={`https://near.social/#/${ownerId}/widget/Index?tab=create&content=${id}${kind ? "&kind=" + kind : ""
+        }`}
+      onClick={() => props.update("create")}
+    >
       <i className={icon} />
       <span>{text}</span>
     </a>
@@ -52,14 +52,20 @@ const createNewDropdown = (
       <li>
         <hr className="dropdown-divider" />
       </li>
-      {createNewButton({ id: "project", text: "Project", icon: "bi-boxes" })}
+      {createNewButton({
+        id: "entity",
+        text: "Project",
+        icon: "bi-boxes",
+        kind: "Project",
+      })}
       <li>
         <hr className="dropdown-divider" />
       </li>
       {createNewButton({
-        id: "organization",
+        id: "entity",
         text: "Organization",
         icon: "bi-diagram-2",
+        kind: "Organization",
       })}
     </ul>
   </div>
@@ -70,9 +76,9 @@ const contentSelector = (
     src={`${ownerId}/widget/TabSelector`}
     props={{
       tab: "dashboard",
-      content: state.content,
-      search: state.search,
-      update: (content) => State.update({ content }),
+      content: getContent(props.content),
+      search: props.search,
+      update: (content) => props.update({ content }),
       buttons: [
         {
           id: "projects",
@@ -105,9 +111,9 @@ const searchBar = (
           <input
             className="form-control border-0"
             type="search"
-            value={state.search}
+            value={props.search}
             placeholder="Search"
-            onChange={(e) => State.update({ search: e.target.value })}
+            onChange={(e) => props.update({ search: e.target.value })}
           />
         </div>
       </div>
@@ -119,26 +125,22 @@ const content = {
   projects: (
     <Widget
       src={`${ownerId}/widget/EntityList`}
-      props={{ search: state.search, update: props.update }}
+      props={{ search: props.search, update: props.update }}
     />
   ),
   contributors: (
     <Widget
       src={`${ownerId}/widget/ContributorList`}
-      props={{ search: state.search, update: props.update }}
+      props={{ search: props.search, update: props.update }}
     />
   ),
   requests: (
     <Widget
       src={`${ownerId}/widget/NeedList`}
-      props={{
-        search: state.search,
-        update: props.update,
-        notStandalone: true,
-      }}
+      props={{ search: props.search, update: props.update }}
     />
   ),
-}[state.content];
+}[getContent(props.content)];
 
 return (
   <div>

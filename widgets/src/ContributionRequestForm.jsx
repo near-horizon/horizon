@@ -1,4 +1,6 @@
 const ownerId = "contribut3.near";
+const id = props.id;
+const need = props.need ?? null;
 const allContributionTypes = (
   Near.view(ownerId, "get_contribution_types", {}, "final", true) ?? []
 ).map((name) => ({ name }));
@@ -11,7 +13,7 @@ const convertType = (contributionType) => {
   return { Other: contributionType.name };
 };
 
-initState({
+State.init({
   // The entity to which to request a contribution.
   entity: props.entity ? [{ name: props.entity }] : [],
   // The description of the contribution request.
@@ -21,12 +23,12 @@ initState({
     : [],
 });
 
-const onClick = () => {
+const onSubmit = () => {
   const args = {
     entity_id: state.entity[0].name,
     description: state.description,
     contribution_type: convertType(state.contributionType[0]),
-    need: null,
+    need,
   };
 
   Near.call(ownerId, "request_contribution", args);
@@ -36,9 +38,25 @@ const existingEntities = (
   Near.view(ownerId, "get_entities", {}, "final") ?? []
 ).map(([accountId]) => ({ name: accountId }));
 
-const entityEditor = (
+const entityEditor = props.entity ? (
+  <div>
+    <label htmlFor="account-id" className="text-muted fw-semibold">
+      Contribute to:
+    </label>
+    <div
+      className="rounded-3 bg-light"
+      style={{ height: "5em" }}
+      id="account-id"
+    >
+      <Widget
+        src={`${ownerId}/widget/ProfileLine`}
+        props={{ accountId: props.entity, imageSize: "4em", isEntity: true }}
+      />
+    </div>
+  </div>
+) : (
   <div className="col-lg-12  mb-2">
-    <label htmlFor="enity-id">Entity account ID:</label>
+    <label htmlFor="enity-id">Contribute to:</label>
     <Typeahead
       id="entity-id"
       labelKey="name"
@@ -52,15 +70,14 @@ const entityEditor = (
 );
 
 const descriptionDiv = (
-  <div className="col-lg-12  mb-2">
-    <label htmlFor="description">Description:</label>
-    <textarea
-      id="description"
-      value={state.description}
-      type="text"
-      rows={6}
-      className="form-control"
-      onChange={(event) => State.update({ description: event.target.value })}
+  <div className="col-lg-12 mb-2">
+    <Widget
+      src={`${ownerId}/widget/DescriptionInput`}
+      props={{
+        description: state.description,
+        text: "Details:",
+        update: (description) => State.update({ description }),
+      }}
     />
   </div>
 );
@@ -78,45 +95,30 @@ const contributionTypeInput = (
   </div>
 );
 
-const header = <div className="card-header">Propose contribution</div>;
-
 const body = (
-  <div className="card-body">
-    <div className="row">
-      {entityEditor}
-      {descriptionDiv}
-      {contributionTypeInput}
-    </div>
-
-    <a className="btn btn-outline-primary mb-2" onClick={onClick}>
-      Submit
-    </a>
-  </div>
-);
-
-const footer = (
-  <div className="card-footer">
-    Preview:
-    <Widget
-      src={`${ownerId}/widget/ContributionRequest`}
-      props={{
-        isPreview: true,
-        id: 0, // irrelevant
-        contributorId: context.accountId,
-        entityId: state.entity[0].name,
-        contributionRequest: {
-          entity: state.entity[0].name,
-          description: state.description,
-        },
-      }}
-    />
+  <div className="row">
+    {entityEditor}
+    {contributionTypeInput}
+    {descriptionDiv}
   </div>
 );
 
 return (
-  <div className="card">
-    {header}
-    {body}
-    {footer}
-  </div>
+  <Widget
+    src={`${ownerId}/widget/Modal`}
+    props={{
+      title: "Propose contribution",
+      confirmText: (
+        <>
+          <i className="bi-send" />
+          <span>Send proposal</span>
+        </>
+      ),
+      onConfirm: onSubmit,
+      hidden: props.hidden,
+      onClose: props.onClose,
+      body,
+      id,
+    }}
+  />
 );

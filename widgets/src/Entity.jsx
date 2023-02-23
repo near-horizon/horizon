@@ -8,6 +8,10 @@ if (!accountId) {
   return "Cannot show entity without account ID!";
 }
 
+State.init({
+  contributionFormHidden: true,
+});
+
 const entity = Near.view(
   ownerId,
   "get_entity",
@@ -32,14 +36,14 @@ const isAuthorized = Near.view(
 const contributions = Near.view(
   ownerId,
   "get_entity_contributions",
-  { entity_id: accountId },
+  { account_id: accountId },
   "final"
 );
 
 const profile = Social.getr(`${accountId}/profile`);
 
-const [[founder]] = (contributions ?? []).filter((contribution) => {
-  const [_, details] = contribution;
+const [founder] = Object.keys(contributions ?? {}).filter((contribution) => {
+  const details = contributions[contribution];
   const all = [...details.history, details.current];
   return all.some((detail) => detail.description === "");
 });
@@ -74,16 +78,20 @@ const body = (
                     {
                       text: "Propose contribution",
                       icon: "bi-person-up",
-                    },
-                    {
-                      text: "Invite to contribute",
-                      icon: "bi-person-plus",
+                      id: "contribute",
+                      onClick: () =>
+                        State.update({ contributionFormHidden: false }),
                     },
                     {
                       text: "View details",
                       icon: "bi-info-circle",
                       href: `https://near.social/#/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`,
-                      onClick: () => props.update && props.update("entity"),
+                      onClick: () =>
+                        props.update({
+                          tab: "entity",
+                          content: "",
+                          search: "",
+                        }),
                     },
                     {
                       text: "Share",
@@ -91,6 +99,15 @@ const body = (
                       id: "share",
                     },
                   ],
+                }}
+              />
+              <Widget
+                src={`${ownerId}/widget/ContributionRequestForm`}
+                props={{
+                  id: `${accountId}ContributionRequestForm`,
+                  entity: accountId,
+                  hidden: state.contributionFormHidden,
+                  onClose: () => State.update({ contributionFormHidden: true }),
                 }}
               />
             </div>

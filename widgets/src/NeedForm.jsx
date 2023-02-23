@@ -15,14 +15,35 @@ const convertType = (contributionType) => {
   return { Other: contributionType.name };
 };
 
-initState({
+State.init({
   contributionType: [],
+  entityId: accountId ? [{ name: accountId }] : [],
   description: "",
 });
 
-if (!accountId) {
-  return "Cannot render contribution need form widget without account ID!";
-}
+const entityIdInput = (
+  <Widget
+    src={`${ownerId}/widget/AdminEntityAccountIdInput`}
+    props={{
+      label: "Request as:",
+      update: (entityId) => {
+        State.update({ entityId });
+        Near.asyncView(
+          ownerId,
+          "get_entity_invites",
+          { account_id: entityId[0].name },
+          "final"
+        ).then((invites) =>
+          State.update({
+            forbiddenIds: new Set(Object.keys(invites)),
+          })
+        );
+      },
+      accountId: context.accountId,
+      selected: state.entityId,
+    }}
+  />
+);
 
 const contributionTypeInput = (
   <div className="col-lg-12 mb-2">
@@ -37,16 +58,15 @@ const contributionTypeInput = (
   </div>
 );
 
-const descriptionDiv = (
-  <div className="col-lg-12  mb-2">
-    <label htmlFor="description">Description:</label>
-    <textarea
-      id="description"
-      value={state.description}
-      type="text"
-      rows={6}
-      className="form-control"
-      onChange={(event) => State.update({ description: event.target.value })}
+const descriptionInput = (
+  <div className="col-lg-12 mb-2">
+    <Widget
+      src={`${ownerId}/widget/DescriptionInput`}
+      props={{
+        description: state.description,
+        text: "Details:",
+        update: (description) => State.update({ description }),
+      }}
     />
   </div>
 );
@@ -57,7 +77,7 @@ const onSubmit = () => {
   }
 
   const args = {
-    entity_id: accountId,
+    entity_id: state.entityId[0].name,
     description: state.description,
     contribution_type: convertType(state.contributionType[0]),
   };
@@ -65,52 +85,33 @@ const onSubmit = () => {
   Near.call(ownerId, "post_contribution_need", args);
 };
 
-const header = <div className="card-header">Post need</div>;
-
-const body = (
-  <div className="card-body">
-    <div className="row">
-      {descriptionDiv}
-      {contributionTypeInput}
-    </div>
-
-    <a
-      className={`btn ${
-        state.contributionType.length !== 1 || state.description.length === 0
-          ? "btn-secondary"
-          : "btn-primary"
-      } mb-2`}
-      onClick={onSubmit}
-    >
-      Post
-    </a>
-  </div>
-);
-
-const footer = (
-  <div className="card-footer">
-    Preview:
-    {state.accountIdValid ? (
-      <Widget
-        src={`${ownerId}/widget/Need`}
-        props={{
-          isPreview: true,
-          accountId: state.accountId,
-          contributionNeed: {
-            description: state.description,
-            contribution_type: convertType(state.contributionType[0]),
-            active: true,
-          },
-        }}
-      />
-    ) : null}
-  </div>
-);
-
 return (
-  <div className="card">
-    {header}
-    {body}
-    {footer}
+  <div className="px-3" style={{ maxWidth: "45em" }}>
+    <h1 className="fs-2 mb-3 pb-3">Create new contribution request</h1>
+    <div className="bg-light mb-3 p-4 rounded-2">
+      <div className="row">
+        {entityIdInput}
+        {contributionTypeInput}
+        {descriptionInput}
+      </div>
+    </div>
+    <div className="d-flex flex-row justify-content-between">
+      <a
+        className="btn btn-outline-secondary"
+        href={`https://near.social/#/${ownerId}/widget/Index?tab=dashboard`}
+        onClick={() => props.update("dashboard")}
+      >
+        Cancel
+      </a>
+      <a
+        className={`btn ${state.contributionType.length !== 1 || state.description.length === 0
+            ? "btn-secondary"
+            : "btn-primary"
+          }`}
+        onClick={onSubmit}
+      >
+        Create request
+      </a>
+    </div>
   </div>
 );

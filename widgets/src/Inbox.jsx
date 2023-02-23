@@ -10,11 +10,6 @@ const getContent = (content) => {
   return content;
 };
 
-State.init({
-  content: getContent(props.content),
-  search: props.search ?? "",
-});
-
 const proposalsCount = (
   Near.view(
     ownerId,
@@ -49,9 +44,9 @@ const contentSelector = (
     src={`${ownerId}/widget/TabSelector`}
     props={{
       tab: "inbox",
-      content: state.content,
-      search: state.search,
-      update: (content) => State.update({ content }),
+      content: getContent(props.content),
+      search: props.search,
+      update: (content) => props.update({ content }),
       buttons: [
         {
           id: "proposals",
@@ -81,9 +76,9 @@ const searchBar = (
           <input
             className="form-control border-0"
             type="search"
-            value={state.search}
+            value={props.search}
             placeholder="Search"
-            onChange={(e) => State.update({ search: e.target.value })}
+            onChange={(e) => props.update({ search: e.target.value })}
           />
         </div>
       </div>
@@ -95,16 +90,16 @@ const content = {
   proposals: (
     <Widget
       src={`${ownerId}/widget/ContributionRequestList`}
-      props={{ search: state.search, update: props.update }}
+      props={{ search: props.search, update: props.update }}
     />
   ),
   invitations: (
     <Widget
       src={`${ownerId}/widget/InviteList`}
-      props={{ search: state.search, update: props.update }}
+      props={{ search: props.search, update: props.update }}
     />
   ),
-}[state.content];
+}[getContent(state.content)];
 
 return (
   <div>

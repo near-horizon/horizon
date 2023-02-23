@@ -1,9 +1,5 @@
 const ownerId = "contribut3.near";
 
-State.init({
-  selected: props.tab ?? "dashboard",
-});
-
 const proposalsCount = (
   Near.view(
     ownerId,
@@ -28,13 +24,10 @@ const inboxCount = proposalsCount + invitesCount;
 
 const navItem = ({ text, icon, id, count }) => (
   <a
-    className={`nav-link mt-2 rounded-3 p-2 ${id === state.selected ? "bg-secondary" : ""
+    className={`nav-link mt-2 rounded-3 p-2 ${id === props.tab ? "bg-secondary" : ""
       }`}
     href={`https://near.social/#/${ownerId}/widget/Index?tab=${id}`}
-    onClick={() => {
-      State.update({ selected: id });
-      props.update && props.update(id);
-    }}
+    onClick={() => props.update({ tab: id, content: "", search: "" })}
   >
     <i className={icon} />
     <span>{text}</span>
@@ -64,7 +57,6 @@ return (
       icon: "bi-house",
       id: "dashboard",
     })}
-    {/* {navItem({ text: "Profile", link: "#", icon: "bi-person", id: "profile" })} */}
     {navItem({
       text: "Inbox",
       icon: "bi-envelope",
@@ -87,5 +79,9 @@ return (
       icon: "bi-info-square",
       id: "about",
     })}
+    <a className="nav-link mt-2 rounded-3 p-2" href="https://near.social/#/">
+      <i className="bi-escape" />
+      <span>Exit application</span>
+    </a>
   </div>
 );

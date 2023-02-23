@@ -13,7 +13,12 @@ const invite = Near.view(
   "final"
 );
 
-const descriptionArea = <Markdown text={invite.description} />;
+const descriptionArea = (
+  <Widget
+    src={`${ownerId}/widget/DescriptionArea`}
+    props={{ description: invite.description }}
+  />
+);
 
 const controls =
   contributorId === context.accountId ? (

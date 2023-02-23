@@ -17,7 +17,7 @@ return (
       <div key={accountId} className="mb-4">
         <Widget
           src={`${ownerId}/widget/Entity`}
-          props={{ accountId, notStandalone: true, update: props.update }}
+          props={{ accountId, update: props.update }}
         />
       </div>
     ))}

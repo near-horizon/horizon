@@ -9,6 +9,10 @@ if (!accountId || !cid) {
   return "Cannot render contribution need widget without account ID or CID!";
 }
 
+State.init({
+  contributionFormHidden: true,
+});
+
 const isContributor = Near.view(
   ownerId,
   "check_is_contributor",
@@ -66,7 +70,7 @@ const body = (
       <div className="d-flex flex-row justify-content-between align-items-start">
         <a
           href={`https://near.social/#/${ownerId}/widget/Index?tab=need&accountId=${accountId}&cid=${cid}`}
-          onClick={() => props.update("need")}
+          onClick={() => props.update({ tab: "need", content: "", search: "" })}
         >
           <h4>Looking for {contributionNeed.contribution_type}</h4>
         </a>
@@ -88,6 +92,8 @@ const body = (
                   text: "Propose contribution",
                   icon: "bi-person-up",
                   id: "contribute",
+                  onClick: () =>
+                    State.update({ contributionFormHidden: false }),
                 },
                 {
                   text: "View details",
@@ -100,6 +106,17 @@ const body = (
                   id: "share",
                 },
               ],
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/ContributionRequestForm`}
+            props={{
+              id: `${accountId}ContributionRequestForm`,
+              entity: accountId,
+              hidden: state.contributionFormHidden,
+              need: cid,
+              contributionType: contributionNeed.contribution_type,
+              onClose: () => State.update({ contributionFormHidden: true }),
             }}
           />
         </div>

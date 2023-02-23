@@ -14,7 +14,7 @@ const convertType = (contributionType) => {
   return { Other: contributionType.name };
 };
 
-initState({
+State.init({
   contributionTypes: [],
   skills: [],
   resume: "",

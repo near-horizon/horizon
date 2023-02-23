@@ -16,7 +16,7 @@ if (!isModerator) {
   return "Loading...";
 }
 
-initState({
+State.init({
   accountId: "",
   valid: true,
 });

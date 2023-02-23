@@ -92,7 +92,7 @@ const body = (
       <Widget
         src={`${ownerId}/widget/ProfileLine`}
         props={{
-          accountId,
+          accountId: contributorId,
           imageSize: "3em",
           update: props.update,
           additionalText: (

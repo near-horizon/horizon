@@ -7,6 +7,10 @@ if (!accountId) {
   return "Cannot show contributor without account ID!";
 }
 
+State.init({
+  inviteFormHidden: true,
+});
+
 const contributor = isPreview
   ? props.contributor
   : Near.view(
@@ -43,7 +47,7 @@ const contributionTypes = contributor.contribution_types.reduce(
   {}
 );
 
-if ("Other" in contributionTypes) {
+if (contributionTypes && "Other" in contributionTypes) {
   contributionTypes[contributionTypes.Other] = "";
   delete contributionTypes.Other;
 }
@@ -87,19 +91,21 @@ const body = (
                   update: props.update,
                   items: [
                     {
-                      text: "Propose contribution",
-                      icon: "bi-person-up",
-                      id: "contribute",
-                    },
-                    {
                       text: "Invite to contribute",
                       icon: "bi-person-plus",
                       id: "invite",
+                      onClick: () => State.update({ inviteFormHidden: false }),
                     },
                     {
                       text: "View details",
                       icon: "bi-info-circle",
-                      id: "info",
+                      href: `https://near.social/#/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`,
+                      onClick: () =>
+                        props.update({
+                          tab: "contributor",
+                          content: "",
+                          search: "",
+                        }),
                     },
                     {
                       text: "Share",
@@ -107,6 +113,15 @@ const body = (
                       id: "share",
                     },
                   ],
+                }}
+              />
+              <Widget
+                src={`${ownerId}/widget/InviteForm`}
+                props={{
+                  id: `${accountId}InviteForm`,
+                  accountId,
+                  hidden: state.inviteFormHidden,
+                  onClose: () => State.update({ inviteFormHidden: true }),
                 }}
               />
             </div>

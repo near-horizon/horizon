@@ -16,11 +16,6 @@ const getContent = (content) => {
   return content;
 };
 
-State.init({
-  content: getContent(props.content),
-  search: props.search ?? "",
-});
-
 const need = Near.view(
   ownerId,
   "get_contribution_need",
@@ -133,11 +128,11 @@ const contentSelector = (
     src={`${ownerId}/widget/TabSelector`}
     props={{
       tab: "need",
-      content: state.content,
-      search: state.search,
+      content: getContent(props.content),
+      search: props.search,
       accountId: props.accountId,
       cid: props.cid,
-      update: (content) => State.update({ content }),
+      update: (content) => props.update({ content }),
       buttons: [
         {
           id: "contributors",
@@ -167,9 +162,9 @@ const searchBar = (
           <input
             className="form-control border-0"
             type="search"
-            value={state.search}
+            value={props.search}
             placeholder="Search"
-            onChange={(e) => State.update({ search: e.target.value })}
+            onChange={(e) => props.update({ search: e.target.value })}
           />
         </div>
       </div>
@@ -181,21 +176,16 @@ const content = {
   proposals: (
     <Widget
       src={`${ownerId}/widget/ContributionRequestList`}
-      props={{ accountId, search: state.search, update: props.update, cid }}
+      props={{ accountId, search: props.search, update: props.update, cid }}
     />
   ),
   contributors: (
     <Widget
       src={`${ownerId}/widget/ContributorList`}
-      props={{ accountId, search: state.search, update: props.update, cid }}
+      props={{ accountId, search: props.search, update: props.update, cid }}
     />
   ),
-  // invitations: ( <Widget
-  //     src={`${ownerId}/widget/InviteList`}
-  //     props={{ accountId, search: state.search, update: props.update }}
-  //   />
-  // ),
-}[state.content];
+}[getContent(props.content)];
 
 return (
   <div className="">
