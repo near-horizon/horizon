@@ -105,6 +105,7 @@ const body = (
                           tab: "contributor",
                           content: "",
                           search: "",
+                          accountId,
                         }),
                     },
                     {

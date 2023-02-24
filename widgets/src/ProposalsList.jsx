@@ -1,42 +1,43 @@
 const ownerId = "contribut3.near";
+const search = props.search ?? "";
+const accountId = props.accountId;
 
-const entities = Near.view(
-  ownerId,
-  "get_contributor_admin_entities",
-  { account_id: context.accountId },
-  "final",
-  true
-);
+const requests =
+  Near.view(
+    ownerId,
+    "get_contributor_contribution_requests",
+    { account_id: context.accountId },
+    "final",
+    true
+  ) ?? [];
 
-if (!entities) {
+if (!requests) {
   return "Loading...";
 }
 
-if (
-  !Array.isArray(entities) ||
-  (Array.isArray(entities) && entities.length === 0)
-) {
-  return "No entities with Admin access for your account!";
+if (Array.isArray(requests) && requests.length === 0) {
+  return "No proposals found!";
 }
 
-const allEntities = entities.sort((a, b) => a.localeCompare(b));
+const allRequests = requests.filter(([entityId]) => entityId.includes(search));
 
-const allNeeds = allEntities.reduce(
-  (needs, accountId) => [
-    ...needs,
-    Near.view(
-      ownerId,
-      "get_entity_contribution_needs",
-      { account_id: accountId },
-      "final",
-      true
-    ),
-  ],
-  []
+if (!allRequests || allRequests.length === 0) {
+  return "No proposals match search criteria!";
+}
+
+return (
+  <>
+    {allRequests.map(([entityId]) => (
+      <div key={contributorId} className="mt-3">
+        <Widget
+          src={`${ownerId}/widget/ContributionRequest`}
+          props={{
+            entityId: entityId,
+            contributorId: accountId,
+            update: props.update,
+          }}
+        />
+      </div>
+    ))}
+  </>
 );
-
-if (!allNeeds[0]) {
-  return "Loading...";
-}
-
-return <div></div>;

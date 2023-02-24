@@ -25,7 +25,43 @@ State.init({
   startDate,
 });
 
-const accountIdInput = (
+if (accountId) {
+  Near.asyncView(
+    ownerId,
+    "get_entity",
+    { account_id: accountId },
+    "final"
+  ).then((entity) => {
+    const date = new Date(Number(entity.start_date));
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+
+    State.update({
+      name: entity.name,
+      kind: [{ name: entity.kind }],
+      startDate: `${year}-${month}-${day}`,
+    });
+  });
+}
+
+const accountIdInput = accountId ? (
+  <div>
+    <label htmlFor="account-id" className="text-muted fw-semibold">
+      Project account ID
+    </label>
+    <div
+      className="rounded-3 bg-light"
+      style={{ height: "5em" }}
+      id="account-id"
+    >
+      <Widget
+        src={`${ownerId}/widget/ProfileLine`}
+        props={{ accountId, imageSize: "4em", isEntity: true }}
+      />
+    </div>
+  </div>
+) : (
   <div className="col-lg-12 mb-2">
     <Widget
       src={`${ownerId}/widget/ValidatedAccountIdInput`}
@@ -97,11 +133,13 @@ const onSubmit = () => {
 
 return (
   <div className="px-3" style={{ maxWidth: "45em" }}>
-    <h1 className="fs-2 mb-3 pb-3">Create new project</h1>
+    <h1 className="fs-2 mb-3 pb-3">
+      {accountId ? "Create new" : "Edit"} project
+    </h1>
     <div className="bg-light mb-3 p-4 rounded-2">
       <div className="row">
-        {nameInput}
         {accountIdInput}
+        {nameInput}
         {kindInput}
         {startDateInput}
       </div>
@@ -109,8 +147,8 @@ return (
     <div className="d-flex flex-row justify-content-between">
       <a
         className="btn btn-outline-secondary"
-        href={`https://near.social/#/${ownerId}/widget/Index?tab=dashboard`}
-        onClick={() => props.update("dashboard")}
+        href={`https://near.social/#/${ownerId}/widget/Index?tab=home`}
+        onClick={() => props.update({ tab: "home" })}
       >
         Cancel
       </a>

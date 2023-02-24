@@ -14,7 +14,15 @@ return (
         href={`https://near.social/#/${ownerId}/widget/Index?tab=${tab}&content=${id}${props.search ? "&search=" + props.search : ""
           }${accountId ? "&accountId=" + accountId : ""}${cid ? "&cid=" + cid : ""
           }`}
-        onClick={() => props.update(id)}
+        onClick={() =>
+          props.update({
+            tab,
+            content: id,
+            search: props.search,
+            accountId,
+            cid,
+          })
+        }
         key={id}
       >
         <i className={icon} />

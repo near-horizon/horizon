@@ -70,7 +70,15 @@ const body = (
       <div className="d-flex flex-row justify-content-between align-items-start">
         <a
           href={`https://near.social/#/${ownerId}/widget/Index?tab=need&accountId=${accountId}&cid=${cid}`}
-          onClick={() => props.update({ tab: "need", content: "", search: "" })}
+          onClick={() =>
+            props.update({
+              tab: "need",
+              content: "",
+              search: "",
+              accountId,
+              cid,
+            })
+          }
         >
           <h4>Looking for {contributionNeed.contribution_type}</h4>
         </a>

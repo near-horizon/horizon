@@ -11,7 +11,7 @@ const requests =
         ? "get_need_contribution_requests"
         : "get_entity_contribution_requests"
       : "get_admin_contribution_requests",
-    accountId ? { entity_id: accountId } : { account_id: context.accountId },
+    { account_id: accountId || context.accountId, ...(cid ? { cid } : {}) },
     "final",
     true
   ) ?? [];
@@ -41,7 +41,7 @@ return (
         <Widget
           src={`${ownerId}/widget/ContributionRequest`}
           props={{
-            entityId: accountId || entityId,
+            entityId: accountId ? accountId : entityId,
             contributorId: accountId ? entityId : contributorId,
             update: props.update,
           }}

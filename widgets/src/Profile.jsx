@@ -5,16 +5,6 @@ if (!accountId) {
   return "Cannot show contributor without account ID!";
 }
 
-const availableContent = ["contributions"];
-
-const getContent = (content) => {
-  if (!content || !availableContent.includes(content)) {
-    return "contributions";
-  }
-
-  return content;
-};
-
 State.init({
   inviteFormHidden: true,
 });
@@ -77,6 +67,7 @@ const body = (
           props={{
             accountId,
             imageSize: "5em",
+            isEntity: false,
             update: props.update,
             additionalColumn: controls,
             additionalRow: (
@@ -111,63 +102,25 @@ const body = (
   </div>
 );
 
-const contentSelector = (
-  <Widget
-    src={`${ownerId}/widget/TabSelector`}
-    props={{
-      tab: "entity",
-      content: getContent(props.content),
-      search: props.search,
-      accountId: props.accountId,
-      update: (content) => props.update({ content }),
-      buttons: [
-        {
-          id: "contributions",
-          text: "Contributes to",
-          icon: "bi-person-up",
-        },
-      ],
-    }}
-  />
-);
-
-const searchBar = (
-  <div className="w-25 col-12 col-md-10 col-lg-8">
-    <div className="card card-sm">
-      <div className="card-body row p-0 ps-2 align-items-center">
-        <div className="col-auto pe-0 me-0">
-          <i className="bi-search" />
-        </div>
-        <div className="col ms-0">
-          <input
-            className="form-control border-0"
-            type="search"
-            value={props.search}
-            placeholder="Search"
-            onChange={(e) => props.update({ search: e.target.value })}
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-const content = {
-  contributions: (
-    <Widget
-      src={`${ownerId}/widget/ContributionList`}
-      props={{ search: props.search, update: props.update }}
-    />
-  ),
-}[getContent(props.content)];
-
 return (
   <div>
     <div className="mb-5">{body}</div>
     <div className="d-flex flex-row justify-content-between ps-3">
-      {contentSelector}
-      {searchBar}
+      <span className="fw-bold fs-4">Conrtibutes to</span>
+      <Widget
+        src={`${ownerId}/widget/SearchInput`}
+        props={{ search: props.search, update: props.update }}
+      />
     </div>
-    <div className="px-3 pt-3">{content}</div>
+    <div className="px-3 pt-3">
+      <Widget
+        src={`${ownerId}/widget/ContributionList`}
+        props={{
+          accountId: props.accountId,
+          search: props.search,
+          update: props.update,
+        }}
+      />
+    </div>
   </div>
 );

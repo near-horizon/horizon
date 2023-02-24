@@ -132,7 +132,7 @@ const contentSelector = (
       search: props.search,
       accountId: props.accountId,
       cid: props.cid,
-      update: (content) => props.update({ content }),
+      update: props.update,
       buttons: [
         {
           id: "contributors",

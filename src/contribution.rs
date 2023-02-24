@@ -253,7 +253,7 @@ impl Contract {
             .entry(contributor_id.clone())
             .or_insert(VersionedContributor::Current(Default::default()));
         self.contributions
-            .entry(key)
+            .entry(key.clone())
             .and_modify(|v_old| {
                 let mut old = Contribution::from(v_old.clone());
                 old.history.push(old.current);
@@ -265,6 +265,7 @@ impl Contract {
                 current: contribution_detail,
                 history: vec![],
             }));
+        self.requests.remove(&key);
         Events::ApproveContribution {
             entity_id,
             contributor_id,
@@ -370,16 +371,32 @@ impl Contract {
             .map(|contribution_request| contribution_request.clone().into())
     }
 
-    /// Get all the requests for this entity.
-    pub fn get_entity_contribution_requests(
+    /// Get all the requests this contributor sent.
+    pub fn get_contributor_contribution_requests(
         &self,
-        entity_id: AccountId,
+        account_id: AccountId,
     ) -> Vec<(AccountId, ContributionRequest)> {
         self.requests
             .into_iter()
-            .filter_map(|((key_entity_id, account_id), versioned_contribution)| {
-                (key_entity_id == &entity_id)
-                    .then_some((account_id.clone(), versioned_contribution.clone().into()))
+            .filter_map(|((entity_id, contributor_id), versioned_contribution)| {
+                (contributor_id == &account_id)
+                    .then_some((entity_id.clone(), versioned_contribution.clone().into()))
+            })
+            .collect()
+    }
+
+    /// Get all the requests for this entity.
+    pub fn get_entity_contribution_requests(
+        &self,
+        account_id: AccountId,
+    ) -> Vec<(AccountId, ContributionRequest)> {
+        self.requests
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), versioned_contribution)| {
+                (entity_id == &account_id).then_some((
+                    contributor_id.clone(),
+                    versioned_contribution.clone().into(),
+                ))
             })
             .collect()
     }
@@ -412,7 +429,7 @@ impl Contract {
         &self,
         account_id: AccountId,
         cid: String,
-    ) -> HashMap<AccountId, ContributionRequest> {
+    ) -> Vec<(AccountId, ContributionRequest)> {
         self.requests
             .into_iter()
             .filter_map(|((entity_id, contributor_id), r)| {

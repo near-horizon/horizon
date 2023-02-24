@@ -73,6 +73,8 @@ const body = (
                           tab: "contribution",
                           content: "",
                           search: "",
+                          entityId,
+                          contributorId,
                         }),
                     },
                     {

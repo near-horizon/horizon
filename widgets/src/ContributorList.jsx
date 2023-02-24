@@ -9,13 +9,13 @@ const allContributors = (
       Near.view(
         ownerId,
         cid ? "get_need_contributions" : "get_entity_contributions",
-        { account_id: accountId },
+        { account_id: accountId, ...(cid ? { cid } : {}) },
         "final",
         true
       ) ?? {}
     )
     : Near.view(ownerId, "get_contributors", {}, "final", true) ?? []
-).filter((ids) => (accountId ? ids[0].includes(search) : ids.includes(search)));
+).filter((id) => id.includes(search));
 
 if (!allContributors || allContributors.length === 0) {
   return "No contributors found!";
@@ -23,11 +23,11 @@ if (!allContributors || allContributors.length === 0) {
 
 return (
   <>
-    {allContributors.map((ids) => (
-      <div key={account ? ids[0] : ids} className="mb-2">
+    {allContributors.map((id) => (
+      <div key={id} className="mb-2">
         <Widget
           src={`${ownerId}/widget/Contributor`}
-          props={{ accountId: accountId ? ids[0] : ids, update: props.update }}
+          props={{ accountId: id, update: props.update }}
         />
       </div>
     ))}

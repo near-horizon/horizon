@@ -14,15 +14,24 @@ const content = {
   request: (
     <Widget
       src={`${ownerId}/widget/NeedForm`}
-      props={{ search: state.search, update: props.update }}
+      props={{
+        search: state.search,
+        update: props.update,
+        accountId: props.accountId,
+      }}
     />
   ),
   entity: (
     <Widget
       src={`${ownerId}/widget/EntityForm`}
-      props={{ search: state.search, update: props.update, kind: props.kind }}
+      props={{
+        search: state.search,
+        update: props.update,
+        kind: props.kind,
+        accountId: props.accountId,
+      }}
     />
   ),
 }[getContent(props.content)];
 
-return content;
+return <div>{content}</div>;

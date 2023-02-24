@@ -3,7 +3,12 @@ const ownerId = "contribut3.near";
 State.init({
   search: props.search ?? "",
   content: props.content,
-  tab: props.tab ?? "dashboard",
+  tab: props.tab ?? "home",
+  accountId: props.accountId,
+  entityId: props.entityId,
+  contributorId: props.contributorId,
+  kind: props.kind,
+  cid: props.cid,
 });
 
 const isModerator = Near.view(
@@ -25,7 +30,7 @@ const isContributor = Near.view(
 const update = (state) => State.update(state);
 
 const tabContent = {
-  dashboard: (
+  home: (
     <Widget
       src={`${ownerId}/widget/Dashboard`}
       props={{ content: state.content, search: state.search, update }}
@@ -37,7 +42,7 @@ const tabContent = {
       props={{
         content: state.content,
         search: state.search,
-        accountId: props.accountId,
+        accountId: state.accountId,
         update,
       }}
     />
@@ -58,7 +63,7 @@ const tabContent = {
     <Widget
       src={`${ownerId}/widget/EntityPage`}
       props={{
-        accountId: props.accountId,
+        accountId: state.accountId,
         search: state.search,
         content: state.content,
         update,
@@ -69,8 +74,8 @@ const tabContent = {
     <Widget
       src={`${ownerId}/widget/NeedPage`}
       props={{
-        accountId: props.accountId,
-        cid: props.cid,
+        accountId: state.accountId,
+        cid: state.cid,
         search: state.search,
         content: state.content,
         update,
@@ -83,7 +88,8 @@ const tabContent = {
       props={{
         search: state.search,
         content: state.content,
-        kind: props.kind,
+        accountId: props.accountId,
+        kind: state.kind,
         update,
       }}
     />
@@ -102,13 +108,15 @@ const tabContent = {
 
 return (
   <div className="d-flex flex-row">
-    <div className="px-1">
-      <Widget
-        src={`${ownerId}/widget/Sidebar`}
-        props={{ tab: state.tab, update }}
-      />
+    <div className="d-flex flex-row position-sticky top-0">
+      <div className="flex-grow-1">
+        <Widget
+          src={`${ownerId}/widget/Sidebar`}
+          props={{ tab: state.tab, update }}
+        />
+      </div>
+      <div className="vr mx-3" style={{ height: "90vh" }} />
     </div>
-    <div className="vr mx-2" />
-    <div className="w-100">{tabContent}</div>
+    <div className="flex-grow-1">{tabContent}</div>
   </div>
 );

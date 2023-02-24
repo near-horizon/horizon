@@ -21,7 +21,7 @@ if (!contributions) {
 }
 
 if (Array.isArray(contributions) && contributions.length === 0) {
-  return "No contribution requests found!";
+  return "No contributions found!";
 }
 
 const allContributions = contributions.filter((id) =>
@@ -29,7 +29,7 @@ const allContributions = contributions.filter((id) =>
 );
 
 if (!allContributions || allContributions.length === 0) {
-  return "No requests match search criteria!";
+  return "No contributions match search criteria!";
 }
 
 return (

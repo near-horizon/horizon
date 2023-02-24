@@ -11,6 +11,7 @@ const availableContent = [
   "requests",
   "contributions",
   "contributors",
+  "graph",
 ];
 
 const getContent = (content) => {
@@ -56,7 +57,14 @@ const profile = Social.getr(`${accountId}/profile`);
 
 const controls = isAuthorized ? (
   <div className="d-flex flex-row justify-content-between align-items-center">
-    <a className="btn btn-outline-secondary me-2" style={{ width: "8em" }}>
+    <a
+      className="btn btn-outline-secondary me-2"
+      style={{ width: "8em" }}
+      href={`https://near.social/#/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
+      onClick={() =>
+        props.update({ tab: "create", content: "entity", accountId })
+      }
+    >
       <i className="bi-pencil-square" />
       <span>Edit project</span>
     </a>
@@ -68,15 +76,18 @@ const controls = isAuthorized ? (
           {
             text: "Create new request",
             icon: "bi-boxes",
+            href: `https://near.social/#/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
+            onClick: () =>
+              props.update({ tab: "create", content: "request", accountId }),
           },
-          {
-            text: "Invite contributors",
-            icon: "bi-person-plus",
-          },
-          {
-            text: "Delete project",
-            icon: "bi-trash",
-          },
+          // {
+          //   text: "Invite contributors",
+          //   icon: "bi-person-plus",
+          // },
+          // {
+          //   text: "Delete project",
+          //   icon: "bi-trash",
+          // },
         ],
       }}
     />
@@ -150,7 +161,7 @@ const body = (
       />
       <Widget
         src={`${ownerId}/widget/ProfileLine`}
-        props={{ accountId: founder }}
+        props={{ accountId: founder, isEntity: false, update: props.update }}
       />
     </div>
   </div>
@@ -160,7 +171,7 @@ const proposalsCount = (
   Near.view(
     ownerId,
     "get_entity_contribution_requests",
-    { entity_id: accountId },
+    { account_id: accountId },
     "final",
     true
   ) ?? []
@@ -184,7 +195,7 @@ const contentSelector = (
       content: getContent(props.content),
       search: props.search,
       accountId: props.accountId,
-      update: (content) => props.update({ content }),
+      update: props.update,
       buttons: [
         {
           id: "requests",
@@ -209,8 +220,13 @@ const contentSelector = (
           : null,
         {
           id: "contributions",
-          text: "Contributes to",
+          text: "In-Graph",
           icon: "bi-person-up",
+        },
+        {
+          id: "graph",
+          text: "Out-Graph",
+          icon: "bi-ui-checks-grid",
         },
         {
           id: "contributors",
@@ -220,27 +236,6 @@ const contentSelector = (
       ].filter((x) => x !== null),
     }}
   />
-);
-
-const searchBar = (
-  <div className="w-25 col-12 col-md-10 col-lg-8">
-    <div className="card card-sm">
-      <div className="card-body row p-0 ps-2 align-items-center">
-        <div className="col-auto pe-0 me-0">
-          <i className="bi-search" />
-        </div>
-        <div className="col ms-0">
-          <input
-            className="form-control border-0"
-            type="search"
-            value={props.search}
-            placeholder="Search"
-            onChange={(e) => props.update({ search: e.target.value })}
-          />
-        </div>
-      </div>
-    </div>
-  </div>
 );
 
 const content = {
@@ -267,6 +262,16 @@ const content = {
       }}
     />
   ),
+  graph: (
+    <Widget
+      src={`${ownerId}/widget/ContributionList`}
+      props={{
+        accountId,
+        search: props.search,
+        update: props.update,
+      }}
+    />
+  ),
   contributors: (
     <Widget
       src={`${ownerId}/widget/ContributorList`}
@@ -286,7 +291,10 @@ return (
     <div className="mb-5">{body}</div>
     <div className="d-flex flex-row justify-content-between ps-3">
       {contentSelector}
-      {searchBar}
+      <Widget
+        src={`${ownerId}/widget/SearchInput`}
+        props={{ search: props.search, update: props.update }}
+      />
     </div>
     <div className="px-3 pt-3">{content}</div>
   </div>

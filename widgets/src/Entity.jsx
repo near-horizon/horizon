@@ -91,6 +91,7 @@ const body = (
                           tab: "entity",
                           content: "",
                           search: "",
+                          accountId,
                         }),
                     },
                     {

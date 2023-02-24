@@ -44,19 +44,27 @@ const navItem = ({ text, icon, id, count }) => (
   </a>
 );
 
+const HomeLink = styled.a`
+  color: #000;
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    text-decoration: none;
+    color: #000;
+  }
+`;
+
 return (
   <div className="d-flex flex-column">
-    <a className="mb-4">
-      <h4>
-        <i className="bi-triangle" />
-        Web3 Combinator
+    <HomeLink
+      href={`https://near.social/#/${ownerId}/widget/Index`}
+      onClick={() => props.update({ tab: "home", content: "", search: "" })}
+    >
+      <h4 className="fs-4 text-nowrap d-flex flex-row align-items-center">
+        <Widget src={`${ownerId}/widget/Logo`} props={{ size: 32 }} />
+        <span className="ms-2">Web3 Combinator</span>
       </h4>
-    </a>
-    {navItem({
-      text: "Dashboard",
-      icon: "bi-house",
-      id: "dashboard",
-    })}
+    </HomeLink>
     {navItem({
       text: "Inbox",
       icon: "bi-envelope",
@@ -69,7 +77,7 @@ return (
       id: "entities",
     })}
     {navItem({
-      text: "My contributions",
+      text: "My graph",
       icon: "bi-ui-checks-grid",
       id: "contributions",
     })}
