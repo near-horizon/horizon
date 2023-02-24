@@ -96,6 +96,10 @@ return (
         />
       </div>
     </div>
-    <div className="px-3 pt-3">{content}</div>
+    <div className="px-3 pt-3">
+      {context.accountId
+        ? content
+        : "You need to be logged in to view this page!"}
+    </div>
   </div>
 );

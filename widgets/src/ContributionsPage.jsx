@@ -21,15 +21,19 @@ return (
       </div>
     </div>
     <div className="px-3 pt-3">
-      <Widget
-        src={`${ownerId}/widget/ContributionList`}
-        props={{
-          accountId: context.accountId,
-          isEntity: false,
-          search: props.search,
-          update: props.update,
-        }}
-      />
+      {context.accountId ? (
+        <Widget
+          src={`${ownerId}/widget/ContributionList`}
+          props={{
+            accountId: context.accountId,
+            isEntity: false,
+            search: props.search,
+            update: props.update,
+          }}
+        />
+      ) : (
+        "You need to be logged in to view this page!"
+      )}
     </div>
   </div>
 );
