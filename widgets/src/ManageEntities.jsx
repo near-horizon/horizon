@@ -68,7 +68,12 @@ const content = {
   requests: (
     <Widget
       src={`${ownerId}/widget/NeedList`}
-      props={{ search: props.search, update: props.update }}
+      props={{
+        search: props.search,
+        update: props.update,
+        accountId: context.accountId,
+        isAdmin: true,
+      }}
     />
   ),
 }[getContent(props.content)];

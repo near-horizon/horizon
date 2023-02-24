@@ -23,7 +23,7 @@ const getContent = (content) => {
 };
 
 State.init({
-  contributionFormHidden: false,
+  contributionFormHidden: true,
 });
 
 const entity = Near.view(
