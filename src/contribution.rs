@@ -476,6 +476,17 @@ impl Contract {
             .collect()
     }
 
+    /// Get all contribnution needs this account can manage.
+    pub fn get_admin_contribution_needs(&self, account_id: AccountId) -> Vec<(AccountId, String)> {
+        self.needs
+            .into_iter()
+            .filter_map(|((entity_id, cid), _)| {
+                self.check_is_manager_or_higher(&entity_id, &account_id)
+                    .then_some((entity_id.clone(), cid.clone()))
+            })
+            .collect()
+    }
+
     /// Get all contribnution needs.
     pub fn get_contribution_needs(&self) -> HashMap<AccountId, HashMap<String, ContributionNeed>> {
         self.needs
