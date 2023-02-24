@@ -86,12 +86,10 @@ impl Contract {
         if account_id == &self.moderator_id {
             return true;
         }
-        let contribution = Contribution::from(
-            self.contributions
-                .get(&(entity_id.clone(), account_id.clone()))
-                .expect("ERR_NO_CONTRIBUTION")
-                .clone(),
-        );
+        let Some(vc) = self.contributions.get(&(entity_id.clone(), account_id.clone())) else {
+            return false;
+        };
+        let contribution = Contribution::from(vc.clone());
         contribution.permissions.contains(&Permission::Admin)
     }
 
