@@ -24,6 +24,7 @@ pub enum EntityStatus {
 }
 
 /// An entity can take different shapes, and currently we can categorize them in these types.
+#[allow(clippy::upper_case_acronyms)]
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub enum EntityKind {
@@ -139,7 +140,7 @@ impl Contract {
                 permissions,
                 description: description.clone(),
                 contribution_type: contribution_type.clone(),
-                start_date: start_date.clone().into(),
+                start_date: start_date.into(),
             }),
         );
         Events::InviteContributor {
@@ -162,7 +163,7 @@ impl Contract {
         let details = ContributionDetail {
             description: invite.description.clone(),
             contribution_type: invite.contribution_type.clone(),
-            start_date: invite.start_date.clone(),
+            start_date: invite.start_date,
             end_date: None,
             need: None,
         };

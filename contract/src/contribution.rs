@@ -244,7 +244,7 @@ impl Contract {
         let start_date: Timestamp = start_date.unwrap_or(env::block_timestamp().into()).into();
         let contribution_detail = ContributionDetail {
             description: description.clone(),
-            start_date: start_date.clone(),
+            start_date,
             contribution_type: request.contribution_type.clone(),
             need: request.need,
             end_date: None,
@@ -481,7 +481,7 @@ impl Contract {
         self.needs
             .into_iter()
             .filter_map(|((entity_id, cid), _)| {
-                self.check_is_manager_or_higher(&entity_id, &account_id)
+                self.check_is_manager_or_higher(entity_id, &account_id)
                     .then_some((entity_id.clone(), cid.clone()))
             })
             .collect()

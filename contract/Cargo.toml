@@ -1,0 +1,13 @@
+[package]
+name = "near-contribute"
+version = "0.1.0"
+authors = ["Illia Polosukhin <ilblackdragon@gmail.com>, Petar Vujović <petarvujovic98@gmail.com>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+cid = "0.10.1"
+near-contract-standards = "4.1.1"
+near-sdk = { version = "4.1.1", features = ["unstable"] }

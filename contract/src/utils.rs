@@ -2,6 +2,7 @@ pub mod u128_dec_format {
     use near_sdk::serde::de;
     use near_sdk::serde::{Deserialize, Deserializer, Serializer};
 
+    #[allow(dead_code)]
     pub fn serialize<S>(num: &u128, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -9,6 +10,7 @@ pub mod u128_dec_format {
         serializer.serialize_str(&num.to_string())
     }
 
+    #[allow(dead_code)]
     pub fn deserialize<'de, D>(deserializer: D) -> Result<u128, D::Error>
     where
         D: Deserializer<'de>,
@@ -63,7 +65,7 @@ pub mod option_u64_dec_format {
         if s.is_empty() {
             Ok(None)
         } else {
-            s.parse::<u64>().map(|x| Some(x)).map_err(de::Error::custom)
+            s.parse::<u64>().map(Some).map_err(de::Error::custom)
         }
     }
 }
