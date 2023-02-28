@@ -256,6 +256,7 @@ impl Contract {
             .entry(key.clone())
             .and_modify(|v_old| {
                 let mut old = Contribution::from(v_old.clone());
+                old.current.end_date = Some(start_date);
                 old.history.push(old.current);
                 old.current = contribution_detail.clone();
                 *v_old = VersionedContribution::Current(old);
