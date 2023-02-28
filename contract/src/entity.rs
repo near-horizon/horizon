@@ -72,6 +72,45 @@ impl From<VersionedEntity> for Entity {
 
 #[near_bindgen]
 impl Contract {
+    /// Add new entity and user as founding contributor.
+    pub fn admin_add_entity(
+        &mut self,
+        account_id: AccountId,
+        founder_id: AccountId,
+        name: String,
+        kind: EntityKind,
+        start_date: U64,
+    ) {
+        self.assert_moderator();
+        self.entities.insert(
+            account_id.clone(),
+            VersionedEntity::Current(Entity {
+                name,
+                status: EntityStatus::Active,
+                kind,
+                start_date: start_date.into(),
+                end_date: None,
+            }),
+        );
+        self.contributors
+            .entry(founder_id.clone())
+            .or_insert(VersionedContributor::Current(Default::default()));
+        self.contributions.insert(
+            (account_id, founder_id),
+            VersionedContribution::Current(Contribution {
+                permissions: HashSet::from([Permission::Admin]),
+                current: ContributionDetail {
+                    description: "".to_string(),
+                    start_date: start_date.into(),
+                    contribution_type: ContributionType::Other("Founding".to_string()),
+                    end_date: None,
+                    need: None,
+                },
+                history: vec![],
+            }),
+        );
+    }
+
     /// Add new entity and given user as founding contributor.
     pub fn add_entity(
         &mut self,

@@ -5,7 +5,7 @@ authors = ["Illia Polosukhin <ilblackdragon@gmail.com>, Petar Vujović <petarvuj
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 cid = "0.10.1"

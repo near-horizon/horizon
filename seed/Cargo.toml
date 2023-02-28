@@ -1,8 +1,17 @@
 [package]
 name = "seed"
 version = "0.1.0"
+authors = ["Petar Vujović <petarvujovic98@gmail.com>"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+chrono = "0.4.23"
+csv = "1.2.0"
+near-account-id = "0.16.0"
+near-crypto = "0.16.0"
+near-jsonrpc-client = { version = "0.5.0", features = ["any"] }
+near-jsonrpc-primitives = "0.16.0"
+near-primitives = "0.16.0"
+serde = { version = "1.0.152", features = ["derive"] }
+serde_json = "1.0.93"
+tokio = { version = "1.19", features = ["full"] }
