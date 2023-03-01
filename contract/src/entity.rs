@@ -9,8 +9,8 @@ use crate::contribution::{
     VersionedContributionInvite,
 };
 use crate::contributor::{ContributionType, VersionedContributor};
+use crate::dec_serde::{option_u64_dec_format, u64_dec_format};
 use crate::events::Events;
-use crate::utils::{option_u64_dec_format, u64_dec_format};
 use crate::{Contract, ContractExt};
 
 /// An entity can be in different states because it can potentially have an end (through different
@@ -119,6 +119,9 @@ impl Contract {
         kind: EntityKind,
         start_date: U64,
     ) {
+        if self.entities.contains_key(&account_id) {
+            env::panic_str("ERR_ENTITY_EXISTS");
+        }
         self.entities.insert(
             account_id.clone(),
             VersionedEntity::Current(Entity {
@@ -169,6 +172,12 @@ impl Contract {
         start_date: U64,
         permissions: HashSet<Permission>,
     ) {
+        if self
+            .invites
+            .contains_key(&(entity_id.clone(), contributor_id.clone()))
+        {
+            env::panic_str("ERR_INVITE_EXISTS");
+        }
         self.assert_manager_or_higher(&entity_id, &env::predecessor_account_id());
         self.contributors
             .entry(contributor_id.clone())
@@ -199,7 +208,7 @@ impl Contract {
                 .remove(&(account_id.clone(), env::predecessor_account_id()))
                 .expect("ERR_NO_INVITE"),
         );
-        let details = ContributionDetail {
+        let contribution_detail = ContributionDetail {
             description: invite.description.clone(),
             contribution_type: invite.contribution_type.clone(),
             start_date: invite.start_date,
@@ -209,15 +218,16 @@ impl Contract {
         self.contributions
             .entry((account_id.clone(), env::predecessor_account_id()))
             .and_modify(|v_old| {
-                let mut old = Contribution::from(v_old.clone());
-                old.history.push(old.current);
-                old.current = details.clone();
-                old.permissions = invite.permissions.clone();
-                *v_old = VersionedContribution::Current(old);
+                let old = Contribution::from(v_old.clone());
+                *v_old = VersionedContribution::Current(old.add_detail(
+                    invite.start_date,
+                    contribution_detail.clone(),
+                    None,
+                ));
             })
             .or_insert(VersionedContribution::Current(Contribution {
                 permissions: invite.permissions.clone(),
-                current: details.clone(),
+                current: contribution_detail.clone(),
                 history: vec![],
             }));
         Events::AcceptInvite {
@@ -244,14 +254,14 @@ impl Contract {
         &self,
         from_index: Option<u64>,
         limit: Option<u64>,
-    ) -> Vec<(AccountId, Entity)> {
+    ) -> HashMap<AccountId, Entity> {
         let from_index = from_index.unwrap_or(0);
         let limit = limit.unwrap_or(self.entities.len().into());
         self.entities
             .into_iter()
             .skip(from_index as usize)
             .take(limit as usize)
-            .map(|(key, versioned_entity)| (key.clone(), versioned_entity.clone().into()))
+            .map(|(key, entity)| (key.clone(), entity.clone().into()))
             .collect()
     }
 
@@ -259,9 +269,9 @@ impl Contract {
     pub fn get_admin_entities(&self, account_id: AccountId) -> HashMap<AccountId, Entity> {
         self.contributions
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), c)| {
+            .filter_map(|((entity_id, contributor_id), contribution)| {
                 (contributor_id == &account_id
-                    && Contribution::from(c.clone())
+                    && Contribution::from(contribution.clone())
                         .permissions
                         .contains(&Permission::Admin))
                 .then_some((

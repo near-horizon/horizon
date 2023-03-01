@@ -38,9 +38,9 @@ State.init({
 });
 
 const allStatuses = ["Active", "Flagged"].map((name) => ({ name }));
-const allAccountIds = (
-  Near.view(ownerId, "get_entities", {}, "final", true) ?? []
-).map(([name]) => ({ name }));
+const allAccountIds = Object.keys(
+  Near.view(ownerId, "get_entities", {}, "final", true) ?? {}
+).map((name) => ({ name }));
 
 const accountIdInput = (
   <Widget

@@ -8,20 +8,25 @@ use std::collections::{HashMap, HashSet};
 use std::iter::FromIterator;
 
 use crate::contributor::{ContributionType, VersionedContributor};
+use crate::dec_serde::{option_u64_dec_format, u64_dec_format};
 use crate::entity::Permission;
 use crate::events::Events;
-use crate::utils::{option_u64_dec_format, u64_dec_format};
 use crate::{Contract, ContractExt, MAX_DESCRIPTION_LENGTH};
 
 /// The story/description of a contribution to an entity.
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionDetail {
+    /// Details about this contribution.
     pub description: String,
+    /// The type of this contribution.
     pub contribution_type: ContributionType,
+    /// The CID of the need this is associated with (if any).
     pub need: Option<String>,
+    /// The start date of the contribution.
     #[serde(with = "u64_dec_format")]
     pub start_date: Timestamp,
+    /// The end date of the contribution (if not ongoing).
     #[serde(with = "option_u64_dec_format")]
     pub end_date: Option<Timestamp>,
 }
@@ -31,19 +36,39 @@ pub struct ContributionDetail {
 #[serde(crate = "near_sdk::serde")]
 pub struct Contribution {
     // TODO: Do we want to store this in a UnorderedSet for lazy loading?
+    /// Set of permissions this contributor has for the entity.
     pub permissions: HashSet<Permission>,
+    /// The details of the ongoing contribution.
     pub current: ContributionDetail,
-    /// If more than one contribution was made, previous ones are in history.
     // TODO: Do we want to keep this stored in a Vector for lazy reading?
+    /// If more than one contribution was made, previous ones are in history.
     pub history: Vec<ContributionDetail>,
+}
+
+impl Contribution {
+    pub fn add_detail(
+        mut self,
+        start_date: u64,
+        contribution_detail: ContributionDetail,
+        permissions: Option<HashSet<Permission>>,
+    ) -> Self {
+        self.current.end_date = Some(start_date);
+        self.history.push(self.current);
+        self.current = contribution_detail;
+        self.permissions = permissions.unwrap_or(self.permissions);
+        self
+    }
 }
 
 /// Request to contribute.
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionRequest {
+    /// The details of the request.
     pub description: String,
+    /// The type of request this is.
     pub contribution_type: ContributionType,
+    /// The CID of the need this is associated with (if any).
     pub need: Option<String>,
 }
 
@@ -51,8 +76,11 @@ pub struct ContributionRequest {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionNeed {
+    /// The details of the need.
     pub description: String,
+    /// The type of need this is.
     pub contribution_type: ContributionType,
+    /// Whether this need is currently active.
     pub active: bool,
 }
 
@@ -60,9 +88,13 @@ pub struct ContributionNeed {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionInvite {
+    /// The details of the invite.
     pub description: String,
+    /// The type of invite this is.
     pub contribution_type: ContributionType,
+    /// The set of permissions a contributor will get if they accept the invite.
     pub permissions: HashSet<Permission>,
+    /// The start date of the contribution after accepting the invite.
     #[serde(with = "u64_dec_format")]
     pub start_date: Timestamp,
 }
@@ -121,6 +153,7 @@ impl From<VersionedContributionInvite> for ContributionInvite {
 
 const RAW: u64 = 0x55;
 
+/// Create a CID for a string.
 pub fn create_cid(value: &str) -> String {
     let hash = Code::Sha2_256.digest(value.to_string().as_bytes());
     let cid = Cid::new_v1(RAW, hash);
@@ -255,11 +288,12 @@ impl Contract {
         self.contributions
             .entry(key.clone())
             .and_modify(|v_old| {
-                let mut old = Contribution::from(v_old.clone());
-                old.current.end_date = Some(start_date);
-                old.history.push(old.current);
-                old.current = contribution_detail.clone();
-                *v_old = VersionedContribution::Current(old);
+                let old = Contribution::from(v_old.clone());
+                *v_old = VersionedContribution::Current(old.add_detail(
+                    start_date,
+                    contribution_detail.clone(),
+                    None,
+                ));
             })
             .or_insert(VersionedContribution::Current(Contribution {
                 permissions: HashSet::new(),
@@ -320,20 +354,6 @@ impl Contract {
             .collect()
     }
 
-    /// Get all the entity account IDs where contributor has Admin permissions.
-    pub fn get_contributor_admin_entities(&self, account_id: AccountId) -> HashSet<AccountId> {
-        self.contributions
-            .into_iter()
-            .filter_map(|((entity, contributor), contribution)| {
-                (&account_id == contributor
-                    && Contribution::from(contribution.clone())
-                        .permissions
-                        .contains(&Permission::Admin))
-                .then_some(entity.clone())
-            })
-            .collect()
-    }
-
     /// Get contribution details.
     pub fn get_contribution(
         &self,
@@ -352,11 +372,32 @@ impl Contract {
     ) -> HashMap<AccountId, Contribution> {
         self.contributions
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), versioned_contribution)| {
-                (entity_id == &account_id).then_some((
-                    contributor_id.clone(),
-                    versioned_contribution.clone().into(),
-                ))
+            .filter_map(|((entity_id, contributor_id), contribution)| {
+                (entity_id == &account_id)
+                    .then_some((contributor_id.clone(), contribution.clone().into()))
+            })
+            .collect()
+    }
+
+    /// Get all contributions for a specific need.
+    pub fn get_need_contributions(
+        &self,
+        account_id: AccountId,
+        cid: String,
+    ) -> HashMap<AccountId, Contribution> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), contribution)| {
+                if entity_id != &account_id {
+                    return None;
+                }
+                let contribution = Contribution::from(contribution.clone());
+                (contribution.current.need == Some(cid.clone())
+                    || contribution
+                        .history
+                        .iter()
+                        .any(|detail| detail.need == Some(cid.clone())))
+                .then_some((contributor_id.clone(), contribution))
             })
             .collect()
     }
@@ -369,19 +410,19 @@ impl Contract {
     ) -> Option<ContributionRequest> {
         self.requests
             .get(&(entity_id, contributor_id))
-            .map(|contribution_request| contribution_request.clone().into())
+            .map(|request| request.clone().into())
     }
 
     /// Get all the requests this contributor sent.
     pub fn get_contributor_contribution_requests(
         &self,
         account_id: AccountId,
-    ) -> Vec<(AccountId, ContributionRequest)> {
+    ) -> HashMap<AccountId, ContributionRequest> {
         self.requests
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), versioned_contribution)| {
+            .filter_map(|((entity_id, contributor_id), contribution)| {
                 (contributor_id == &account_id)
-                    .then_some((entity_id.clone(), versioned_contribution.clone().into()))
+                    .then_some((entity_id.clone(), contribution.clone().into()))
             })
             .collect()
     }
@@ -390,14 +431,12 @@ impl Contract {
     pub fn get_entity_contribution_requests(
         &self,
         account_id: AccountId,
-    ) -> Vec<(AccountId, ContributionRequest)> {
+    ) -> HashMap<AccountId, ContributionRequest> {
         self.requests
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), versioned_contribution)| {
-                (entity_id == &account_id).then_some((
-                    contributor_id.clone(),
-                    versioned_contribution.clone().into(),
-                ))
+            .filter_map(|((entity_id, contributor_id), contribution)| {
+                (entity_id == &account_id)
+                    .then_some((contributor_id.clone(), contribution.clone().into()))
             })
             .collect()
     }
@@ -416,52 +455,37 @@ impl Contract {
             .collect()
     }
 
-    /// Get contribution need details.
-    pub fn get_contribution_need(
-        &self,
-        account_id: AccountId,
-        cid: String,
-    ) -> Option<ContributionNeed> {
-        self.needs.get(&(account_id, cid)).map(|n| n.clone().into())
-    }
-
     /// Get all contribution requests for a specific need.
     pub fn get_need_contribution_requests(
         &self,
         account_id: AccountId,
         cid: String,
-    ) -> Vec<(AccountId, ContributionRequest)> {
+    ) -> HashMap<AccountId, ContributionRequest> {
         self.requests
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), r)| {
+            .filter_map(|((entity_id, contributor_id), request)| {
                 (entity_id == &account_id
-                    && ContributionRequest::from(r.clone()).need == Some(cid.clone()))
-                .then_some((contributor_id.clone(), ContributionRequest::from(r.clone())))
+                    && ContributionRequest::from(request.clone()).need == Some(cid.clone()))
+                .then_some((
+                    contributor_id.clone(),
+                    ContributionRequest::from(request.clone()),
+                ))
             })
             .collect()
     }
 
-    /// Get all contributions for a specific need.
-    pub fn get_need_contributions(
-        &self,
-        account_id: AccountId,
-        cid: String,
-    ) -> HashMap<AccountId, Contribution> {
-        self.contributions
+    /// Get all contribution needs.
+    pub fn get_contribution_needs(&self) -> HashMap<AccountId, HashMap<String, ContributionNeed>> {
+        self.needs
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), c)| {
-                if entity_id != &account_id {
-                    return None;
-                }
-                let contribution = Contribution::from(c.clone());
-                (contribution.current.need == Some(cid.clone())
-                    || contribution
-                        .history
-                        .iter()
-                        .any(|d| d.need == Some(cid.clone())))
-                .then_some((contributor_id.clone(), contribution))
+            .fold(HashMap::new(), |mut map, ((account_id, cid), need)| {
+                map.entry(account_id.clone())
+                    .and_modify(|inner| {
+                        inner.insert(cid.clone(), need.clone().into());
+                    })
+                    .or_insert(HashMap::from_iter([(cid.clone(), need.clone().into())]));
+                map
             })
-            .collect()
     }
 
     /// Get all contribnution needs of entity.
@@ -488,18 +512,15 @@ impl Contract {
             .collect()
     }
 
-    /// Get all contribnution needs.
-    pub fn get_contribution_needs(&self) -> HashMap<AccountId, HashMap<String, ContributionNeed>> {
+    /// Get contribution need details.
+    pub fn get_contribution_need(
+        &self,
+        account_id: AccountId,
+        cid: String,
+    ) -> Option<ContributionNeed> {
         self.needs
-            .into_iter()
-            .fold(HashMap::new(), |mut map, ((account_id, cid), need)| {
-                map.entry(account_id.clone())
-                    .and_modify(|inner| {
-                        inner.insert(cid.clone(), need.clone().into());
-                    })
-                    .or_insert(HashMap::from_iter([(cid.clone(), need.clone().into())]));
-                map
-            })
+            .get(&(account_id, cid))
+            .map(|need| need.clone().into())
     }
 
     /// Checks whether the contributor with the provided contributor ID already proposed to the

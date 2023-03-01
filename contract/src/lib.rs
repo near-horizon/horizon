@@ -11,9 +11,9 @@ use crate::entity::{Permission, VersionedEntity};
 
 mod contribution;
 mod contributor;
+mod dec_serde;
 mod entity;
 mod events;
-mod utils;
 
 const MAX_DESCRIPTION_LENGTH: usize = 420;
 
@@ -78,21 +78,6 @@ impl Contract {
         );
     }
 
-    pub fn check_is_manager_or_higher(
-        &self,
-        entity_id: &AccountId,
-        account_id: &AccountId,
-    ) -> bool {
-        if account_id == &self.moderator_id {
-            return true;
-        }
-        let Some(vc) = self.contributions.get(&(entity_id.clone(), account_id.clone())) else {
-            return false;
-        };
-        let contribution = Contribution::from(vc.clone());
-        contribution.permissions.contains(&Permission::Admin)
-    }
-
     /// Checks if given account is registered as a contributor.
     #[allow(dead_code)]
     fn assert_is_registered(&self, account_id: &AccountId) {
@@ -107,6 +92,22 @@ impl Contract {
     /// Check if given account ID is moderator.
     pub fn check_is_moderator(&self, account_id: AccountId) -> bool {
         self.moderator_id == account_id
+    }
+
+    /// Check if given account ID is manager or higher for given entity.
+    pub fn check_is_manager_or_higher(
+        &self,
+        entity_id: &AccountId,
+        account_id: &AccountId,
+    ) -> bool {
+        if account_id == &self.moderator_id {
+            return true;
+        }
+        let Some(contribution) = self.contributions.get(&(entity_id.clone(), account_id.clone())) else {
+            return false;
+        };
+        let contribution = Contribution::from(contribution.clone());
+        contribution.permissions.contains(&Permission::Admin)
     }
 
     /// Should only be called by this contract on migration.

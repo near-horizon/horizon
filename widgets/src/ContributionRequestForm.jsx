@@ -34,9 +34,9 @@ const onSubmit = () => {
   Near.call(ownerId, "request_contribution", args);
 };
 
-const existingEntities = (
-  Near.view(ownerId, "get_entities", {}, "final") ?? []
-).map(([accountId]) => ({ name: accountId }));
+const existingEntities = Object.keys(
+  Near.view(ownerId, "get_entities", {}, "final") ?? {}
+).map((name) => ({ name }));
 
 const entityEditor = props.entity ? (
   <div>

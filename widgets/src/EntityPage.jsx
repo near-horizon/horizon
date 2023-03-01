@@ -167,7 +167,7 @@ const body = (
   </div>
 );
 
-const proposalsCount = (
+const proposalsCount = Object.keys(
   Near.view(
     ownerId,
     "get_entity_contribution_requests",

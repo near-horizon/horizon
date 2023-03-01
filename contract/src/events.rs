@@ -2,7 +2,7 @@ use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, serde_json, AccountId, Timestamp};
 
 use crate::contributor::ContributionType;
-use crate::utils::u64_dec_format;
+use crate::dec_serde::u64_dec_format;
 
 #[derive(Deserialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
