@@ -32,7 +32,7 @@ if (Array.isArray(requests) && requests.length === 0) {
 }
 
 const allRequests = requests.filter((ids) =>
-  accountId ? ids.includes(accountId) : ids[0].includes(search)
+  accountId ? ids.includes(search) : ids[0].includes(search)
 );
 
 if (!allRequests || allRequests.length === 0) {
@@ -41,13 +41,13 @@ if (!allRequests || allRequests.length === 0) {
 
 return (
   <>
-    {allRequests.map(([entityId, contributorId]) => (
+    {allRequests.map((ids) => (
       <div key={contributorId} className="mt-3">
         <Widget
           src={`${ownerId}/widget/ContributionRequest`}
           props={{
-            entityId: accountId ? accountId : entityId,
-            contributorId: accountId ? entityId : contributorId,
+            entityId: accountId ? accountId : ids[0],
+            contributorId: accountId ? ids : ids[1],
             update: props.update,
           }}
         />

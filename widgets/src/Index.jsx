@@ -104,10 +104,21 @@ const tabContent = {
       }}
     />
   ),
+  contribution: (
+    <Widget
+      src={`${ownerId}/widget/ContributionPage`}
+      props={{
+        entityId: state.entityId,
+        contributorId: state.contributorId,
+        search: state.search,
+        update,
+      }}
+    />
+  ),
 }[state.tab];
 
 return (
-  <div className="d-flex flex-row">
+  <div className="d-flex flex-row position-relative">
     <div className="d-flex flex-row position-sticky top-0">
       <div className="flex-grow-1">
         <Widget
@@ -117,6 +128,8 @@ return (
       </div>
       <div className="vr mx-3" style={{ height: "90vh" }} />
     </div>
-    <div className="flex-grow-1">{tabContent}</div>
+    <div className="flex-grow-1" style={{ maxWidth: "calc(100% - 272px)" }}>
+      {tabContent}
+    </div>
   </div>
 );
