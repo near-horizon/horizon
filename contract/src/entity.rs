@@ -39,11 +39,16 @@ pub enum EntityKind {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Entity {
+    /// Name of the entity.
     name: String,
+    /// Status of the entity.
     status: EntityStatus,
+    /// The type of the entity.
     kind: EntityKind,
+    /// The start date of the entity.
     #[serde(with = "u64_dec_format")]
     start_date: Timestamp,
+    /// The end date of the entity. (optional)
     #[serde(with = "option_u64_dec_format")]
     end_date: Option<Timestamp>,
 }
@@ -102,7 +107,7 @@ impl Contract {
                 current: ContributionDetail {
                     description: "".to_string(),
                     start_date: start_date.into(),
-                    contribution_type: ContributionType::Other("Founding".to_string()),
+                    contribution_type: ContributionType::Founding,
                     end_date: None,
                     need: None,
                 },
@@ -142,7 +147,7 @@ impl Contract {
                 current: ContributionDetail {
                     description: "".to_string(),
                     start_date: start_date.into(),
-                    contribution_type: ContributionType::Other("Founding".to_string()),
+                    contribution_type: ContributionType::Founding,
                     end_date: None,
                     need: None,
                 },
@@ -289,6 +294,28 @@ impl Contract {
             .expect("ERR_NO_ENTITY")
             .clone()
             .into()
+    }
+
+    /// List entity founders.
+    pub fn get_founders(&self, account_id: AccountId) -> HashSet<AccountId> {
+        self.contributions
+            .into_iter()
+            .filter_map(|((entity_id, contributor_id), contribution)| {
+                (entity_id == &account_id && {
+                    let contribution = Contribution::from(contribution.clone());
+                    let founding_type = vec![
+                        ContributionType::Founding,
+                        ContributionType::Other("Founding".to_string()),
+                    ];
+                    founding_type.contains(&contribution.current.contribution_type)
+                        || contribution
+                            .history
+                            .into_iter()
+                            .any(|detail| founding_type.contains(&detail.contribution_type))
+                })
+                .then_some(contributor_id.clone())
+            })
+            .collect()
     }
 
     /// Check if account ID is an entity.

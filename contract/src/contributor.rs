@@ -25,6 +25,7 @@ pub enum ContributionType {
     Marketing,
     Legal,
     Other(String),
+    Founding,
 }
 
 impl Default for ContributionType {

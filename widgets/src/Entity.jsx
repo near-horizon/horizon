@@ -33,20 +33,16 @@ const isAuthorized = Near.view(
   "final"
 );
 
-const contributions = Near.view(
-  ownerId,
-  "get_entity_contributions",
-  { account_id: accountId },
-  "final"
-);
-
 const profile = Social.getr(`${accountId}/profile`);
 
-const [founder] = Object.keys(contributions ?? {}).filter((contribution) => {
-  const details = contributions[contribution];
-  const all = [...details.history, details.current];
-  return all.some((detail) => detail.description === "");
-});
+const founders =
+  Near.view(
+    ownerId,
+    "get_founders",
+    { account_id: accountId },
+    "final",
+    true
+  ) || [];
 
 const body = (
   <div
@@ -115,10 +111,29 @@ const body = (
           ),
           additionalRow: (
             <>
-              <Widget
-                src={`${ownerId}/widget/ProfileLine`}
-                props={{ accountId: founder, update: props.update }}
-              />
+              <div>
+                {founders.map((founder) =>
+                  founders.length === 1 ? (
+                    <Widget
+                      src={`${ownerId}/widget/ProfileLine`}
+                      props={{
+                        accountId: founder,
+                        isEntity: false,
+                        update: props.update,
+                      }}
+                    />
+                  ) : (
+                    <Widget
+                      src={`${ownerId}/widget/ProfileCircle`}
+                      props={{
+                        accountId: founder,
+                        isEntity: false,
+                        update: props.update,
+                      }}
+                    />
+                  )
+                )}
+              </div>
               <Widget
                 src={`${ownerId}/widget/Tags`}
                 props={{ tags: profile.tags }}
