@@ -449,7 +449,11 @@ impl Contract {
         self.requests
             .into_iter()
             .filter_map(|((entity_id, contributor_id), _)| {
-                self.check_is_manager_or_higher(entity_id, &account_id)
+                let Some(contribution) = self.contributions.get(&(entity_id.clone(), account_id.clone())) else {
+                    return None;
+                };
+                let contribution = Contribution::from(contribution.clone());
+                contribution.permissions.contains(&Permission::Admin)
                     .then_some((entity_id.clone(), contributor_id.clone()))
             })
             .collect()
