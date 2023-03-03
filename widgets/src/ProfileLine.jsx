@@ -21,7 +21,7 @@ Near.asyncView(
 const profile = Social.getr(`${accountId}/profile`);
 
 const fullName = profile.name || state.data.name || accountId;
-const href = `https://near.social/#/${ownerId}/widget/Index?tab=${isEntity ? "entity" : "contributor"
+const href = `/#/${ownerId}/widget/Index?tab=${isEntity ? "entity" : "contributor"
   }&accountId=${accountId}`;
 
 if (state.data || profile) {

@@ -11,7 +11,7 @@ return (
       <a
         className={`btn ${props.content === id ? "btn-secondary" : "btn-outline-secondary"
           }`}
-        href={`https://near.social/#/${ownerId}/widget/Index?tab=${tab}&content=${id}${props.search ? "&search=" + props.search : ""
+        href={`/#/${ownerId}/widget/Index?tab=${tab}&content=${id}${props.search ? "&search=" + props.search : ""
           }${accountId ? "&accountId=" + accountId : ""}${cid ? "&cid=" + cid : ""
           }`}
         onClick={() =>

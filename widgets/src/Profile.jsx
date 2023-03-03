@@ -41,7 +41,7 @@ const controls = (
     <a
       className="btn btn-success me-2 text-light"
       style={{ width: "13em" }}
-      href={`https://near.social/#/mob.near/widget/ProfilePage?accountId=${accountId}`}
+      href={`/#/mob.near/widget/ProfilePage?accountId=${accountId}`}
     >
       <i className="bi-code" />
       <span className="text-nowrap">View Social profile</span>

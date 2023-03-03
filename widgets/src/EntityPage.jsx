@@ -56,7 +56,7 @@ const controls = isAuthorized ? (
     <a
       className="btn btn-outline-secondary me-2"
       style={{ width: "8em" }}
-      href={`https://near.social/#/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
+      href={`/#/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
       onClick={() =>
         props.update({ tab: "create", content: "entity", accountId })
       }
@@ -72,7 +72,7 @@ const controls = isAuthorized ? (
           {
             text: "Create new request",
             icon: "bi-boxes",
-            href: `https://near.social/#/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
+            href: `/#/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
             onClick: () =>
               props.update({ tab: "create", content: "request", accountId }),
           },

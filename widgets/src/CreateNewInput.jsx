@@ -4,7 +4,7 @@ const createNewButton = ({ id, text, icon, kind }) => (
   <li>
     <a
       className="dropdown-item"
-      href={`https://near.social/#/${ownerId}/widget/Index?tab=create&content=${id}${kind ? "&kind=" + kind : ""
+      href={`/#/${ownerId}/widget/Index?tab=create&content=${id}${kind ? "&kind=" + kind : ""
         }`}
       onClick={() => props.update({ tab: "create", content: id, kind })}
     >

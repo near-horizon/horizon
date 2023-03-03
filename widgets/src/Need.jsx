@@ -69,7 +69,7 @@ const body = (
     <div className="flex-grow-1 py-3">
       <div className="d-flex flex-row justify-content-between align-items-start">
         <a
-          href={`https://near.social/#/${ownerId}/widget/Index?tab=need&accountId=${accountId}&cid=${cid}`}
+          href={`/#/${ownerId}/widget/Index?tab=need&accountId=${accountId}&cid=${cid}`}
           onClick={() =>
             props.update({
               tab: "need",

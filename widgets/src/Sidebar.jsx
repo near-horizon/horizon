@@ -26,7 +26,7 @@ const navItem = ({ text, icon, id, count }) => (
   <a
     className={`nav-link mt-2 rounded-3 p-2 ${id === props.tab ? "bg-secondary" : ""
       }`}
-    href={`https://near.social/#/${ownerId}/widget/Index?tab=${id}`}
+    href={`/#/${ownerId}/widget/Index?tab=${id}`}
     onClick={() => props.update({ tab: id, content: "", search: "" })}
   >
     <i className={icon} />
@@ -57,7 +57,7 @@ const HomeLink = styled.a`
 return (
   <div className="d-flex flex-column">
     <HomeLink
-      href={`https://near.social/#/${ownerId}/widget/Index`}
+      href={`/#/${ownerId}/widget/Index`}
       onClick={() => props.update({ tab: "home", content: "", search: "" })}
     >
       <h4 className="fs-4 text-nowrap d-flex flex-row align-items-center">
@@ -87,7 +87,7 @@ return (
       icon: "bi-info-square",
       id: "about",
     })}
-    <a className="nav-link mt-2 rounded-3 p-2" href="https://near.social/#/">
+    <a className="nav-link mt-2 rounded-3 p-2" href="/#/">
       <i className="bi-escape" />
       <span>Exit application</span>
     </a>

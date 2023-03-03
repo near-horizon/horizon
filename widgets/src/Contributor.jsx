@@ -99,7 +99,7 @@ const body = (
                     {
                       text: "View details",
                       icon: "bi-info-circle",
-                      href: `https://near.social/#/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`,
+                      href: `/#/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`,
                       onClick: () =>
                         props.update({
                           tab: "contributor",
