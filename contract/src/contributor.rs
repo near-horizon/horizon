@@ -129,6 +129,7 @@ impl Contract {
             ContributionType::Investment,
             ContributionType::Marketing,
             ContributionType::Legal,
+            ContributionType::Founding,
         ]
     }
 }
