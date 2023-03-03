@@ -53,14 +53,6 @@ pub enum VersionedContributor {
     Current(Contributor),
 }
 
-impl VersionedContributor {
-    pub fn unwrap(self) -> Contributor {
-        match self {
-            VersionedContributor::Current(c) => c,
-        }
-    }
-}
-
 impl From<VersionedContributor> for Contributor {
     fn from(value: VersionedContributor) -> Self {
         match value {

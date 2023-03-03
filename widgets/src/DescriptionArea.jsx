@@ -1,37 +1,68 @@
 const description = props.description || "";
-const lengthCutoff = 80;
 
 State.init({
-  showAll: description.length <= lengthCutoff,
+  showAll: false,
 });
 
+const Elipsiss = styled.b`
+  display: ${({ hidden }) => (hidden ? "none" : "inline-block")};
+  background-color: white;
+  position: absolute;
+  padding-right: 0.4em;
+  right: 0;
+  top: 0;
+`;
+
+const ShowToggle = styled.a`
+  --blue: RGBA(13, 110, 253, 1);
+  display: ${({ hidden }) => (hidden ? "none" : "inline-block")};
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--blue);
+  text-decoration: none;
+  margin-left: 0.5em;
+  padding: 0;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  &:visited {
+    color: var(--blue);
+    text-decoration: none;
+  }
+`;
+
+const TextArea = styled.div`
+  position: relative;
+  overflow: hidden;
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  white-space: ${({ wrap }) => (wrap ? "wrap" : "nowrap")};
+`;
+
+const Description = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
 return (
-  <div className="d-flex flex-row justify-content-start align-items-start">
-    <div>
-      <Markdown
-        text={
-          state.showAll
-            ? description
-            : description.substring(0, lengthCutoff) + "..."
-        }
-      />
-    </div>
-    {state.showAll && description.length > lengthCutoff ? (
-      <a
-        className="btn fw-bold text-primary ms-2 p-0 text-nowrap"
-        onClick={() => State.update({ showAll: false })}
-      >
-        Show less
-      </a>
-    ) : description.length < lengthCutoff ? (
-      <></>
-    ) : (
-      <a
-        className="btn fw-bold text-primary ms-2 p-0 text-nowrap"
-        onClick={() => State.update({ showAll: true })}
-      >
-        Read more
-      </a>
-    )}
-  </div>
+  <Description>
+    <TextArea wrap={state.showAll}>
+      <Markdown text={description} />
+      <Elipsiss hidden={state.showAll || description.length < 100}>
+        ...
+      </Elipsiss>
+    </TextArea>
+    <ShowToggle
+      hidden={description.length < 100}
+      onClick={() => State.update({ showAll: !state.showAll })}
+    >
+      {state.showAll ? "Show less" : "Read more"}
+    </ShowToggle>
+  </Description>
 );

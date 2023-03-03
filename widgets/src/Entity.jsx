@@ -142,7 +142,7 @@ const body = (
           ),
         }}
       />
-      <div style={{ maxWidth: "85%" }}>
+      <div style={{ maxWidth: "100%", marginTop: "0.5em" }}>
         <Widget
           src={`${ownerId}/widget/DescriptionArea`}
           props={{

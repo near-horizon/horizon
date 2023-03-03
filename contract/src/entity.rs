@@ -162,7 +162,7 @@ impl Contract {
 
     /// Moderator updates the entity details.
     pub fn set_entity(&mut self, account_id: AccountId, entity: Entity) {
-        self.assert_moderator();
+        self.assert_manager_or_higher(&account_id, &env::predecessor_account_id());
         self.entities
             .insert(account_id, VersionedEntity::Current(entity));
     }
