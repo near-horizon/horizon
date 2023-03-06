@@ -10,7 +10,7 @@ const DropdownDivider = styled.hr`
   margin: 0;
 `;
 
-const DropdownItem = styled.a`
+const DropdownItem = styled.button`
   display: block;
   width: 100%;
   clear: both;
@@ -19,7 +19,10 @@ const DropdownItem = styled.a`
   white-space: nowrap;
   text-decoration: none;
   color: black;
+  border: 0;
+  text-align: left;
   transition: background-color 0.2s ease-in-out;
+  background-color: white;
 
   &:hover {
     color: black;
