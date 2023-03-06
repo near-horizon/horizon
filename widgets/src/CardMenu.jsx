@@ -75,14 +75,37 @@ const DropdownList = styled.ul`
   }
 `;
 
-const Dot = styled.i`
-  display: inline-block;
-  width: 0.2em;
-  height: 0.2em;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 100%;
-  margin: 0.1em;
-`;
+const dots = (
+  <svg
+    width="4"
+    height="16"
+    viewBox="0 0 4 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M2.00008 8.83325C2.46032 8.83325 2.83341 8.46016 2.83341 7.99992C2.83341 7.53968 2.46032 7.16659 2.00008 7.16659C1.53984 7.16659 1.16675 7.53968 1.16675 7.99992C1.16675 8.46016 1.53984 8.83325 2.00008 8.83325Z"
+      stroke="#344054"
+      stroke-width="1.66667"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M2.00008 2.99992C2.46032 2.99992 2.83341 2.62682 2.83341 2.16659C2.83341 1.70635 2.46032 1.33325 2.00008 1.33325C1.53984 1.33325 1.16675 1.70635 1.16675 2.16659C1.16675 2.62682 1.53984 2.99992 2.00008 2.99992Z"
+      stroke="#344054"
+      stroke-width="1.66667"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M2.00008 14.6666C2.46032 14.6666 2.83341 14.2935 2.83341 13.8333C2.83341 13.373 2.46032 12.9999 2.00008 12.9999C1.53984 12.9999 1.16675 13.373 1.16675 13.8333C1.16675 14.2935 1.53984 14.6666 2.00008 14.6666Z"
+      stroke="#344054"
+      stroke-width="1.66667"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
 
 const MenuIcon = styled.button`
   display: flex;
@@ -112,9 +135,7 @@ return (
       onClick={() => State.update({ show: !state.show })}
       onBlur={() => State.update({ show: false })}
     >
-      <Dot />
-      <Dot />
-      <Dot />
+      {dots}
     </MenuIcon>
 
     <DropdownList className={state.show ? "show" : ""}>
