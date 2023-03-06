@@ -116,7 +116,7 @@ const MenuIcon = styled.button`
   width: 2.5em;
   height: 2.5em;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 5px;
+  border-radius: 8px;
   color: black;
   cursor: pointer;
 

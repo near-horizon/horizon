@@ -19,16 +19,20 @@ const WidgetContainer = styled.div`
   margin-bottom: 0.5em;
 `;
 
-return allEntities.map((accountId) => (
-  <WidgetContainer key={accountId}>
-    <Widget
-      src={`${ownerId}/widget/Entity`}
-      props={{
-        accountId,
-        notStandalone: false,
-        inboxView: true,
-        update: props.update,
-      }}
-    />
-  </WidgetContainer>
-));
+return (
+  <>
+    {allEntities.map((accountId) => (
+      <WidgetContainer key={accountId}>
+        <Widget
+          src={`${ownerId}/widget/Entity`}
+          props={{
+            accountId,
+            notStandalone: false,
+            inboxView: true,
+            update: props.update,
+          }}
+        />
+      </WidgetContainer>
+    ))}
+  </>
+);
