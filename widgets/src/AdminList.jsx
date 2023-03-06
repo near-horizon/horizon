@@ -15,20 +15,20 @@ if (!allEntities || allEntities.length === 0) {
   return "No entities with Admin access for your account!";
 }
 
-return (
-  <>
-    {allEntities.map((accountId) => (
-      <div key={accountId} className="mb-2">
-        <Widget
-          src={`${ownerId}/widget/Entity`}
-          props={{
-            accountId,
-            notStandalone: false,
-            inboxView: true,
-            update: props.update,
-          }}
-        />
-      </div>
-    ))}
-  </>
-);
+const WidgetContainer = styled.div`
+  margin-bottom: 0.5em;
+`;
+
+return allEntities.map((accountId) => (
+  <WidgetContainer key={accountId}>
+    <Widget
+      src={`${ownerId}/widget/Entity`}
+      props={{
+        accountId,
+        notStandalone: false,
+        inboxView: true,
+        update: props.update,
+      }}
+    />
+  </WidgetContainer>
+));
