@@ -4,8 +4,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U64;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, near_bindgen, require, serde_json, AccountId, Timestamp};
-use std::collections::{HashMap, HashSet};
-use std::iter::FromIterator;
+use std::collections::HashSet;
 
 use crate::contributor::{ContributionType, VersionedContributor};
 use crate::dec_serde::{option_u64_dec_format, u64_dec_format};
@@ -341,15 +340,11 @@ impl Contract {
     /// Views
 
     /// Get all the contributions for a single contributor.
-    pub fn get_contributor_contributions(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<AccountId, Contribution> {
+    pub fn get_contributor_contributions(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.contributions
             .into_iter()
-            .filter_map(|((entity, contributor), contribution)| {
-                (&account_id == contributor)
-                    .then_some((entity.clone(), contribution.clone().into()))
+            .filter_map(|((entity, contributor), _)| {
+                (&account_id == contributor).then_some(entity.clone())
             })
             .collect()
     }
@@ -366,25 +361,17 @@ impl Contract {
     }
 
     /// Get all the contributions for this entity.
-    pub fn get_entity_contributions(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<AccountId, Contribution> {
+    pub fn get_entity_contributions(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.contributions
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), contribution)| {
-                (entity_id == &account_id)
-                    .then_some((contributor_id.clone(), contribution.clone().into()))
+            .filter_map(|((entity_id, contributor_id), _)| {
+                (entity_id == &account_id).then_some(contributor_id.clone())
             })
             .collect()
     }
 
     /// Get all contributions for a specific need.
-    pub fn get_need_contributions(
-        &self,
-        account_id: AccountId,
-        cid: String,
-    ) -> HashMap<AccountId, Contribution> {
+    pub fn get_need_contributions(&self, account_id: AccountId, cid: String) -> HashSet<AccountId> {
         self.contributions
             .into_iter()
             .filter_map(|((entity_id, contributor_id), contribution)| {
@@ -397,7 +384,7 @@ impl Contract {
                         .history
                         .iter()
                         .any(|detail| detail.need == Some(cid.clone())))
-                .then_some((contributor_id.clone(), contribution))
+                .then_some(contributor_id.clone())
             })
             .collect()
     }
@@ -417,26 +404,21 @@ impl Contract {
     pub fn get_contributor_contribution_requests(
         &self,
         account_id: AccountId,
-    ) -> HashMap<AccountId, ContributionRequest> {
+    ) -> HashSet<AccountId> {
         self.requests
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), contribution)| {
-                (contributor_id == &account_id)
-                    .then_some((entity_id.clone(), contribution.clone().into()))
+            .filter_map(|((entity_id, contributor_id), _)| {
+                (contributor_id == &account_id).then_some(entity_id.clone())
             })
             .collect()
     }
 
     /// Get all the requests for this entity.
-    pub fn get_entity_contribution_requests(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<AccountId, ContributionRequest> {
+    pub fn get_entity_contribution_requests(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.requests
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), contribution)| {
-                (entity_id == &account_id)
-                    .then_some((contributor_id.clone(), contribution.clone().into()))
+            .filter_map(|((entity_id, contributor_id), _)| {
+                (entity_id == &account_id).then_some(contributor_id.clone())
             })
             .collect()
     }
@@ -464,44 +446,30 @@ impl Contract {
         &self,
         account_id: AccountId,
         cid: String,
-    ) -> HashMap<AccountId, ContributionRequest> {
+    ) -> HashSet<AccountId> {
         self.requests
             .into_iter()
             .filter_map(|((entity_id, contributor_id), request)| {
                 (entity_id == &account_id
                     && ContributionRequest::from(request.clone()).need == Some(cid.clone()))
-                .then_some((
-                    contributor_id.clone(),
-                    ContributionRequest::from(request.clone()),
-                ))
+                .then_some(contributor_id.clone())
             })
             .collect()
     }
 
     /// Get all contribution needs.
-    pub fn get_contribution_needs(&self) -> HashMap<AccountId, HashMap<String, ContributionNeed>> {
+    pub fn get_contribution_needs(&self) -> Vec<(AccountId, String)> {
         self.needs
             .into_iter()
-            .fold(HashMap::new(), |mut map, ((account_id, cid), need)| {
-                map.entry(account_id.clone())
-                    .and_modify(|inner| {
-                        inner.insert(cid.clone(), need.clone().into());
-                    })
-                    .or_insert(HashMap::from_iter([(cid.clone(), need.clone().into())]));
-                map
-            })
+            .map(|((account_id, cid), _)| (account_id.clone(), cid.clone()))
+            .collect()
     }
 
     /// Get all contribnution needs of entity.
-    pub fn get_entity_contribution_needs(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<String, ContributionNeed> {
+    pub fn get_entity_contribution_needs(&self, account_id: AccountId) -> HashSet<String> {
         self.needs
             .into_iter()
-            .filter_map(|((entity_id, cid), need)| {
-                (entity_id == &account_id).then_some((cid.clone(), need.clone().into()))
-            })
+            .filter_map(|((entity_id, cid), _)| (entity_id == &account_id).then_some(cid.clone()))
             .collect()
     }
 

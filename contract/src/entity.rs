@@ -2,7 +2,7 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::json_types::U64;
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, near_bindgen, AccountId, Timestamp};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 use crate::contribution::{
     Contribution, ContributionDetail, ContributionInvite, VersionedContribution,
@@ -255,23 +255,12 @@ impl Contract {
     /// Views
 
     /// List out entities. By default list all of them.
-    pub fn get_entities(
-        &self,
-        from_index: Option<u64>,
-        limit: Option<u64>,
-    ) -> HashMap<AccountId, Entity> {
-        let from_index = from_index.unwrap_or(0);
-        let limit = limit.unwrap_or(self.entities.len().into());
-        self.entities
-            .into_iter()
-            .skip(from_index as usize)
-            .take(limit as usize)
-            .map(|(key, entity)| (key.clone(), entity.clone().into()))
-            .collect()
+    pub fn get_entities(&self) -> HashSet<AccountId> {
+        self.entities.keys().cloned().collect()
     }
 
     /// List out entities that account ID is admin for.
-    pub fn get_admin_entities(&self, account_id: AccountId) -> HashMap<AccountId, Entity> {
+    pub fn get_admin_entities(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.contributions
             .into_iter()
             .filter_map(|((entity_id, contributor_id), contribution)| {
@@ -279,10 +268,7 @@ impl Contract {
                     && Contribution::from(contribution.clone())
                         .permissions
                         .contains(&Permission::Admin))
-                .then_some((
-                    entity_id.clone(),
-                    self.entities.get(entity_id).unwrap().clone().into(),
-                ))
+                .then_some(entity_id.clone())
             })
             .collect()
     }
@@ -324,29 +310,21 @@ impl Contract {
     }
 
     /// List invites sent by entity with given account ID.
-    pub fn get_entity_invites(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<AccountId, ContributionInvite> {
+    pub fn get_entity_invites(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.invites
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), invite)| {
-                (entity_id == &account_id)
-                    .then_some((contributor_id.clone(), invite.clone().into()))
+            .filter_map(|((entity_id, contributor_id), _)| {
+                (entity_id == &account_id).then_some(contributor_id.clone())
             })
             .collect()
     }
 
     /// List invites sent to contributor with given account ID.
-    pub fn get_contributor_invites(
-        &self,
-        account_id: AccountId,
-    ) -> HashMap<AccountId, ContributionInvite> {
+    pub fn get_contributor_invites(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.invites
             .into_iter()
-            .filter_map(|((entity_id, contributor_id), invite)| {
-                (contributor_id == &account_id)
-                    .then_some((entity_id.clone(), invite.clone().into()))
+            .filter_map(|((entity_id, contributor_id), _)| {
+                (contributor_id == &account_id).then_some(entity_id.clone())
             })
             .collect()
     }
