@@ -1,44 +1,59 @@
 const ownerId = "contribut3.near";
 const search = props.search ?? "";
 const accountId = props.accountId;
+const limit = 10;
 
-const requests = Object.keys(
-  Near.view(
+State.init({
+  items: [],
+  shown: [],
+  from: 0,
+  hasMore: true,
+});
+
+if (state.items.length === 0) {
+  Near.asyncView(
     ownerId,
     "get_contributor_contribution_requests",
     { account_id: context.accountId },
     "final",
-    true
-  ) ?? {}
-);
-
-if (!requests) {
-  return "Loading...";
+    false
+  ).then((requests) =>
+    State.update({
+      items: requests.sort(),
+      shown: requests.slice(0, limit),
+      from: limit,
+      hasMore: requests.length > limit,
+    })
+  );
 }
 
-if (Array.isArray(requests) && requests.length === 0) {
-  return "No proposals found!";
-}
+const loadMore = () => {
+  State.update({
+    shown: state.items.slice(0, state.from + limit),
+    from: state.from + limit,
+    hasMore: state.from + limit < state.items.length,
+  });
+};
 
-const allRequests = requests.filter((entityId) => entityId.includes(search));
-
-if (!allRequests || allRequests.length === 0) {
-  return "No proposals match search criteria!";
-}
+const WidgetContainer = styled.div`
+  margin: 0.5em 0;
+`;
 
 return (
-  <>
-    {allRequests.map((entityId) => (
-      <div key={contributorId} className="mt-3">
-        <Widget
-          src={`${ownerId}/widget/ContributionRequest`}
-          props={{
-            entityId,
-            contributorId: accountId,
-            update: props.update,
-          }}
-        />
-      </div>
-    ))}
-  </>
+  <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
+    {state.shown
+      .filter((entityId) => entityId.includes(search))
+      .map((entityId) => (
+        <WidgetContainer key={entityId}>
+          <Widget
+            src={`${ownerId}/widget/ContributionRequest`}
+            props={{
+              entityId,
+              contributorId: accountId,
+              update: props.update,
+            }}
+          />
+        </WidgetContainer>
+      ))}
+  </InfiniteScroll>
 );

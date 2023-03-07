@@ -2,56 +2,79 @@ const ownerId = "contribut3.near";
 const search = props.search ?? "";
 const accountId = props.accountId;
 const cid = props.cid;
+const limit = 10;
 
-const requests = accountId
-  ? Object.keys(
-    Near.view(
-      ownerId,
-      cid
-        ? "get_need_contribution_requests"
-        : "get_entity_contribution_requests",
-      { account_id: accountId, ...(cid ? { cid } : {}) },
-      "final",
-      true
-    ) ?? {}
-  )
-  : Near.view(
+State.init({
+  items: [],
+  shown: [],
+  from: 0,
+  hasMore: true,
+});
+
+if (state.items.length === 0) {
+  Near.asyncView(
     ownerId,
-    "get_admin_contribution_requests",
-    { account_id: context.accountId },
+    accountId
+      ? cid
+        ? "get_need_contribution_requests"
+        : "get_entity_contribution_requests"
+      : "get_admin_contribution_requests",
+    { account_id: accountId ?? context.accountId, ...(cid ? { cid } : {}) },
     "final",
-    true
-  ) ?? [];
-
-if (!requests) {
-  return "Loading...";
+    false
+  ).then((requests) => {
+    if (accountId) {
+      State.update({
+        items: requests
+          .map((contributorId) => [accountId, contributorId])
+          .sort(),
+        shown: requests
+          .map((contributorId) => [accountId, contributorId])
+          .slice(0, limit),
+        from: limit,
+        hasMore: requests.length > limit,
+      });
+    } else {
+      State.update({
+        items: requests.sort(),
+        shown: requests.slice(0, limit),
+        from: limit,
+        hasMore: requests.length > limit,
+      });
+    }
+  });
 }
 
-if (Array.isArray(requests) && requests.length === 0) {
-  return "No contribution requests found!";
-}
+const loadMore = () => {
+  State.update({
+    shown: state.items.slice(0, state.from + limit),
+    from: state.from + limit,
+    hasMore: state.from + limit < state.items.length,
+  });
+};
 
-const allRequests = requests.filter((ids) =>
-  accountId ? ids.includes(search) : ids[0].includes(search)
-);
-
-if (!allRequests || allRequests.length === 0) {
-  return "No requests match search criteria!";
-}
+const WidgetContainer = styled.div`
+  margin: 0.5em 0;
+`;
 
 return (
-  <>
-    {allRequests.map((ids) => (
-      <div key={contributorId} className="mt-3">
-        <Widget
-          src={`${ownerId}/widget/ContributionRequest`}
-          props={{
-            entityId: accountId ? accountId : ids[0],
-            contributorId: accountId ? ids : ids[1],
-            update: props.update,
-          }}
-        />
-      </div>
-    ))}
-  </>
+  <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
+    {state.shown
+      .filter(
+        ([entityId, contributorId]) =>
+          entityId.includes(search) || contributorId.includes(search)
+      )
+      .map(([entityId, contributorId]) => (
+        <WidgetContainer key={`${entityId}-${contributorId}`}>
+          <Widget
+            src={`${ownerId}/widget/ContributionRequest`}
+            props={{
+              entityId,
+              contributorId,
+              update: props.update,
+            }}
+          />
+        </WidgetContainer>
+      ))}
+  </InfiniteScroll>
 );

@@ -18,7 +18,7 @@ const contributor = isPreview
     "get_contributor",
     { account_id: accountId },
     "final",
-    true
+    false
   );
 
 if (!contributor) {
@@ -32,12 +32,14 @@ const isEntity = Near.view(
   "check_is_entity",
   { account_id: accountId },
   "final",
-  true
+  false
 );
 
 const active = contributor.looking_for_work;
 
-const profile = Social.getr(`${accountId}/profile`);
+const profile = Social.get(`${accountId}/profile/**`, "final", {
+  subscribe: false,
+});
 
 const contributionTypes = contributor.contribution_types.reduce(
   (ob, contributionType) =>

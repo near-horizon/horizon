@@ -37,10 +37,15 @@ const ShowToggle = styled.a`
 
 const TextArea = styled.div`
   position: relative;
+  font-weight: 400;
+  color: #667085;
   overflow: hidden;
   flex-grow: 1;
-  text-overflow: ellipsis;
-  white-space: ${({ wrap }) => (wrap ? "wrap" : "nowrap")};
+  height: ${({ wrap }) => (wrap ? "unset" : "2em")};
+
+  p {
+    font-weight: 500;
+  }
 `;
 
 const Description = styled.div`

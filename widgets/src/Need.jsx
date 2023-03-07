@@ -18,21 +18,23 @@ const isContributor = Near.view(
   "check_is_contributor",
   { account_id: context.accountId },
   "final",
-  true
+  false
 );
 
 const currentContributor = Near.view(
   ownerId,
   "get_contribution",
   { entity_id: accountId, contributor_id: context.accountId },
-  "final"
+  "final",
+  false
 );
 
 const isAuthorized = Near.view(
   ownerId,
   "check_is_manager_or_higher",
   { entity_id: accountId, account_id: context.accountId },
-  "final"
+  "final",
+  false
 );
 
 const contributionNeed = props.isPreview
@@ -50,7 +52,7 @@ const contributionNeed = props.isPreview
 
 const entity = isPreview
   ? props.entity
-  : Near.view(ownerId, "get_entity", { account_id: accountId }, "final");
+  : Near.view(ownerId, "get_entity", { account_id: accountId }, "final", false);
 
 if (!entity) {
   return isPreview
@@ -58,7 +60,9 @@ if (!entity) {
     : "Loading...";
 }
 
-const profile = Social.getr(`${accountId}/profile`);
+const profile = Social.get(`${accountId}/profile/**`, "final", {
+  subscribe: true,
+});
 
 const body = (
   <div
