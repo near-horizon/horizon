@@ -3,79 +3,99 @@ const accountId = props.accountId;
 const contributionType = props.contributionType
   ? [{ name: props.contributionType }]
   : [];
-const allContributionTypes = (
-  Near.view(ownerId, "get_contribution_types", {}, "final", true) ?? []
-).map((name) => ({ name }));
-
-const convertType = (contributionType) => {
-  if (allContributionTypes.some(({ name }) => name === contributionType.name)) {
-    return contributionType.name;
-  }
-
-  return { Other: contributionType.name };
-};
 
 State.init({
   contributionType: [],
   entityId: accountId ? [{ name: accountId }] : [],
   description: "",
+  options: [],
+  fetched: false,
 });
 
-const entityIdInput = props.accountId ? (
-  <div>
-    <label htmlFor="account-id" className="text-muted fw-semibold">
-      Request for:
-    </label>
-    <div
-      className="rounded-3 bg-light"
-      style={{ height: "5em" }}
-      id="account-id"
-    >
+console.log("rendered this");
+
+if (!state.fetched) {
+  Near.asyncView(ownerId, "get_contribution_types", {}, "final", false).then(
+    (types) =>
+      State.update({
+        fetched: true,
+        options: types.map((name) => ({ name })),
+      })
+  );
+}
+
+const Label = styled.label`
+  font-weight: 600;
+  color: #344054;
+`;
+
+const EntityInput = styled.div`
+  margin-bottom: 0.5em;
+`;
+
+const SelectedEntity = styled.div`
+  border-radius: 4px;
+  background-color: #f2f4f7;
+  height: 5em;
+`;
+
+const entityEditor = (
+  <EntityInput>
+    <Label htmlFor="enity-id">Request for:</Label>
+    {props.accountId ? (
+      <SelectedEntity id="entity-id">
+        <Widget
+          src={`${ownerId}/widget/ProfileLine`}
+          props={{
+            accountId: props.accountId,
+            imageSize: "4em",
+            isEntity: true,
+          }}
+        />
+      </SelectedEntity>
+    ) : (
       <Widget
-        src={`${ownerId}/widget/ProfileLine`}
-        props={{ accountId, imageSize: "4em", isEntity: true }}
+        src={`${ownerId}/widget/AdminEntityAccountIdInput`}
+        props={{
+          update: (entityId) => {
+            State.update({ entityId });
+            Near.asyncView(
+              ownerId,
+              "get_entity_invites",
+              { account_id: entityId[0].name },
+              "final"
+            ).then((invites) =>
+              State.update({
+                forbiddenIds: new Set(Object.keys(invites)),
+              })
+            );
+          },
+          accountId: context.accountId,
+          selected: state.entityId,
+        }}
       />
-    </div>
-  </div>
-) : (
-  <Widget
-    src={`${ownerId}/widget/AdminEntityAccountIdInput`}
-    props={{
-      label: "Request for:",
-      update: (entityId) => {
-        State.update({ entityId });
-        Near.asyncView(
-          ownerId,
-          "get_entity_invites",
-          { account_id: entityId[0].name },
-          "final"
-        ).then((invites) =>
-          State.update({
-            forbiddenIds: new Set(Object.keys(invites)),
-          })
-        );
-      },
-      accountId: context.accountId,
-      selected: state.entityId,
-    }}
-  />
+    )}
+  </EntityInput>
 );
 
+const InputWrapper = styled.div`
+  margin-bottom: 0.5em;
+`;
+
 const contributionTypeInput = (
-  <div className="col-lg-12 mb-2">
+  <InputWrapper>
     <Widget
       src={`${ownerId}/widget/ContributionTypeInput`}
       props={{
         contributionType: state.contributionType,
         update: (contributionType) => State.update({ contributionType }),
-        allContributionTypes,
       }}
     />
-  </div>
+  </InputWrapper>
 );
 
 const descriptionInput = (
-  <div className="col-lg-12 mb-2">
+  <InputWrapper>
     <Widget
       src={`${ownerId}/widget/DescriptionInput`}
       props={{
@@ -84,8 +104,16 @@ const descriptionInput = (
         update: (description) => State.update({ description }),
       }}
     />
-  </div>
+  </InputWrapper>
 );
+
+const convertType = (contributionType) => {
+  if (state.options.some(({ name }) => name === contributionType.name)) {
+    return contributionType.name;
+  }
+
+  return { Other: contributionType.name };
+};
 
 const onSubmit = () => {
   if (state.contributionType.length !== 1 || state.description.length === 0) {
@@ -101,33 +129,84 @@ const onSubmit = () => {
   Near.call(ownerId, "post_contribution_need", args);
 };
 
+const Page = styled.div`
+  padding: 0 0.75em;
+  max-width: 100%;
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 0.75em;
+    padding-bottom: 0.75em;
+  }
+`;
+
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75em;
+  padding: 1em;
+  border-radius: 4px;
+  background-color: #f9fafb;
+`;
+
+const Controls = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const CloseButton = styled.a`
+  background-color: white;
+  padding: 0.7em;
+  border-radius: 4px;
+  border: 0;
+  color: #344054;
+  transition: box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    text-decoration: none;
+    color: unset;
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  }
+`;
+
+const ConfirmButton = styled.button`
+  padding: 0.7em;
+  border-radius: 4px;
+  border: 0;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  background-color: ${({ valid }) => (valid ? "#7f56d9" : "#344054")};
+  color: white;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    ${({ valid }) => (valid ? "background-color: #4f56d9;" : "")}
+  }
+`;
+
 return (
-  <div className="px-3" style={{ maxWidth: "45em" }}>
-    <h1 className="fs-2 mb-3 pb-3">Create new contribution request</h1>
-    <div className="bg-light mb-3 p-4 rounded-2">
-      <div className="row">
-        {entityIdInput}
-        {contributionTypeInput}
-        {descriptionInput}
-      </div>
-    </div>
-    <div className="d-flex flex-row justify-content-between">
-      <a
-        className="btn btn-outline-secondary"
+  <Page>
+    <h1>Create new contribution request</h1>
+    <Form>
+      {entityEditor}
+      {contributionTypeInput}
+      {descriptionInput}
+    </Form>
+    <Controls>
+      <CloseButton
         href={`/#/${ownerId}/widget/Index?tab=home`}
         onClick={() => props.update({ tab: "home" })}
       >
         Cancel
-      </a>
-      <a
-        className={`btn ${state.contributionType.length !== 1 || state.description.length === 0
-            ? "btn-secondary"
-            : "btn-primary"
-          }`}
+      </CloseButton>
+      <ConfirmButton
+        valid={
+          state.contributionType.length === 1 && state.description.length > 0
+        }
         onClick={onSubmit}
       >
         Create request
-      </a>
-    </div>
-  </div>
+      </ConfirmButton>
+    </Controls>
+  </Page>
 );

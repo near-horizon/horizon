@@ -46,7 +46,7 @@ const founders =
     "get_founders",
     { account_id: accountId },
     "final",
-    true
+    false
   ) || [];
 
 const profile = Social.getr(`${accountId}/profile`);
@@ -177,7 +177,7 @@ const proposalsCount = Object.keys(
     "get_entity_contribution_requests",
     { account_id: accountId },
     "final",
-    true
+    false
   ) ?? []
 ).length;
 
@@ -187,7 +187,7 @@ const invitesCount = Object.keys(
     "get_entity_invites",
     { account_id: accountId },
     "final",
-    true
+    false
   ) ?? {}
 ).length;
 
@@ -196,7 +196,7 @@ const isContributor = Near.view(
   "check_is_contributor",
   { account_id: accountId },
   "final",
-  true
+  false
 );
 
 const contentSelector = (

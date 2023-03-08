@@ -23,7 +23,7 @@ if (state.items.length === 0) {
     "final",
     false
   ).then((needs) => {
-    if (accountId && isAdmin) {
+    if (accountId && !isAdmin) {
       State.update({
         items: needs.map((cid) => [accountId, cid]),
         shown: needs.map((cid) => [accountId, cid]).slice(0, limit),

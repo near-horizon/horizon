@@ -10,7 +10,7 @@ const DropdownDivider = styled.hr`
   margin: 0;
 `;
 
-const DropdownItem = styled.button`
+const DropdownItem = styled.a`
   display: block;
   width: 100%;
   clear: both;

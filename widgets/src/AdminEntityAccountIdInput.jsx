@@ -4,27 +4,36 @@ const accountId = props.accountId;
 const selected = props.selected;
 const label = props.label || "Invite to:";
 
-const options = (
-  Near.view(
+State.init({
+  options: [],
+  fetched: false,
+});
+
+if (!state.fetched) {
+  Near.asyncView(
     ownerId,
-    "get_contributor_admin_entities",
+    "get_admin_entities",
     { account_id: accountId },
     "final",
-    true
-  ) ?? []
-).map((name) => ({ name }));
+    false
+  ).then((entities) =>
+    State.update({
+      fetched: true,
+      options: entities.map((name) => ({ name })),
+    })
+  );
+}
 
 return (
-  <div className="col-lg-12 mb-2">
-    <label htmlFor="entity-id-input">{label}</label>
+  <>
     <Typeahead
       id="entity-id-input"
       labelKey="name"
       onChange={update}
-      options={options}
+      options={state.options}
       placeholder="contribut3.near, social.near..."
       selected={selected}
       positionFixed
     />
-  </div>
+  </>
 );

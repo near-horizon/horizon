@@ -104,8 +104,15 @@ const body = (
                   text: "Propose contribution",
                   icon: "bi-person-up",
                   id: "contribute",
+                  href: `/#/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}&cid=${cid}`,
                   onClick: () =>
-                    State.update({ contributionFormHidden: false }),
+                    props.update({
+                      tab: "create",
+                      content: "proposal",
+                      search: "",
+                      accountId,
+                      cid,
+                    }),
                 },
                 {
                   text: "View details",
@@ -118,17 +125,6 @@ const body = (
                   id: "share",
                 },
               ],
-            }}
-          />
-          <Widget
-            src={`${ownerId}/widget/ContributionRequestForm`}
-            props={{
-              id: `${accountId}ContributionRequestForm`,
-              entity: accountId,
-              hidden: state.contributionFormHidden,
-              need: cid,
-              contributionType: contributionNeed.contribution_type,
-              onClose: () => State.update({ contributionFormHidden: true }),
             }}
           />
         </div>

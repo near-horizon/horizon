@@ -11,36 +11,71 @@ if (!accountId) {
 State.init({
   contributionFormHidden: true,
   entity: null,
+  entityFetched: false,
   founders: [],
+  foundersFetched: false,
+  profile: null,
+  profileFetched: false,
 });
 
-Near.asyncView(
-  ownerId,
-  "get_entity",
-  { account_id: accountId },
-  "final",
-  false
-).then((entity) => State.update({ entity }));
+if (!state.entityFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_entity",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((entity) => State.update({ entity, entityFetched: true }));
+}
 
-const profile = Social.getr(`${accountId}/profile`, "final", {
-  subscribe: false,
-});
+if (!state.profileFetched) {
+  const profile = Social.getr(`${accountId}/profile`, "final", {
+    subscribe: false,
+  });
+  State.update({ profile, profileFetched: true });
+}
 
-Near.asyncView(
-  ownerId,
-  "get_founders",
-  { account_id: accountId },
-  "final",
-  false
-).then((founders) => State.update({ founders }));
+if (!state.foundersFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_founders",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((founders) => State.update({ founders, foundersFetched: true }));
+}
 
-const body = (
-  <div
-    className="d-flex flex-row justify-content-start"
-    id={accountId}
-    style={{ minHeight: "8em", maxWidth: "100%" }}
-  >
-    <div className="flex-grow-1 py-3" style={{ maxWidth: "100%" }}>
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  min-height: 8em;
+  max-width: 100%;
+  padding: 0 0.75em;
+  border-bottom: 1px solid #eaecf0;
+`;
+
+const Wrapper = styled.div`
+  flex-grow: 1;
+  padding: 0.75em 0;
+  max-width: 100%;
+`;
+
+const ActionColumn = styled.div`
+  display: ${({ show }) => (show ? "flex" : "none")};
+  flex-direction: row;
+  justify-content: between;
+  align-items: center;
+`;
+
+const DescriptionWrapper = styled.div`
+  max-width: 100%;
+  margin-top: 0.5em;
+`;
+
+return (
+  <Container id={accountId}>
+    <Wrapper>
       <Widget
         src={`${ownerId}/widget/ProfileLine`}
         props={{
@@ -48,10 +83,8 @@ const body = (
           isEntity: true,
           imageSize: "3em",
           update: props.update,
-          additionalColumn: inboxView ? (
-            <></>
-          ) : (
-            <div className="d-flex flex-row justify-content-between align-items-center">
+          additionalColumn: (
+            <ActionColumn show={!inboxView}>
               <Widget
                 src={`${ownerId}/widget/ActiveIndicator`}
                 props={{ active: state.entity.status }}
@@ -64,9 +97,14 @@ const body = (
                     {
                       text: "Propose contribution",
                       icon: "bi-person-up",
-                      id: "contribute",
+                      href: `/#/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}`,
                       onClick: () =>
-                        State.update({ contributionFormHidden: false }),
+                        props.update({
+                          tab: "create",
+                          content: "proposal",
+                          search: "",
+                          accountId,
+                        }),
                     },
                     {
                       text: "View details",
@@ -88,19 +126,10 @@ const body = (
                   ],
                 }}
               />
-              <Widget
-                src={`${ownerId}/widget/ContributionRequestForm`}
-                props={{
-                  id: `${accountId}ContributionRequestForm`,
-                  entity: accountId,
-                  hidden: state.contributionFormHidden,
-                  onClose: () => State.update({ contributionFormHidden: true }),
-                }}
-              />
-            </div>
+            </ActionColumn>
           ),
           additionalRow: (
-            <>
+            <div>
               <div>
                 {state.founders.map((founder) =>
                   state.founders.length === 1 ? (
@@ -126,26 +155,20 @@ const body = (
               </div>
               <Widget
                 src={`${ownerId}/widget/Tags`}
-                props={{ tags: profile.tags }}
+                props={{ tags: state.profile.tags }}
               />
-            </>
+            </div>
           ),
         }}
       />
-      <div style={{ maxWidth: "100%", marginTop: "0.5em" }}>
+      <DescriptionWrapper>
         <Widget
           src={`${ownerId}/widget/DescriptionArea`}
           props={{
-            description: state.entity.description || profile.description,
+            description: state.entity.description || state.profile.description,
           }}
         />
-      </div>
-    </div>
-  </div>
-);
-
-return (
-  <div className="border-bottom border-secondary-subtle">
-    <div className="px-3 py-0">{body}</div>
-  </div>
+      </DescriptionWrapper>
+    </Wrapper>
+  </Container>
 );

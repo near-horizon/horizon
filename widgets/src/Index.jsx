@@ -90,6 +90,7 @@ const tabContent = {
         content: state.content,
         accountId: props.accountId,
         kind: state.kind,
+        cid: state.cid,
         update,
       }}
     />

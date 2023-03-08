@@ -1,26 +1,31 @@
 const ownerId = "contribut3.near";
 
-const proposalsCount = (
-  Near.view(
+State.init({
+  proposalsCount: null,
+  invitesCount: null,
+});
+
+if (state.proposalsCount === null) {
+  Near.asyncView(
     ownerId,
     "get_admin_contribution_requests",
     { account_id: context.accountId },
     "final",
-    true
-  ) ?? []
-).length;
+    false
+  ).then((proposals) => State.update({ proposalsCount: proposals.length }));
+}
 
-const invitesCount = Object.keys(
-  Near.view(
+if (state.invitesCount === null) {
+  Near.asyncView(
     ownerId,
     "get_contributor_invites",
     { account_id: context.accountId },
     "final",
-    true
-  ) ?? {}
-).length;
+    false
+  ).then((invites) => State.update({ invitesCount: invites.length }));
+}
 
-const inboxCount = proposalsCount + invitesCount;
+const inboxCount = state.proposalsCount + state.invitesCount;
 
 const mail = (
   <svg

@@ -10,25 +10,30 @@ const getContent = (content) => {
   return content;
 };
 
-const proposalsCount = (
-  Near.view(
+State.init({
+  proposalsCount: null,
+  invitesCount: null,
+});
+
+if (state.proposalsCount === null) {
+  Near.asyncView(
     ownerId,
     "get_admin_contribution_requests",
     { account_id: context.accountId },
     "final",
-    true
-  ) ?? []
-).length;
+    false
+  ).then((proposals) => State.update({ proposalsCount: proposals.length }));
+}
 
-const invitesCount = Object.keys(
-  Near.view(
+if (state.invitesCount === null) {
+  Near.asyncView(
     ownerId,
     "get_contributor_invites",
     { account_id: context.accountId },
     "final",
-    true
-  ) ?? {}
-).length;
+    false
+  ).then((invites) => State.update({ invitesCount: invites.length }));
+}
 
 const header = (
   <div>
@@ -51,7 +56,7 @@ const contentSelector = (
         {
           id: "proposals",
           text: "Proposals",
-          count: proposalsCount,
+          count: state.proposalsCount,
           icon: (
             <svg
               width="15"
@@ -73,7 +78,7 @@ const contentSelector = (
         {
           id: "invitations",
           text: "Invitations",
-          count: invitesCount,
+          count: state.invitesCount,
           icon: (
             <svg
               width="20"

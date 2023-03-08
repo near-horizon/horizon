@@ -16,21 +16,29 @@ const linkNavigate = () =>
 
 State.init({
   data: null,
+  fetched: false,
+  profile: null,
+  profileFetched: false,
 });
 
-Near.asyncView(
-  ownerId,
-  isEntity ? "get_entity" : "get_contributor",
-  { account_id: accountId },
-  "final",
-  false
-).then((data) => State.update({ data }));
+if (!state.fetched) {
+  Near.asyncView(
+    ownerId,
+    isEntity ? "get_entity" : "get_contributor",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((data) => State.update({ data, fetched: true }));
+}
 
-const profile = Social.get(`${accountId}/profile/**`, "final", {
-  subscribe: false,
-});
+if (!state.profileFetched) {
+  const profile = Social.get(`${accountId}/profile/**`, "final", {
+    subscribe: false,
+  });
+  State.update({ profile, profileFetched: true });
+}
 
-const fullName = profile.name || state.data.name || accountId;
+const fullName = state.profile.name || state.data.name || accountId;
 const href = `/#/${ownerId}/widget/Index?tab=${isEntity ? "entity" : "contributor"
   }&accountId=${accountId}`;
 
