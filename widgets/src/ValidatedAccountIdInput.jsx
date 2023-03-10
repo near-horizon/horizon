@@ -3,7 +3,7 @@ const forbiddenIds = props.forbiddenIds ?? new Set();
 const update = props.update;
 const value = props.value;
 
-initState({
+State.init({
   valid: props.valid ?? true,
   errorMessage: <></>,
 });
@@ -77,9 +77,14 @@ if (!update) {
   return "Cannot render account ID input without update function!";
 }
 
+const Label = styled.label`
+  font-weight: 600;
+  color: #344054;
+`;
+
 return (
   <>
-    <label htmlFor="account-id">{label}</label>
+    <Label htmlFor="account-id">{label}</Label>
     <small style={{ color: "red" }}>
       {state.valid ? null : state.errorMessage}
     </small>
@@ -87,9 +92,8 @@ return (
       type="text"
       id="account-id"
       placeholder="social.near, john.near..."
-      className={`form-control ${
-        state.valid ? "" : "was-validated is-invalid"
-      }`}
+      className={`form-control ${state.valid ? "" : "was-validated is-invalid"
+        }`}
       value={value}
       onChange={({ target }) => update(target.value)}
       onBlur={() => validate(value)}

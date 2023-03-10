@@ -16,25 +16,59 @@ const getContent = (content) => {
   return content;
 };
 
-const need = Near.view(
-  ownerId,
-  "get_contribution_need",
-  { account_id: accountId, cid },
-  "final",
-  true
-);
+State.init({
+  need: null,
+  needFetched: false,
+  proposalsCount: 0,
+  proposalsCountFetched: false,
+  contributorsCount: 0,
+  contributorsCountFetched: false,
+});
 
-const isAuthorized = Near.view(
-  ownerId,
-  "check_is_manager_or_higher",
-  { entity_id: accountId, account_id: context.accountId },
-  "final"
-);
+if (!state.needFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_contribution_need",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((need) => State.update({ need, needFetched: true }));
+}
+
+if (!state.proposalsCountFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_need_contribution_requests",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((proposals) =>
+    State.update({
+      proposalsCount: proposals.length,
+      proposalsCountFetched: true,
+    })
+  );
+}
+
+if (!state.contributorsCountFetched) {
+  Near.view(
+    ownerId,
+    "get_need_contributions",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((contributors) =>
+    State.update({
+      contributorsCount: contributors.length,
+      contributorsCountFetched: true,
+    })
+  );
+}
 
 const needString =
-  typeof need.contribution_type === "string"
-    ? need.contribution_type
-    : need.contribution_type.Other;
+  typeof state.need.contribution_type === "string"
+    ? state.need.contribution_type
+    : state.need.contribution_type.Other;
 
 const body = (
   <div className="px-3">
@@ -87,7 +121,7 @@ const body = (
           <Widget
             src={`${ownerId}/widget/ActiveIndicator`}
             props={{
-              active: need.active,
+              active: state.need.active,
               activeText: "Open for proposals",
               inactiveText: "Closed",
             }}
@@ -99,29 +133,9 @@ const body = (
         />
       </div>
     </div>
-    <Markdown text={need.description} />
+    <Markdown text={state.need.description} />
   </div>
 );
-
-const proposalsCount = Object.keys(
-  Near.view(
-    ownerId,
-    "get_need_contribution_requests",
-    { account_id: accountId, cid },
-    "final",
-    true
-  ) ?? {}
-).length;
-
-const contributorsCount = Object.keys(
-  Near.view(
-    ownerId,
-    "get_need_contributions",
-    { account_id: accountId, cid },
-    "final",
-    true
-  ) ?? {}
-).length;
 
 const contentSelector = (
   <Widget
@@ -137,7 +151,7 @@ const contentSelector = (
         {
           id: "contributors",
           text: "Contributors",
-          count: contributorsCount,
+          count: state.contributorsCount,
           icon: (
             <svg
               width="20"
@@ -159,7 +173,7 @@ const contentSelector = (
         {
           id: "proposals",
           text: "Proposals",
-          count: proposalsCount,
+          count: state.proposalsCount,
           icon: (
             <svg
               width="20"
@@ -183,27 +197,6 @@ const contentSelector = (
   />
 );
 
-const searchBar = (
-  <div className="w-25 col-12 col-md-10 col-lg-8">
-    <div className="card card-sm">
-      <div className="card-body row p-0 ps-2 align-items-center">
-        <div className="col-auto pe-0 me-0">
-          <i className="bi-search" />
-        </div>
-        <div className="col ms-0">
-          <input
-            className="form-control border-0"
-            type="search"
-            value={props.search}
-            placeholder="Search"
-            onChange={(e) => props.update({ search: e.target.value })}
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
 const content = {
   proposals: (
     <Widget
@@ -224,7 +217,10 @@ return (
     <div className="mb-5">{body}</div>
     <div className="d-flex flex-row justify-content-between ps-3">
       {contentSelector}
-      {searchBar}
+      <Widget
+        src={`${ownerId}/widget/SearchInput`}
+        props={{ search: props.search, update: props.update }}
+      />
     </div>
     <div className="px-3 pt-3">{content}</div>
   </div>

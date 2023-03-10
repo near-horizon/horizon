@@ -7,9 +7,14 @@ if (!update) {
   return "Cannot render entity type input without update function!";
 }
 
+const Label = styled.label`
+  font-weight: 600;
+  color: #344054;
+`;
+
 return (
   <>
-    <label htmlFor="entity-type">{text}</label>
+    <Label htmlFor="entity-type">{text}</Label>
     <Typeahead
       id="entity-type"
       labelKey="name"

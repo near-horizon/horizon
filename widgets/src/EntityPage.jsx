@@ -23,93 +23,159 @@ const getContent = (content) => {
 };
 
 State.init({
-  contributionFormHidden: true,
+  isAuthorized: false,
+  isAuthorizedFetched: false,
+  founders: [],
+  foundersFetched: false,
+  proposalsCount: 0,
+  proposalsCountFetched: false,
+  invitesCount: 0,
+  invitesCountFetched: false,
+  isContributor: false,
+  isContributorFetched: false,
+  profile: null,
+  profileFetched: false,
 });
 
-const entity = Near.view(
-  ownerId,
-  "get_entity",
-  { account_id: accountId },
-  "final"
-);
+if (!state.isAuthorizedFetched) {
+  Near.asyncView(
+    ownerId,
+    "check_is_manager_or_higher",
+    { entity_id: accountId, account_id: context.accountId },
+    "final",
+    false
+  ).then((isAuthorized) =>
+    State.update({ isAuthorized, isAuthorizedFetched: true })
+  );
+}
 
-const isAuthorized = Near.view(
-  ownerId,
-  "check_is_manager_or_higher",
-  { entity_id: accountId, account_id: context.accountId },
-  "final"
-);
-
-const founders =
-  Near.view(
+if (!state.foundersFetched) {
+  Near.asyncView(
     ownerId,
     "get_founders",
     { account_id: accountId },
     "final",
     false
-  ) || [];
+  ).then((founders) => State.update({ founders, foundersFetched: true }));
+}
 
-const profile = Social.getr(`${accountId}/profile`);
+if (!state.proposalsCountFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_entity_contribution_requests",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((proposals) =>
+    State.update({
+      proposalsCount: proposals.length,
+      proposalsCountFetched: true,
+    })
+  );
+}
 
-const controls = isAuthorized ? (
-  <div className="d-flex flex-row justify-content-between align-items-center">
-    <a
-      className="btn btn-outline-secondary me-2"
-      style={{ width: "8em" }}
-      href={`/#/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
-      onClick={() =>
-        props.update({ tab: "create", content: "entity", accountId })
-      }
-    >
-      <i className="bi-pencil-square" />
-      <span>Edit project</span>
-    </a>
-    <Widget
-      src={`${ownerId}/widget/CardMenu`}
-      props={{
-        update: props.update,
-        items: [
-          {
-            text: "Create new request",
-            icon: "bi-boxes",
-            href: `/#/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
-            onClick: () =>
-              props.update({ tab: "create", content: "request", accountId }),
-          },
-          // {
-          //   text: "Invite contributors",
-          //   icon: "bi-person-plus",
-          // },
-          // {
-          //   text: "Delete project",
-          //   icon: "bi-trash",
-          // },
-        ],
-      }}
-    />
-  </div>
-) : (
-  <div className="d-flex flex-column justify-content-start align-items-stretch">
-    <a
-      className="btn btn-success me-2 text-light"
-      style={{ width: "13em" }}
-      onClick={() => State.update({ contributionFormHidden: false })}
-    >
-      <i className="bi-person-up" />
-      <span className="text-nowrap">Propose contribution</span>
-    </a>
-    <Widget
-      src={`${ownerId}/widget/ContributionRequestForm`}
-      props={{
-        id: `${accountId}ContributionRequestForm`,
-        entity: accountId,
-        hidden: state.contributionFormHidden,
-        onClose: () => State.update({ contributionFormHidden: true }),
-      }}
-    />
-  </div>
+if (!state.invitesCountFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_entity_invites",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((invites) =>
+    State.update({ invitesCount: invites.length, invitesCountFetched: true })
+  );
+}
+
+if (!state.isContributorFetched) {
+  Near.asyncView(
+    ownerId,
+    "check_is_contributor",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((isContributor) =>
+    State.update({ isContributor, isContributorFetched: true })
+  );
+}
+
+if (!state.profileFetched) {
+  const profile = Social.getr(`${accountId}/profile`, "final", {
+    subscribe: false,
+  });
+  State.update({ profile, profileFetched: true });
+}
+
+const Controls = styled.div`
+  display: flex;
+  flex-direction: ${({ isAuthorized }) => (isAuthorized ? "row" : "column")};
+  justify-content: ${({ isAuthorized }) =>
+    isAuthorized ? "space-between" : "flex-start"};
+  align-items: ${({ isAuthorized }) => (isAuthorized ? "center" : "stretch")};
+`;
+
+const controls = (
+  <Controls isAuthorized={state.isAuthorized}>
+    {state.isAuthorized ? (
+      <>
+        <a
+          className="btn btn-outline-secondary me-2"
+          style={{ width: "8em" }}
+          href={`/#/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
+          onClick={() =>
+            props.update({ tab: "create", content: "entity", accountId })
+          }
+        >
+          <i className="bi-pencil-square" />
+          <span>Edit project</span>
+        </a>
+        <Widget
+          src={`${ownerId}/widget/CardMenu`}
+          props={{
+            update: props.update,
+            items: [
+              {
+                text: "Create new request",
+                icon: "bi-boxes",
+                href: `/#/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
+                onClick: () =>
+                  props.update({
+                    tab: "create",
+                    content: "request",
+                    accountId,
+                  }),
+              },
+              // {
+              //   text: "Invite contributors",
+              //   icon: "bi-person-plus",
+              // },
+              // {
+              //   text: "Delete project",
+              //   icon: "bi-trash",
+              // },
+            ],
+          }}
+        />
+      </>
+    ) : (
+      <a
+        className="btn btn-success me-2 text-light"
+        style={{ width: "13em" }}
+        href={`/#/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}`}
+        onClick={() =>
+          props.update({
+            tab: "create",
+            content: "proposal",
+            search: "",
+            accountId,
+          })
+        }
+      >
+        <i className="bi-person-up" />
+        <span className="text-nowrap">Propose contribution</span>
+      </a>
+    )}
+  </Controls>
 );
-
 const body = (
   <div className="px-3">
     <div className="d-flex flex-row justify-content-start" id={accountId}>
@@ -138,7 +204,7 @@ const body = (
                 </div>
                 <Widget
                   src={`${ownerId}/widget/Tags`}
-                  pros={{ tags: profile.tags }}
+                  pros={{ tags: state.profile.tags }}
                 />
               </>
             ),
@@ -148,15 +214,15 @@ const body = (
     </div>
     <Widget
       src={`${ownerId}/widget/DescriptionArea`}
-      props={{ description: profile.description }}
+      props={{ description: state.profile.description }}
     />
     <div className="d-flex flex-row justify-content-between align-items-center">
       <Widget
         src={`${ownerId}/widget/SocialLinks`}
-        props={{ links: profile.linktree ?? {} }}
+        props={{ links: state.profile.linktree ?? {} }}
       />
       <div>
-        {founders.map((founder) => (
+        {state.founders.map((founder) => (
           <Widget
             src={`${ownerId}/widget/ProfileLine`}
             props={{
@@ -169,34 +235,6 @@ const body = (
       </div>
     </div>
   </div>
-);
-
-const proposalsCount = Object.keys(
-  Near.view(
-    ownerId,
-    "get_entity_contribution_requests",
-    { account_id: accountId },
-    "final",
-    false
-  ) ?? []
-).length;
-
-const invitesCount = Object.keys(
-  Near.view(
-    ownerId,
-    "get_entity_invites",
-    { account_id: accountId },
-    "final",
-    false
-  ) ?? {}
-).length;
-
-const isContributor = Near.view(
-  ownerId,
-  "check_is_contributor",
-  { account_id: accountId },
-  "final",
-  false
 );
 
 const contentSelector = (
@@ -233,7 +271,7 @@ const contentSelector = (
             </svg>
           ),
         },
-        isAuthorized
+        state.isAuthorized
           ? {
             id: "proposals",
             text: "Proposals",
@@ -254,11 +292,11 @@ const contentSelector = (
                 />
               </svg>
             ),
-            count: proposalsCount,
+            count: state.proposalsCount,
             grey: true,
           }
           : null,
-        isAuthorized
+        state.isAuthorized
           ? {
             id: "invitations",
             text: "Invitations",
@@ -279,7 +317,7 @@ const contentSelector = (
                 />
               </svg>
             ),
-            count: invitesCount,
+            count: state.invitesCount,
             grey: true,
           }
           : null,

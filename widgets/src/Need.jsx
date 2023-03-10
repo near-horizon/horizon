@@ -1,45 +1,18 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId;
-const notStandalone = props.notStandalone ?? false;
-const isPreview = props.isPreview ?? false;
 const cid = props.cid;
-const inboxView = props.inboxView;
 
 if (!accountId || !cid) {
   return "Cannot render contribution need widget without account ID or CID!";
 }
 
 State.init({
-  contributionFormHidden: true,
+  need: null,
+  needFetched: false,
 });
 
-const isContributor = Near.view(
-  ownerId,
-  "check_is_contributor",
-  { account_id: context.accountId },
-  "final",
-  false
-);
-
-const currentContributor = Near.view(
-  ownerId,
-  "get_contribution",
-  { entity_id: accountId, contributor_id: context.accountId },
-  "final",
-  false
-);
-
-const isAuthorized = Near.view(
-  ownerId,
-  "check_is_manager_or_higher",
-  { entity_id: accountId, account_id: context.accountId },
-  "final",
-  false
-);
-
-const contributionNeed = props.isPreview
-  ? props.contributionNeed
-  : Near.view(
+if (!state.needFetched) {
+  Near.asyncView(
     ownerId,
     "get_contribution_need",
     {
@@ -47,31 +20,49 @@ const contributionNeed = props.isPreview
       cid,
     },
     "final",
-    true
-  );
-
-const entity = isPreview
-  ? props.entity
-  : Near.view(ownerId, "get_entity", { account_id: accountId }, "final", false);
-
-if (!entity) {
-  return isPreview
-    ? "You must provide a entity object in preview mode"
-    : "Loading...";
+    false
+  ).then((need) => State.update({ need, needFetched: true }));
 }
 
-const profile = Social.get(`${accountId}/profile/**`, "final", {
-  subscribe: true,
-});
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  min-height: 8em;
+  max-width: 100%;
+  padding: 0 0.75em;
+  border-bottom: 1px solid #eaecf0;
+`;
 
-const body = (
-  <div
-    className="d-flex flex-row justify-content-start"
-    id={accountId}
-    style={{ minHeight: "8em" }}
-  >
-    <div className="flex-grow-1 py-3">
-      <div className="d-flex flex-row justify-content-between align-items-start">
+const Wrapper = styled.div`
+  flex-grow: 1;
+  padding: 0.75em 0;
+  max-width: 100%;
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+`;
+
+const ActionColumn = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: start;
+`;
+
+const DescriptionWrapper = styled.div`
+  max-width: 100%;
+  margin-top: 0.5em;
+`;
+
+return (
+  <Container id={`${accountId}-${cid}`}>
+    <Wrapper>
+      <Header>
         <a
           href={`/#/${ownerId}/widget/Index?tab=need&accountId=${accountId}&cid=${cid}`}
           onClick={() =>
@@ -84,13 +75,13 @@ const body = (
             })
           }
         >
-          <h4>Looking for {contributionNeed.contribution_type}</h4>
+          <h4>Looking for {state.need.contribution_type}</h4>
         </a>
-        <div className="d-flex flex-row justify-content-end align-items-start">
+        <ActionColumn>
           <Widget
             src={`${ownerId}/widget/ActiveIndicator`}
             props={{
-              active: contributionNeed.active,
+              active: state.need.active,
               activeText: "Open to proposals",
               inactiveText: "Closed",
             }}
@@ -127,8 +118,8 @@ const body = (
               ],
             }}
           />
-        </div>
-      </div>
+        </ActionColumn>
+      </Header>
       <Widget
         src={`${ownerId}/widget/ProfileLine`}
         props={{
@@ -141,18 +132,12 @@ const body = (
               <Widget src={`${ownerId}/widget/Tags`} props={{ tags }} />
               <Widget
                 src={`${ownerId}/widget/DescriptionArea`}
-                props={{ description: contributionNeed.description }}
+                props={{ description: state.need.description }}
               />
             </>
           ),
         }}
       />
-    </div>
-  </div>
-);
-
-return (
-  <div className="border-bottom border-secondary-subtle">
-    <div className="px-3 py-0">{body}</div>
-  </div>
+    </Wrapper>
+  </Container>
 );
