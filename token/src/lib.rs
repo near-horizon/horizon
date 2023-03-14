@@ -29,20 +29,24 @@ impl From<VersionedAllowList> for AccountId {
 }
 
 #[derive(Owner, FungibleToken)]
-#[fungible_token(name = "NEAR Horizon", symbol = "HZN", decimals = 24)]
+#[fungible_token(name = "NEAR Horizon", symbol = "NHZN", decimals = 24)]
 #[near_bindgen]
 pub struct Contract {
     allowlist: LookupSet<VersionedAllowList>,
     fund_amount: u128,
 }
 
+const ONE_NHZN: u128 = 1_000_000_000_000_000_000_000_000;
+
 #[near_bindgen]
 impl Contract {
     #[init]
-    pub fn new(owner_id: AccountId, total_supply: U128, fund_amount: U128) -> Self {
+    pub fn new(owner_id: AccountId, total_supply: U128, fund_amount: Option<U128>) -> Self {
         let mut contract = Self {
             allowlist: LookupSet::new(b"a"),
-            fund_amount: fund_amount.into(),
+            fund_amount: fund_amount
+                .map(|fund_amount| fund_amount.into())
+                .unwrap_or(50_000 * ONE_NHZN),
         };
 
         Owner::init(&mut contract, &owner_id);
@@ -116,7 +120,7 @@ mod tests {
     fn test_init() {
         let bob: AccountId = "bob.near".parse().unwrap();
         let total_supply = 1_000_000;
-        let contract = Contract::new(bob.clone(), total_supply.into(), 50_000.into());
+        let contract = Contract::new(bob.clone(), total_supply.into(), None);
 
         assert_eq!(contract.own_get_owner(), Some(bob));
         assert_eq!(contract.ft_total_supply(), total_supply.into());
@@ -126,7 +130,7 @@ mod tests {
     fn test_add_deposit() {
         let bob: AccountId = "bob.near".parse().unwrap();
         let total_supply = 1_000_000;
-        let mut contract = Contract::new(bob.clone(), total_supply.into(), 50_000.into());
+        let mut contract = Contract::new(bob.clone(), total_supply.into(), None);
 
         assert_eq!(contract.own_get_owner(), Some(bob.clone()));
         assert_eq!(contract.ft_total_supply(), total_supply.into());
@@ -157,7 +161,7 @@ mod tests {
         let bob: AccountId = "bob.near".parse().unwrap();
         let alice: AccountId = "alice.near".parse().unwrap();
         let total_supply = 1_000_000;
-        let mut contract = Contract::new(bob.clone(), total_supply.into(), 50_000.into());
+        let mut contract = Contract::new(bob.clone(), total_supply.into(), None);
 
         let context = VMContextBuilder::new()
             .predecessor_account_id(bob.clone())
@@ -184,7 +188,7 @@ mod tests {
         let bob: AccountId = "bob.near".parse().unwrap();
         let alice: AccountId = "alice.near".parse().unwrap();
         let total_supply = 1_000_000;
-        let mut contract = Contract::new(bob.clone(), total_supply.into(), 50_000.into());
+        let mut contract = Contract::new(bob.clone(), total_supply.into(), None);
 
         let context = VMContextBuilder::new()
             .predecessor_account_id(bob.clone())
@@ -217,7 +221,7 @@ mod tests {
         let bob: AccountId = "bob.near".parse().unwrap();
         let alice: AccountId = "alice.near".parse().unwrap();
         let total_supply = 1_000_000;
-        let mut contract = Contract::new(bob.clone(), total_supply.into(), 50_000.into());
+        let mut contract = Contract::new(bob.clone(), total_supply.into(), None);
 
         let context = VMContextBuilder::new()
             .predecessor_account_id(bob.clone())
