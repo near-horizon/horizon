@@ -1,79 +1,68 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::store::UnorderedMap;
-use near_sdk::{env, near_bindgen, require, sys, AccountId, BorshStorageKey, Gas, PanicOnDefault};
+use near_sdk::store::{TreeMap, UnorderedMap};
+use near_sdk::{near_bindgen, require, AccountId, BorshStorageKey, PanicOnDefault};
+use near_sdk_contract_tools::owner::OwnerExternal;
+use near_sdk_contract_tools::Upgrade;
+use near_sdk_contract_tools::{owner::Owner, Owner};
 
 use crate::contribution::{
-    Contribution, VersionedContribution, VersionedContributionInvite, VersionedContributionNeed,
-    VersionedContributionRequest,
+    VersionedContribution, VersionedContributionNeed, VersionedContributionRequest,
 };
-use crate::contributor::VersionedContributor;
-use crate::entity::{Permission, VersionedEntity};
+use crate::investor::VersionedInvestor;
+use crate::project::VersionedProject;
+use crate::vendor::VersionedVendor;
 
 mod contribution;
-mod contributor;
 mod dec_serde;
-mod entity;
 mod events;
-
-const MAX_DESCRIPTION_LENGTH: usize = 420;
+mod investor;
+mod project;
+mod vendor;
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKeys {
-    Entities,
-    Contributions,
+    Projects,
+    Vendors,
+    Investors,
     Requests,
-    Contributors,
-    Needs,
-    Invites,
+    Proposals,
+    Contributions,
 }
 
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault, Owner, Upgrade)]
+#[upgrade(hook = "owner")]
 pub struct Contract {
-    moderator_id: AccountId,
-    entities: UnorderedMap<AccountId, VersionedEntity>,
+    projects: TreeMap<AccountId, VersionedProject>,
+    vendors: TreeMap<AccountId, VersionedVendor>,
+    investors: TreeMap<AccountId, VersionedInvestor>,
+    requests: UnorderedMap<(AccountId, String), VersionedContributionNeed>,
+    proposals: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
     contributions: UnorderedMap<(AccountId, AccountId), VersionedContribution>,
-    requests: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
-    contributors: UnorderedMap<AccountId, VersionedContributor>,
-    needs: UnorderedMap<(AccountId, String), VersionedContributionNeed>,
-    invites: UnorderedMap<(AccountId, AccountId), VersionedContributionInvite>,
 }
 
 #[near_bindgen]
 impl Contract {
     #[init]
-    pub fn new(moderator_id: AccountId) -> Self {
-        Self {
-            moderator_id,
-            entities: UnorderedMap::new(StorageKeys::Entities),
-            contributions: UnorderedMap::new(StorageKeys::Contributions),
+    pub fn new(owner_id: AccountId) -> Self {
+        let mut this = Self {
+            projects: TreeMap::new(StorageKeys::Projects),
+            vendors: TreeMap::new(StorageKeys::Vendors),
+            investors: TreeMap::new(StorageKeys::Investors),
             requests: UnorderedMap::new(StorageKeys::Requests),
-            contributors: UnorderedMap::new(StorageKeys::Contributors),
-            needs: UnorderedMap::new(StorageKeys::Needs),
-            invites: UnorderedMap::new(StorageKeys::Invites),
-        }
-    }
-
-    pub fn set_moderator(&mut self, moderator_id: AccountId) {
-        self.assert_moderator();
-        self.moderator_id = moderator_id;
+            proposals: UnorderedMap::new(StorageKeys::Proposals),
+            contributions: UnorderedMap::new(StorageKeys::Contributions),
+        };
+        Owner::init(&mut this, &owner_id);
+        this
     }
 
     /// Assertions.
 
-    /// Checks if transaction was performed by moderator account.
-    fn assert_moderator(&self) {
-        // Errors::OnlyModerator.into()
+    /// Checks if given account has permissions of a admin or higher for given entity.
+    fn assert_admin(&self, entity_id: &AccountId, account_id: &AccountId) {
         require!(
-            self.moderator_id == env::predecessor_account_id(),
-            "ERR_ONLY_MODERATOR"
-        );
-    }
-
-    /// Checks if given account has permissions of a manager or higher for given entity.
-    fn assert_manager_or_higher(&self, entity_id: &AccountId, account_id: &AccountId) {
-        require!(
-            self.check_is_manager_or_higher(entity_id, account_id),
+            self.check_is_project_admin(entity_id, account_id),
             "ERR_NO_PERMISSION"
         );
     }
@@ -81,78 +70,13 @@ impl Contract {
     /// Checks if given account is registered as a contributor.
     #[allow(dead_code)]
     fn assert_is_registered(&self, account_id: &AccountId) {
-        require!(
-            self.contributors.contains_key(account_id),
-            "ERR_NOT_REGISTERED"
-        );
+        require!(self.vendors.contains_key(account_id), "ERR_NOT_REGISTERED");
     }
 
     /// Views
 
     /// Check if given account ID is moderator.
-    pub fn check_is_moderator(&self, account_id: AccountId) -> bool {
-        self.moderator_id == account_id
-    }
-
-    /// Check if given account ID is manager or higher for given entity.
-    pub fn check_is_manager_or_higher(
-        &self,
-        entity_id: &AccountId,
-        account_id: &AccountId,
-    ) -> bool {
-        if account_id == &self.moderator_id {
-            return true;
-        }
-        let Some(contribution) = self.contributions.get(&(entity_id.clone(), account_id.clone())) else {
-            return false;
-        };
-        let contribution = Contribution::from(contribution.clone());
-        contribution.permissions.contains(&Permission::Admin)
-    }
-
-    /// Should only be called by this contract on migration.
-    /// This is NOOP implementation. KEEP IT if you haven't changed contract state.
-    /// This method is called from `upgrade()` method.
-    /// For next version upgrades, change this function.
-    #[init(ignore_state)]
-    #[private]
-    pub fn migrate() -> Self {
-        let this: Contract = env::state_read().expect("Contract is not initialized.");
-        this
-    }
-}
-
-#[no_mangle]
-pub fn upgrade() {
-    env::setup_panic_hook();
-
-    let contract: Contract = env::state_read().expect("Contract is not initialized");
-    contract.assert_moderator();
-
-    const MIGRATE_METHOD_NAME: &[u8; 7] = b"migrate";
-    const UPGRADE_GAS_LEFTOVER: Gas = Gas(5_000_000_000_000);
-
-    unsafe {
-        // Load code into register 0 result from the input argument if factory call or from promise if callback.
-        sys::input(0);
-        // Create a promise batch to upgrade current contract with code from register 0.
-        let promise_id = sys::promise_batch_create(
-            env::current_account_id().as_bytes().len() as u64,
-            env::current_account_id().as_bytes().as_ptr() as u64,
-        );
-        // Deploy the contract code from register 0.
-        sys::promise_batch_action_deploy_contract(promise_id, u64::MAX, 0);
-        // Call promise to migrate the state.
-        // Batched together to fail upgrade if migration fails.
-        sys::promise_batch_action_function_call(
-            promise_id,
-            MIGRATE_METHOD_NAME.len() as u64,
-            MIGRATE_METHOD_NAME.as_ptr() as u64,
-            0,
-            0,
-            0,
-            (env::prepaid_gas() - env::used_gas() - UPGRADE_GAS_LEFTOVER).0,
-        );
-        sys::promise_return(promise_id);
+    pub fn check_is_owner(&self, account_id: &AccountId) -> bool {
+        self.own_get_owner() == Some(account_id.clone())
     }
 }

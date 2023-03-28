@@ -11,3 +11,5 @@ crate-type = ["cdylib", "rlib"]
 cid = "0.10.1"
 near-contract-standards = "4.1.1"
 near-sdk = { version = "4.1.1", features = ["unstable"] }
+near-sdk-contract-tools = "0.7.2"
+optional_struct = "0.3.1"

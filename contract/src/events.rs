@@ -1,29 +1,39 @@
-use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{env, serde_json, AccountId, Timestamp};
+use std::collections::HashSet;
 
-use crate::contributor::ContributionType;
+use near_sdk::{AccountId, Timestamp};
+use near_sdk_contract_tools::event;
+
 use crate::dec_serde::u64_dec_format;
 
-#[derive(Deserialize, Serialize)]
-#[serde(crate = "near_sdk::serde")]
+#[event(standard = "near_contribute", version = "1", serde = "near_sdk::serde")]
 pub enum Events {
-    AddEntity {
-        entity_id: AccountId,
+    AddProject {
+        account_id: AccountId,
     },
-    RegisterContributor {
-        contributor_id: AccountId,
+    EditProject {
+        account_id: AccountId,
+    },
+    RemoveProject {
+        account_id: AccountId,
+    },
+    AddVendor {
+        account_id: AccountId,
+    },
+    EditVendor {
+        account_id: AccountId,
+    },
+    RemoveVendor {
+        account_id: AccountId,
     },
     PostContributionNeed {
         entity_id: AccountId,
         cid: String,
         description: String,
-        contribution_type: ContributionType,
     },
     RequestContribution {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
-        contribution_type: ContributionType,
     },
     RejectContribution {
         entity_id: AccountId,
@@ -33,7 +43,6 @@ pub enum Events {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
-        contribution_type: ContributionType,
         #[serde(with = "u64_dec_format")]
         start_date: Timestamp,
     },
@@ -47,7 +56,6 @@ pub enum Events {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
-        contribution_type: ContributionType,
         #[serde(with = "u64_dec_format")]
         start_date: Timestamp,
     },
@@ -55,17 +63,16 @@ pub enum Events {
         entity_id: AccountId,
         contributor_id: AccountId,
         description: String,
-        contribution_type: ContributionType,
         #[serde(with = "u64_dec_format")]
         start_date: Timestamp,
     },
-}
-
-impl Events {
-    pub(crate) fn emit(self) {
-        env::log_str(&format!(
-            "EVENT_JSON:{}",
-            &serde_json::to_string(&self).unwrap()
-        ));
-    }
+    AddInvestors {
+        investors: HashSet<AccountId>,
+    },
+    RemoveInvestors {
+        investors: HashSet<AccountId>,
+    },
+    EditInvestors {
+        investors: HashSet<AccountId>,
+    },
 }

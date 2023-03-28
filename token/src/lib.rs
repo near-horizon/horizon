@@ -9,6 +9,7 @@ use near_sdk_contract_tools::standard::nep141::{
 };
 use near_sdk_contract_tools::{owner::Owner, FungibleToken, Owner};
 
+/// The versioned whitelist item.
 #[derive(BorshDeserialize, BorshSerialize)]
 enum VersionedAllowList {
     V0(AccountId),
@@ -28,15 +29,17 @@ impl From<VersionedAllowList> for AccountId {
     }
 }
 
+/// The fungible token contract struct.
 #[derive(Owner, FungibleToken)]
-#[fungible_token(name = "NEAR Horizon", symbol = "NHZN", decimals = 24)]
+#[fungible_token(name = "NEAR Horizon", symbol = "NHZN", decimals = 4)]
 #[near_bindgen]
 pub struct Contract {
     allowlist: LookupSet<VersionedAllowList>,
     fund_amount: u128,
 }
 
-const ONE_NHZN: u128 = 1_000_000_000_000_000_000_000_000;
+/// A constant representing one NEAR Horizon token (10^4 miliNEAR Horizon).
+const ONE_NHZN: u128 = 1_000;
 
 #[near_bindgen]
 impl Contract {
@@ -99,6 +102,10 @@ impl Contract {
 
 impl Nep141Hook for Contract {
     fn before_transfer(&mut self, transfer: &Nep141Transfer) {
+        require!(
+            self.allowlist.contains(&transfer.sender_id.clone().into()),
+            "ERR_SENDER_NOT_REGISTERED"
+        );
         require!(
             self.allowlist
                 .contains(&transfer.receiver_id.clone().into()),
@@ -173,7 +180,7 @@ mod tests {
         let transfer_amount = 1_000;
 
         contract.register_holder(alice.clone());
-        contract.transfer(bob.clone(), alice.clone(), transfer_amount.into(), None);
+        contract.transfer(bob.clone(), alice.clone(), transfer_amount, None);
 
         assert_eq!(contract.ft_balance_of(alice), transfer_amount.into());
         assert_eq!(
@@ -200,7 +207,7 @@ mod tests {
         let transfer_amount = 1_000_u128;
 
         contract.register_holder(alice.clone());
-        contract.transfer(bob.clone(), alice.clone(), transfer_amount.into(), None);
+        contract.transfer(bob.clone(), alice.clone(), transfer_amount, None);
 
         let context = VMContextBuilder::new()
             .predecessor_account_id(alice.clone())
