@@ -2,7 +2,8 @@
 members = [
   "contract",
   "seed",
-  "token"
+  "token",
+  "awesome-near-fetcher"
 ]
 
 [profile.release]
