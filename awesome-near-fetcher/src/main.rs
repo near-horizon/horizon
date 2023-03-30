@@ -7,7 +7,9 @@ const AWESOME_NEAR_API: &'static str = "https://awesomenear.com/api/graphql";
 #[derive(Deserialize, Debug)]
 struct SimpleProject {
     id: String,
+    #[allow(dead_code)]
     slug: String,
+    #[allow(dead_code)]
     title: String,
 }
 
@@ -23,7 +25,7 @@ struct ProjectsListResponse {
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
-struct Token {
+pub struct Token {
     name: Option<String>,
     id: Option<String>,
     #[serde(rename = "coinGeckoId")]
@@ -31,7 +33,7 @@ struct Token {
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
-struct Author {
+pub struct Author {
     email: Option<String>,
     id: Option<String>,
     image: Option<String>,
@@ -71,14 +73,55 @@ struct ProjectDetails {
     whitepaper: Option<String>,
     #[serde(serialize_with = "optional_vec::serialize")]
     categories: Option<Vec<String>>,
+    #[serde(serialize_with = "optional_author::serialize")]
+    author: Option<Author>,
+    #[serde(serialize_with = "optional_token::serialize")]
+    token: Option<Token>,
+    #[allow(dead_code)]
     #[serde(skip)]
     tokens: Vec<Token>,
-    #[serde(skip)]
-    token: Option<Token>,
+    #[allow(dead_code)]
     #[serde(skip)]
     contracts: Vec<Contract>,
+    #[allow(dead_code)]
     #[serde(skip)]
     description: Option<String>,
+}
+
+mod optional_token {
+    pub fn serialize<S>(token: &Option<super::Token>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match token {
+            Some(token) => serializer.serialize_str(&format!(
+                "({},{},{})",
+                token.id.clone().unwrap_or(String::new()),
+                token.name.clone().unwrap_or(String::new()),
+                token.coin_gecko_id.clone().unwrap_or(String::new()),
+            )),
+            None => serializer.serialize_none(),
+        }
+    }
+}
+
+mod optional_author {
+    pub fn serialize<S>(author: &Option<super::Author>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match author {
+            Some(author) => serializer.serialize_str(&format!(
+                "({},{},{},{},{})",
+                author.id.clone().unwrap_or(String::new()),
+                author.name.clone().unwrap_or(String::new()),
+                author.email.clone().unwrap_or(String::new()),
+                author.role.clone().unwrap_or(String::new()),
+                author.image.clone().unwrap_or(String::new())
+            )),
+            None => serializer.serialize_none(),
+        }
+    }
 }
 
 mod optional_vec {
@@ -95,7 +138,7 @@ mod optional_vec {
 
 #[derive(Deserialize, Debug, Clone)]
 struct ProjectDetailsResponse {
-    project: ProjectDetails,
+    project: Option<ProjectDetails>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -140,7 +183,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut fetch_set = tokio::task::JoinSet::new();
 
-    for project in data.projects_list {
+    for (index, project) in data.projects_list.iter().enumerate() {
+        if index > 0 && index % 100 == 0 {
+            let sleep_secs = 10;
+            println!("Waiting for {sleep_secs} second after {index} records...");
+            tokio::time::sleep(tokio::time::Duration::from_secs(sleep_secs)).await;
+        }
         fetch_set.spawn(
             client
                 .post(AWESOME_NEAR_API)
@@ -149,35 +197,40 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
     }
 
+    println!("Fetching {} records from awesomenear...", fetch_set.len());
+
     let mut json_set = tokio::task::JoinSet::new();
-    // let mut projects = vec![];
 
     while let Some(response) = fetch_set.join_one().await {
-        let response = response?;
-        let response = response?;
-        json_set.spawn(response.json::<TopLevelProjectDetailsResponse>());
-        // projects.push(response.json::<TopLevelProjectDetailsResponse>().await?);
+        json_set.spawn((response?)?.json::<TopLevelProjectDetailsResponse>());
     }
 
-    let mut writer = csv::WriterBuilder::new().from_path("../data.csv")?;
+    let mut writer = csv::WriterBuilder::new()
+        .has_headers(true)
+        .from_path("../data.csv")?;
+
+    let mut written_count = 0;
+
+    println!("Parsing {} records...", json_set.len());
 
     while let Some(details) = json_set.join_one().await {
         let details = details?;
 
         let Ok(details) = details else {
-            println!("error here");
             continue;
         };
 
         if let Some(project) = details.data {
+            written_count += 1;
             writer.serialize(project.project)?;
         }
     }
-    // for project in projects {
-    //     writer.serialize(project.data.project)?;
-    // }
+
+    println!("Writing {written_count} records...");
 
     writer.flush()?;
+
+    println!("Written {written_count} records!");
 
     Ok(())
 }
