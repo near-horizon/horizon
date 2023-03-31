@@ -58,7 +58,7 @@ impl Contract {
     pub fn add_request(&mut self, request: Request) {
         self.assert_admin(&request.project_id, &env::predecessor_account_id());
         let cid = crate::create_cid(&serde_json::to_string(&request).unwrap());
-        let key = (request.project_id.clone(), cid.clone());
+        let key = (request.project_id.clone(), cid);
         self.requests
             .insert(key.clone(), VersionedRequest::V0(request));
         Events::AddRequest {
@@ -71,7 +71,7 @@ impl Contract {
     /// Edit existing request.
     pub fn edit_request(&mut self, cid: String, request: Request) {
         self.assert_admin(&request.project_id, &env::predecessor_account_id());
-        let key = (request.project_id.clone(), cid.clone());
+        let key = (request.project_id.clone(), cid);
         require!(self.requests.contains_key(&key), "ERR_NO_REQUEST");
         self.requests
             .insert(key.clone(), VersionedRequest::V0(request));
@@ -133,4 +133,3 @@ impl Contract {
         );
     }
 }
-

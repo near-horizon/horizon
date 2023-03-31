@@ -14,6 +14,16 @@ pub enum Events {
     RemoveProject {
         account_id: AccountId,
     },
+    SubmitApplication {
+        account_id: AccountId,
+    },
+    ApproveApplication {
+        account_id: AccountId,
+    },
+    RejectApplication {
+        account_id: AccountId,
+        reason: String,
+    },
     AddVendor {
         account_id: AccountId,
     },

@@ -150,7 +150,7 @@ impl Contract {
                     if !contribution.actions.is_empty() {
                         if let Some(latest) = contribution.actions.last_mut() {
                             require!(timestamp > latest.start_date, "ERR_INVALID_START_DATE");
-                            latest.end_date = Some(timestamp.clone());
+                            latest.end_date = Some(timestamp);
                         }
                     }
                     contribution.actions.push(ContributionAction {
@@ -216,10 +216,7 @@ impl Contract {
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
                     require!(
-                        match contribution.status {
-                            ContributionStatus::Delivered(_) => true,
-                            _ => false,
-                        },
+                        matches!(contribution.status, ContributionStatus::Delivered(_)),
                         "ERR_CONTRIBUTION_NOT_DELIVERED"
                     );
                     contribution.status =
@@ -251,10 +248,7 @@ impl Contract {
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
                     require!(
-                        match contribution.status {
-                            ContributionStatus::Completed(_) => true,
-                            _ => false,
-                        },
+                        matches!(contribution.status, ContributionStatus::Completed(_)),
                         "ERR_CONTRIBUTION_NOT_COMPLETED"
                     );
                     contribution.vendor_feedback = Some(feedback.clone());
@@ -286,10 +280,7 @@ impl Contract {
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
                     require!(
-                        match contribution.status {
-                            ContributionStatus::Completed(_) => true,
-                            _ => false,
-                        },
+                        matches!(contribution.status, ContributionStatus::Completed(_)),
                         "ERR_CONTRIBUTION_NOT_COMPLETED"
                     );
                     contribution.project_feedback = Some(feedback.clone());
@@ -383,8 +374,8 @@ impl Contract {
     ) {
         let account_id = near_sdk::env::predecessor_account_id();
         require!(
-            self.check_is_project_admin(&project_id, &account_id)
-                || self.check_is_vendor_admin(&vendor_id, &account_id),
+            self.check_is_project_admin(project_id, &account_id)
+                || self.check_is_vendor_admin(vendor_id, &account_id),
             "ERR_NO_PERMISSION"
         );
     }

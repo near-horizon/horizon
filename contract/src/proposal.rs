@@ -131,7 +131,7 @@ impl Contract {
         self.proposals
             .keys()
             .filter(|((project_id, _), _)| {
-                self.check_is_project_admin(&project_id, &near_sdk::env::predecessor_account_id())
+                self.check_is_project_admin(project_id, &near_sdk::env::predecessor_account_id())
             })
             .cloned()
             .collect()

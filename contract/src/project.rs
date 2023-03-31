@@ -1,12 +1,15 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{env, near_bindgen, require, AccountId, Timestamp};
+use near_sdk::{
+    assert_one_yocto, env, ext_contract, near_bindgen, require, AccountId, Promise, Timestamp,
+};
+use near_sdk_contract_tools::owner::Owner;
 use near_sdk_contract_tools::standard::nep297::Event;
 use std::collections::{HashMap, HashSet};
 
 use crate::dec_serde::u64_dec_format;
 use crate::events::Events;
-use crate::{Contract, ContractExt};
+use crate::{Contract, ContractExt, XCC_GAS};
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
@@ -18,6 +21,7 @@ pub struct TokenDetail {
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
+#[allow(clippy::upper_case_acronyms)]
 pub enum TechLead {
     CTO(AccountId),
     Founder(AccountId),
@@ -187,13 +191,20 @@ impl VersionedProject {
     }
 }
 
+#[ext_contract(token_ext)]
+trait Token {
+    #[payable]
+    fn fund_program_participant(&mut self, account_id: AccountId);
+}
+
 #[near_bindgen]
 impl Contract {
     /// Add new project and given user as founding contributor.
     pub fn add_entity(&mut self, account_id: AccountId) {
-        if self.projects.contains_key(&account_id) {
-            env::panic_str("ERR_ENTITY_EXISTS");
-        }
+        require!(
+            !self.projects.contains_key(&account_id),
+            "ERR_PROJECT_EXISTS"
+        );
         self.projects.insert(
             account_id.clone(),
             VersionedProject::new(HashSet::from_iter([env::predecessor_account_id()])),
@@ -218,6 +229,81 @@ impl Contract {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.remove(&account_id);
         Events::RemoveProject { account_id }.emit();
+    }
+
+    pub fn apply_for_program(&mut self, account_id: AccountId) {
+        self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            require!(
+                project.application.is_some(),
+                "ERR_APPLICATION_NOT_FILLED_OUT"
+            );
+            project.application_status =
+                ApplicationStatus::Submitted(near_sdk::env::block_timestamp());
+            *old = VersionedProject::V0(project);
+        });
+        Events::SubmitApplication { account_id }.emit();
+    }
+
+    #[payable]
+    pub fn approve_application(&mut self, account_id: AccountId) -> Promise {
+        self.assert_owner();
+        assert_one_yocto();
+        let project: Project = self
+            .projects
+            .get(&account_id)
+            .expect("ERR_NOT_PROJECT")
+            .into();
+        require!(
+            matches!(project.application_status, ApplicationStatus::Submitted(_)),
+            "ERR_APPLICATION_NOT_SUBMITTED"
+        );
+        token_ext::ext(self.credits_account_id.clone())
+            .with_static_gas(XCC_GAS)
+            .with_attached_deposit(1)
+            .fund_program_participant(account_id.clone())
+            .then(
+                Self::ext(near_sdk::env::current_account_id())
+                    .with_static_gas(XCC_GAS)
+                    .approve_application_callback(account_id),
+            )
+    }
+
+    #[private]
+    pub fn approve_application_callback(
+        &mut self,
+        account_id: AccountId,
+        #[callback_result] result: Result<(), near_sdk::PromiseError>,
+    ) {
+        result.expect("ERR_NOT_FUNDED");
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            project.application_status = ApplicationStatus::Accepted;
+            *old = VersionedProject::V0(project);
+        });
+        Events::ApproveApplication { account_id }.emit();
+    }
+
+    #[payable]
+    pub fn reject_application(&mut self, account_id: AccountId, reason: String) {
+        self.assert_owner();
+        assert_one_yocto();
+        let project: Project = self
+            .projects
+            .get(&account_id)
+            .expect("ERR_NOT_PROJECT")
+            .into();
+        require!(
+            matches!(project.application_status, ApplicationStatus::Submitted(_)),
+            "ERR_APPLICATION_NOT_SUBMITTED"
+        );
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            project.application_status = ApplicationStatus::Rejected(reason.clone());
+            *old = VersionedProject::V0(project);
+        });
+        Events::RejectApplication { account_id, reason }.emit();
     }
 
     /// Views
@@ -291,5 +377,10 @@ impl Contract {
             self.check_is_project_admin(project_id, account_id) || self.check_is_owner(account_id),
             "ERR_NO_PERMISSION"
         );
+    }
+
+    #[allow(dead_code)]
+    pub(super) fn assert_is_project(&self, account_id: &AccountId) {
+        require!(self.check_is_project(account_id.clone()), "ERR_NOT_PROJECT");
     }
 }

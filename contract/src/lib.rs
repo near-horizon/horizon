@@ -2,7 +2,9 @@ use cid::multihash::{Code, MultihashDigest};
 use cid::Cid;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::store::{TreeMap, UnorderedMap};
-use near_sdk::{near_bindgen, require, AccountId, BorshStorageKey, CryptoHash, PanicOnDefault};
+use near_sdk::{
+    near_bindgen, require, AccountId, BorshStorageKey, CryptoHash, Gas, PanicOnDefault,
+};
 use near_sdk_contract_tools::owner::OwnerExternal;
 use near_sdk_contract_tools::Upgrade;
 use near_sdk_contract_tools::{owner::Owner, Owner};
@@ -24,6 +26,8 @@ mod request;
 mod vendor;
 
 const RAW: u64 = 0x55;
+pub const TGAS: u64 = 1_000_000_000_000;
+pub const XCC_GAS: Gas = Gas(20 * TGAS);
 
 /// Create a CID for a string.
 pub fn create_cid(value: &str) -> String {
@@ -47,6 +51,7 @@ enum StorageKeys {
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault, Owner, Upgrade)]
 #[upgrade(hook = "owner")]
 pub struct Contract {
+    credits_account_id: AccountId,
     projects: TreeMap<AccountId, VersionedProject>,
     vendors: TreeMap<AccountId, VersionedVendor>,
     investors: TreeMap<AccountId, VersionedInvestor>,
@@ -59,8 +64,9 @@ pub struct Contract {
 #[near_bindgen]
 impl Contract {
     #[init]
-    pub fn new(owner_id: AccountId) -> Self {
+    pub fn new(owner_id: AccountId, credits_account_id: AccountId) -> Self {
         let mut this = Self {
+            credits_account_id,
             projects: TreeMap::new(StorageKeys::Projects),
             vendors: TreeMap::new(StorageKeys::Vendors),
             investors: TreeMap::new(StorageKeys::Investors),
