@@ -1,15 +1,17 @@
+use cid::multihash::{Code, MultihashDigest};
+use cid::Cid;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::store::{TreeMap, UnorderedMap};
-use near_sdk::{near_bindgen, require, AccountId, BorshStorageKey, PanicOnDefault};
+use near_sdk::{near_bindgen, require, AccountId, BorshStorageKey, CryptoHash, PanicOnDefault};
 use near_sdk_contract_tools::owner::OwnerExternal;
 use near_sdk_contract_tools::Upgrade;
 use near_sdk_contract_tools::{owner::Owner, Owner};
 
-use crate::contribution::{
-    VersionedContribution, VersionedContributionNeed, VersionedContributionRequest,
-};
+use crate::contribution::VersionedContribution;
 use crate::investor::VersionedInvestor;
 use crate::project::VersionedProject;
+use crate::proposal::VersionedProposal;
+use crate::request::VersionedRequest;
 use crate::vendor::VersionedVendor;
 
 mod contribution;
@@ -17,7 +19,18 @@ mod dec_serde;
 mod events;
 mod investor;
 mod project;
+mod proposal;
+mod request;
 mod vendor;
+
+const RAW: u64 = 0x55;
+
+/// Create a CID for a string.
+pub fn create_cid(value: &str) -> String {
+    let hash = Code::Sha2_256.digest(value.to_string().as_bytes());
+    let cid = Cid::new_v1(RAW, hash);
+    cid.to_string()
+}
 
 #[derive(BorshSerialize, BorshStorageKey)]
 enum StorageKeys {
@@ -27,6 +40,7 @@ enum StorageKeys {
     Requests,
     Proposals,
     Contributions,
+    ContributionHistory { accounts_hash: CryptoHash },
 }
 
 #[near_bindgen]
@@ -36,9 +50,10 @@ pub struct Contract {
     projects: TreeMap<AccountId, VersionedProject>,
     vendors: TreeMap<AccountId, VersionedVendor>,
     investors: TreeMap<AccountId, VersionedInvestor>,
-    requests: UnorderedMap<(AccountId, String), VersionedContributionNeed>,
-    proposals: UnorderedMap<(AccountId, AccountId), VersionedContributionRequest>,
-    contributions: UnorderedMap<(AccountId, AccountId), VersionedContribution>,
+    requests: UnorderedMap<(AccountId, String), VersionedRequest>,
+    proposals: UnorderedMap<((AccountId, String), AccountId), VersionedProposal>,
+    contributions:
+        UnorderedMap<(AccountId, AccountId), UnorderedMap<String, VersionedContribution>>,
 }
 
 #[near_bindgen]
@@ -59,7 +74,7 @@ impl Contract {
 
     /// Assertions.
 
-    /// Checks if given account has permissions of a admin or higher for given entity.
+    /// Checks if given account has permissions of a admin or higher for given project.
     fn assert_admin(&self, entity_id: &AccountId, account_id: &AccountId) {
         require!(
             self.check_is_project_admin(entity_id, account_id),

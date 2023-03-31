@@ -110,10 +110,14 @@ impl Contract {
     /// Assertions
 
     /// Check whether the given account can edit the vendor with the given ID.
-    fn assert_can_edit_vendor(&self, vendor_id: &AccountId, account_id: &AccountId) {
+    pub(super) fn assert_can_edit_vendor(&self, vendor_id: &AccountId, account_id: &AccountId) {
         require!(
             self.check_is_vendor_admin(vendor_id, account_id) || self.check_is_owner(account_id),
             "ERR_NO_PERMISSION"
         );
+    }
+
+    pub(super) fn assert_is_vendor(&self, account_id: &AccountId) {
+        require!(self.vendors.contains_key(account_id), "ERR_NOT_VENDOR");
     }
 }

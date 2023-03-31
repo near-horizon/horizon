@@ -1,9 +1,7 @@
 use std::collections::HashSet;
 
-use near_sdk::{AccountId, Timestamp};
+use near_sdk::AccountId;
 use near_sdk_contract_tools::event;
-
-use crate::dec_serde::u64_dec_format;
 
 #[event(standard = "near_contribute", version = "1", serde = "near_sdk::serde")]
 pub enum Events {
@@ -25,46 +23,32 @@ pub enum Events {
     RemoveVendor {
         account_id: AccountId,
     },
-    PostContributionNeed {
-        entity_id: AccountId,
+    AddRequest {
+        account_id: AccountId,
         cid: String,
-        description: String,
     },
-    RequestContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: String,
+    EditRequest {
+        account_id: AccountId,
+        cid: String,
     },
-    RejectContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
+    RemoveRequest {
+        account_id: AccountId,
+        cid: String,
     },
-    ApproveContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: String,
-        #[serde(with = "u64_dec_format")]
-        start_date: Timestamp,
+    AddProposal {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
     },
-    FinishContribution {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        #[serde(with = "u64_dec_format")]
-        end_date: Timestamp,
+    EditProposal {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
     },
-    InviteContributor {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: String,
-        #[serde(with = "u64_dec_format")]
-        start_date: Timestamp,
-    },
-    AcceptInvite {
-        entity_id: AccountId,
-        contributor_id: AccountId,
-        description: String,
-        #[serde(with = "u64_dec_format")]
-        start_date: Timestamp,
+    RemoveProposal {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
     },
     AddInvestors {
         investors: HashSet<AccountId>,
@@ -74,5 +58,43 @@ pub enum Events {
     },
     EditInvestors {
         investors: HashSet<AccountId>,
+    },
+    AddContribution {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
+    AcceptContribution {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
+    AddContributionAction {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+        description: String,
+    },
+    DeliverContribution {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
+    CompleteContribution {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
+    GiveVendorFeedback {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+        feedback: String,
+    },
+    GiveProjectFeedback {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+        feedback: String,
     },
 }

@@ -2,8 +2,6 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, near_bindgen, require, AccountId, Timestamp};
 use near_sdk_contract_tools::standard::nep297::Event;
-use optional_struct::optional_struct;
-use optional_struct::Applyable;
 use std::collections::{HashMap, HashSet};
 
 use crate::dec_serde::u64_dec_format;
@@ -24,6 +22,12 @@ pub enum TechLead {
     CTO(AccountId),
     Founder(AccountId),
     None,
+}
+
+impl Default for TechLead {
+    fn default() -> Self {
+        Self::None
+    }
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
@@ -79,18 +83,30 @@ pub enum Permission {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Application {
+    #[serde(default)]
     pub integration: String,
+    #[serde(default)]
     pub why: String,
+    #[serde(default)]
     pub partners: String,
+    #[serde(default)]
     pub token: Option<TokenDetail>,
+    #[serde(default)]
     pub contact: Option<String>,
+    #[serde(default)]
     pub geo: Option<String>,
+    #[serde(default)]
     pub success_position: String,
+    #[serde(default)]
     pub vision: String,
+    #[serde(default)]
     pub tech_lead: TechLead,
+    #[serde(default)]
     pub team: HashMap<AccountId, HashSet<Permission>>,
-    pub graduation: Graduation,
-    pub private: PrivateData,
+    #[serde(default)]
+    pub graduation: Option<Graduation>,
+    #[serde(default)]
+    pub private: Option<PrivateData>,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
@@ -108,7 +124,6 @@ impl Default for ApplicationStatus {
     }
 }
 
-#[optional_struct]
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Project {
@@ -174,7 +189,7 @@ impl VersionedProject {
 
 #[near_bindgen]
 impl Contract {
-    /// Add new entity and given user as founding contributor.
+    /// Add new project and given user as founding contributor.
     pub fn add_entity(&mut self, account_id: AccountId) {
         if self.projects.contains_key(&account_id) {
             env::panic_str("ERR_ENTITY_EXISTS");
@@ -187,21 +202,15 @@ impl Contract {
     }
 
     /// Edit project details.
-    pub fn edit_project(&mut self, account_id: AccountId, project: OptionalProject) {
+    pub fn edit_project(&mut self, account_id: AccountId, project: Project) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
             .entry(account_id.clone())
             .and_modify(|existing| {
-                let mut old: Project = existing.clone().into();
-                project.clone().apply_to(&mut old);
-                *existing = VersionedProject::V0(old);
+                *existing = VersionedProject::V0(project.clone());
             })
-            .or_insert({
-                let mut new: Project = Default::default();
-                project.apply_to(&mut new);
-                VersionedProject::V0(new)
-            });
-        Events::RemoveProject { account_id }.emit();
+            .or_insert(VersionedProject::V0(project));
+        Events::EditProject { account_id }.emit();
     }
 
     /// Remove project.
@@ -213,7 +222,7 @@ impl Contract {
 
     /// Views
 
-    /// List out entities. By default list all of them.
+    /// List out projects. By default list all of them.
     pub fn get_projects(&self, from_index: Option<u64>, limit: Option<u64>) -> HashSet<AccountId> {
         let from_index = from_index.unwrap_or(0) as usize;
         let limit = limit.unwrap_or(self.projects.len().into()) as usize;
@@ -225,7 +234,7 @@ impl Contract {
             .collect()
     }
 
-    /// List out entities that account ID is admin for.
+    /// List out projects that account ID is admin for.
     pub fn get_admin_projects(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.projects
             .into_iter()
@@ -236,7 +245,7 @@ impl Contract {
             .collect()
     }
 
-    /// List single entity details.
+    /// List single project details.
     pub fn get_project(&self, account_id: AccountId) -> Project {
         self.projects
             .get(&account_id)
@@ -244,12 +253,12 @@ impl Contract {
             .into()
     }
 
-    /// List entity founders.
+    /// List project founders.
     pub fn get_founders(&self, account_id: AccountId) -> HashSet<AccountId> {
         Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY")).founders
     }
 
-    /// List entity team.
+    /// List project team.
     pub fn get_team(&self, account_id: AccountId) -> HashSet<AccountId> {
         Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
             .application
@@ -266,8 +275,8 @@ impl Contract {
     }
 
     /// Check if given account ID is manager or higher for given project.
-    pub fn check_is_project_admin(&self, entity_id: &AccountId, account_id: &AccountId) -> bool {
-        let Some(versioned_project) = self.projects.get(entity_id) else {
+    pub fn check_is_project_admin(&self, project_id: &AccountId, account_id: &AccountId) -> bool {
+        let Some(versioned_project) = self.projects.get(project_id) else {
             return false;
         };
         let project: Project = versioned_project.into();
@@ -277,7 +286,7 @@ impl Contract {
     /// Assertions
 
     /// Check whether the given account ID can edit the project with the given ID.
-    fn assert_can_edit_project(&self, project_id: &AccountId, account_id: &AccountId) {
+    pub(super) fn assert_can_edit_project(&self, project_id: &AccountId, account_id: &AccountId) {
         require!(
             self.check_is_project_admin(project_id, account_id) || self.check_is_owner(account_id),
             "ERR_NO_PERMISSION"
