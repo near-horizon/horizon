@@ -83,7 +83,7 @@ const body = (
                 backgroundColor: "#6941C6",
                 borderColor: "#6941C6",
               }}
-            // href={`/#/${ownerId}/widget/Entity?accountId=${accountId}`}
+              // href={`/#/${ownerId}/widget/Entity?accountId=${accountId}`}
             >
               <i className="bi-person-plus" />
               <span className="text-nowrap">Invite contributor</span>

@@ -89,8 +89,9 @@ const DropdownLi = styled.li`
 const createNewButton = ({ id, text, icon, kind }) => (
   <DropdownLi>
     <DropdownItem
-      href={`/#/${ownerId}/widget/Index?tab=create&content=${id}${kind ? "&kind=" + kind : ""
-        }`}
+      href={`/#/${ownerId}/widget/Index?tab=create&content=${id}${
+        kind ? "&kind=" + kind : ""
+      }`}
       onClick={() => props.update({ tab: "create", content: id, kind })}
     >
       <i className={icon} />
