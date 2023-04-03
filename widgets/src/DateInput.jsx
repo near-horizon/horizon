@@ -16,9 +16,14 @@ if (!update) {
   return "Cannot render date input without update function!";
 }
 
+const Label = styled.label`
+  font-weight: 600;
+  color: #344054;
+`;
+
 return (
   <>
-    <label htmlFor={id}>{text}</label>
+    <Label htmlFor={id}>{text}</Label>
     <input
       id={id}
       type="date"

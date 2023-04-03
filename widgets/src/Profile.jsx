@@ -33,7 +33,15 @@ const controls = (
         backgroundColor: "#6941C6",
         borderColor: "#6941C6",
       }}
-      onClick={() => State.update({ inviteFormHidden: false })}
+      onClick={() =>
+        props.update({
+          tab: "create",
+          content: "invite",
+          search: "",
+          accountId,
+        })
+      }
+      href={`/#/${ownerId}/widget/Index?tab=create&content=invite&accountId=${accountId}`}
     >
       <i className="bi-person-plus" />
       <span className="text-nowrap">Invite to contribute</span>
@@ -46,15 +54,6 @@ const controls = (
       <i className="bi-code" />
       <span className="text-nowrap">View Social profile</span>
     </a>
-    <Widget
-      src={`${ownerId}/widget/InviteForm`}
-      props={{
-        id: `${accountId}InviteForm`,
-        accountId,
-        hidden: state.inviteFormHidden,
-        onClose: () => State.update({ inviteFormHidden: true }),
-      }}
-    />
   </div>
 );
 

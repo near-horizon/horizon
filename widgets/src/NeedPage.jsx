@@ -16,25 +16,59 @@ const getContent = (content) => {
   return content;
 };
 
-const need = Near.view(
-  ownerId,
-  "get_contribution_need",
-  { account_id: accountId, cid },
-  "final",
-  true
-);
+State.init({
+  need: null,
+  needFetched: false,
+  proposalsCount: 0,
+  proposalsCountFetched: false,
+  contributorsCount: 0,
+  contributorsCountFetched: false,
+});
 
-const isAuthorized = Near.view(
-  ownerId,
-  "check_is_manager_or_higher",
-  { entity_id: accountId, account_id: context.accountId },
-  "final"
-);
+if (!state.needFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_contribution_need",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((need) => State.update({ need, needFetched: true }));
+}
+
+if (!state.proposalsCountFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_need_contribution_requests",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((proposals) =>
+    State.update({
+      proposalsCount: proposals.length,
+      proposalsCountFetched: true,
+    })
+  );
+}
+
+if (!state.contributorsCountFetched) {
+  Near.view(
+    ownerId,
+    "get_need_contributions",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((contributors) =>
+    State.update({
+      contributorsCount: contributors.length,
+      contributorsCountFetched: true,
+    })
+  );
+}
 
 const needString =
-  typeof need.contribution_type === "string"
-    ? need.contribution_type
-    : need.contribution_type.Other;
+  typeof state.need.contribution_type === "string"
+    ? state.need.contribution_type
+    : state.need.contribution_type.Other;
 
 const body = (
   <div className="px-3">
@@ -87,7 +121,7 @@ const body = (
           <Widget
             src={`${ownerId}/widget/ActiveIndicator`}
             props={{
-              active: need.active,
+              active: state.need.active,
               activeText: "Open for proposals",
               inactiveText: "Closed",
             }}
@@ -99,29 +133,9 @@ const body = (
         />
       </div>
     </div>
-    <Markdown text={need.description} />
+    <Markdown text={state.need.description} />
   </div>
 );
-
-const proposalsCount = Object.keys(
-  Near.view(
-    ownerId,
-    "get_need_contribution_requests",
-    { account_id: accountId, cid },
-    "final",
-    true
-  ) ?? {}
-).length;
-
-const contributorsCount = Object.keys(
-  Near.view(
-    ownerId,
-    "get_need_contributions",
-    { account_id: accountId, cid },
-    "final",
-    true
-  ) ?? {}
-).length;
 
 const contentSelector = (
   <Widget
@@ -137,39 +151,50 @@ const contentSelector = (
         {
           id: "contributors",
           text: "Contributors",
-          icon: "bi-people",
-          count: contributorsCount,
+          count: state.contributorsCount,
+          icon: (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.3332 2.8898C14.5679 3.50343 15.4165 4.77762 15.4165 6.25C15.4165 7.72238 14.5679 8.99657 13.3332 9.6102M14.9998 13.972C16.2594 14.5419 17.3936 15.4708 18.3332 16.6667M1.6665 16.6667C3.28858 14.6021 5.49082 13.3333 7.9165 13.3333C10.3422 13.3333 12.5444 14.6021 14.1665 16.6667M11.6665 6.25C11.6665 8.32107 9.98757 10 7.9165 10C5.84544 10 4.1665 8.32107 4.1665 6.25C4.1665 4.17893 5.84544 2.5 7.9165 2.5C9.98757 2.5 11.6665 4.17893 11.6665 6.25Z"
+                stroke="#475467"
+                stroke-width="1.66667"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          ),
         },
         {
           id: "proposals",
           text: "Proposals",
-          icon: "bi-person-down",
-          count: proposalsCount,
+          count: state.proposalsCount,
+          icon: (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15.8333 7.5L13.3333 5M13.3333 5L15.8333 2.5M13.3333 5L18.3333 5M13.3333 17.5V16.5C13.3333 15.0999 13.3333 14.3998 13.0608 13.865C12.8211 13.3946 12.4387 13.0122 11.9683 12.7725C11.4335 12.5 10.7334 12.5 9.33329 12.5H5.66663C4.26649 12.5 3.56643 12.5 3.03165 12.7725C2.56124 13.0122 2.17879 13.3946 1.93911 13.865C1.66663 14.3998 1.66663 15.0999 1.66663 16.5V17.5M10.4166 6.25C10.4166 7.86083 9.11079 9.16667 7.49996 9.16667C5.88913 9.16667 4.58329 7.86083 4.58329 6.25C4.58329 4.63917 5.88913 3.33333 7.49996 3.33333C9.11079 3.33333 10.4166 4.63917 10.4166 6.25Z"
+                stroke="#667085"
+                stroke-width="1.66667"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          ),
         },
       ],
     }}
   />
-);
-
-const searchBar = (
-  <div className="w-25 col-12 col-md-10 col-lg-8">
-    <div className="card card-sm">
-      <div className="card-body row p-0 ps-2 align-items-center">
-        <div className="col-auto pe-0 me-0">
-          <i className="bi-search" />
-        </div>
-        <div className="col ms-0">
-          <input
-            className="form-control border-0"
-            type="search"
-            value={props.search}
-            placeholder="Search"
-            onChange={(e) => props.update({ search: e.target.value })}
-          />
-        </div>
-      </div>
-    </div>
-  </div>
 );
 
 const content = {
@@ -192,7 +217,10 @@ return (
     <div className="mb-5">{body}</div>
     <div className="d-flex flex-row justify-content-between ps-3">
       {contentSelector}
-      {searchBar}
+      <Widget
+        src={`${ownerId}/widget/SearchInput`}
+        props={{ search: props.search, update: props.update }}
+      />
     </div>
     <div className="px-3 pt-3">{content}</div>
   </div>

@@ -2,34 +2,62 @@ const ownerId = "contribut3.near";
 const search = props.search ?? "";
 const accountId = props.accountId;
 const cid = props.cid;
+const limit = 10;
 
-const allContributors = (
-  accountId
-    ? Object.keys(
-      Near.view(
-        ownerId,
-        cid ? "get_need_contributions" : "get_entity_contributions",
-        { account_id: accountId, ...(cid ? { cid } : {}) },
-        "final",
-        true
-      ) ?? {}
-    )
-    : Near.view(ownerId, "get_contributors", {}, "final", true) ?? []
-).filter((id) => id.includes(search));
+State.init({
+  items: [],
+  shown: [],
+  from: 0,
+  hasMore: true,
+});
 
-if (!allContributors || allContributors.length === 0) {
-  return "No contributors found!";
+if (state.items.length === 0) {
+  Near.asyncView(
+    ownerId,
+    accountId
+      ? cid
+        ? "get_need_contributions"
+        : "get_entity_contributions"
+      : "get_contributors",
+    {
+      ...(accountId ? { account_id: accountId } : {}),
+      ...(cid ? { cid } : {}),
+    },
+    "final",
+    false
+  ).then((contributors) => {
+    State.update({
+      items: contributors.sort(),
+      shown: contributors.slice(0, limit),
+      from: limit,
+      hasMore: contributors.length > limit,
+    });
+  });
 }
 
+const loadMore = () => {
+  State.update({
+    shown: state.items.slice(0, state.from + limit),
+    from: state.from + limit,
+    hasMore: state.from + limit < state.items.length,
+  });
+};
+
+const WidgetContainer = styled.div`
+  margin: 0.5em 0;
+`;
+
 return (
-  <>
-    {allContributors.map((id) => (
-      <div key={id} className="mb-2">
-        <Widget
-          src={`${ownerId}/widget/Contributor`}
-          props={{ accountId: id, update: props.update }}
-        />
-      </div>
-    ))}
-  </>
+  <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
+    {state.shown
+      .filter((accountId) => accountId.includes(search))
+      .map((accountId) => (
+        <WidgetContainer key={accountId}>
+          <Widget
+            src={`${ownerId}/widget/Contributor`}
+            props={{ accountId, update: props.update }}
+          />
+        </WidgetContainer>
+      ))}
+  </InfiniteScroll>
 );

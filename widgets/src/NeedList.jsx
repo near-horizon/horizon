@@ -2,74 +2,72 @@ const ownerId = "contribut3.near";
 const search = props.search;
 const accountId = props.accountId;
 const isAdmin = props.isAdmin;
+const limit = 10;
 
-const needs = accountId
-  ? Near.view(
+State.init({
+  items: [],
+  shown: [],
+  from: 0,
+  hasMore: true,
+});
+
+if (state.items.length === 0) {
+  Near.asyncView(
     ownerId,
-    isAdmin
-      ? "get_admin_contribution_needs"
-      : "get_entity_contribution_needs",
-    { account_id: accountId },
+    accountId
+      ? isAdmin
+        ? "get_admin_contribution_needs"
+        : "get_entity_contribution_needs"
+      : "get_contribution_needs",
+    { ...(accountId ? { account_id: accountId } : {}) },
     "final",
-    true
-  )
-  : Near.view(ownerId, "get_contribution_needs", {}, "final", true);
-
-if (!needs) {
-  return "Loading...";
+    false
+  ).then((needs) => {
+    if (accountId && !isAdmin) {
+      State.update({
+        items: needs.map((cid) => [accountId, cid]),
+        shown: needs.map((cid) => [accountId, cid]).slice(0, limit),
+        from: limit,
+        hasMore: needs.length > limit,
+      });
+    } else {
+      State.update({
+        items: needs.sort(([a], [b]) => a.localeCompare(b)),
+        shown: needs.slice(0, limit),
+        from: limit,
+        hasMore: needs.length > limit,
+      });
+    }
+  });
 }
 
-if (
-  (Array.isArray(needs) && needs.length === 0) ||
-  Object.keys(needs).length === 0
-) {
-  return "Couldn't find any contribution needs!";
-}
+const loadMore = () => {
+  State.update({
+    shown: state.items.slice(0, state.from + limit),
+    from: state.from + limit,
+    hasMore: state.from + limit < state.items.length,
+  });
+};
 
-const allNeeds = isAdmin
-  ? needs.filter(([entityId]) => entityId.includes(search))
-  : Object.keys(needs)
-    .reduce((list, accountIdOrCid) => {
-      if (props.accountId) {
-        return [
-          ...list,
-          [props.accountId, accountIdOrCid, needs[accountIdOrCid]],
-        ];
-      }
-
-      const entityNeeds = needs[accountIdOrCid];
-      const needsList = Object.keys(entityNeeds).map((cid) => [
-        accountIdOrCid,
-        cid,
-        entityNeeds[cid],
-      ]);
-
-      return [...list, ...needsList];
-    }, [])
-    .filter(
-      ([accountId, _, need]) =>
-        accountId.includes(search) ||
-        need.description.includes(search) ||
-        need.contribution_type.includes(search)
-    );
-
-if (!allNeeds || allNeeds.length === 0) {
-  return "No contribution needs found!";
-}
+const WidgetContainer = styled.div`
+  margin: 0.5em 0;
+`;
 
 return (
-  <>
-    {allNeeds.map(([accountId, cid]) => (
-      <div key={cid} className="mb-2">
-        <Widget
-          src={`${ownerId}/widget/Need`}
-          props={{
-            accountId,
-            cid,
-            update: props.update,
-          }}
-        />
-      </div>
-    ))}
-  </>
+  <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
+    {state.shown
+      .filter(([accountId]) => accountId.includes(search))
+      .map(([accountId, cid]) => (
+        <WidgetContainer key={cid}>
+          <Widget
+            src={`${ownerId}/widget/Need`}
+            props={{
+              accountId,
+              cid,
+              update: props.update,
+            }}
+          />
+        </WidgetContainer>
+      ))}
+  </InfiniteScroll>
 );

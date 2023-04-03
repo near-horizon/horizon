@@ -6,37 +6,82 @@ const isEntity = props.isEntity ?? false;
 
 State.init({
   finishFormHidden: true,
+  contribution: null,
+  contributionFetched: false,
+  isAuthorized: false,
+  isAuthorizedFetched: false,
+  profile: null,
+  profileFetched: false,
 });
 
 if (!entityId || !contributorId) {
   return "Cannot show contribution without entity ID or contributor ID!";
 }
 
-const contribution = Near.view(
-  ownerId,
-  "get_contribution",
-  { entity_id: entityId, contributor_id: contributorId },
-  "final",
-  true
-);
+if (!state.contributionFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_contribution",
+    { entity_id: entityId, contributor_id: contributorId },
+    "final",
+    false
+  ).then((contribution) =>
+    State.update({ contribution, contributionFetched: true })
+  );
+}
 
-const isAuthorized = Near.view(
-  ownerId,
-  "check_is_manager_or_higher",
-  { account_id: accountId, entity_id: entityId },
-  "final",
-  true
-);
+if (!state.isAuthorizedFetched) {
+  Near.asyncView(
+    ownerId,
+    "check_is_manager_or_higher",
+    { account_id: accountId, entity_id: entityId },
+    "final",
+    false
+  ).then((isAuthorized) =>
+    State.update({ isAuthorized, isAuthorizedFetched: true })
+  );
+}
 
-const profile = Social.getr(`${isEntity ? contributorId : entityId}/profile`);
+if (!state.profileFetched) {
+  const profile = Social.getr(
+    `${isEntity ? contributorId : entityId}/profile`,
+    "final",
+    { subscribe: false }
+  );
+  State.update({ profile, profileFetched: true });
+}
 
-const body = (
-  <div
-    className="d-flex flex-row justify-content-start"
-    id={accountId}
-    style={{ minHeight: "8em" }}
-  >
-    <div className="flex-grow-1 py-3">
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  min-height: 8em;
+  max-width: 100%;
+  padding: 0 0.75em;
+  border-bottom: 1px solid #eaecf0;
+`;
+
+const Wrapper = styled.div`
+  flex-grow: 1;
+  padding: 0.75em 0;
+  max-width: 100%;
+`;
+
+const ActionColumn = styled.div`
+  display: "flex";
+  flex-direction: row;
+  justify-content: between;
+  align-items: center;
+`;
+
+const TagWrapper = styled.div`
+  max-width: 100%;
+  margin: 0.5em 0;
+`;
+
+return (
+  <Container id={accountId}>
+    <Wrapper>
       <Widget
         src={`${ownerId}/widget/ProfileLine`}
         props={{
@@ -45,17 +90,17 @@ const body = (
           imageSize: "4em",
           update: props.update,
           additionalColumn: (
-            <div className="d-flex flex-row justify-content-between align-items-center">
+            <ActionColumn>
               <Widget
                 src={`${ownerId}/widget/ActiveIndicator`}
-                props={{ active: !contribution.end_date }}
+                props={{ active: !state.contribution.end_date }}
               />
               <Widget
                 src={`${ownerId}/widget/CardMenu`}
                 props={{
                   update: props.update,
                   items: [
-                    isAuthorized
+                    state.isAuthorized
                       ? {
                         text: "Stop contribution",
                         icon: "bi-slash-circle",
@@ -95,24 +140,18 @@ const body = (
                   onClose: () => State.update({ finishFormHidden: true }),
                 }}
               />
-            </div>
+            </ActionColumn>
           ),
           additionalRow: (
-            <div className="my-2">
+            <TagWrapper>
               <Widget
                 src={`${ownerId}/widget/Tags`}
-                props={{ tags: profile.tags }}
+                props={{ tags: state.profile.tags }}
               />
-            </div>
+            </TagWrapper>
           ),
         }}
       />
-    </div>
-  </div>
-);
-
-return (
-  <div className="border-bottom border-secondary-subtle">
-    <div className="px-3 py-0">{body}</div>
-  </div>
+    </Wrapper>
+  </Container>
 );

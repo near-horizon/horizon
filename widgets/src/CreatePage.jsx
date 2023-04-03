@@ -1,6 +1,6 @@
 const ownerId = "contribut3.near";
 
-const availableContent = ["request", "entity"];
+const availableContent = ["request", "entity", "proposal", "invite"];
 
 const getContent = (content) => {
   if (!content || !availableContent.includes(content)) {
@@ -28,6 +28,28 @@ const content = {
         search: state.search,
         update: props.update,
         kind: props.kind,
+        accountId: props.accountId,
+      }}
+    />
+  ),
+  proposal: (
+    <Widget
+      src={`${ownerId}/widget/ContributionRequestForm`}
+      props={{
+        search: state.search,
+        update: props.update,
+        kind: props.kind,
+        accountId: props.accountId,
+        cid: props.cid,
+      }}
+    />
+  ),
+  invite: (
+    <Widget
+      src={`${ownerId}/widget/InviteForm`}
+      props={{
+        search: state.search,
+        update: props.update,
         accountId: props.accountId,
       }}
     />

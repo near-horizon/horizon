@@ -1,20 +1,25 @@
 const tags = Object.keys(props.tags || {});
 
+const TagItem = styled.span`
+  display: inline-block;
+  border: 1px solid #e6e8eb;
+  font-size: 0.8em;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.25em 0.5em;
+  color: #687076;
+  margin: 0.25em;
+`;
+
+const Container = styled.div`
+  max-width: 400px;
+  overflow: hidden;
+`;
+
 return (
-  <div className="text-truncate text-muted" style={{ maxWidth: "400px" }}>
-    {tags.length > 0 ? (
-      <>
-        {tags.map((tag) => (
-          <span
-            className="d-inline-block mx-1 py-1 px-2 badge border border-secondary text-secondary text-muted text-center"
-            key={tag}
-          >
-            {tag}
-          </span>
-        ))}
-      </>
-    ) : (
-      <></>
-    )}
-  </div>
+  <Container>
+    {tags.map((tag) => (
+      <TagItem key={tag}>{tag}</TagItem>
+    ))}
+  </Container>
 );

@@ -16,7 +16,7 @@ const isModerator = Near.view(
   "check_is_moderator",
   { account_id: context.accountId },
   "final",
-  true
+  false
 );
 
 const isContributor = Near.view(
@@ -24,7 +24,7 @@ const isContributor = Near.view(
   "check_is_contributor",
   { account_id: context.accountId },
   "final",
-  true
+  false
 );
 
 const update = (state) => State.update(state);
@@ -90,6 +90,7 @@ const tabContent = {
         content: state.content,
         accountId: props.accountId,
         kind: state.kind,
+        cid: state.cid,
         update,
       }}
     />

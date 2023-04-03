@@ -5,37 +5,53 @@ const size = props.size ?? "1.5em";
 
 State.init({
   data: null,
+  fetched: false,
+  profile: null,
+  profileFetched: false,
 });
 
-Near.asyncView(
-  ownerId,
-  isEntity ? "get_entity" : "get_contributor",
-  { account_id: accountId },
-  "final"
-).then((data) => State.update({ data }));
+if (!state.fetched) {
+  Near.asyncView(
+    ownerId,
+    isEntity ? "get_entity" : "get_contributor",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((data) => State.update({ data, fetched: true }));
+}
 
-const profile = Social.getr(`${accountId}/profile`);
+if (!state.profileFetched) {
+  const profile = Social.get(`${accountId}/profile/**`, "final", {
+    subscribe: false,
+  });
+  State.update({ profile, profileFetched: true });
+}
 
-const fullName = profile.name || state.data.name || accountId;
-const image = profile.image;
+const fullName = state.profile.name || state.data.name || accountId;
+const image = state.profile.image;
 const url =
   (image.ipfs_cid
     ? `https://ipfs.near.social/ipfs/${image.ipfs_cid}`
     : image.url) || "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
 
-if (state.data || profile) {
-  return (
-    <div
-      className="profile-circle d-inline-block"
-      title={`${fullName} @${accountId}`}
-      style={{ width: size, height: size }}
-    >
-      <img
-        className="rounded-circle w-100 h-100"
-        style={{ objectFit: "cover" }}
-        src={`https://i.near.social/thumbnail/${url}`}
-        alt="profile image"
-      />
-    </div>
-  );
-}
+const imageSrc = `https://i.near.social/thumbnail/${url}`;
+
+const ImageCircle = styled.img`
+  border-radius: 100%;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+`;
+
+const ImageContainer = styled.div`
+  display: inline-block;
+  --size: ${({ size }) => size};
+  width: var(--size, 1.5em);
+  height: var(--size, 1.5em);
+`;
+
+return (
+  <ImageContainer title={`${fullName} @${accountId}`} size={size}>
+    <ImageCircle src={imageSrc} alt="profile image" />
+  </ImageContainer>
+);

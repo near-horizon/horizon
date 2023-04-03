@@ -10,9 +10,14 @@ if (!update) {
   return "Cannot render name input without update function!";
 }
 
+const Label = styled.label`
+  font-weight: 600;
+  color: #344054;
+`;
+
 return (
   <>
-    <label htmlFor="name">{label}</label>
+    <Label htmlFor="name">{label}</Label>
     <input
       type="text"
       id="name"
