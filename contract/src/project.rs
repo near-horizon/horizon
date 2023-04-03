@@ -200,7 +200,7 @@ trait Token {
 #[near_bindgen]
 impl Contract {
     /// Add new project and given user as founding contributor.
-    pub fn add_entity(&mut self, account_id: AccountId) {
+    pub fn add_project(&mut self, account_id: AccountId) {
         require!(
             !self.projects.contains_key(&account_id),
             "ERR_PROJECT_EXISTS"

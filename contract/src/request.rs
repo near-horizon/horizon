@@ -23,6 +23,7 @@ pub struct Request {
     project_id: AccountId,
     title: String,
     description: String,
+    open: bool,
     tags: HashSet<String>,
     source: PaymentSource,
     #[serde(with = "crate::dec_serde::u64_dec_format")]
