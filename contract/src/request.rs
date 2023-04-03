@@ -116,6 +116,15 @@ impl Contract {
             .into()
     }
 
+    /// List out requests from project with given account ID.
+    pub fn get_project_requests(&self, account_id: AccountId) -> HashSet<(AccountId, String)> {
+        self.requests
+            .keys()
+            .filter(|(project_id, _)| project_id == &account_id)
+            .cloned()
+            .collect()
+    }
+
     /// Get requests for which given account ID has admin or higher permissions.
     pub fn get_admin_requests(&self, account_id: AccountId) -> HashSet<(AccountId, String)> {
         self.requests
