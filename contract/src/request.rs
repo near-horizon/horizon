@@ -109,7 +109,7 @@ impl Contract {
     }
 
     /// Get request details.
-    pub fn get_request(&self, cid: &str, account_id: &AccountId) -> Request {
+    pub fn get_request(&self, cid: String, account_id: AccountId) -> Request {
         self.requests
             .get(&(account_id.clone(), cid.to_string()))
             .expect("ERR_NO_REQUEST")
