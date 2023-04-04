@@ -133,10 +133,6 @@ return (
     <div className="mb-3 px-3">
       <div className="d-flex flex-row justify-content-between mb-3">
         {header}
-        <Widget
-          src={`${ownerId}/widget/CreateNewInput`}
-          props={{ update: props.update }}
-        />
       </div>
       <div className="d-flex flex-row justify-content-between">
         {contentSelector}

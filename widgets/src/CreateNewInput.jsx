@@ -115,6 +115,7 @@ const DropdownList = styled.ul`
   transform: translate(0px, var(--y-pos)) scale(0);
   transition: transform 0.2s ease-in-out;
   transform-origin: top right;
+  width: 100%;
 
   &.show {
     transform: translate(0px, var(--y-pos)) scale(1);
@@ -122,20 +123,19 @@ const DropdownList = styled.ul`
 `;
 
 const MenuIcon = styled.button`
+  color: #fff;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
-  background-color: #7f56d9;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  padding: 0.4em 1em;
-
-  &:hover {
-    background-color: #7050c0;
-  }
+  padding: 0.5em 1em;
+  gap: 0.5em;
+  background: #11181c;
+  border-radius: 50px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
 `;
 
 const DropdownContainer = styled.div`
@@ -159,27 +159,17 @@ return (
 
     <DropdownList className={state.show ? "show" : ""}>
       {createNewButton({
-        id: "request",
-        text: "Contribution request",
-        icon: "bi-ui-checks-grid",
-      })}
-      <li>
-        <DropdownDivider />
-      </li>
-      {createNewButton({
-        id: "entity",
+        id: "project",
         text: "Project",
         icon: "bi-boxes",
-        kind: "Project",
       })}
       <li>
         <DropdownDivider />
       </li>
       {createNewButton({
-        id: "entity",
-        text: "Organization",
+        id: "vendor",
+        text: "Vendor",
         icon: "bi-diagram-2",
-        kind: "Organization",
       })}
     </DropdownList>
   </DropdownContainer>

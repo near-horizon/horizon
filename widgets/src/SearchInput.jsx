@@ -18,15 +18,24 @@ const icon = (
 
 const SearchInput = styled.input`
   display: block;
-  padding: 0.5em;
-  padding-left: 3em;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: .5em .75em;
+  padding-left: 2.25em;
+  gap: .5em;
+  width: 359px;
+  height: 36px;
+  background: #ffffff;
   border: 1px solid #d0d5dd;
-  border-radius: 8px;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 4px;
 `;
 
 const Icon = styled.div`
   position: absolute;
-  inset: 0.45em auto auto 0.75em;
+  inset: 0.3em auto auto 0.6em;
 `;
 
 const Container = styled.div`

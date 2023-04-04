@@ -11,24 +11,22 @@ const TabItem = styled.a`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  color: #344054;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 1em;
   padding: 0.5em;
   margin: 0;
   text-decoration: none;
-  transition: background-color 0.2s ease-in-out;
-  background-color: ${({ selected }) => (selected ? "#f2f4f7" : "white")};
+  transition: all 0.2s ease-in-out;
+  border-bottom: 4px solid ${({ selected }) => selected ? "#0091ff" : "transparent"};
+  font-style: normal;
+  font-weight: 600;
+  font-size: .95em;
+  line-height: 1em;
+  color: ${({ selected }) => selected ? "#11181c" : "#687076"};
 
   &:hover {
     color: #667085;
     text-decoration: none;
     background-color: #f9fafb;
-  }
-
-  &:nth-child(n + 2) {
-    border-left: 1px solid #d0d5dd;
   }
 
   span {
@@ -52,24 +50,23 @@ const CountIndicator = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #d0d5dd;
+  justify-content: flex-start;
+  align-items: flex-end;
   overflow: hidden;
-  border-radius: 8px;
+  border-bottom: 1px solid #eceef0;
+  width: 100%;
+  padding: 0;
 `;
 
 return (
   <Container>
-    {buttons.map(({ id, text, icon, count, grey }) => (
+    {buttons.map(({ id, text, count, grey }) => (
       <TabItem
         selected={props.content === id}
         hasCount={!!count && count > 0}
-        href={`/#/${ownerId}/widget/Index?tab=${tab}&content=${id}${
-          props.search ? "&search=" + props.search : ""
-        }${accountId ? "&accountId=" + accountId : ""}${
-          cid ? "&cid=" + cid : ""
-        }`}
+        href={`/#/${ownerId}/widget/Index?tab=${tab}&content=${id}${props.search ? "&search=" + props.search : ""
+          }${accountId ? "&accountId=" + accountId : ""}${cid ? "&cid=" + cid : ""
+          }`}
         onClick={() =>
           props.update({
             tab,
@@ -81,7 +78,6 @@ return (
         }
         key={id}
       >
-        {icon}
         <span>{text}</span>
         <CountIndicator show={!!count && count > 0} grey={grey}>
           {count}
