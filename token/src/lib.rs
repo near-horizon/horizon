@@ -38,7 +38,7 @@ pub struct Contract {
     fund_amount: u128,
 }
 
-/// A constant representing one NEAR Horizon token (10^4 miliNEAR Horizon).
+/// A constant representing one NEAR Horizon token (10^4 miliNHZN).
 const ONE_NHZN: u128 = 1_000;
 
 #[near_bindgen]
