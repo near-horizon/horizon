@@ -1,6 +1,6 @@
 const ownerId = "contribut3.near";
 
-const availableContent = ["projects", "contributors", "requests"];
+const availableContent = ["projects", "vendors", "backers", "requests"];
 
 const getContent = (content) => {
   if (!content || !availableContent.includes(content)) {
@@ -9,7 +9,6 @@ const getContent = (content) => {
 
   return content;
 };
-
 
 const contentSelector = (
   <Widget
@@ -44,19 +43,25 @@ const contentSelector = (
 const content = {
   projects: (
     <Widget
-      src={`${ownerId}/widget/EntityList`}
+      src={`${ownerId}/widget/Project.List`}
       props={{ search: props.search, update: props.update }}
     />
   ),
-  contributors: (
+  vendors: (
     <Widget
-      src={`${ownerId}/widget/ContributorList`}
+      src={`${ownerId}/widget/Vendor.List`}
+      props={{ search: props.search, update: props.update }}
+    />
+  ),
+  backers: (
+    <Widget
+      src={`${ownerId}/widget/Investor.List`}
       props={{ search: props.search, update: props.update }}
     />
   ),
   requests: (
     <Widget
-      src={`${ownerId}/widget/NeedList`}
+      src={`${ownerId}/widget/Request.List`}
       props={{ search: props.search, update: props.update }}
     />
   ),
@@ -90,23 +95,123 @@ const Heading = styled.div`
   }
 `;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 1.5em;
+`;
+
+const Filters = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Filter = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+`;
+
+const Stats = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.5em;
+
+  div {
+    width: 20%;
+  }
+`;
+
 return (
-  <div>
-    <div className="mb-3">
-      <Heading>
-        <h1>Discover NEAR Horizon</h1>
-        <h2>Explore projects, vendors, investors and contribution requests</h2>
-      </Heading>
-      <div className="d-flex flex-row justify-content-between">
-        {contentSelector}
-      </div>
-      <div className="mt-2">
+  <Container>
+    <Heading>
+      <h1>Discover NEAR Horizon</h1>
+      <h2>Explore projects, vendors, investors and contribution requests</h2>
+    </Heading>
+    <Stats>
+      <Widget
+        src={`${ownerId}/widget/Stats.Card`}
+        props={{
+          value: "1077",
+          label: "Projects",
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Stats.Card`}
+        props={{
+          value: "1M+",
+          label: "Monthly active accounts",
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Stats.Card`}
+        props={{
+          value: "25M+",
+          label: "Total accounts",
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Stats.Card`}
+        props={{
+          value: "$88M+",
+          label: "Raised",
+        }}
+      />
+      <Widget src={`${ownerId}/widget/Stats.Link`} />
+    </Stats>
+    <div>{contentSelector}</div>
+    <Filters>
+      <Widget
+        src={`${ownerId}/widget/SearchInput`}
+        props={{ search: props.search, update: props.update }}
+      />
+      <Filter>
         <Widget
-          src={`${ownerId}/widget/SearchInput`}
-          props={{ search: props.search, update: props.update }}
+          src={`${ownerId}/widget/Filter`}
+          props={{
+            name: "Type",
+            options: [
+              { id: "verified", text: "Verified", href: "#" },
+              { id: "not-verified", text: "Not verified", href: "#" },
+            ],
+            selected: "verified",
+            update: (id) => console.log(id),
+          }}
         />
-      </div>
-    </div>
-    <div className="px-3 pt-3">{content}</div>
-  </div>
+        <Widget
+          src={`${ownerId}/widget/Filter`}
+          props={{
+            name: "Status",
+            options: [
+              { id: "active", text: "Active", href: "#" },
+              { id: "not-active", text: "Not active", href: "#" },
+            ],
+            selected: "active",
+            update: (id) => alert(id),
+          }}
+        />
+        <Widget
+          src={`${ownerId}/widget/Filter`}
+          props={{
+            name: "Sort by",
+            options: [
+              { id: "name", text: "Name", href: "#" },
+              { id: "id", text: "Account ID", href: "#" },
+            ],
+            selected: "name",
+            update: (id) => alert(id),
+          }}
+        />
+      </Filter>
+    </Filters>
+    <div>{content}</div>
+  </Container>
 );
