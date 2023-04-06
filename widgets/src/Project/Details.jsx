@@ -35,6 +35,15 @@ return (
       }}
     />
     <Widget
+      src={`${ownerId}/widget/Inputs.Viewable.Links`}
+      props={{
+        label: "Links",
+        id: "links",
+        value: { github: "near-horizon", twitter: "nearhorizon" },
+        onSave: (links) => onSave({ links }),
+      }}
+    />
+    <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Select`}
       props={{
         label: "Category",

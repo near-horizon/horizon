@@ -153,7 +153,7 @@ const supportedLinks = [
 ];
 
 const SocialItem = styled.li`
-  padding: 0.5em;
+  padding: 0.125em;
 `;
 
 const linksList = supportedLinks
@@ -172,6 +172,9 @@ const List = styled.ul`
   flex-direction: row;
   justify-content: between;
   align-items: center;
+  margin: 0;
+  padding: 0;
+  gap: .25em;
 `;
 
 return <List>{linksList}</List>;
