@@ -35,10 +35,8 @@ const Navbar = styled.div`
 `;
 
 const LogoArea = styled.a`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  width: 14em;
   padding: 0px;
   gap: 0.7em;
   font-style: normal;
@@ -67,7 +65,7 @@ const logo = (
     href={`/#/${ownerId}/widget/Index`}
     onClick={() => props.update({ tab: "home", content: "", search: "" })}
   >
-    <></>NEAR Horizon
+    <Widget src={`${ownerId}/widget/Logo`} />
   </LogoArea>
 );
 
