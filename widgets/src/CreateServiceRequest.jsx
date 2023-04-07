@@ -5,8 +5,8 @@ const STEP_1 = "step1";
 const STEP_2 = "step2";
 const propsData = {
   step1: {
-    nextButtonText: "Invite vendors",
-    nextButtonIcon: "bi-arrow-right-short",
+    nextButtonText: "Publish request",
+    nextButtonIcon: "bi-send",
     progress: 100
   },
   step2: {
