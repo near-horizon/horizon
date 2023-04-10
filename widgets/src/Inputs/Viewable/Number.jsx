@@ -2,7 +2,7 @@ const ownerId = "contribut3.near";
 const id = props.id ?? "number";
 const label = props.label ?? "Input";
 const value = props.value ?? 0;
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 
 const LabelArea = styled.div`
   display: flex;

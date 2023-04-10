@@ -1,4 +1,4 @@
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 const ownerId = "contribut3.near";
 
 const Container = styled.div`

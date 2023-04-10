@@ -3,7 +3,7 @@ const id = props.id ?? "select";
 const label = props.label ?? "Input";
 const value = props.value ?? [];
 const options = props.options ?? [];
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 
 const LabelArea = styled.div`
   display: flex;

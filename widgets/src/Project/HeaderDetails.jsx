@@ -41,7 +41,12 @@ return (
       />
       <Widget
         src={`${ownerId}/widget/BadgeList`}
-        props={{ badges: [{ value: "Verified" }, { value: "Fundraiser", color: "#62ebe4" }] }}
+        props={{
+          badges: [
+            { value: "Verified" },
+            { value: "Fundraiser", color: "#62ebe4" },
+          ],
+        }}
       />
     </Details>
   </Container>
