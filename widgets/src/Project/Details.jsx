@@ -8,6 +8,7 @@ const Container = styled.div`
   justify-content: flex-start;
   gap: 1em;
   padding: 0.5em 0.2em;
+  max-width: 100%;
 `;
 
 const Heading = styled.div`
@@ -49,7 +50,12 @@ return (
         label: "Category",
         id: "category",
         value: [{ name: "Wallets" }],
-        options: [{ name: "Wallets" }, { name: "Games" }, { name: "Social" }, { name: "Other" }],
+        options: [
+          { name: "Wallets" },
+          { name: "Games" },
+          { name: "Social" },
+          { name: "Other" },
+        ],
         onSave: ([{ name: category }]) => onSave({ category }),
       }}
     />
@@ -69,7 +75,12 @@ return (
         label: "Development phase",
         id: "phase",
         value: [{ name: "Testnet launched" }],
-        options: [{ name: "Testnet launched" }, { name: "Mainnet launched" }, { name: "In development" }, { name: "Concept" }],
+        options: [
+          { name: "Testnet launched" },
+          { name: "Mainnet launched" },
+          { name: "In development" },
+          { name: "Concept" },
+        ],
         onSave: ([{ name: phase }]) => onSave({ phase }),
       }}
     />

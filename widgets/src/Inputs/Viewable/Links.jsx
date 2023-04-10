@@ -7,23 +7,23 @@ const onSave = props.onSave ?? (() => { });
 const supportedLinks = [
   {
     name: "github",
-    url: "https://github.com/",
+    url: "github.com/",
   },
   {
     name: "discord",
-    url: "https://discord.com/",
+    url: "discord.com/",
   },
   {
     name: "reddit",
-    url: "https://reddit.com/u/",
+    url: "reddit.com/u/",
   },
   {
     name: "twitter",
-    url: "https://twitter.com/",
+    url: "twitter.com/",
   },
   {
     name: "youtube",
-    url: "https://youtube.com/",
+    url: "youtube.com/",
   },
 ];
 
@@ -55,10 +55,16 @@ const SaveButton = styled.button`
 const edit = (update, v) => (
   <>
     <LabelArea>
-      {supportedLinks
-        .map(({ name, url }) => (
-          <Widget src={`${ownerId}/widget/Inputs.Social`} props={{ start: url, value: v[name] ?? "", update: (s) => update({ ...v, [name]: s }) }} />
-        ))}
+      {supportedLinks.map(({ name, url }) => (
+        <Widget
+          src={`${ownerId}/widget/Inputs.Social`}
+          props={{
+            start: url,
+            value: v[name] ?? "",
+            update: (s) => update({ ...v, [name]: s }),
+          }}
+        />
+      ))}
     </LabelArea>
     <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
   </>
@@ -72,7 +78,12 @@ return (
       label,
       value,
       edit,
-      view: <Widget src={`${ownerId}/widget/SocialLinks`} props={{ links: value }} />,
+      view: (
+        <Widget
+          src={`${ownerId}/widget/SocialLinks`}
+          props={{ links: value }}
+        />
+      ),
     }}
   />
 );

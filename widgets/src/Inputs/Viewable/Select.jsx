@@ -11,6 +11,7 @@ const LabelArea = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
+  flex-wrap: wrap;
 `;
 
 const Input = styled.input`

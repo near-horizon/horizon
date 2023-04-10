@@ -11,6 +11,7 @@ const LabelArea = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
+  flex-wrap: wrap;
 `;
 
 const SaveButton = styled.button`
@@ -54,7 +55,14 @@ return (
       label,
       value,
       edit,
-      view: <Widget src={`${ownerId}/widget/Tags`} props={{ tags: value.reduce((acc, { name }) => ({ ...acc, [name]: "" }), {}) }} />,
+      view: (
+        <Widget
+          src={`${ownerId}/widget/Tags`}
+          props={{
+            tags: value.reduce((acc, { name }) => ({ ...acc, [name]: "" }), {}),
+          }}
+        />
+      ),
     }}
   />
 );

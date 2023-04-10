@@ -1,7 +1,7 @@
 const start = props.start ?? "https://";
 const id = props.id ?? "link";
 const value = props.value ?? "";
-const update = props.update ?? (() => { });
+const update = props.update ?? (() => {});
 
 const Input = styled.input`
   display: block;
@@ -45,10 +45,6 @@ const Container = styled.div`
 return (
   <Container>
     <Start>{start}</Start>
-    <Input
-      type="text"
-      value={value}
-      onChange={(e) => update(e.target.value)}
-    />
+    <Input type="text" value={value} onChange={(e) => update(e.target.value)} />
   </Container>
 );

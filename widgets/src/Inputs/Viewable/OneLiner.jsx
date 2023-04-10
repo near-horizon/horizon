@@ -1,10 +1,7 @@
 const ownerId = "contribut3.near";
 const id = props.id ?? "text";
-const label = props.label ?? "Input";
 const value = props.value ?? "";
-const link = props.link ?? "";
-const isLink = link !== "";
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 
 const LabelArea = styled.div`
   display: flex;
@@ -12,7 +9,6 @@ const LabelArea = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
-  flex-wrap: wrap;
 `;
 
 const Input = styled.input`
@@ -50,7 +46,7 @@ return (
     src={`${ownerId}/widget/Inputs.Viewable`}
     props={{
       id,
-      label,
+      noLabel: true,
       value,
       edit: (update, v) => (
         <LabelArea>
@@ -63,7 +59,7 @@ return (
           <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: isLink ? <a href={link}>{value}</a> : value,
+      view: value,
     }}
   />
 );

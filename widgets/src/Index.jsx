@@ -59,9 +59,9 @@ const tabContent = {
       props={{ content: state.content, search: state.search, update }}
     />
   ),
-  entity: (
+  project: (
     <Widget
-      src={`${ownerId}/widget/EntityPage`}
+      src={`${ownerId}/widget/Project.Page`}
       props={{
         accountId: state.accountId,
         search: state.search,

@@ -3,6 +3,8 @@ const label = props.label ?? "Input";
 const value = props.value ?? "";
 const view = props.view ?? (() => <></>);
 const edit = props.edit ?? (() => <></>);
+const big = props.big ?? false;
+const noLabel = props.noLabel ?? false;
 
 State.init({
   value,
@@ -15,14 +17,15 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0.25em;
+  gap: ${({ big }) => (big ? ".625em" : ".25em")};
+  width: 100%;
 `;
 
 const Label = styled.label`
   font-style: normal;
   font-weight: 600;
-  font-size: 0.95em;
-  line-height: 1em;
+  font-size: ${({ big }) => (big ? "1em" : ".95em")};
+  line-height: ${({ big }) => (big ? "1.4em" : "1em")};
   color: #11181c;
 `;
 
@@ -67,9 +70,15 @@ const EditButtonContainer = styled.div`
 `;
 
 return (
-  <Container>
+  <Container big={big}>
     <Row>
-      <Label htmlFor={id}>{label}</Label>
+      {noLabel ? (
+        view
+      ) : (
+        <Label htmlFor={id} big={big}>
+          {label}
+        </Label>
+      )}
       <EditButtonContainer>
         <EditButton
           onClick={() => State.update({ edit: false })}
@@ -86,6 +95,12 @@ return (
       </EditButtonContainer>
     </Row>
 
-    {state.edit ? edit((value) => State.update({ value }), state.value) : view}
+    {state.edit ? (
+      edit((value) => State.update({ value }), state.value)
+    ) : noLabel ? (
+      <></>
+    ) : (
+      view
+    )}
   </Container>
 );

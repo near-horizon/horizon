@@ -72,6 +72,7 @@ const LabelArea = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
+  flex-wrap: wrap;
 `;
 
 const Input = styled.input`
@@ -125,13 +126,14 @@ return (
               onChange={(e) => update(e.target.value)}
               onBlur={() => validate(v)}
             />
-            <SaveButton valid={state.valid} onClick={() => state.valid && onSave(v)}>
+            <SaveButton
+              valid={state.valid}
+              onClick={() => state.valid && onSave(v)}
+            >
               Save
             </SaveButton>
           </LabelArea>
-          <Error>
-            {state.valid ? <></> : state.errorMessage}
-          </Error>
+          <Error>{state.valid ? <></> : state.errorMessage}</Error>
         </>
       ),
       view: isLink ? <a href={link}>{value}</a> : value,

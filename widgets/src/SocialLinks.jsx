@@ -174,7 +174,7 @@ const List = styled.ul`
   align-items: center;
   margin: 0;
   padding: 0;
-  gap: .25em;
+  gap: 0.25em;
 `;
 
 return <List>{linksList}</List>;

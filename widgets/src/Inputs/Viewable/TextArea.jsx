@@ -1,26 +1,25 @@
 const ownerId = "contribut3.near";
-const id = props.id ?? "text";
+const id = props.id ?? "textarea";
 const label = props.label ?? "Input";
 const value = props.value ?? "";
-const link = props.link ?? "";
-const isLink = link !== "";
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 
 const LabelArea = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 0.25em;
-  flex-wrap: wrap;
+  width: 100%;
 `;
 
-const Input = styled.input`
+const Input = styled.textarea`
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0.5em 0.75em;
+  width: 100%;
   gap: 0.5em;
   background: #ffffff;
   border: 1px solid #d0d5dd;
@@ -45,6 +44,16 @@ const SaveButton = styled.button`
   color: #11181c;
 `;
 
+const MarkdownText = styled.div`
+  font-size: 0.95em;
+  line-height: 1.25em;
+
+  p {
+    color: #101828;
+    font-weight: 400;
+  }
+`;
+
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
@@ -52,18 +61,24 @@ return (
       id,
       label,
       value,
+      big: true,
       edit: (update, v) => (
         <LabelArea>
           <Input
             id
-            type={isLink ? "url" : "text"}
+            rows={5}
             value={v}
             onChange={(e) => update(e.target.value)}
           />
           <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: isLink ? <a href={link}>{value}</a> : value,
+      // view: <Widget src={`${ownerId}/widget/DescriptionArea`} props={{ description: value }} />,
+      view: (
+        <MarkdownText>
+          <Markdown text={value} />
+        </MarkdownText>
+      ),
     }}
   />
 );
