@@ -1,5 +1,6 @@
 const onSave = props.onSave ?? (() => {});
 const ownerId = "contribut3.near";
+const isAdmin = props.isAdmin;
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ return (
         value: "layers.gg",
         link: "https://layers.gg",
         onSave: (website) => onSave({ website }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -42,6 +44,7 @@ return (
         id: "links",
         value: { github: "near-horizon", twitter: "nearhorizon" },
         onSave: (links) => onSave({ links }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -57,6 +60,7 @@ return (
           { name: "Other" },
         ],
         onSave: ([{ name: category }]) => onSave({ category }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -67,6 +71,7 @@ return (
         value: [{ name: "Native" }],
         options: [{ name: "Native" }, { name: "Multichain" }],
         onSave: ([{ name: integration }]) => onSave({ integration }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -82,6 +87,7 @@ return (
           { name: "Concept" },
         ],
         onSave: ([{ name: phase }]) => onSave({ phase }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -91,6 +97,7 @@ return (
         id: "userbase",
         value: 3500,
         onSave: (userbase) => onSave({ userbase }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -110,6 +117,7 @@ return (
           { name: "IPO" },
         ],
         onSave: ([{ name: stage }]) => onSave({ stage }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -119,6 +127,7 @@ return (
         id: "goal",
         value: 1000000,
         onSave: (goal) => onSave({ goal }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -128,6 +137,7 @@ return (
         id: "raised",
         value: 600000,
         onSave: (raised) => onSave({ raised }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -137,6 +147,7 @@ return (
         id: "ceo",
         value: "petarvujovic.near",
         onSave: (ceo) => onSave({ ceo }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -146,6 +157,7 @@ return (
         id: "cto",
         value: "petarvujovic.near",
         onSave: (cto) => onSave({ cto }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -155,6 +167,7 @@ return (
         id: "size",
         value: 10,
         onSave: (team) => onSave({ team }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -175,6 +188,7 @@ return (
           { name: "farming" },
         ],
         onSave: (tags) => onSave({ tags: tags.map(({ name }) => name) }),
+        canEdit: isAdmin
       }}
     />
     <Widget
@@ -184,6 +198,7 @@ return (
         id: "location",
         value: "San Francisco, CA",
         onSave: (geo) => onSave({ geo }),
+        canEdit: isAdmin
       }}
     />
   </Container>

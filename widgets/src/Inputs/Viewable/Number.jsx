@@ -62,6 +62,7 @@ return (
         </LabelArea>
       ),
       view: value, // Intl.NumberFormat("en", { notation: "compact" }).format(value),
+      canEdit
     }}
   />
 );

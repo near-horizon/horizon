@@ -64,6 +64,7 @@ return (
         </LabelArea>
       ),
       view: isLink ? <a href={link}>{value}</a> : value,
+      canEdit
     }}
   />
 );

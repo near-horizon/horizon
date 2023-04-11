@@ -84,6 +84,7 @@ return (
           props={{ links: value }}
         />
       ),
+      canEdit
     }}
   />
 );

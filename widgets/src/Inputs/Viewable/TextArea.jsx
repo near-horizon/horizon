@@ -79,6 +79,7 @@ return (
           <Markdown text={value} />
         </MarkdownText>
       ),
+      canEdit
     }}
   />
 );

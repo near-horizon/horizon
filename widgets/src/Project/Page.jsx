@@ -1,6 +1,14 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
 
+const isAdmin = Near.view(
+  ownerId,
+  "check_is_project_admin",
+  { project_id: accountId, account_id: context.accountId },
+  "final"
+);
+
+
 const availableContent = [
   "overview",
   "requests",
@@ -137,7 +145,7 @@ return (
       <HeaderDetails>
         <Widget
           src={`${ownerId}/widget/Project.HeaderDetails`}
-          props={{ accountId: props.accountId }}
+          props={{ accountId: ownerId, isAdmin }}
         />
         <CTARow>
           <Widget
