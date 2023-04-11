@@ -23,7 +23,7 @@ return (
       </h4>
       {need ? (
         <a
-          href={`/#/${ownerId}/widget/Index?accountId=${entityId}&cid=${cid}`}
+          href={`/${ownerId}/widget/Index?accountId=${entityId}&cid=${cid}`}
           onClick={() =>
             props.update({
               accountId: entityId,

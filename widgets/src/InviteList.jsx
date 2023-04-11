@@ -11,20 +11,20 @@ State.init({
 });
 
 if (state.items.length === 0) {
-  Near.asyncView(
-    ownerId,
-    accountId ? "get_entity_invites" : "get_contributor_invites",
-    { account_id: props.accountId ?? context.accountId },
-    "final",
-    false
-  ).then((invites) =>
-    State.update({
-      items: invites.sort(),
-      shown: invites.slice(0, limit),
-      from: limit,
-      hasMore: invites.length > limit,
-    })
-  );
+  // Near.asyncView(
+  //   ownerId,
+  //   accountId ? "get_project_invites" : "get_vendor_invites",
+  //   { account_id: props.accountId ?? context.accountId },
+  //   "final",
+  //   false
+  // ).then((invites) =>
+  //   State.update({
+  //     items: invites.sort(),
+  //     shown: invites.slice(0, limit),
+  //     from: limit,
+  //     hasMore: invites.length > limit,
+  //   })
+  // );
 }
 
 const loadMore = () =>

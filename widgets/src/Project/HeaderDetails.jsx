@@ -1,6 +1,21 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
 
+State.init({
+  profile: null,
+  profileIsFetched: false,
+});
+
+if (!state.profileIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${accountId}/profile/**`] },
+    "final",
+    false
+  ).then((profile) => State.update({ profile: profile[accountId].profile, profileIsFetched: true }));
+}
+
 const Container = styled.div`
   display: flex;
   flex-direction: row;
@@ -21,21 +36,29 @@ return (
   <Container>
     <Widget
       src={`${ownerId}/widget/Project.Icon`}
-      props={{ accountId: ownerId, size: "8em" }}
+      props={{ accountId, size: "8em" }}
     />
     <Details>
       <Widget
-        src={`${ownerId}/widget/NameAndAccount`}
-        props={{ accountId: ownerId, name: "NEAR Horizon" }}
+        src={`${ownerId}/widget/Inputs.Viewable.NameAndAccount`}
+        props={{
+          value: state.profile.name,
+          id: "name",
+          accountId,
+          onSave: (name) =>
+            Near.call("social.near", "set", {
+              data: { [accountId]: { profile: { name } } },
+            }),
+        }}
       />
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.OneLiner`}
         props={{
           value: "Simple solutions for complex tasks",
-          id: "one_liner",
-          onSave: (one_liner) =>
+          id: "tagline",
+          onSave: (tagline) =>
             Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { one_liner } } },
+              data: { [accountId]: { profile: { tagline } } },
             }),
         }}
       />

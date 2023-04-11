@@ -4,7 +4,7 @@ const label = props.label ?? "Input";
 const value = props.value ?? "";
 const link = props.link ?? "";
 const isLink = link !== "";
-const onSave = props.onSave ?? (() => {});
+const onSave = props.onSave ?? (() => { });
 
 const LabelArea = styled.div`
   display: flex;

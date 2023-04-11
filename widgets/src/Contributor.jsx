@@ -17,7 +17,7 @@ State.init({
 if (!state.contributorFetched) {
   Near.asyncView(
     ownerId,
-    "get_contributor",
+    "get_vendor",
     { account_id: accountId },
     "final",
     false
@@ -136,7 +136,7 @@ return (
                     {
                       text: "Invite to contribute",
                       icon: "bi-person-plus",
-                      href: `/#/${ownerId}/widget/Index?tab=create&content=invite&accountId=${accountId}`,
+                      href: `/${ownerId}/widget/Index?tab=create&content=invite&accountId=${accountId}`,
                       onClick: () =>
                         props.update({
                           tab: "create",
@@ -148,7 +148,7 @@ return (
                     {
                       text: "View details",
                       icon: "bi-info-circle",
-                      href: `/#/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`,
+                      href: `/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`,
                       onClick: () =>
                         props.update({
                           tab: "contributor",

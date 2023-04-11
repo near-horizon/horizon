@@ -17,8 +17,12 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: ${({ big }) => (big ? ".625em" : ".25em")};
+  gap: .25em;
   width: 100%;
+
+  &.big {
+    gap: 0.625em;
+  }
 `;
 
 const Label = styled.label`
@@ -70,7 +74,7 @@ const EditButtonContainer = styled.div`
 `;
 
 return (
-  <Container big={big}>
+  <Container className={big ? "big" : ""}>
     <Row>
       {noLabel ? (
         view

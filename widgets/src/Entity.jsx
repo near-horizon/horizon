@@ -97,7 +97,7 @@ return (
                     {
                       text: "Propose contribution",
                       icon: "bi-person-up",
-                      href: `/#/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}`,
+                      href: `/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}`,
                       onClick: () =>
                         props.update({
                           tab: "create",
@@ -109,7 +109,7 @@ return (
                     {
                       text: "View details",
                       icon: "bi-info-circle",
-                      href: `/#/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`,
+                      href: `/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`,
                       onClick: () =>
                         props.update({
                           tab: "entity",

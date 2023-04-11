@@ -194,7 +194,7 @@ return (
     </Form>
     <Controls>
       <CloseButton
-        href={`/#/${ownerId}/widget/Index?tab=home`}
+        href={`/${ownerId}/widget/Index?tab=home`}
         onClick={() => props.update({ tab: "home" })}
       >
         Cancel

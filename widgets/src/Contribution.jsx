@@ -102,17 +102,17 @@ return (
                   items: [
                     state.isAuthorized
                       ? {
-                          text: "Stop contribution",
-                          icon: "bi-slash-circle",
-                          id: "stop",
-                          onClick: () =>
-                            State.update({ finishFormHidden: false }),
-                        }
+                        text: "Stop contribution",
+                        icon: "bi-slash-circle",
+                        id: "stop",
+                        onClick: () =>
+                          State.update({ finishFormHidden: false }),
+                      }
                       : null,
                     {
                       text: "View details",
                       icon: "bi-info-circle",
-                      href: `/#/${ownerId}/widget/Index?tab=contribution&entityId=${entityId}&contributorId=${contributorId}`,
+                      href: `/${ownerId}/widget/Index?tab=contribution&entityId=${entityId}&contributorId=${contributorId}`,
                       onClick: () =>
                         props.update({
                           tab: "contribution",

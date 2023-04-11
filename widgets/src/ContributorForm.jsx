@@ -25,7 +25,7 @@ State.init({
 if (!state.existing) {
   Near.asyncView(
     ownerId,
-    "get_contributor",
+    "get_vendor",
     { account_id: context.accountId },
     "final"
   ).then((contributor) => {

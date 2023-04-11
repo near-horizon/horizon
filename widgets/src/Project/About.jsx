@@ -1,5 +1,6 @@
-const onSave = props.onSave ?? (() => {});
+const onSave = props.onSave ?? (() => { });
 const ownerId = "contribut3.near";
+const accountId = props.accountId;
 
 const Container = styled.div`
   display: flex;
@@ -20,6 +21,22 @@ const Heading = styled.div`
   width: 100%;
 `;
 
+State.init({
+  description: "",
+  descriptionIsFetched: false,
+});
+
+if (!state.descriptionIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${accountId}/profile/description`] },
+    "final",
+    false,
+  ).then((data) => State.update({ description: data[accountId].profile.description, descriptionIsFetched: true }));
+  return <>Loading...</>;
+}
+
 return (
   <Container>
     <Heading>About project</Heading>
@@ -28,9 +45,8 @@ return (
       props={{
         label: "Description",
         id: "description",
-        value:
-          "Ethereum bought lots of cold wallet although VeChain waited some dead cat bounce during many ICO. NFT proves the digital signature until a burned, nor since ERC20 token standard generates many quick distributed ledger, Lightning Network halving a REKT in many decentralised application! Because Silk Road broadcast some provably bagholder, Ripple sharded some instant all-time-high, nor when TRON returns lots of peer-to-peer FUD, Ripple counted a accidental fork at the dead cat bounce! When blockchain could be a provably fair consensus process of some fork, Cardano required few burned bollinger band in many zero confirmation transaction",
-        onSave: (description) => onSave({ description }),
+        value: state.description,
+        onSave: (description) => Near.call("social.near", "set", { data: { [accountId]: { profile: { description } } } }),
       }}
     />
     <Widget

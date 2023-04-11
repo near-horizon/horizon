@@ -75,15 +75,15 @@ if (!state.proposalsCountFetched) {
 }
 
 if (!state.invitesCountFetched) {
-  Near.asyncView(
-    ownerId,
-    "get_entity_invites",
-    { account_id: accountId },
-    "final",
-    false
-  ).then((invites) =>
-    State.update({ invitesCount: invites.length, invitesCountFetched: true })
-  );
+  // Near.asyncView(
+  //   ownerId,
+  //   "get_entity_invites",
+  //   { account_id: accountId },
+  //   "final",
+  //   false
+  // ).then((invites) =>
+  //   State.update({ invitesCount: invites.length, invitesCountFetched: true })
+  // );
 }
 
 if (!state.isContributorFetched) {
@@ -120,7 +120,7 @@ const controls = (
         <a
           className="btn btn-outline-secondary me-2"
           style={{ width: "8em" }}
-          href={`/#/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
+          href={`/${ownerId}/widget/Index?tab=create&content=entity&accountId=${accountId}`}
           onClick={() =>
             props.update({ tab: "create", content: "entity", accountId })
           }
@@ -136,7 +136,7 @@ const controls = (
               {
                 text: "Create new request",
                 icon: "bi-boxes",
-                href: `/#/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
+                href: `/${ownerId}/widget/Index?tab=create&content=request&accountId=${accountId}`,
                 onClick: () =>
                   props.update({
                     tab: "create",
@@ -160,7 +160,7 @@ const controls = (
       <a
         className="btn btn-success me-2 text-light"
         style={{ width: "13em" }}
-        href={`/#/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}`}
+        href={`/${ownerId}/widget/Index?tab=create&content=proposal&accountId=${accountId}`}
         onClick={() =>
           props.update({
             tab: "create",
@@ -273,53 +273,53 @@ const contentSelector = (
         },
         state.isAuthorized
           ? {
-              id: "proposals",
-              text: "Proposals",
-              icon: (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.8333 7.5L13.3333 5M13.3333 5L15.8333 2.5M13.3333 5L18.3333 5M13.3333 17.5V16.5C13.3333 15.0999 13.3333 14.3998 13.0608 13.865C12.8211 13.3946 12.4387 13.0122 11.9683 12.7725C11.4335 12.5 10.7334 12.5 9.33329 12.5H5.66663C4.26649 12.5 3.56643 12.5 3.03165 12.7725C2.56124 13.0122 2.17879 13.3946 1.93911 13.865C1.66663 14.3998 1.66663 15.0999 1.66663 16.5V17.5M10.4166 6.25C10.4166 7.86083 9.11079 9.16667 7.49996 9.16667C5.88913 9.16667 4.58329 7.86083 4.58329 6.25C4.58329 4.63917 5.88913 3.33333 7.49996 3.33333C9.11079 3.33333 10.4166 4.63917 10.4166 6.25Z"
-                    stroke="#667085"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              ),
-              count: state.proposalsCount,
-              grey: true,
-            }
+            id: "proposals",
+            text: "Proposals",
+            icon: (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.8333 7.5L13.3333 5M13.3333 5L15.8333 2.5M13.3333 5L18.3333 5M13.3333 17.5V16.5C13.3333 15.0999 13.3333 14.3998 13.0608 13.865C12.8211 13.3946 12.4387 13.0122 11.9683 12.7725C11.4335 12.5 10.7334 12.5 9.33329 12.5H5.66663C4.26649 12.5 3.56643 12.5 3.03165 12.7725C2.56124 13.0122 2.17879 13.3946 1.93911 13.865C1.66663 14.3998 1.66663 15.0999 1.66663 16.5V17.5M10.4166 6.25C10.4166 7.86083 9.11079 9.16667 7.49996 9.16667C5.88913 9.16667 4.58329 7.86083 4.58329 6.25C4.58329 4.63917 5.88913 3.33333 7.49996 3.33333C9.11079 3.33333 10.4166 4.63917 10.4166 6.25Z"
+                  stroke="#667085"
+                  stroke-width="1.66667"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            ),
+            count: state.proposalsCount,
+            grey: true,
+          }
           : null,
         state.isAuthorized
           ? {
-              id: "invitations",
-              text: "Invitations",
-              icon: (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10 9.99984L6.4393 7.03255C5.91026 6.59169 5.64574 6.37125 5.45557 6.10103C5.28708 5.86161 5.16195 5.59445 5.08589 5.31174C5.00004 4.99266 5.00004 4.64833 5.00004 3.95967V1.6665M10 9.99984L13.5608 7.03256C14.0898 6.59169 14.3543 6.37125 14.5445 6.10103C14.713 5.86161 14.8381 5.59445 14.9142 5.31174C15 4.99266 15 4.64833 15 3.95967V1.6665M10 9.99984L6.4393 12.9671C5.91026 13.408 5.64574 13.6284 5.45557 13.8986C5.28708 14.1381 5.16195 14.4052 5.08589 14.6879C5.00004 15.007 5.00004 15.3513 5.00004 16.04V18.3332M10 9.99984L13.5608 12.9671C14.0898 13.408 14.3543 13.6284 14.5445 13.8986C14.713 14.1381 14.8381 14.4052 14.9142 14.6879C15 15.007 15 15.3513 15 16.04V18.3332M3.33337 1.6665H16.6667M3.33337 18.3332H16.6667"
-                    stroke="#667085"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              ),
-              count: state.invitesCount,
-              grey: true,
-            }
+            id: "invitations",
+            text: "Invitations",
+            icon: (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 9.99984L6.4393 7.03255C5.91026 6.59169 5.64574 6.37125 5.45557 6.10103C5.28708 5.86161 5.16195 5.59445 5.08589 5.31174C5.00004 4.99266 5.00004 4.64833 5.00004 3.95967V1.6665M10 9.99984L13.5608 7.03256C14.0898 6.59169 14.3543 6.37125 14.5445 6.10103C14.713 5.86161 14.8381 5.59445 14.9142 5.31174C15 4.99266 15 4.64833 15 3.95967V1.6665M10 9.99984L6.4393 12.9671C5.91026 13.408 5.64574 13.6284 5.45557 13.8986C5.28708 14.1381 5.16195 14.4052 5.08589 14.6879C5.00004 15.007 5.00004 15.3513 5.00004 16.04V18.3332M10 9.99984L13.5608 12.9671C14.0898 13.408 14.3543 13.6284 14.5445 13.8986C14.713 14.1381 14.8381 14.4052 14.9142 14.6879C15 15.007 15 15.3513 15 16.04V18.3332M3.33337 1.6665H16.6667M3.33337 18.3332H16.6667"
+                  stroke="#667085"
+                  stroke-width="1.66667"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            ),
+            count: state.invitesCount,
+            grey: true,
+          }
           : null,
         {
           id: "contributions",
@@ -344,27 +344,27 @@ const contentSelector = (
         },
         isContributor
           ? {
-              id: "graph",
-              text: "Out-Graph",
-              icon: (
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmln
-                  s="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.8333 17.5L18.3333 15M18.3333 15L15.8333 12.5M18.3333 15H13.3333M9.99996 12.9167H6.24996C5.08699 12.9167 4.5055 12.9167 4.03234 13.0602C2.96701 13.3834 2.13333 14.217 1.81016 15.2824C1.66663 15.7555 1.66663 16.337 1.66663 17.5M12.0833 6.25C12.0833 8.32107 10.4044 10 8.33329 10C6.26222 10 4.58329 8.32107 4.58329 6.25C4.58329 4.17893 6.26222 2.5 8.33329 2.5C10.4044 2.5 12.0833 4.17893 12.0833 6.25Z"
-                    stroke="#475467"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              ),
-            }
+            id: "graph",
+            text: "Out-Graph",
+            icon: (
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmln
+                s="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.8333 17.5L18.3333 15M18.3333 15L15.8333 12.5M18.3333 15H13.3333M9.99996 12.9167H6.24996C5.08699 12.9167 4.5055 12.9167 4.03234 13.0602C2.96701 13.3834 2.13333 14.217 1.81016 15.2824C1.66663 15.7555 1.66663 16.337 1.66663 17.5M12.0833 6.25C12.0833 8.32107 10.4044 10 8.33329 10C6.26222 10 4.58329 8.32107 4.58329 6.25C4.58329 4.17893 6.26222 2.5 8.33329 2.5C10.4044 2.5 12.0833 4.17893 12.0833 6.25Z"
+                  stroke="#475467"
+                  stroke-width="1.66667"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            ),
+          }
           : null,
       ].filter((x) => x !== null),
     }}

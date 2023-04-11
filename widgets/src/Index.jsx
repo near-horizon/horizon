@@ -11,22 +11,6 @@ State.init({
   cid: props.cid,
 });
 
-const isModerator = Near.view(
-  ownerId,
-  "check_is_moderator",
-  { account_id: context.accountId },
-  "final",
-  false
-);
-
-const isContributor = Near.view(
-  ownerId,
-  "check_is_contributor",
-  { account_id: context.accountId },
-  "final",
-  false
-);
-
 const update = (state) => State.update(state);
 
 const tabContent = {
@@ -82,9 +66,9 @@ const tabContent = {
       }}
     />
   ),
-  create: (
+  createproject: (
     <Widget
-      src={`${ownerId}/widget/CreatePage`}
+      src={`${ownerId}/widget/Project.Form`}
       props={{
         search: state.search,
         content: state.content,
@@ -126,19 +110,31 @@ const ContentContainer = styled.div`
   padding: 2.5em 1.5em;
 `;
 
+const Sidebar = styled.div`
+  display: ${({ show }) => show ? "flex" : "none"};
+  flex-direction: row;
+  position: sticky;
+  top: 0;
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+`;
+
 return (
   <div>
     <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
-    <div className="d-flex flex-row position-relative">
-      <div className="d-flex flex-row position-sticky top-0">
-        <div className="flex-grow-1">
-          <Widget
-            src={`${ownerId}/widget/Sidebar`}
-            props={{ tab: state.tab, update }}
-          />
-        </div>
-      </div>
+    <Content>
+      <Sidebar show={state.tab !== "createproject"}>
+        <Widget
+          src={`${ownerId}/widget/Sidebar`}
+          props={{ tab: state.tab, update }}
+        />
+      </Sidebar>
       <ContentContainer>{tabContent}</ContentContainer>
-    </div>
+    </Content>
   </div>
 );

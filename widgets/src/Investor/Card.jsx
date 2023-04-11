@@ -73,7 +73,7 @@ const FooterButton = styled.a`
 
   &:hover {
     ${({ disabled }) =>
-      disabled ? "color: #878a8e; text-decoration: none;" : ""}
+    disabled ? "color: #878a8e; text-decoration: none;" : ""}
   }
 `;
 
@@ -88,7 +88,7 @@ const Footer = styled.div`
 const footer = (
   <Footer>
     <FooterButton
-      href={`/#/${ownerId}/widget/Index?tab=investor&accountId=${accountId}`}
+      href={`/${ownerId}/widget/Index?tab=investor&accountId=${accountId}`}
       onClick={() =>
         props.update({
           tab: "investor",
@@ -103,15 +103,15 @@ const footer = (
     <FooterButton
       blue
       disabled
-      // href={`/#/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
-      // onClick={() =>
-      //   props.update({
-      //     tab: "entity",
-      //     content: "",
-      //     search: "",
-      //     accountId,
-      //   })
-      // }
+    // href={`/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
+    // onClick={() =>
+    //   props.update({
+    //     tab: "entity",
+    //     content: "",
+    //     search: "",
+    //     accountId,
+    //   })
+    // }
     >
       <svg
         width="17"

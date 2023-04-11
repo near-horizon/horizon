@@ -137,7 +137,7 @@ return (
       <HeaderDetails>
         <Widget
           src={`${ownerId}/widget/Project.HeaderDetails`}
-          props={{ accountId: ownerId }}
+          props={{ accountId: props.accountId }}
         />
         <CTARow>
           <Widget
@@ -208,6 +208,7 @@ return (
             onSave: (s) => {
               console.log(s);
             },
+            accountId: props.accountId,
           }}
         />
       </MainContent>

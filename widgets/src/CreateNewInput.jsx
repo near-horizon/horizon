@@ -84,41 +84,50 @@ const DropdownItem = styled.a`
 
 const DropdownLi = styled.li`
   cursor: pointer;
+  z-index: 3;
 `;
 
-const createNewButton = ({ id, text, icon, kind }) => (
-  <DropdownLi>
-    <DropdownItem
-      href={`/#/${ownerId}/widget/Index?tab=create&content=${id}${
-        kind ? "&kind=" + kind : ""
-      }`}
-      onClick={() => props.update({ tab: "create", content: id, kind })}
-    >
-      <i className={icon} />
-      <span>{text}</span>
-    </DropdownItem>
-  </DropdownLi>
+const createNewButton = ({ id, text, icon }) => (
+  <DropdownMenu.Item asChild={true}>
+    <DropdownLi>
+      <DropdownItem
+        href={`/${ownerId}/widget/Index?tab=${id}`}
+        onClick={() => props.update({ tab: id, content: "" })}
+      >
+        <i className={icon} />
+        <span>{text}</span>
+      </DropdownItem>
+    </DropdownLi>
+  </DropdownMenu.Item>
 );
 
+const scaleOut = styled.keyframes`
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+`;
+
 const DropdownList = styled.ul`
-  --y-pos: 40px;
   z-index: 3;
   dislpay: block;
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 5px;
   list-style-type: none;
-  position: absolute;
-  inset: 0px 0px auto auto;
   padding: 0px;
   margin: 0px;
-  transform: translate(0px, var(--y-pos)) scale(0);
-  transition: transform 0.2s ease-in-out;
   transform-origin: top right;
-  width: 100%;
+  width: 184px;
 
-  &.show {
-    transform: translate(0px, var(--y-pos)) scale(1);
+  &[data-state="open"] {
+    animation: ${scaleOut} 0.2s ease-in-out;
+  }
+
+  &[data-state="closed"] {
+    animation: ${scaleOut} 0.2s ease-in-out reverse;
   }
 `;
 
@@ -140,6 +149,7 @@ const MenuIcon = styled.button`
 
 const DropdownContainer = styled.div`
   position: relative;
+  z-index: 3;
 `;
 
 const MenuText = styled.span`
@@ -147,30 +157,31 @@ const MenuText = styled.span`
 `;
 
 return (
-  <DropdownContainer>
-    <MenuIcon
-      onClick={() => State.update({ show: !state.show })}
-      onBlur={() => State.update({ show: false })}
-    >
-      {icon}
-      <MenuText>Create new...</MenuText>
-      <Arrow className={state.show ? "show" : ""}>{arrowIcon}</Arrow>
-    </MenuIcon>
+  <DropdownMenu.Root asChild={true} onOpenChange={(show) => State.update({ show })} open={state.show}>
+    <DropdownMenu.Trigger asChild={true}>
+      <MenuIcon>
+        {icon}
+        <MenuText>Create new...</MenuText>
+        <Arrow className={state.show ? "show" : ""}>{arrowIcon}</Arrow>
+      </MenuIcon>
+    </DropdownMenu.Trigger>
 
-    <DropdownList className={state.show ? "show" : ""}>
-      {createNewButton({
-        id: "project",
-        text: "Project",
-        icon: "bi-boxes",
-      })}
-      <li>
-        <DropdownDivider />
-      </li>
-      {createNewButton({
-        id: "vendor",
-        text: "Vendor",
-        icon: "bi-diagram-2",
-      })}
-    </DropdownList>
-  </DropdownContainer>
+    <DropdownMenu.Content asChild={true}>
+      <DropdownList className={state.show ? "show" : ""}>
+        {createNewButton({
+          id: "createproject",
+          text: "Project",
+          icon: "bi-boxes",
+        })}
+        <li>
+          <DropdownDivider />
+        </li>
+        {createNewButton({
+          id: "createvendor",
+          text: "Vendor",
+          icon: "bi-diagram-2",
+        })}
+      </DropdownList>
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
 );

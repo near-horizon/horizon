@@ -37,8 +37,8 @@ if (!state.descriptionIsFetched) {
     { keys: [`${accountId}/profile/description`] },
     "final",
     false
-  ).then((description) =>
-    State.update({ description, descriptionIsFetched: true })
+  ).then((data) =>
+    State.update({ description: data[accountId].profile.description, descriptionIsFetched: true })
   );
 }
 
@@ -86,10 +86,10 @@ const Footer = styled.a`
 
 const footer = (
   <Footer
-    href={`/#/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
+    href={`/${ownerId}/widget/Index?tab=project&accountId=${accountId}`}
     onClick={() =>
       props.update({
-        tab: "entity",
+        tab: "project",
         content: "",
         search: "",
         accountId,

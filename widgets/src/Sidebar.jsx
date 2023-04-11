@@ -8,7 +8,7 @@ State.init({
 if (state.proposalsCount === null) {
   Near.asyncView(
     ownerId,
-    "get_admin_contribution_requests",
+    "get_admin_proposals",
     { account_id: context.accountId },
     "final",
     false
@@ -16,13 +16,13 @@ if (state.proposalsCount === null) {
 }
 
 if (state.invitesCount === null) {
-  Near.asyncView(
-    ownerId,
-    "get_contributor_invites",
-    { account_id: context.accountId },
-    "final",
-    false
-  ).then((invites) => State.update({ invitesCount: invites.length }));
+  // Near.asyncView(
+  //   ownerId,
+  //   "get_vendor_invites",
+  //   { account_id: context.accountId },
+  //   "final",
+  //   false
+  // ).then((invites) => State.update({ invitesCount: invites.length }));
 }
 
 const inboxCount = state.proposalsCount + state.invitesCount;
@@ -232,7 +232,7 @@ const CountIndicator = styled.div`
 const navItem = ({ text, icon, id, count }) => (
   <NavItem
     selected={id === props.tab}
-    href={`/#/${ownerId}/widget/Index?tab=${id}`}
+    href={`/${ownerId}/widget/Index?tab=${id}`}
     onClick={() => props.update({ tab: id, content: "", search: "" })}
   >
     {icon}
@@ -282,7 +282,7 @@ return (
       icon: about,
       id: "help",
     })}
-    <NavItem href="/#/">
+    <NavItem href="/">
       <svg
         width="24"
         height="25"

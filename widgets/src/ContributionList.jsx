@@ -13,7 +13,7 @@ State.init({
 if (state.items.length === 0) {
   Near.asyncView(
     ownerId,
-    isEntity ? "get_entity_contributions" : "get_contributor_contributions",
+    isEntity ? "get_project_contributions" : "get_vendor_contributions",
     { account_id: props.accountId },
     "final",
     false

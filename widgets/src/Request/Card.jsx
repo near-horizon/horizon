@@ -206,7 +206,7 @@ const Footer = styled.div`
 const footer = (
   <Footer>
     <FooterButton
-      href={`/#/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`}
+      href={`/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`}
       onClick={() =>
         props.update({
           tab: "contributor",
@@ -220,7 +220,7 @@ const footer = (
     </FooterButton>
     <FooterButton
       blue
-      href={`/#/${ownerId}/widget/Index?tab=create&content=proposal&cid=${cid}&accountId=${accountId}`}
+      href={`/${ownerId}/widget/Index?tab=create&content=proposal&cid=${cid}&accountId=${accountId}`}
       onClick={() =>
         props.update({
           tab: "create",

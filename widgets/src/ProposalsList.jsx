@@ -13,7 +13,7 @@ State.init({
 if (state.items.length === 0) {
   Near.asyncView(
     ownerId,
-    "get_contributor_contribution_requests",
+    "get_vendor_proposals",
     { account_id: context.accountId },
     "final",
     false
