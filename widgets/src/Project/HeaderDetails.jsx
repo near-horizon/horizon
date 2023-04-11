@@ -1,5 +1,6 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
+const isAdmin = props.isAdmin;
 
 State.init({
   profile: null,
@@ -22,6 +23,7 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
+  width: 100%;
 `;
 
 const Details = styled.div`
@@ -30,6 +32,7 @@ const Details = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.5em;
+  width: 100%;
 `;
 
 return (
@@ -49,19 +52,24 @@ return (
             Near.call("social.near", "set", {
               data: { [accountId]: { profile: { name } } },
             }),
+          canEdit: isAdmin
+
         }}
       />
+
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.OneLiner`}
         props={{
           value: "Simple solutions for complex tasks",
-          id: "tagline",
-          onSave: (tagline) =>
+          id: "one_liner",
+          onSave: (one_liner) =>
             Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { tagline } } },
+              data: { [accountId]: { profile: { one_liner } } },
             }),
+          canEdit: isAdmin
         }}
       />
+
       <Widget
         src={`${ownerId}/widget/BadgeList`}
         props={{

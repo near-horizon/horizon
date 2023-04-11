@@ -5,6 +5,7 @@ const value = props.value ?? "";
 const link = props.link ?? "";
 const isLink = link !== "";
 const onSave = props.onSave ?? (() => {});
+const canEdit = props.canEdit;
 
 State.init({
   valid: true,
@@ -137,6 +138,7 @@ return (
         </>
       ),
       view: isLink ? <a href={link}>{value}</a> : value,
+      canEdit
     }}
   />
 );

@@ -5,6 +5,7 @@ const view = props.view ?? (() => <></>);
 const edit = props.edit ?? (() => <></>);
 const big = props.big ?? false;
 const noLabel = props.noLabel ?? false;
+const canEdit = props.canEdit ?? false;
 
 State.init({
   value,
@@ -83,6 +84,7 @@ return (
           {label}
         </Label>
       )}
+      {canEdit && 
       <EditButtonContainer>
         <EditButton
           onClick={() => State.update({ edit: false })}
@@ -97,9 +99,10 @@ return (
           Edit
         </EditButton>
       </EditButtonContainer>
+      }
     </Row>
 
-    {state.edit ? (
+    {state.edit && canEdit ? (
       edit((value) => State.update({ value }), state.value)
     ) : noLabel ? (
       <></>
