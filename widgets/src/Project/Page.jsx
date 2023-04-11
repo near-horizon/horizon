@@ -1,13 +1,20 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
 
-const isAdmin = Near.view(
-  ownerId,
-  "check_is_project_admin",
-  { project_id: accountId, account_id: context.accountId },
-  "final"
-);
+State.init({
+  isAdmin: false,
+  isAdminIsFetched: false,
+});
 
+if (!state.isAdminIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "check_is_project_admin",
+    { project_id: accountId, account_id: context.accountId },
+    "final",
+    false,
+  ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
+}
 
 const availableContent = [
   "overview",

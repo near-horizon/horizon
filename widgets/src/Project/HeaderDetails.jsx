@@ -61,10 +61,10 @@ return (
         src={`${ownerId}/widget/Inputs.Viewable.OneLiner`}
         props={{
           value: "Simple solutions for complex tasks",
-          id: "one_liner",
-          onSave: (one_liner) =>
+          id: "tagline",
+          onSave: (tagline) =>
             Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { one_liner } } },
+              data: { [accountId]: { profile: { tagline } } },
             }),
           canEdit: isAdmin
         }}
