@@ -6,6 +6,8 @@ const edit = props.edit ?? (() => <></>);
 const big = props.big ?? false;
 const noLabel = props.noLabel ?? false;
 const canEdit = props.canEdit ?? false;
+const flexDirection = props.direction ?? "row";
+const editButtonText = props.editButtonText ?? "Edit"
 
 State.init({
   value,
@@ -34,9 +36,9 @@ const Label = styled.label`
   color: #11181c;
 `;
 
-const Row = styled.div`
+const Stack = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({direction}) => (direction)};
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
@@ -76,7 +78,7 @@ const EditButtonContainer = styled.div`
 
 return (
   <Container className={big ? "big" : ""}>
-    <Row>
+    <Stack direction={flexDirection}>
       {noLabel ? (
         view
       ) : (
@@ -96,11 +98,11 @@ return (
           onClick={() => State.update({ edit: true })}
           className={`left ${state.edit ? "hidden" : ""}`}
         >
-          Edit
+          {editButtonText}
         </EditButton>
       </EditButtonContainer>
       }
-    </Row>
+    </Stack>
 
     {state.edit && canEdit ? (
       edit((value) => State.update({ value }), state.value)
