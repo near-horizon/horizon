@@ -9,6 +9,10 @@ const LabelArea = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
+  & input {
+    width: 100%;
+  }
+  width: 75%;
 `;
 
 const Input = styled.input`
