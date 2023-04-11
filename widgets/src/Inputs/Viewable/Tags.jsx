@@ -4,6 +4,7 @@ const label = props.label ?? "Input";
 const value = props.value ?? [];
 const options = props.options ?? [];
 const onSave = props.onSave ?? (() => {});
+const canEdit = props.canEdit;
 
 const LabelArea = styled.div`
   display: flex;
