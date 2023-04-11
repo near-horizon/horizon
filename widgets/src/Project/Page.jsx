@@ -152,7 +152,7 @@ return (
       <HeaderDetails>
         <Widget
           src={`${ownerId}/widget/Project.HeaderDetails`}
-          props={{ accountId: ownerId, isAdmin }}
+          props={{ accountId, isAdmin: state.isAdmin }}
         />
         <CTARow>
           <Widget
