@@ -1,8 +1,8 @@
 const ownerId = "contribut3.near";
-const accountId = props.accountId || context.accountId;
 const size = props.size ?? "1.5em";
 
 State.init({
+  accountId: props.accountId || context.accountId,
   profile: null,
   profileIsFetched: false,
 });
@@ -11,19 +11,19 @@ if (!state.profileIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
-    { keys: [`${accountId}/profile/**`] },
+    { keys: [`${state.accountId}/profile/**`] },
     "final",
     false
   ).then((profile) =>
     State.update({
-      profile: profile[accountId].profile,
+      profile: profile[state.accountId].profile,
       profileIsFetched: true,
     })
   );
   return "Loading...";
 }
 
-const fullName = state.profile.name || state.profile.name || accountId;
+const fullName = state.profile.name || state.profile.name || state.accountId;
 const image = state.profile.image;
 const url =
   (image.ipfs_cid
@@ -34,7 +34,6 @@ const imageSrc = `https://i.near.social/thumbnail/${url}`;
 
 const ImageCircle = styled.img`
   background: #fafafa;
-  // border: 3px solid #eceef0;
   border-radius: 8px;
   object-fit: cover;
   width: 100%;
@@ -49,7 +48,7 @@ const ImageContainer = styled.div`
 `;
 
 return (
-  <ImageContainer title={`${fullName} @${accountId}`} size={size}>
+  <ImageContainer title={`${fullName} @${state.accountId}`} size={size}>
     <ImageCircle src={imageSrc} alt="profile image" />
   </ImageContainer>
 );

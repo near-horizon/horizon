@@ -1,35 +1,19 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId || context.accountId;
 const isEntity = props.isEntity ?? false;
-const additionalText = props.additionalText;
-const additionalRow = props.additionalRow;
-const alignment = additionalRow ? "flex-start" : "center";
-const additionalColumn = props.additionalColumn;
 const imageSize = props.imageSize;
 const linkNavigate = () =>
   props.update({
-    tab: isEntity ? "entity" : "contributor",
+    tab: isEntity ? "project" : "vendor",
     accountId,
     content: "",
     search: "",
   });
 
 State.init({
-  data: null,
-  fetched: false,
   profile: null,
   profileFetched: false,
 });
-
-if (!state.fetched) {
-  Near.asyncView(
-    ownerId,
-    isEntity ? "get_project" : "get_vendor",
-    { account_id: accountId },
-    "final",
-    false
-  ).then((data) => State.update({ data, fetched: true }));
-}
 
 if (!state.profileFetched) {
   Near.asyncView(
@@ -44,10 +28,9 @@ if (!state.profileFetched) {
   return <>Loading...</>;
 }
 
-const fullName = state.profile.name || state.data.application.name || accountId;
-const href = `/${ownerId}/widget/Index?tab=${
-  isEntity ? "project" : "vendor"
-}&accountId=${accountId}`;
+const fullName = state.profile.name || accountId;
+const href = `/${ownerId}/widget/Index?tab=${isEntity ? "project" : "vendor"
+  }&accountId=${accountId}`;
 
 const ImageContainer = styled.div`
   margin: 0.5em;
@@ -73,16 +56,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  width: 100%;
-  align-items: ${({ alignment }) => alignment};
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: between;
   align-items: flex-start;
-  flex-grow: 1;
+  width: 100%;
 `;
 
 return (
@@ -94,17 +69,8 @@ return (
           props={{ accountId, size: imageSize, isEntity }}
         />
       </ImageContainer>
+      <b>{fullName}</b>
+      <span>@{accountId}</span>
     </ImageLink>
-    <Column>
-      <div>
-        <ImageLink href={href} onClick={linkNavigate}>
-          <b>{fullName}</b>
-          <span>@{accountId}</span>
-        </ImageLink>
-        {additionalText}
-      </div>
-      {additionalRow}
-    </Column>
-    {additionalColumn}
   </Container>
 );

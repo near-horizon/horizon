@@ -84,21 +84,21 @@ return (
           {label}
         </Label>
       )}
-      {canEdit && 
-      <EditButtonContainer>
-        <EditButton
-          onClick={() => State.update({ edit: false })}
-          className={`right ${state.edit ? "" : "hidden"}`}
-        >
-          Cancel
-        </EditButton>
-        <EditButton
-          onClick={() => State.update({ edit: true })}
-          className={`left ${state.edit ? "hidden" : ""}`}
-        >
-          Edit
-        </EditButton>
-      </EditButtonContainer>
+      {canEdit &&
+        <EditButtonContainer>
+          <EditButton
+            onClick={() => State.update({ edit: false })}
+            className={`right ${state.edit ? "" : "hidden"}`}
+          >
+            Cancel
+          </EditButton>
+          <EditButton
+            onClick={() => State.update({ edit: true })}
+            className={`left ${state.edit ? "hidden" : ""}`}
+          >
+            Edit
+          </EditButton>
+        </EditButtonContainer>
       }
     </Row>
 

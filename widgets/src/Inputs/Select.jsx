@@ -2,8 +2,8 @@ const label = props.label ?? "Label";
 const placeholder = props.placeholder ?? "Placeholder";
 const value = props.value ?? "";
 const options = props.options ?? [];
-const onChange = props.onChange ?? (() => {});
-const validate = props.validate ?? (() => {});
+const onChange = props.onChange ?? (() => { });
+const validate = props.validate ?? (() => { });
 const error = props.error ?? "";
 
 const Container = styled.div`
@@ -53,7 +53,7 @@ const Input = styled.div`
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   border-radius: 4px;
   color: #101828;
-  width: 60%;
+  width: 100%;
 `;
 
 const Placeholder = styled.span`
