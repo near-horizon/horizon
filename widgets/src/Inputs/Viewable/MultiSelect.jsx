@@ -1,8 +1,9 @@
 const ownerId = "contribut3.near";
-const id = props.id ?? "text";
-const value = props.value ?? "";
-const onSave = props.onSave ?? (() => { });
-const canEdit = props.canEdit;
+const id = props.id ?? "select";
+const label = props.label ?? "Input";
+const value = props.value ?? [];
+const options = props.options ?? [];
+const onSave = props.onSave ?? (() => {});
 
 const LabelArea = styled.div`
   display: flex;
@@ -43,31 +44,31 @@ const SaveButton = styled.button`
   color: #11181c;
 `;
 
+const edit = (update, v) => (
+  <LabelArea>
+    <Widget
+      src={`${ownerId}/widget/Inputs.MultiSelect`}
+      props={{
+        id,
+        noLabel: true,
+        value: v,
+        options,
+        onChange: update,
+      }}
+    />
+    <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
+  </LabelArea>
+);
+
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
     props={{
       id,
-      noLabel: true,
+      label,
       value,
-      edit: (update, v) => (
-        <LabelArea>
-          <Input
-            id
-            type="text"
-            value={v}
-            onChange={(e) => update(e.target.value)}
-          />
-          <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
-        </LabelArea>
-      ),
-      view: (
-        <Widget
-          src={`${ownerId}/widget/NameAndAccount`}
-          props={{ accountId: props.accountId, name: value }}
-        />
-      ),
-      canEdit
+      edit,
+      view: value.map(({ name }) => name).join(", "),
     }}
   />
 );

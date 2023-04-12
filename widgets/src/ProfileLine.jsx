@@ -38,13 +38,16 @@ if (!state.profileFetched) {
     { keys: [`${accountId}/profile/**`] },
     "final",
     false
-  ).then((profile) => State.update({ profile: profile[accountId].profile, profileFetched: true }));
+  ).then((profile) =>
+    State.update({ profile: profile[accountId].profile, profileFetched: true })
+  );
   return <>Loading...</>;
 }
 
 const fullName = state.profile.name || state.data.application.name || accountId;
-const href = `/${ownerId}/widget/Index?tab=${isEntity ? "project" : "vendor"
-  }&accountId=${accountId}`;
+const href = `/${ownerId}/widget/Index?tab=${
+  isEntity ? "project" : "vendor"
+}&accountId=${accountId}`;
 
 const ImageContainer = styled.div`
   margin: 0.5em;

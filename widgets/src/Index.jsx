@@ -20,26 +20,9 @@ const tabContent = {
       props={{ content: state.content, search: state.search, update }}
     />
   ),
-  contributor: (
-    <Widget
-      src={`${ownerId}/widget/Profile`}
-      props={{
-        content: state.content,
-        search: state.search,
-        accountId: state.accountId,
-        update,
-      }}
-    />
-  ),
   inbox: (
     <Widget
       src={`${ownerId}/widget/Inbox`}
-      props={{ content: state.content, search: state.search, update }}
-    />
-  ),
-  entities: (
-    <Widget
-      src={`${ownerId}/widget/ManageEntities`}
       props={{ content: state.content, search: state.search, update }}
     />
   ),
@@ -54,12 +37,11 @@ const tabContent = {
       }}
     />
   ),
-  need: (
+  vendor: (
     <Widget
-      src={`${ownerId}/widget/NeedPage`}
+      src={`${ownerId}/widget/Vendor.Page`}
       props={{
         accountId: state.accountId,
-        cid: state.cid,
         search: state.search,
         content: state.content,
         update,
@@ -79,27 +61,6 @@ const tabContent = {
       }}
     />
   ),
-  contributions: (
-    <Widget
-      src={`${ownerId}/widget/ContributionsPage`}
-      props={{
-        search: state.search,
-        content: state.content,
-        update,
-      }}
-    />
-  ),
-  contribution: (
-    <Widget
-      src={`${ownerId}/widget/ContributionPage`}
-      props={{
-        entityId: state.entityId,
-        contributorId: state.contributorId,
-        search: state.search,
-        update,
-      }}
-    />
-  ),
 }[state.tab];
 
 const ContentContainer = styled.div`
@@ -111,7 +72,7 @@ const ContentContainer = styled.div`
 `;
 
 const Sidebar = styled.div`
-  display: ${({ show }) => show ? "flex" : "none"};
+  display: ${({ show }) => (show ? "flex" : "none")};
   flex-direction: row;
   position: sticky;
   top: 0;

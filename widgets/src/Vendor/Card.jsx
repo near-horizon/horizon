@@ -96,15 +96,15 @@ const footer = (
     </FooterButton>
     <FooterButton
       blue
-    // href={`/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
-    // onClick={() =>
-    //   props.update({
-    //     tab: "entity",
-    //     content: "",
-    //     search: "",
-    //     accountId,
-    //   })
-    // }
+      // href={`/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
+      // onClick={() =>
+      //   props.update({
+      //     tab: "entity",
+      //     content: "",
+      //     search: "",
+      //     accountId,
+      //   })
+      // }
     >
       Invite vendor
     </FooterButton>

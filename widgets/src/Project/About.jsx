@@ -1,4 +1,4 @@
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 const ownerId = "contribut3.near";
 const accountId = props.accountId;
 
@@ -32,8 +32,13 @@ if (!state.descriptionIsFetched) {
     "get",
     { keys: [`${accountId}/profile/description`] },
     "final",
-    false,
-  ).then((data) => State.update({ description: data[accountId].profile.description, descriptionIsFetched: true }));
+    false
+  ).then((data) =>
+    State.update({
+      description: data[accountId].profile.description,
+      descriptionIsFetched: true,
+    })
+  );
   return <>Loading...</>;
 }
 
@@ -46,7 +51,10 @@ return (
         label: "Description",
         id: "description",
         value: state.description,
-        onSave: (description) => Near.call("social.near", "set", { data: { [accountId]: { profile: { description } } } }),
+        onSave: (description) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { description } } },
+          }),
       }}
     />
     <Widget

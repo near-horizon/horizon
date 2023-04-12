@@ -2,7 +2,7 @@ const ownerId = "contribut3.near";
 const label = props.label ?? "Account ID";
 const placeholder = props.placeholder ?? "Enter your account ID";
 const value = props.value ?? "";
-const onChange = props.onChange ?? (() => { });
+const onChange = props.onChange ?? (() => {});
 const accountIdRegex =
   /^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/;
 
@@ -42,7 +42,10 @@ const validate = () => {
       errorMessage: (
         <>
           Account ID must follow the rules specified{" "}
-          <a href="https://nomicon.io/DataStructures/Account#account-id-rules" target="_blank">
+          <a
+            href="https://nomicon.io/DataStructures/Account#account-id-rules"
+            target="_blank"
+          >
             here
           </a>
           !

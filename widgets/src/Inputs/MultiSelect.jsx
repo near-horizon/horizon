@@ -2,8 +2,8 @@ const label = props.label ?? "Label";
 const placeholder = props.placeholder ?? "Placeholder";
 const value = props.value ?? "";
 const options = props.options ?? [];
-const onChange = props.onChange ?? (() => { });
-const validate = props.validate ?? (() => { });
+const onChange = props.onChange ?? (() => {});
+const validate = props.validate ?? (() => {});
 const error = props.error ?? "";
 
 const Container = styled.div`
@@ -15,10 +15,10 @@ const Container = styled.div`
   gap: 0.45em;
   width: 100%;
 
-  .typeahead  {
+  .typeahead {
     width: 100%;
 
-    &> div {
+    & > div {
       padding: 0.5em 0.75em;
       background: #ffffff;
       border: 1px solid #d0d5dd;
@@ -33,12 +33,12 @@ const Container = styled.div`
       border-radius: 3px;
       font-style: normal;
       font-weight: 500;
-      font-size: .95em;
+      font-size: 0.95em;
       line-height: 1.25em;
       text-align: center;
       color: #344054;
 
-      &> button {
+      & > button {
         font-size: 1.25em;
         color: #98a2b3;
       }
@@ -72,7 +72,7 @@ const Error = styled.span`
 
 return (
   <Container>
-    <Label>{label}</Label>
+    {props.noLabel ? <></> : <Label>{label}</Label>}
     <Typeahead
       id
       placeholder={placeholder}

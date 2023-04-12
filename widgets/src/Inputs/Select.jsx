@@ -2,8 +2,8 @@ const label = props.label ?? "Label";
 const placeholder = props.placeholder ?? "Placeholder";
 const value = props.value ?? "";
 const options = props.options ?? [];
-const onChange = props.onChange ?? (() => { });
-const validate = props.validate ?? (() => { });
+const onChange = props.onChange ?? (() => {});
+const validate = props.validate ?? (() => {});
 const error = props.error ?? "";
 
 const Container = styled.div`
@@ -111,7 +111,7 @@ const Item = styled.button`
   background: transparent;
   border: none;
   transition: background 0.2s ease-in-out;
-  
+
   &:nth-child(n + 1) {
     border-top: 1px solid #d0d5dd;
   }
@@ -129,10 +129,17 @@ const Item = styled.button`
 return (
   <Container>
     <Label>{label}</Label>
-    <Select.Root onValueChange={(value) => onChange(options.find((option) => option.value === value))}>
+    <Select.Root
+      onValueChange={(value) =>
+        onChange(options.find((option) => option.value === value))
+      }
+    >
       <Select.Trigger asChild={true}>
         <Input>
-          <Select.Value aria-label={value.value} placeholder={<Placeholder>{placeholder}</Placeholder>} />
+          <Select.Value
+            aria-label={value.value}
+            placeholder={<Placeholder>{placeholder}</Placeholder>}
+          />
           <Select.Icon>
             <svg
               width="12"

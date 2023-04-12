@@ -1,26 +1,13 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId || context.accountId;
-const isEntity = props.isEntity ?? false;
 const size = props.size ?? "1.5em";
 
 State.init({
-  data: null,
-  fetched: false,
   profile: null,
-  profileFetched: false,
+  profileIsFetched: false,
 });
 
-if (!state.fetched) {
-  Near.asyncView(
-    ownerId,
-    isEntity ? "get_project" : "get_vendor",
-    { account_id: accountId },
-    "final",
-    false
-  ).then((data) => State.update({ data, fetched: true }));
-}
-
-if (!state.profileFetched) {
+if (!state.profileIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
@@ -28,12 +15,15 @@ if (!state.profileFetched) {
     "final",
     false
   ).then((profile) =>
-    State.update({ profile: profile[accountId].profile, profileFetched: true })
+    State.update({
+      profile: profile[accountId].profile,
+      profileIsFetched: true,
+    })
   );
-  return <>Loading...</>;
+  return "Loading...";
 }
 
-const fullName = state.profile.name || state.data.name || accountId;
+const fullName = state.profile.name || state.profile.name || accountId;
 const image = state.profile.image;
 const url =
   (image.ipfs_cid
@@ -43,7 +33,9 @@ const url =
 const imageSrc = `https://i.near.social/thumbnail/${url}`;
 
 const ImageCircle = styled.img`
-  border-radius: ${({ isEntity }) => (isEntity ? "8px" : "100%")};
+  background: #fafafa;
+  // border: 3px solid #eceef0;
+  border-radius: 100%;
   object-fit: cover;
   width: 100%;
   height: 100%;
@@ -58,6 +50,6 @@ const ImageContainer = styled.div`
 
 return (
   <ImageContainer title={`${fullName} @${accountId}`} size={size}>
-    <ImageCircle src={imageSrc} isEntity={isEntity} alt="profile image" />
+    <ImageCircle src={imageSrc} alt="profile image" />
   </ImageContainer>
 );

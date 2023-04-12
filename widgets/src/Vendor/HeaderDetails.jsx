@@ -1,6 +1,5 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
-const isAdmin = props.isAdmin;
 
 State.init({
   profile: null,
@@ -20,6 +19,7 @@ if (!state.profileIsFetched) {
       profileIsFetched: true,
     })
   );
+  return <>Loading...</>;
 }
 
 const Container = styled.div`
@@ -28,7 +28,6 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 100%;
 `;
 
 const Details = styled.div`
@@ -37,13 +36,14 @@ const Details = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.5em;
-  width: 100%;
 `;
+
+const deposit = "000000000000000000000";
 
 return (
   <Container>
     <Widget
-      src={`${ownerId}/widget/Project.Icon`}
+      src={`${ownerId}/widget/Vendor.Icon`}
       props={{ accountId, size: "8em" }}
     />
     <Details>
@@ -53,35 +53,45 @@ return (
           value: state.profile.name,
           id: "name",
           accountId,
-          onSave: (name) =>
-            Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { name } } },
-            }),
-          canEdit: isAdmin
-
+          onSave: (name) => {
+            const args = {
+              data: {
+                [accountId]: { profile: { name } },
+              },
+            };
+            Near.call({
+              contractName: "social.near",
+              methodName: "set",
+              args,
+              deposit,
+            });
+          },
         }}
       />
-
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.OneLiner`}
         props={{
-          value: "Simple solutions for complex tasks",
+          value: state.profile.tagline,
           id: "tagline",
-          onSave: (tagline) =>
-            Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { tagline } } },
-            }),
-          canEdit: isAdmin
+          onSave: (tagline) => {
+            const args = {
+              data: {
+                [accountId]: { profile: { tagline } },
+              },
+            };
+            Near.call({
+              contractName: "social.near",
+              methodName: "set",
+              args,
+              deposit,
+            });
+          },
         }}
       />
-
       <Widget
         src={`${ownerId}/widget/BadgeList`}
         props={{
-          badges: [
-            { value: "Verified" },
-            { value: "Fundraiser", color: "#62ebe4" },
-          ],
+          badges: [{ value: "Verified" }],
         }}
       />
     </Details>

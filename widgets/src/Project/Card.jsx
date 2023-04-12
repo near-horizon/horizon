@@ -38,7 +38,10 @@ if (!state.descriptionIsFetched) {
     "final",
     false
   ).then((data) =>
-    State.update({ description: data[accountId].profile.description, descriptionIsFetched: true })
+    State.update({
+      description: data[accountId].profile.description,
+      descriptionIsFetched: true,
+    })
   );
 }
 
