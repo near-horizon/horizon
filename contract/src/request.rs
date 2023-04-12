@@ -17,6 +17,14 @@ pub enum PaymentSource {
     Other,
 }
 
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
+#[serde(crate = "near_sdk::serde")]
+pub enum RequestType {
+    Short,
+    Long,
+    Full,
+}
+
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
 pub struct Request {
@@ -24,6 +32,7 @@ pub struct Request {
     title: String,
     description: String,
     open: bool,
+    request_type: RequestType,
     tags: HashSet<String>,
     source: PaymentSource,
     #[serde(with = "crate::dec_serde::u64_dec_format")]

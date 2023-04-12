@@ -9,7 +9,7 @@ use near_sdk::{
 };
 use near_sdk_contract_tools::standard::nep297::Event;
 
-use crate::{events::Events, Contract, ContractExt, StorageKeys};
+use crate::{events::Events, proposal::Proposal, Contract, ContractExt, StorageKeys};
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
 #[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
@@ -42,6 +42,7 @@ pub struct Contribution {
     vendor_feedback: Option<String>,
     #[serde(default)]
     project_feedback: Option<String>,
+    price: u128,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone)]
@@ -73,12 +74,14 @@ impl Contract {
         self.assert_is_proposal(&project_id, &cid, &vendor_id);
         let key = (project_id.clone(), vendor_id.clone());
         let proposal_id = ((project_id.clone(), cid.clone()), vendor_id.clone());
+        let proposal: Proposal = self.proposals.get(&proposal_id).unwrap().into();
         let contribution = VersionedContribution::V0(Contribution {
             proposal_id,
             status: ContributionStatus::Created(near_sdk::env::block_timestamp()),
             actions: vec![],
             vendor_feedback: None,
             project_feedback: None,
+            price: proposal.price,
         });
         self.contributions
             .entry(key)

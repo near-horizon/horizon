@@ -13,15 +13,15 @@ use crate::{events::Events, Contract, ContractExt};
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
 pub struct Proposal {
-    request_id: (AccountId, String),
-    vendor_id: AccountId,
-    title: String,
-    description: String,
+    pub request_id: (AccountId, String),
+    pub vendor_id: AccountId,
+    pub title: String,
+    pub description: String,
     #[serde(with = "crate::dec_serde::u64_dec_format")]
-    start_date: Timestamp,
+    pub start_date: Timestamp,
     #[serde(with = "crate::dec_serde::u64_dec_format")]
-    end_date: Timestamp,
-    price: u128,
+    pub end_date: Timestamp,
+    pub price: u128,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone)]
