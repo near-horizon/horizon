@@ -42,10 +42,10 @@ const Stack = styled.div`
   justify-content: flex-start;
   gap: 0.25em;
 
-  &.column {
+  &.f-column {
     flex-direction: column;
   }
-  &.row {
+  &.f-row {
     flex-direction: row;
   }
 `;
@@ -84,7 +84,7 @@ const EditButtonContainer = styled.div`
 
 return (
   <Container className={big ? "big" : ""}>
-    <Stack className={flexDirection}>
+    <Stack className={"f-" + flexDirection}>
       {noLabel ? (
         view
       ) : (
@@ -92,21 +92,21 @@ return (
           {label}
         </Label>
       )}
-      {canEdit && 
-      <EditButtonContainer>
-        <EditButton
-          onClick={() => State.update({ edit: false })}
-          className={`right ${state.edit ? "" : "hidden"}`}
-        >
-          Cancel
-        </EditButton>
-        <EditButton
-          onClick={() => State.update({ edit: true })}
-          className={`left ${state.edit ? "hidden" : ""}`}
-        >
-          {editButtonText}
-        </EditButton>
-      </EditButtonContainer>
+      {canEdit &&
+        <EditButtonContainer>
+          <EditButton
+            onClick={() => State.update({ edit: false })}
+            className={`right ${state.edit ? "" : "hidden"}`}
+          >
+            Cancel
+          </EditButton>
+          <EditButton
+            onClick={() => State.update({ edit: true })}
+            className={`left ${state.edit ? "hidden" : ""}`}
+          >
+            {editButtonText}
+          </EditButton>
+        </EditButtonContainer>
       }
     </Stack>
 
