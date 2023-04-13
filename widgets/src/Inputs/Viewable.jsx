@@ -44,7 +44,9 @@ const Stack = styled.div`
 
   &.f-column {
     flex-direction: column;
+    align-items: flex-start;
   }
+
   &.f-row {
     flex-direction: row;
   }
@@ -62,6 +64,7 @@ const EditButton = styled.button`
   overflow: hidden;
   position: absolute;
   inset: auto auto auto 0;
+  white-space: nowrap;
 
   &.hidden {
     transform: scaleX(0);

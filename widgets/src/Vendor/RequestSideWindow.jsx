@@ -1,4 +1,5 @@
 const ownerId = "contribut3.near";
+const accountId = props.accountId;
 
 const personPlus = (
   <svg
@@ -23,9 +24,20 @@ return (
     src={`${ownerId}/widget/SideWindow`}
     props={{
       title: "Request a contribution",
-      description: "Request a contribution from this vendor",
+      description: (
+        <Widget
+          src={`${ownerId}/widget/SelectedLine`}
+          props={{ accountId, label: "Vendor", isProject: false }}
+        />
+      ),
       trigger: <>{personPlus}Request contribution</>,
-      children: <Widget src={`${ownerId}/widget/Vendor.RequestForm`} />,
+      children: (
+        <Widget
+          src={`${ownerId}/widget/Vendor.RequestForm`}
+          props={{ accountId }}
+        />
+      ),
+      minWidth: "600px",
     }}
   />
 );

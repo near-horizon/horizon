@@ -23,13 +23,20 @@ const Input = styled.input`
 
 const LabelArea = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
   gap: 0.25em;
+  position: relative;
+
   & input {
     width: 100%;
   }
+
+  div.d-inline-block {
+    white-space: nowrap;
+  }
+
   width: 75%;
 `;
 

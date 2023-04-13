@@ -2,6 +2,8 @@ const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
 const size = props.size ?? props.tall ? "5em" : "1em";
 
+console.log("Render happening with: ", accountId, size);
+
 State.init({
   name: "",
   tagline: "",
@@ -79,10 +81,7 @@ const Tagline = styled.div`
 
 return (
   <Container>
-    <Widget
-      src={`${ownerId}/widget/Project.Icon`}
-      props={{ accountId, size }}
-    />
+    <Widget src={`${ownerId}/widget/Vendor.Icon`} props={{ accountId, size }} />
     <Column>
       <Row>
         <Name>{state.name}</Name>

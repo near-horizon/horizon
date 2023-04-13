@@ -2,6 +2,7 @@ const trigger = props.trigger;
 const title = props.title;
 const description = props.description;
 const children = props.children;
+const minWidth = props.minWidth ?? "unset";
 
 const fadeIn = styled.keyframes`
   from {
@@ -24,6 +25,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 
   h2 {
     font-style: normal;
@@ -51,15 +53,20 @@ const slideIn = styled.keyframes`
 `;
 
 const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   position: fixed;
   inset: 74px 0 0 auto;
   padding: 1.5em 2em 2em;
   gap: 0.625em;
   isolation: isolate;
   animation: ${slideIn} 200ms ease-out;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: #fff;
   z-index: 10;
+  min-width: ${minWidth};
 `;
 
 const Button = styled.button`
@@ -78,6 +85,10 @@ const Button = styled.button`
   font-size: 0.95em;
   line-height: 1em;
   text-align: center;
+`;
+
+const Description = styled.div`
+  width: 100%;
 `;
 
 return (
@@ -113,7 +124,9 @@ return (
             </CloseButton>
           </Dialog.Close>
         </Header>
-        <Dialog.Description>{description}</Dialog.Description>
+        <Dialog.Description asChild>
+          <Description>{description}</Description>
+        </Dialog.Description>
         {children}
       </Content>
     </Dialog.Content>

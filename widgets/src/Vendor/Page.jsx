@@ -117,10 +117,13 @@ return (
       <HeaderDetails>
         <Widget
           src={`${ownerId}/widget/Vendor.HeaderDetails`}
-          props={{ accountId: props.accountId }}
+          props={{ accountId }}
         />
         <CTARow>
-          <Widget src={`${ownerId}/widget/Vendor.RequestSideWindow`} />
+          <Widget
+            src={`${ownerId}/widget/Vendor.RequestSideWindow`}
+            props={{ accountId }}
+          />
           <Widget
             src={`${ownerId}/widget/Buttons.Grey`}
             props={{
