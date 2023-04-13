@@ -43,9 +43,19 @@ const Details = styled.div`
 return (
   <Container>
     <Widget
-      src={`${ownerId}/widget/Project.Icon`}
-      props={{ accountId, size: "8em" }}
+      src={`${ownerId}/widget/Inputs.Viewable.Logo`}
+      props={{
+        accountId,
+        value: state.profile.image,
+        id: "image", 
+        onSave: (image) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { image } } },
+          }),
+        canEdit
+      }}
     />
+
     <Details>
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.NameAndAccount`}
