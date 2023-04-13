@@ -86,6 +86,14 @@ impl Contract {
         self.vendors.keys().cloned().collect()
     }
 
+    pub fn get_admin_vendors(&self, account_id: AccountId) -> HashSet<AccountId> {
+        self.vendors
+            .into_iter()
+            .filter(|(_, vendor)| Vendor::from(vendor.clone()).is_admin(&account_id))
+            .map(|(vendor_id, _)| vendor_id.clone())
+            .collect()
+    }
+
     /// Check if account is registered as contributor.
     pub fn check_is_vendor(&self, account_id: &AccountId) -> bool {
         self.vendors.contains_key(account_id)
