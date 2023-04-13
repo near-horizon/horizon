@@ -15,8 +15,10 @@ if (!state.nameIsFetched) {
     "get",
     { keys: [`${accountId}/profile/name`] },
     "final",
-    false,
-  ).then((name) => State.update({ name: name[accountId].profile.name, nameIsFetched: true }));
+    false
+  ).then((name) =>
+    State.update({ name: name[accountId].profile.name, nameIsFetched: true })
+  );
   return <>Loading...</>;
 }
 
@@ -35,7 +37,7 @@ const Container = styled.div`
 const Name = styled.div`
   font-style: normal;
   font-weight: 600;
-  font-size: .95em;
+  font-size: 0.95em;
   line-height: 1em;
   color: #101828;
 `;
@@ -43,7 +45,7 @@ const Name = styled.div`
 const AccountId = styled.div`
   font-style: normal;
   font-weight: 400;
-  font-size: .75em;
+  font-size: 0.75em;
   line-height: 1em;
   color: #7e868c;
 `;

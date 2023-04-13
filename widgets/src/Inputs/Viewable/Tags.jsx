@@ -64,7 +64,7 @@ return (
           }}
         />
       ),
-      canEdit
+      canEdit,
     }}
   />
 );

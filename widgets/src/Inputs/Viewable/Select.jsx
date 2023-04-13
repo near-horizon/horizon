@@ -68,7 +68,7 @@ return (
       value,
       edit,
       view: value[0].name,
-      canEdit
+      canEdit,
     }}
   />
 );

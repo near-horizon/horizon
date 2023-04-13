@@ -1,11 +1,11 @@
 const ownerId = "contribut3.near";
 const id = props.id ?? "text";
 const accountId = props.accountId ?? context.accountId;
-const onSave = props.onSave ?? (() => { });
+const onSave = props.onSave ?? (() => {});
 const canEdit = props.canEdit;
 
 State.init({
-  img: null
+  img: null,
 });
 
 const Input = styled.input`
@@ -65,8 +65,13 @@ return (
           <SaveButton onClick={() => onSave(state.img)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: <Widget src={`${ownerId}/widget/Project.Icon`} props={{ accountId: props.accountId, size: "8em"  }} />,
-      canEdit
+      view: (
+        <Widget
+          src={`${ownerId}/widget/Project.Icon`}
+          props={{ accountId: props.accountId, size: "8em" }}
+        />
+      ),
+      canEdit,
     }}
   />
 );

@@ -14,7 +14,7 @@ if (!state.nameIsFetched) {
     "get_request",
     { account_id: accountId, cid },
     "final",
-    false,
+    false
   ).then(({ title }) => State.update({ title, titleIsFetched: true }));
   return <>Loading...</>;
 }
@@ -22,13 +22,9 @@ if (!state.nameIsFetched) {
 const Container = styled.div`
   font-style: normal;
   font-weight: 400;
-  font-size: .95em;
+  font-size: 0.95em;
   line-height: 1em;
   color: #101828;
 `;
 
-return (
-  <Container>
-    {title}
-  </Container>
-);
+return <Container>{title}</Container>;

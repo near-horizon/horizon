@@ -29,8 +29,9 @@ if (!state.profileFetched) {
 }
 
 const fullName = state.profile.name || accountId;
-const href = `/${ownerId}/widget/Index?tab=${isEntity ? "project" : "vendor"
-  }&accountId=${accountId}`;
+const href = `/${ownerId}/widget/Index?tab=${
+  isEntity ? "project" : "vendor"
+}&accountId=${accountId}`;
 
 const ImageContainer = styled.div`
   margin: 0.5em;

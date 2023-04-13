@@ -47,12 +47,12 @@ return (
       props={{
         accountId,
         value: state.profile.image,
-        id: "image", 
+        id: "image",
         onSave: (image) =>
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { image } } },
           }),
-        canEdit
+        canEdit,
       }}
     />
 
@@ -67,8 +67,7 @@ return (
             Near.call("social.near", "set", {
               data: { [accountId]: { profile: { name } } },
             }),
-          canEdit: isAdmin
-
+          canEdit: isAdmin,
         }}
       />
 
@@ -81,7 +80,7 @@ return (
             Near.call("social.near", "set", {
               data: { [accountId]: { profile: { tagline } } },
             }),
-          canEdit: isAdmin
+          canEdit: isAdmin,
         }}
       />
 

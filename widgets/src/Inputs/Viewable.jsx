@@ -7,7 +7,7 @@ const big = props.big ?? false;
 const noLabel = props.noLabel ?? false;
 const canEdit = props.canEdit ?? true;
 const flexDirection = props.direction ?? "row";
-const editButtonText = props.editButtonText ?? "Edit"
+const editButtonText = props.editButtonText ?? "Edit";
 
 State.init({
   value,
@@ -92,7 +92,7 @@ return (
           {label}
         </Label>
       )}
-      {canEdit &&
+      {canEdit && (
         <EditButtonContainer>
           <EditButton
             onClick={() => State.update({ edit: false })}
@@ -107,7 +107,7 @@ return (
             {editButtonText}
           </EditButton>
         </EditButtonContainer>
-      }
+      )}
     </Stack>
 
     {state.edit && canEdit ? (

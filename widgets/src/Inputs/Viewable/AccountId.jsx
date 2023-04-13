@@ -138,7 +138,7 @@ return (
         </>
       ),
       view: isLink ? <a href={link}>{value}</a> : value,
-      canEdit
+      canEdit,
     }}
   />
 );

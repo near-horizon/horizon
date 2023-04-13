@@ -65,7 +65,7 @@ return (
         </LabelArea>
       ),
       view: value,
-      canEdit
+      canEdit,
     }}
   />
 );

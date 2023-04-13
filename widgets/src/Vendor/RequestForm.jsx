@@ -15,7 +15,7 @@ const Container = styled.div`
 const Name = styled.div`
   font-style: normal;
   font-weight: 600;
-  font-size: .95em;
+  font-size: 0.95em;
   line-height: 1em;
   color: #101828;
 `;
@@ -23,7 +23,7 @@ const Name = styled.div`
 const AccountId = styled.div`
   font-style: normal;
   font-weight: 400;
-  font-size: .75em;
+  font-size: 0.75em;
   line-height: 1em;
   color: #7e868c;
 `;
@@ -44,9 +44,10 @@ const ImageContainer = styled.div`
 
 const createProjectLine = (accountId, name, image) => {
   const fullName = name ?? accountId;
-  const url = (image.ipfs_cid
-    ? `https://ipfs.near.social/ipfs/${image.ipfs_cid}`
-    : image.url) || "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
+  const url =
+    (image.ipfs_cid
+      ? `https://ipfs.near.social/ipfs/${image.ipfs_cid}`
+      : image.url) || "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
   const imageSrc = `https://i.near.social/thumbnail/${url}`;
 
   return (
@@ -76,14 +77,14 @@ if (!state.projectsIsFetched) {
     "get_admin_projects",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((projects) => {
     Near.asyncView(
       "social.near",
       "get",
       { keys: projects.map((accountId) => `${accountId}/profile/**`) },
       "final",
-      false,
+      false
     ).then((data) =>
       State.update({
         projects: projects.map((accountId) => ({
@@ -91,11 +92,16 @@ if (!state.projectsIsFetched) {
           //   src={`${ownerId}/widget/Project.Line`}
           //   props={{ accountId, size: "1em" }}
           // />,
-          text: createProjectLine(accountId, data[accountId].profile.name, data[accountId].profile.image),
+          text: createProjectLine(
+            accountId,
+            data[accountId].profile.name,
+            data[accountId].profile.image
+          ),
           value: accountId,
         })),
-        projectsIsFetched: true
-      }));
+        projectsIsFetched: true,
+      })
+    );
   });
   return <>Loading...</>;
 }
@@ -134,14 +140,21 @@ return (
             "get_project_requests",
             { account_id: projectId.value },
             "final",
-            false,
-          ).then((requests) => State.update({
-            requests: requests.map(([accountId, cid]) => ({
-              name: <Widget src={`${ownerId}/widget/Request.Line`} props={{ accountId, cid, size: "1em" }} />,
-              value: cid,
-            })),
-            requestsIsFetched: true
-          }));
+            false
+          ).then((requests) =>
+            State.update({
+              requests: requests.map(([accountId, cid]) => ({
+                name: (
+                  <Widget
+                    src={`${ownerId}/widget/Request.Line`}
+                    props={{ accountId, cid, size: "1em" }}
+                  />
+                ),
+                value: cid,
+              })),
+              requestsIsFetched: true,
+            })
+          );
         },
       }}
     />
