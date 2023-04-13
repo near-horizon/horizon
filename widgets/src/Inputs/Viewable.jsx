@@ -26,6 +26,13 @@ const Container = styled.div`
   &.big {
     gap: 0.625em;
   }
+
+  &.f-column {
+    flex-direction: column;
+  }
+  &.f-row {
+    flex-direction: row;
+  }
 `;
 
 const Label = styled.label`
@@ -83,7 +90,7 @@ const EditButtonContainer = styled.div`
 `;
 
 return (
-  <Container className={big ? "big" : ""}>
+  <Container className={ `f-${flexDirection} `+ big ? "big" : "" }>
     <Stack className={"f-" + flexDirection}>
       {noLabel ? (
         view
