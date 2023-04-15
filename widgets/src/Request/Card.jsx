@@ -220,9 +220,9 @@ const footer = (
     </FooterButton>
     <Widget
       src={`${ownerId}/widget/Request.ProposeSideWindow`}
-      props={{ accountId }}
+      props={{ accountId, cid }}
     />
   </Footer>
 );
 
-return <Widget src={`${ownerId} /widget/Card`} props={{ body, footer }} />;
+return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer }} />;
