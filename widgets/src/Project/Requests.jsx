@@ -1,5 +1,5 @@
 const ownerId = "contribut3.near";
-const account_id = props.accountId ?? "contribute3.near"
+const account_id = props.accountId;
 const search = props.search ?? "";
 
 State.init({
