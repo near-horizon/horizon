@@ -218,21 +218,10 @@ const footer = (
     >
       View details
     </FooterButton>
-    <FooterButton
-      blue
-      href={`/${ownerId}/widget/Index?tab=create&content=proposal&cid=${cid}&accountId=${accountId}`}
-      onClick={() =>
-        props.update({
-          tab: "create",
-          content: "proposal",
-          search: "",
-          accountId,
-          cid,
-        })
-      }
-    >
-      Propose contribution
-    </FooterButton>
+    <Widget
+      src={`${ownerId}/widget/Request.ProposeSideWindow`}
+      props={{ accountId }}
+    />
   </Footer>
 );
 
