@@ -12,6 +12,13 @@ use crate::{events::Events, Contract, ContractExt};
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
 #[serde(crate = "near_sdk::serde")]
+pub enum PaymentType {
+    FlatRate,
+    TimeBased,
+}
+
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
+#[serde(crate = "near_sdk::serde")]
 pub enum PaymentSource {
     Credits,
     Other,
@@ -20,6 +27,7 @@ pub enum PaymentSource {
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub enum RequestType {
+    OneTime,
     Short,
     Long,
     Full,
@@ -33,6 +41,7 @@ pub struct Request {
     description: String,
     open: bool,
     request_type: RequestType,
+    payment_type: PaymentType,
     tags: HashSet<String>,
     source: PaymentSource,
     #[serde(with = "crate::dec_serde::u64_dec_format")]

@@ -127,7 +127,7 @@ const contributionType = (
         stroke-linejoin="round"
       />
     </svg>
-    One-time contribution
+    {state.request.request_type}
   </Item>
 );
 
@@ -218,22 +218,11 @@ const footer = (
     >
       View details
     </FooterButton>
-    <FooterButton
-      blue
-      href={`/${ownerId}/widget/Index?tab=create&content=proposal&cid=${cid}&accountId=${accountId}`}
-      onClick={() =>
-        props.update({
-          tab: "create",
-          content: "proposal",
-          search: "",
-          accountId,
-          cid,
-        })
-      }
-    >
-      Propose contribution
-    </FooterButton>
+    <Widget
+      src={`${ownerId}/widget/Request.ProposeSideWindow`}
+      props={{ accountId, cid }}
+    />
   </Footer>
 );
 
-return <Widget src={`${ownerId} /widget/Card`} props={{ body, footer }} />;
+return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer }} />;
