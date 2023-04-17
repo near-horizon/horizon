@@ -30,7 +30,7 @@ pub enum RequestType {
     OneTime,
     Short,
     Long,
-    Full,
+    FullTime,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
@@ -151,6 +151,26 @@ impl Contract {
             .filter(|(project_id, _)| self.check_is_project_admin(project_id, &account_id))
             .cloned()
             .collect()
+    }
+
+    /// List out all the payment types available.
+    pub fn get_payment_types(&self) -> Vec<PaymentType> {
+        vec![PaymentType::FlatRate, PaymentType::TimeBased]
+    }
+
+    /// List out all the payment sources available.
+    pub fn get_payment_sources(&self) -> Vec<PaymentSource> {
+        vec![PaymentSource::Credits, PaymentSource::Other]
+    }
+
+    /// List out all the request types available.
+    pub fn get_request_types(&self) -> Vec<RequestType> {
+        vec![
+            RequestType::OneTime,
+            RequestType::Short,
+            RequestType::Long,
+            RequestType::FullTime,
+        ]
     }
 
     pub(super) fn assert_is_request(&self, cid: &str, account_id: &AccountId) {
