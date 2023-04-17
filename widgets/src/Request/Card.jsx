@@ -127,7 +127,7 @@ const contributionType = (
         stroke-linejoin="round"
       />
     </svg>
-    One-time contribution
+    {state.request.request_type}
   </Item>
 );
 
