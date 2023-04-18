@@ -9,7 +9,7 @@ return (
       title: "Propose contribution",
       description: (
         <Widget
-          src={`${ownerId}/widget/Request.line`}
+          src={`${ownerId}/widget/Request.Line`}
           props={{ accountId, cid }}
         />
       ),

@@ -24,6 +24,7 @@ const ListContainer = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.5em;
+  width: 100%;
 `;
 
 const WidgetContainer = styled.div`
@@ -38,12 +39,22 @@ const WidgetContainer = styled.div`
   }
 `;
 
+const Container = styled.div`
+  width: 100%;
+
+  & > div {
+    width: 100%;
+  }
+`;
+
 return (
-  <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
-    <ListContainer>
-      {state.shown.map((args, index) => (
-        <WidgetContainer key={index}>{createItem(args)}</WidgetContainer>
-      ))}
-    </ListContainer>
-  </InfiniteScroll>
+  <Container>
+    <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
+      <ListContainer>
+        {state.shown.map((args, index) => (
+          <WidgetContainer key={index}>{createItem(args)}</WidgetContainer>
+        ))}
+      </ListContainer>
+    </InfiniteScroll>
+  </Container>
 );
