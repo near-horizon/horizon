@@ -12,7 +12,7 @@ use near_sdk_contract_tools::standard::nep297::Event;
 use crate::{events::Events, proposal::Proposal, Contract, ContractExt, StorageKeys};
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
-#[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
+#[serde(crate = "near_sdk::serde")]
 pub struct ContributionAction {
     description: String,
     #[serde(with = "crate::dec_serde::u64_dec_format")]
@@ -32,7 +32,7 @@ pub enum ContributionStatus {
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
+#[serde(crate = "near_sdk::serde")]
 pub struct Contribution {
     proposal_id: ((AccountId, String), AccountId),
     status: ContributionStatus,

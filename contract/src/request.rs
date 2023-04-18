@@ -34,7 +34,7 @@ pub enum RequestType {
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
+#[serde(crate = "near_sdk::serde")]
 pub struct Request {
     project_id: AccountId,
     title: String,

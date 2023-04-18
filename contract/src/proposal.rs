@@ -11,7 +11,7 @@ use near_sdk_contract_tools::standard::nep297::Event;
 use crate::{events::Events, Contract, ContractExt};
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
-#[serde(crate = "near_sdk::serde", rename_all = "camelCase")]
+#[serde(crate = "near_sdk::serde")]
 pub struct Proposal {
     pub request_id: (AccountId, String),
     pub vendor_id: AccountId,
