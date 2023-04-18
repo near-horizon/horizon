@@ -3,7 +3,10 @@ members = [
   "contract",
   "seed",
   "token",
-  "awesome-near-fetcher"
+  "awesome-near-fetcher",
+]
+exclude = [
+  "api"
 ]
 
 [profile.release]

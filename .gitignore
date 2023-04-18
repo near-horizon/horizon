@@ -3,3 +3,4 @@ target/
 res/
 neardev
 node_modules
+.env
