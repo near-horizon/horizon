@@ -1,6 +1,7 @@
 const onSave = props.onSave ?? (() => {});
 const ownerId = "contribut3.near";
 const isAdmin = props.isAdmin;
+const accountId = props.accountId;
 
 const Container = styled.div`
   display: flex;
@@ -23,6 +24,27 @@ const Heading = styled.div`
   width: 100%;
 `;
 
+State.init({
+  profile: null,
+  profileIsFetched: false,
+});
+
+if (!state.profileIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${accountId}/profile/**`] },
+    "final",
+    false
+  ).then((profile) =>
+    State.update({
+      profile: profile[accountId].profile,
+      profileIsFetched: true,
+    })
+  );
+  return <>Loading...</>;
+}
+
 return (
   <Container>
     <Heading>Details</Heading>
@@ -31,9 +53,12 @@ return (
       props={{
         label: "Website",
         id: "website",
-        value: "layers.gg",
-        link: "https://layers.gg",
-        onSave: (website) => onSave({ website }),
+        value: state.profile.linktree.website,
+        link: `https://${state.profile.linktree.website}`,
+        onSave: (website) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { linktree: { website } } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -42,8 +67,11 @@ return (
       props={{
         label: "Links",
         id: "links",
-        value: { github: "near-horizon", twitter: "nearhorizon" },
-        onSave: (links) => onSave({ links }),
+        value: state.profile.linktree,
+        onSave: (linktree) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { linktree } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -52,14 +80,17 @@ return (
       props={{
         label: "Category",
         id: "category",
-        value: [{ name: "Wallets" }],
+        value: state.profile.category,
         options: [
           { name: "Wallets" },
           { name: "Games" },
           { name: "Social" },
           { name: "Other" },
         ],
-        onSave: ([{ name: category }]) => onSave({ category }),
+        onSave: ([{ name: category }]) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { category } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -68,9 +99,12 @@ return (
       props={{
         label: "Integration",
         id: "integration",
-        value: [{ name: "Native" }],
+        value: state.profile.integration,
         options: [{ name: "Native" }, { name: "Multichain" }],
-        onSave: ([{ name: integration }]) => onSave({ integration }),
+        onSave: ([{ name: integration }]) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { integration } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -79,14 +113,17 @@ return (
       props={{
         label: "Development phase",
         id: "phase",
-        value: [{ name: "Testnet launched" }],
+        value: state.profile.phase,
         options: [
           { name: "Testnet launched" },
           { name: "Mainnet launched" },
           { name: "In development" },
           { name: "Concept" },
         ],
-        onSave: ([{ name: phase }]) => onSave({ phase }),
+        onSave: ([{ name: phase }]) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { phase } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -95,12 +132,15 @@ return (
       props={{
         label: "User base (MAA)",
         id: "userbase",
-        value: 3500,
-        onSave: (userbase) => onSave({ userbase }),
+        value: state.userbase,
+        onSave: (userbase) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { userbase } } },
+          }),
         canEdit: isAdmin,
       }}
     />
-    <Widget
+    {/*<Widget
       src={`${ownerId}/widget/Inputs.Viewable.Select`}
       props={{
         label: "Stage",
@@ -139,14 +179,17 @@ return (
         onSave: (raised) => onSave({ raised }),
         canEdit: isAdmin,
       }}
-    />
+    />*/}
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.AccountId`}
       props={{
         label: "CEO",
         id: "ceo",
-        value: "petarvujovic.near",
-        onSave: (ceo) => onSave({ ceo }),
+        value: state.profile.ceo,
+        onSave: (ceo) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { ceo } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -155,8 +198,11 @@ return (
       props={{
         label: "CTO",
         id: "cto",
-        value: "petarvujovic.near",
-        onSave: (cto) => onSave({ cto }),
+        value: state.profile.cto,
+        onSave: (cto) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { cto } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -165,8 +211,11 @@ return (
       props={{
         label: "Company size",
         id: "size",
-        value: 10,
-        onSave: (team) => onSave({ team }),
+        value: state.team,
+        onSave: (team) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { team } } },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -175,19 +224,26 @@ return (
       props={{
         label: "Tags",
         id: "tags",
-        value: [
-          { name: "defi" },
-          { name: "exchange" },
-          { name: "staking" },
-          { name: "farming" },
-        ],
+        value: Object.keys(state.profile.tags).map((name) => ({ name })),
         options: [
           { name: "defi" },
           { name: "exchange" },
           { name: "staking" },
           { name: "farming" },
         ],
-        onSave: (tags) => onSave({ tags: tags.map(({ name }) => name) }),
+        onSave: (tags) =>
+          Near.call("social.near", "set", {
+            data: {
+              [accountId]: {
+                profile: {
+                  tags: tags.reduce(
+                    (acc, { name }) => ({ ...acc, [name]: "" }),
+                    {}
+                  ),
+                },
+              },
+            },
+          }),
         canEdit: isAdmin,
       }}
     />
@@ -196,7 +252,7 @@ return (
       props={{
         label: "Location",
         id: "location",
-        value: "San Francisco, CA",
+        value: props.geo,
         onSave: (geo) => onSave({ geo }),
         canEdit: isAdmin,
       }}

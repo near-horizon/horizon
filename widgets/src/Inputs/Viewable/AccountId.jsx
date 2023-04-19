@@ -2,8 +2,7 @@ const ownerId = "contribut3.near";
 const id = props.id ?? "text";
 const label = props.label ?? "Input";
 const value = props.value ?? "";
-const link = props.link ?? "";
-const isLink = link !== "";
+const name = props.name ?? "";
 const onSave = props.onSave ?? (() => {});
 const canEdit = props.canEdit;
 
@@ -110,6 +109,14 @@ const Error = styled.small`
   color: red;
 `;
 
+const Link = styled.a`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25em;
+`;
+
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
@@ -137,7 +144,24 @@ return (
           <Error>{state.valid ? <></> : state.errorMessage}</Error>
         </>
       ),
-      view: isLink ? <a href={link}>{value}</a> : value,
+      view: value ? (
+        <Link href={`/near/widget/ProfilePage?accountId=${value}`}>
+          <Widget
+            src={`${ownerId}/widget/Vendor.Icon`}
+            props={{ accountId: value, size: "2em" }}
+          />
+          <Widget
+            src={`${ownerId}/widget/NameAndAccount`}
+            props={{
+              accountId: value,
+              name,
+              nameSize: "1.125em",
+            }}
+          />
+        </Link>
+      ) : (
+        <></>
+      ),
       canEdit,
     }}
   />

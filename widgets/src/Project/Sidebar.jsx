@@ -31,6 +31,8 @@ return (
   <Widget
     src={`${ownerId}/widget/Project.Details`}
     props={{
+      accountId,
+      isAdmin: props.isAdmin,
       onSave: (project) => {
         State.update({
           project: {

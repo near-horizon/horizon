@@ -9,13 +9,17 @@ State.init({
 });
 
 if (!state.isAdminIsFetched) {
-  Near.asyncView(
-    ownerId,
-    "check_is_project_admin",
-    { project_id: accountId, account_id: context.accountId },
-    "final",
-    false
-  ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
+  if (!context.accountId) {
+    State.update({ isAdmin: false, isAdminIsFetched: true });
+  } else {
+    Near.asyncView(
+      ownerId,
+      "check_is_project_admin",
+      { project_id: accountId, account_id: context.accountId },
+      "final",
+      false
+    ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
+  }
 }
 
 if (!state.projectIsFetched) {
@@ -165,12 +169,7 @@ const content = {
   overview: (
     <Widget
       src={`${ownerId}/widget/Project.About`}
-      props={{
-        onSave: (s) => {
-          console.log(s);
-        },
-        accountId: props.accountId,
-      }}
+      props={{ accountId: props.accountId }}
     />
   ),
   requests: (
@@ -293,7 +292,8 @@ return (
         <Widget
           src={`${ownerId}/widget/Project.Sidebar`}
           props={{
-            accountId: "contribut3.near",
+            accountId,
+            isAdmin: state.isAdmin,
             onSave: (s) => {
               console.log(s);
             },
