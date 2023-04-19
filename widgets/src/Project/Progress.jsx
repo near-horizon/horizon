@@ -57,10 +57,6 @@ return (
       <Value>0 NHZN</Value>
     </Row>
     <Row>
-      <Label>Graduation:</Label>
-      <Value>10%</Value>
-    </Row>
-    <Row>
       <Label>Profile:</Label>
       <Value>60%</Value>
     </Row>

@@ -51,7 +51,9 @@ return (
           id: "image",
           onSave: (image) =>
             Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { image: { ipfs_cid: image.cid } } } },
+              data: {
+                [accountId]: { profile: { image: { ipfs_cid: image.cid } } },
+              },
             }),
           canEdit,
         }}

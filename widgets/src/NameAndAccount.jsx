@@ -1,5 +1,5 @@
-const name = props.name ?? context.accountId;
 const accountId = props.accountId ?? context.accountId;
+const name = props.name ?? accountId;
 const nameSize = props.nameSize ?? "1.625em";
 const accountSize = props.accountSize ?? "0.95em";
 

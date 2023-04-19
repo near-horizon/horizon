@@ -20,22 +20,24 @@ const loadMore = () => {
 
 const ListContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 0.5em;
   width: 100%;
 `;
 
 const WidgetContainer = styled.div`
+  flex-shrink: 0;
   width: 100%;
 
   @media (min-width: 768px) {
-    width: 50%;
+    width: 49%;
   }
 
   @media (min-width: 2560px) {
-    width: 33.333%;
+    width: 31%;
   }
 `;
 

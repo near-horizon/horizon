@@ -33,18 +33,21 @@ const url =
 const imageSrc = `https://i.near.social/thumbnail/${url}`;
 
 const ImageCircle = styled.img`
-  background: #fafafa;
-  border-radius: 8px;
   object-fit: cover;
   width: 100%;
   height: 100%;
 `;
 
 const ImageContainer = styled.div`
+  flex-shrink: 0;
+  background: #fafafa;
+  sizing: border-box;
   display: inline-block;
   --size: ${({ size }) => size};
   width: var(--size, 1.5em);
   height: var(--size, 1.5em);
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
 return (
