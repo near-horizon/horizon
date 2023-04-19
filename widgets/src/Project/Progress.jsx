@@ -1,3 +1,5 @@
+const ownerId = "contribut3.near";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,7 +56,13 @@ return (
   <Container>
     <Row>
       <Label>Credits:</Label>
-      <Value>0 NHZN</Value>
+      <Value>
+        0 NHZN{" "}
+        <Widget
+          src={`${ownerId}/widget/Tooltip`}
+          props={{ content: "Test use case" }}
+        />
+      </Value>
     </Row>
     <Row>
       <Label>Profile:</Label>
