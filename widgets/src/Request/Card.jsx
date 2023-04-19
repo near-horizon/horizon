@@ -5,8 +5,8 @@ const cid = props.cid;
 State.init({
   request: null,
   requestIsFetched: false,
-  tags: null,
-  tagsIsFetched: false,
+  profile: null,
+  profileIsFetched: false,
 });
 
 if (!state.requestIsFetched) {
@@ -19,14 +19,20 @@ if (!state.requestIsFetched) {
   ).then((request) => State.update({ request, requestIsFetched: true }));
 }
 
-if (!state.foundersIsFetched) {
+if (!state.profileIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
-    { keys: [`${accountId}/profile/tags`] },
+    { keys: [`${accountId}/profile/**`] },
     "final",
     false
-  ).then((tags) => State.update({ tags, tagsIsFetched: true }));
+  ).then((data) =>
+    State.update({ profile: data[accountId].profile, profileIsFetched: true })
+  );
+}
+
+if (!state.requestIsFetched || !state.profileIsFetched) {
+  return <>Loading...</>;
 }
 
 const Title = styled.h3`
@@ -36,7 +42,6 @@ const Title = styled.h3`
   line-height: 1.4em;
   color: #101828;
   flex: none;
-  order: 0;
   flex-grow: 1;
 `;
 
@@ -47,7 +52,6 @@ const Details = styled.div`
   padding: 0.5em 0px 0px;
   gap: 1.5em;
   flex: none;
-  order: 4;
   align-self: stretch;
   flex-grow: 0;
 `;
@@ -59,7 +63,6 @@ const Item = styled.div`
   padding: 0px;
   gap: 0.4em;
   flex: none;
-  order: 1;
   flex-grow: 0;
   font-style: normal;
   font-weight: 500;
@@ -78,7 +81,7 @@ const deadline = (
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M1 14.75L1 2M1 8.75H6.55C6.97004 8.75 7.18006 8.75 7.34049 8.66825C7.48161 8.59635 7.59635 8.48161 7.66825 8.34049C7.75 8.18006 7.75 7.97004 7.75 7.55V2.45C7.75 2.02996 7.75 1.81994 7.66825 1.65951C7.59635 1.51839 7.48161 1.40365 7.34049 1.33175C7.18006 1.25 6.97004 1.25 6.55 1.25H2.2C1.77996 1.25 1.56994 1.25 1.40951 1.33175C1.26839 1.40365 1.15365 1.51839 1.08175 1.65951C1 1.81994 1 2.02996 1 2.45V8.75ZM7.75 2.75H12.55C12.97 2.75 13.1801 2.75 13.3405 2.83175C13.4816 2.90365 13.5963 3.01839 13.6683 3.15951C13.75 3.31994 13.75 3.52996 13.75 3.95V9.05C1 3.75 9.47004 13.75 9.68006 13.6683 9.84049C13.5963 9.98161 13.4816 10.0963 13.3405 10.1683C13.1801 10.25 12.97 10.25 12.55 10.25H8.95C8.52996 10.25 8.31994 10.25 8.15951 10.1683C8.01839 10.0963 7.90365 9.98161 7.83175 9.84049C7.75 9.68006 7.75 9.47004 7.75 9.05V2.75Z"
+        d="M1.5 14.75L1.5 2M1.5 8.75H7.05C7.47004 8.75 7.68006 8.75 7.84049 8.66825C7.98161 8.59635 8.09635 8.48161 8.16825 8.34049C8.25 8.18006 8.25 7.97004 8.25 7.55V2.45C8.25 2.02996 8.25 1.81994 8.16825 1.65951C8.09635 1.51839 7.98161 1.40365 7.84049 1.33175C7.68006 1.25 7.47004 1.25 7.05 1.25H2.7C2.27996 1.25 2.06994 1.25 1.90951 1.33175C1.76839 1.40365 1.65365 1.51839 1.58175 1.65951C1.5 1.81994 1.5 2.02996 1.5 2.45V8.75ZM8.25 2.75H13.05C13.47 2.75 13.6801 2.75 13.8405 2.83175C13.9816 2.90365 14.0963 3.01839 14.1683 3.15951C14.25 3.31994 14.25 3.52996 14.25 3.95V9.05C14.25 9.47004 14.25 9.68006 14.1683 9.84049C14.0963 9.98161 13.9816 10.0963 13.8405 10.1683C13.6801 10.25 13.47 10.25 13.05 10.25H9.45C9.02996 10.25 8.81994 10.25 8.65951 10.1683C8.51839 10.0963 8.40365 9.98161 8.33175 9.84049C8.25 9.68006 8.25 9.47004 8.25 9.05V2.75Z"
         stroke="#7E868C"
         stroke-width="1.35"
         stroke-linecap="round"
@@ -133,14 +136,21 @@ const contributionType = (
 
 const body = (
   <>
-    <Widget
-      src={`${ownerId}/widget/ProfileLine`}
-      props={{
-        accountId,
-        imageSize: "3em",
-        update: props.update,
-      }}
-    />
+    <Details>
+      <Widget
+        src={`${ownerId}/widget/Project.Icon`}
+        props={{ accountId: props.accountId, size: "2em" }}
+      />
+      <Widget
+        src={`${ownerId}/widget/NameAndAccount`}
+        props={{
+          accountId: props.accountId,
+          name: state.profile.name,
+          nameSize: ".95em",
+          accountSize: ".75em",
+        }}
+      />
+    </Details>
     <Title>{state.request.title}</Title>
     <Widget
       src={`${ownerId}/widget/ActiveIndicator`}

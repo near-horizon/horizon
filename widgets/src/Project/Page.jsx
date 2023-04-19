@@ -4,6 +4,8 @@ const accountId = props.accountId ?? context.accountId;
 State.init({
   isAdmin: false,
   isAdminIsFetched: false,
+  project: null,
+  projectIsFetched: false,
 });
 
 if (!state.isAdminIsFetched) {
@@ -16,13 +18,26 @@ if (!state.isAdminIsFetched) {
   ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
 }
 
+if (!state.projectIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project",
+    { project_id: accountId },
+    "final",
+    false
+  ).then((project) => State.update({ project, projectIsFetched: true }));
+}
+
+if (!state.projectIsFetched || !state.isAdminIsFetched) {
+  return <>Loading...</>;
+}
+
 const availableContent = [
   "overview",
   "requests",
   "people",
-  "funding",
   "history",
-  "graduation",
+  "documents",
 ];
 
 const getContent = (content) => {
@@ -170,19 +185,13 @@ const content = {
       props={{ accountId: props.accountId }}
     />
   ),
-  funding: (
-    <Widget
-      src={`${ownerId}/widget/Project.Funding`}
-      props={{ accountId: props.accountId }}
-    />
-  ),
   history: (
     <Widget
       src={`${ownerId}/widget/Project.History`}
       props={{ accountId: props.accountId }}
     />
   ),
-  graduation: (
+  documents: (
     <Widget
       src={`${ownerId}/widget/Project.Graduation`}
       props={{ accountId: props.accountId }}
@@ -199,33 +208,45 @@ return (
           props={{ accountId, isAdmin: state.isAdmin }}
         />
         <CTARow>
-          <Widget
-            src={`${ownerId}/widget/Buttons.Green`}
-            props={{
-              onClick: () =>
-                Near.call(ownerId, "apply_for_program", {
-                  account_id: accountId,
-                }),
-              text: <>{circledPlus}Apply to accelerator</>,
-            }}
-          />
-          <Widget
-            src={`${ownerId}/widget/Buttons.Grey`}
-            props={{
-              onClick: () => {
-                console.log("clicked");
-              },
-              text: <>{plus}Create request</>,
-            }}
-          />
-          <Widget
-            src={`${ownerId}/widget/Project.ProposeSideWindow`}
-            props={{ accountId }}
-          />
-          <Widget
-            src={`${ownerId}/widget/Project.ClaimSideWindow`}
-            props={{ accountId }}
-          />
+          {state.isAdmin ? (
+            <>
+              {state.project.application_status === "NotSubmitted" ||
+              "Rejected" in state.project.application_status ? (
+                <Widget
+                  src={`${ownerId}/widget/Buttons.Green`}
+                  props={{
+                    onClick: () =>
+                      Near.call(ownerId, "apply_for_program", {
+                        account_id: accountId,
+                      }),
+                    text: <>{circledPlus}Apply to accelerator</>,
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+              <Widget
+                src={`${ownerId}/widget/Buttons.Grey`}
+                props={{
+                  onClick: () => {
+                    console.log("clicked");
+                  },
+                  text: <>{plus}Create request</>,
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Widget
+                src={`${ownerId}/widget/Project.ProposeSideWindow`}
+                props={{ accountId }}
+              />
+              <Widget
+                src={`${ownerId}/widget/Project.ClaimSideWindow`}
+                props={{ accountId }}
+              />
+            </>
+          )}
         </CTARow>
       </HeaderDetails>
       <HeaderProgress>
@@ -256,16 +277,12 @@ return (
                 text: "People",
               },
               {
-                id: "funding",
-                text: "Funding",
-              },
-              {
                 id: "history",
                 text: "Work history",
               },
               {
-                id: "graduation",
-                text: "Graduation",
+                id: "documents",
+                text: "Documents",
               },
             ],
           }}

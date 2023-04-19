@@ -20,7 +20,7 @@ return (
           props={{ accountId, cid }}
         />
       ),
-      minWidth: "600px",
+      minWidth: "400px",
     }}
   />
 );

@@ -67,6 +67,7 @@ const Content = styled.div`
   background: #fff;
   z-index: 10;
   min-width: ${minWidth};
+  max-width: 800px;
 `;
 
 const Button = styled.button`

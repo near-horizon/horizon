@@ -75,6 +75,10 @@ const ContentContainer = styled.div`
   border: 1px solid #eceef0;
   border-radius: 24px 24px 0px 0px;
   padding: 2.5em 1.5em;
+
+  * {
+    margin: 0;
+  }
 `;
 
 const Sidebar = styled.div`

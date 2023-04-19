@@ -31,7 +31,7 @@ const CardBody = styled.div`
   flex-direction: column;
   align-items: flex-start;
   padding: 1.5em 1.5em 1em;
-  gap: 0.9em;
+  gap: 0.675em;
   flex: none;
   order: 0;
   align-self: stretch;
