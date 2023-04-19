@@ -71,14 +71,6 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const Name = styled.a`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  width: 35%;
-`;
-
 const Other = styled.div`
   display: flex;
   flex-direction: row;
