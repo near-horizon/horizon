@@ -1,0 +1,29 @@
+{
+  "project" : {
+    "4.1": {
+      "allowProjects": "Allow individual contributors to send proposals to this project",
+      "allowContributors": "Allow service providers to send proposals to this project",
+      "allowUsers": "Allow other users, including founders, to send messages to this project's inbox"
+    },
+    "4.2.1" : "Here you can invite contributors to join any of your project's existing contribution requests.",
+    "4.2.3" : "Contributors use this form to submit proposals for a project's contribution requests. Proposals will surface on the admin view of a project's page",
+    "4.2.4" : "If you require admin access on an existing project, simply fill out this form, click 'Send Claiming Request' below. The project admins will be notified and will have the option to approve or deny your request.",
+    "5.1" : {
+      "metricCredits": "Horizon Credits (NHZN) help track service usage and inform payments distributed to Horizon service partners.",
+      "metricProfile": "Completion status of your profile. Once fully complete, your project will be more discoverable by others in the community"
+    }
+  },
+  "request" : {
+    "9.1" : {
+      "detailsBudget" : "Your projected budget in USD and the estimated equivalent in Horizon credits (NHZN). Note: Horizon credits can only be transferred to approved Horizon service partners.",
+      "detailsPaymentSource" : "Describes whether payment to  contributors will occur either directly from you (peer-to-peer) or through Horizon's NHZN credit system (credits)"
+    },
+    "10.5.1" : "Once the scope of work has been fulfilled (and payment has been processed for P2P contracts), both parties (project owner and contributor) need to approve ending the contract or it will remain active."
+  },
+  "manage" : {
+    "13.6" : "Once you submit your proposal, it will remain as 'Pending' until the project owner accepts or rejects it."
+  }
+
+
+
+}
