@@ -1,6 +1,12 @@
 const ownerId = "contribut3.near";
 
-const availableContent = ["projects", "vendors", "backers", "requests"];
+const availableContent = [
+  "projects",
+  "requests",
+  "proposals",
+  "contracts",
+  "applications",
+];
 
 const getContent = (content) => {
   if (!content || !availableContent.includes(content)) {
@@ -14,7 +20,7 @@ const contentSelector = (
   <Widget
     src={`${ownerId}/widget/TabSelector`}
     props={{
-      tab: "home",
+      tab: "manage",
       content: getContent(props.content),
       search: props.search,
       update: props.update,
@@ -24,16 +30,20 @@ const contentSelector = (
           text: "Projects",
         },
         {
-          id: "vendors",
-          text: "Vendors",
-        },
-        {
-          id: "backers",
-          text: "Backers",
-        },
-        {
           id: "requests",
           text: "Requests",
+        },
+        {
+          id: "proposals",
+          text: "Proposals",
+        },
+        {
+          id: "contracts",
+          text: "Contracts",
+        },
+        {
+          id: "applications",
+          text: "Applications",
         },
       ],
     }}
@@ -43,25 +53,31 @@ const contentSelector = (
 const content = {
   projects: (
     <Widget
-      src={`${ownerId}/widget/Project.List`}
-      props={{ search: props.search, update: props.update }}
-    />
-  ),
-  vendors: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.List`}
-      props={{ search: props.search, update: props.update }}
-    />
-  ),
-  backers: (
-    <Widget
-      src={`${ownerId}/widget/Investor.List`}
+      src={`${ownerId}/widget/Project.AdminList`}
       props={{ search: props.search, update: props.update }}
     />
   ),
   requests: (
     <Widget
-      src={`${ownerId}/widget/Request.List`}
+      src={`${ownerId}/widget/Request.AdminList`}
+      props={{ search: props.search, update: props.update }}
+    />
+  ),
+  proposals: (
+    <Widget
+      src={`${ownerId}/widget/Proposal.AdminList`}
+      props={{ search: props.search, update: props.update }}
+    />
+  ),
+  contracts: (
+    <Widget
+      src={`${ownerId}/widget/Contract.AdminList`}
+      props={{ search: props.search, update: props.update }}
+    />
+  ),
+  applications: (
+    <Widget
+      src={`${ownerId}/widget/Project.AdminApplicationList`}
       props={{ search: props.search, update: props.update }}
     />
   ),
@@ -112,55 +128,12 @@ const Filter = styled.div`
   gap: 1em;
 `;
 
-const Stats = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 0.5em;
-
-  div {
-    width: 20%;
-  }
-`;
-
 return (
   <Container>
     <Heading>
-      <h1>Discover NEAR Horizon</h1>
-      <h2>Explore projects, vendors, investors and contribution requests</h2>
+      <h1>Manage projects and requests</h1>
+      <p>Create or edit projects and requests</p>
     </Heading>
-    <Stats>
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: "1077",
-          label: "Projects",
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: "1M+",
-          label: "Monthly active accounts",
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: "25M+",
-          label: "Total accounts",
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: "$88M+",
-          label: "Raised",
-        }}
-      />
-      <Widget src={`${ownerId}/widget/Stats.Link`} />
-    </Stats>
     <div>{contentSelector}</div>
     <Filters>
       <Widget

@@ -52,7 +52,9 @@ return (
     <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
       <ListContainer>
         {state.shown.map((args, index) => (
-          <WidgetContainer key={index}>{createItem(args)}</WidgetContainer>
+          <WidgetContainer key={index} className="cont">
+            {createItem(args)}
+          </WidgetContainer>
         ))}
       </ListContainer>
     </InfiniteScroll>

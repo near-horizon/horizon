@@ -42,6 +42,13 @@ if (!state.descriptionIsFetched) {
   return <>Loading...</>;
 }
 
+const onPrivateSave = (value) => {
+  Near.call(ownerId, "edit_project", {
+    account_id: accountId,
+    project: { application: { private: value } },
+  });
+};
+
 return (
   <Container>
     <Heading>About project</Heading>
@@ -68,13 +75,13 @@ return (
       }}
     />
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
+      src={`${ownerId}/widget/Inputs.Viewable.PrivateText`}
       props={{
         label: "What makes your team uniquely positioned for success?",
         id: "success_position",
         value:
           "Ethereum bought lots of cold wallet although VeChain waited some dead cat bounce during many ICO. NFT proves the digital signature until a burned, nor since ERC20 token standard generates many quick distributed ledger, Lightning Network halving a REKT in many decentralised application! Because Silk Road broadcast some provably bagholder, Ripple sharded some instant all-time-high, nor when TRON returns lots of peer-to-peer FUD, Ripple counted a accidental fork at the dead cat bounce! When blockchain could be a provably fair consensus process of some fork, Cardano required few burned bollinger band in many zero confirmation transaction",
-        onSave: (success_position) => onSave({ success_position }),
+        onSave: (value) => onPrivateSave(value),
       }}
     />
     <Widget

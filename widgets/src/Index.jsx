@@ -26,6 +26,12 @@ const tabContent = {
       props={{ content: state.content, search: state.search, update }}
     />
   ),
+  manage: (
+    <Widget
+      src={`${ownerId}/widget/Manage`}
+      props={{ content: state.content, search: state.search, update }}
+    />
+  ),
   project: (
     <Widget
       src={`${ownerId}/widget/Project.Page`}
