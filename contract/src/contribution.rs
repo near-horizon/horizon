@@ -301,6 +301,17 @@ impl Contract {
 
     /// Veiws
 
+    pub fn get_admin_contributions(
+        &self,
+        account_id: AccountId,
+    ) -> HashSet<(AccountId, AccountId)> {
+        self.contributions
+            .keys()
+            .filter(|(project_id, _)| self.check_is_project_admin(&project_id, &account_id))
+            .cloned()
+            .collect()
+    }
+
     pub fn get_project_contributions(
         &self,
         account_id: AccountId,
