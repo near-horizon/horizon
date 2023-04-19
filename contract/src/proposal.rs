@@ -116,6 +116,18 @@ impl Contract {
             .collect()
     }
 
+    pub fn get_request_proposals(
+        &self,
+        account_id: AccountId,
+        cid: String,
+    ) -> HashSet<((AccountId, String), AccountId)> {
+        self.proposals
+            .keys()
+            .filter(|((project_id, stored_cid), _)| &account_id == project_id && &cid == stored_cid)
+            .cloned()
+            .collect()
+    }
+
     pub fn get_vendor_proposals(
         &self,
         account_id: AccountId,
