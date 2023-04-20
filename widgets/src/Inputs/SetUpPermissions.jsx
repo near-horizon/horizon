@@ -3,7 +3,7 @@ const ownerId = "contribut3.near";
 State.init({
   following: [],
   followingIsFetched: false,
-  value: [],
+  value: [{ name: props.accountId }],
   accountsWithPermissions: [],
   accountsWithPermissionsIsFetched: false,
 });

@@ -67,6 +67,12 @@ const tabContent = {
       }}
     />
   ),
+  permissions: (
+    <Widget
+      src={`${ownerId}/widget/Inputs.SetUpPermissions`}
+      props={{ accountId: state.accountId }}
+    />
+  ),
 }[state.tab];
 
 const ContentContainer = styled.div`
@@ -99,7 +105,7 @@ return (
   <div>
     <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
     <Content>
-      <Sidebar show={state.tab !== "createproject"}>
+      <Sidebar show={!["createproject", "permissions"].includes(state.tab)}>
         <Widget
           src={`${ownerId}/widget/Sidebar`}
           props={{ tab: state.tab, update }}

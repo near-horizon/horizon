@@ -72,7 +72,27 @@ State.init({
   website: "",
   geo: "",
   team: null,
+  accountsWithPermissions: [],
+  accountsWithPermissionsIsFetched: false,
 });
+
+if (!state.accountsWithPermissionsIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "debug_get_permissions",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((data) =>
+    State.update({
+      accountsWithPermissions: data
+        .map(([info]) => info)
+        .filter((info) => "AccountId" in info)
+        .map(({ AccountId }) => AccountId),
+      accountsWithPermissionsIsFetched: true,
+    })
+  );
+}
 
 return (
   <Container>
@@ -102,8 +122,36 @@ return (
           placeholder: "layers.near",
           value: state.accountId,
           onChange: (accountId) => State.update({ accountId }),
+          addInfo: (addInfo) => State.update({ addInfo }),
         }}
       />
+      {state.addInfo ? (
+        <Widget
+          src={`${ownerId}/widget/InfoSegment`}
+          props={{
+            title: "Account ID of project",
+            description: (
+              <>
+                You need to grant permissions the account you are currently
+                logged in with (and any other accounts that may want to allow to
+                edit the projects profile). You can do so by logging in with the
+                account of your project and going to this{" "}
+                <a
+                  target="_blank"
+                  href={`/${ownerId}/widget/Index?tab=permissions&accountId=${context.accountId}`}
+                >
+                  link
+                </a>{" "}
+                to grant permissions. After you do this you can come back here
+                and finish the set up process (with the account you are using
+                now - <b>{context.accountId}</b>).
+              </>
+            ),
+          }}
+        />
+      ) : (
+        <></>
+      )}
       <Widget
         src={`${ownerId}/widget/Inputs.Select`}
         props={{
@@ -227,6 +275,7 @@ return (
                           },
                           category: state.category,
                           team: state.team,
+                          stage: state.dev,
                         },
                       },
                     },
@@ -245,7 +294,6 @@ return (
                     project: {
                       application: {
                         integration: state.integration,
-                        stage: state.dev,
                         geo: state.geo,
                       },
                     },

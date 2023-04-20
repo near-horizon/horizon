@@ -3,20 +3,31 @@ const label = props.label ?? "Account ID";
 const placeholder = props.placeholder ?? "Enter your account ID";
 const value = props.value ?? "";
 const onChange = props.onChange ?? (() => {});
+const addInfo = props.addInfo ?? (() => {});
 const accountIdRegex =
   /^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/;
+const canEdit = (accountId) => {
+  return Near.asyncView(
+    "social.near",
+    "is_write_permission_granted",
+    { predecessor_id: context.accountId, key: accountId },
+    "final",
+    false
+  );
+};
 
 State.init({
   valid: true,
   errorMessage: <></>,
 });
 
-const validate = () => {
+const validate = async () => {
   if (typeof value !== "string") {
     State.update({
       valid: false,
       errorMessage: "Account ID must be a text value!",
     });
+    addInfo(false);
     return;
   }
 
@@ -25,6 +36,7 @@ const validate = () => {
       valid: false,
       errorMessage: "Account ID must be at least 2 characters long!",
     });
+    addInfo(false);
     return;
   }
 
@@ -33,6 +45,7 @@ const validate = () => {
       valid: false,
       errorMessage: "Account ID must be at most 64 characters long!",
     });
+    addInfo(false);
     return;
   }
 
@@ -52,18 +65,36 @@ const validate = () => {
         </>
       ),
     });
+    addInfo(false);
     return;
   }
 
-  // if (forbiddenIds.has(value)) {
-  //   State.update({
-  //     valid: false,
-  //     errorMessage: "This account ID has already been used!",
-  //   });
-  //   return;
-  // }
-  //
-  State.update({ valid: true, errorMessage: "" });
+  if (!props.addInfo) {
+    // if (forbiddenIds.has(value)) {
+    //   State.update({
+    //     valid: false,
+    //     errorMessage: "This account ID has already been used!",
+    //   });
+    //   return;
+    // }
+    //
+    State.update({ valid: true, errorMessage: "" });
+    addInfo(false);
+  }
+
+  canEdit(value).then((editPermission) => {
+    if (!editPermission) {
+      State.update({
+        valid: false,
+        errorMessage: "You do not have permission to edit this account!",
+      });
+      addInfo(true);
+      return;
+    }
+
+    State.update({ valid: true, errorMessage: "" });
+    addInfo(false);
+  });
 };
 
 return (
