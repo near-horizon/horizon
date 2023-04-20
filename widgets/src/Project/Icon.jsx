@@ -25,12 +25,10 @@ if (!state.profileIsFetched) {
 
 const fullName = state.profile.name || state.profile.name || state.accountId;
 const image = state.profile.image;
-const url =
+const imageSrc =
   (image.ipfs_cid
     ? `https://ipfs.near.social/ipfs/${image.ipfs_cid}`
     : image.url) || "https://thewiki.io/static/media/sasha_anon.6ba19561.png";
-
-const imageSrc = `https://i.near.social/thumbnail/${url}`;
 
 const ImageCircle = styled.img`
   object-fit: cover;

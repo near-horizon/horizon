@@ -95,7 +95,7 @@ const body = (
             nameSize: "1.125em",
           }}
         />
-        <Widget
+        {/*<Widget
           src={`${ownerId}/widget/BadgeList`}
           props={{
             badges: [
@@ -103,7 +103,7 @@ const body = (
               { value: "Fundraiser", color: "#62ebe4" },
             ],
           }}
-        />
+        />*/}
       </Details>
     </Container>
     <p>{state.profile.tagline}</p>

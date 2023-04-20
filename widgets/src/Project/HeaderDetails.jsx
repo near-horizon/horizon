@@ -55,6 +55,7 @@ return (
                 [accountId]: { profile: { image: { ipfs_cid: image.cid } } },
               },
             }),
+          isProject: true,
           canEdit: isAdmin,
         }}
       />
@@ -87,7 +88,7 @@ return (
         }}
       />
 
-      <Widget
+      {/*<Widget
         src={`${ownerId}/widget/BadgeList`}
         props={{
           badges: [
@@ -95,7 +96,7 @@ return (
             { value: "Fundraiser", color: "#62ebe4" },
           ],
         }}
-      />
+      />*/}
     </Details>
   </Container>
 );
