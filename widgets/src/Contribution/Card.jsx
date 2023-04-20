@@ -45,9 +45,6 @@ const Row = styled.div`
   width: 100%;
 `;
 
-const completedDate = new Date(Number(state.contribution.status.Completed));
-const completedDateString = `Completed ${completedDate.toLocaleDateString()}`;
-
 const Completed = styled.span`
   font-style: normal;
   font-weight: 400;
@@ -55,10 +52,6 @@ const Completed = styled.span`
   line-height: 1em;
   color: #11181c;
 `;
-
-const feedback = isVendorView
-  ? state.contribution.project_feedback
-  : state.contribution.vendor_feedback;
 
 const Feedback = styled.p`
   font-style: italic;
@@ -79,8 +72,13 @@ const Title = styled.h3`
 `;
 
 const startDate = new Date(Number(state.contribution.actions[0].start_date));
+const completedDate = new Date(Number(state.contribution.status.Completed));
+const completedDateString = `Completed ${completedDate.toLocaleDateString()}`;
 const price = state.contribution.price;
 const type = state.request.request_type;
+const feedback = isVendorView
+  ? state.contribution.project_feedback
+  : state.contribution.vendor_feedback;
 
 const Details = styled.div`
   display: flex;
@@ -109,19 +107,27 @@ const Column = styled.div`
 const body = (
   <Column>
     <Row>
-      <Widget
-        src={`${ownerId}/widget/ProfileLine`}
-        props={{
-          accountId: isVendorView ? projectId : vendorId,
-          imageSize: "2em",
-          update: props.update,
-          isEntity: isVendorView,
-        }}
-      />
+      <Detail>
+        <Widget
+          src={`${ownerId}/widget/${isVendorView ? "Project" : "Vendor"}.Icon`}
+          props={{
+            accountId: isVendorView ? projectId : vendorId,
+            size: "2em",
+          }}
+        />
+        <Widget
+          src={`${ownerId}/widget/NameAndAccount`}
+          props={{
+            accountId: props.accountId,
+            name: state.profile.name,
+            nameSize: "1.125em",
+          }}
+        />
+      </Detail>
       <Completed>{completedDateString}</Completed>
     </Row>
     <Title>{state.request.title}</Title>
-    <Feedback>"{feedback}"</Feedback>
+    <Feedback>{feedback}</Feedback>
     <Details>
       <Detail>
         <svg
