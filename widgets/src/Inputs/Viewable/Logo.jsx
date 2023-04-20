@@ -74,7 +74,9 @@ return (
       ),
       view: (
         <Widget
-          src={`${ownerId}/widget/Project.Icon`}
+          src={`${ownerId}/widget/${
+            props.isProject ? "Project" : "Vendor"
+          }.Icon`}
           props={{ accountId: props.accountId, size: "8em" }}
         />
       ),

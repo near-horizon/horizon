@@ -1,9 +1,11 @@
 const ownerId = "contribut3.near";
-const id = props.id ?? "select";
+const id = props.id ?? "text";
 const label = props.label ?? "Input";
-const value = props.value ?? [];
-const options = props.options ?? [];
+const value = props.value ?? "";
+const link = props.link ?? "";
+const isLink = link !== "";
 const onSave = props.onSave ?? (() => {});
+const canEdit = props.canEdit;
 
 const LabelArea = styled.div`
   display: flex;
@@ -44,32 +46,37 @@ const SaveButton = styled.button`
   color: #11181c;
 `;
 
-const edit = (update, v) => (
-  <LabelArea>
-    <Widget
-      src={`${ownerId}/widget/Inputs.MultiSelect`}
-      props={{
-        id,
-        noLabel: true,
-        value: v,
-        options,
-        onChange: update,
-      }}
-    />
-    <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
-  </LabelArea>
-);
-
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
     props={{
       id,
-      label,
+      noLabel: true,
       value,
-      edit,
-      view: value.map(({ name }) => name).join(", "),
-      canEdit: props.canEdit,
+      edit: (update, v) => (
+        <LabelArea>
+          <Widget
+            src={`${ownerId}/widget/Inputs.Toggle`}
+            props={{
+              id,
+              value: v,
+              onChange: update,
+            }}
+          />
+          <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
+        </LabelArea>
+      ),
+      view: (
+        <Widget
+          src={`${ownerId}/widget/ActiveIndicator`}
+          props={{
+            active: value,
+            activeText: "Available",
+            inactiveText: "Not Available",
+          }}
+        />
+      ),
+      canEdit,
     }}
   />
 );
