@@ -60,7 +60,6 @@ pub struct PrivateGraduation {
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub struct PrivateData {
-    pub win_reason: String,
     pub risks: String,
     pub needs: String,
     pub graduation: PrivateGraduation,

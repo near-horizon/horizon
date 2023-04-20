@@ -20,6 +20,70 @@ fn generate_key() -> String {
     hex::encode(sodiumoxide::crypto::secretbox::gen_key().0)
 }
 
+#[derive(Serialize, Deserialize, Default, Debug)]
+struct PrivateGraduation {
+    #[serde(default)]
+    pub legal: String,
+    #[serde(default)]
+    pub budget: String,
+    #[serde(default)]
+    pub monetazation: String,
+    #[serde(default)]
+    pub valuation: String,
+    #[serde(default)]
+    pub gtm: String,
+}
+
+impl PrivateGraduation {
+    fn encrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
+        Self {
+            legal: encrypt_string(&self.legal, key),
+            budget: encrypt_string(&self.budget, key),
+            monetazation: encrypt_string(&self.monetazation, key),
+            valuation: encrypt_string(&self.valuation, key),
+            gtm: encrypt_string(&self.gtm, key),
+        }
+    }
+
+    fn decrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
+        Self {
+            legal: decrypt_string(&self.legal, key),
+            budget: decrypt_string(&self.budget, key),
+            monetazation: decrypt_string(&self.monetazation, key),
+            valuation: decrypt_string(&self.valuation, key),
+            gtm: decrypt_string(&self.gtm, key),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Default, Debug)]
+struct PrivateData {
+    #[serde(default)]
+    pub risks: String,
+    #[serde(default)]
+    pub needs: String,
+    #[serde(default)]
+    pub graduation: PrivateGraduation,
+}
+
+impl PrivateData {
+    fn encrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
+        Self {
+            risks: encrypt_string(&self.risks, key),
+            needs: encrypt_string(&self.needs, key),
+            graduation: self.graduation.encrypt(key),
+        }
+    }
+
+    fn decrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
+        Self {
+            risks: decrypt_string(&self.risks, key),
+            needs: decrypt_string(&self.needs, key),
+            graduation: self.graduation.decrypt(key),
+        }
+    }
+}
+
 #[derive(Clone)]
 struct AppState {
     client: Client,
@@ -257,74 +321,6 @@ async fn verify_permissions(
     )
     .unwrap();
     bool::from_str(&s).unwrap()
-}
-
-#[derive(Serialize, Deserialize, Default, Debug)]
-struct PrivateGraduation {
-    #[serde(default)]
-    pub legal: String,
-    #[serde(default)]
-    pub budget: String,
-    #[serde(default)]
-    pub monetazation: String,
-    #[serde(default)]
-    pub valuation: String,
-    #[serde(default)]
-    pub gtm: String,
-}
-
-impl PrivateGraduation {
-    fn encrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
-        Self {
-            legal: encrypt_string(&self.legal, key),
-            budget: encrypt_string(&self.budget, key),
-            monetazation: encrypt_string(&self.monetazation, key),
-            valuation: encrypt_string(&self.valuation, key),
-            gtm: encrypt_string(&self.gtm, key),
-        }
-    }
-
-    fn decrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
-        Self {
-            legal: decrypt_string(&self.legal, key),
-            budget: decrypt_string(&self.budget, key),
-            monetazation: decrypt_string(&self.monetazation, key),
-            valuation: decrypt_string(&self.valuation, key),
-            gtm: decrypt_string(&self.gtm, key),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Default, Debug)]
-struct PrivateData {
-    #[serde(default)]
-    pub win_reason: String,
-    #[serde(default)]
-    pub risks: String,
-    #[serde(default)]
-    pub needs: String,
-    #[serde(default)]
-    pub graduation: PrivateGraduation,
-}
-
-impl PrivateData {
-    fn encrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
-        Self {
-            win_reason: encrypt_string(&self.win_reason, key),
-            risks: encrypt_string(&self.risks, key),
-            needs: encrypt_string(&self.needs, key),
-            graduation: self.graduation.encrypt(key),
-        }
-    }
-
-    fn decrypt(&self, key: &sodiumoxide::crypto::secretbox::Key) -> Self {
-        Self {
-            win_reason: decrypt_string(&self.win_reason, key),
-            risks: decrypt_string(&self.risks, key),
-            needs: decrypt_string(&self.needs, key),
-            graduation: self.graduation.decrypt(key),
-        }
-    }
 }
 
 #[debug_handler(state = AppState)]
