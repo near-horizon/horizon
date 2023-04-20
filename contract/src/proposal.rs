@@ -8,7 +8,11 @@ use near_sdk::{
 };
 use near_sdk_contract_tools::standard::nep297::Event;
 
-use crate::{events::Events, Contract, ContractExt};
+use crate::{
+    events::Events,
+    request::{PaymentSource, PaymentType, RequestType},
+    Contract, ContractExt,
+};
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
@@ -22,6 +26,9 @@ pub struct Proposal {
     #[serde(with = "crate::dec_serde::u64_dec_format")]
     pub end_date: Timestamp,
     pub price: u128,
+    pub proposal_type: RequestType,
+    pub payment_type: PaymentType,
+    pub payment_source: PaymentSource,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone)]
@@ -139,12 +146,13 @@ impl Contract {
             .collect()
     }
 
-    pub fn get_admin_proposals(&self) -> HashSet<((AccountId, String), AccountId)> {
+    pub fn get_admin_proposals(
+        &self,
+        account_id: AccountId,
+    ) -> HashSet<((AccountId, String), AccountId)> {
         self.proposals
             .keys()
-            .filter(|((project_id, _), _)| {
-                self.check_is_project_admin(project_id, &near_sdk::env::predecessor_account_id())
-            })
+            .filter(|((project_id, _), _)| self.check_is_project_admin(project_id, &account_id))
             .cloned()
             .collect()
     }
