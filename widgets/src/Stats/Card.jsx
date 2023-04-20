@@ -15,7 +15,7 @@ const Value = styled.span`
   font-size: 2em;
   line-height: 1em;
   text-align: center;
-  color: #7269e1;
+  color: #66a0ff;
 `;
 
 const Label = styled.span`

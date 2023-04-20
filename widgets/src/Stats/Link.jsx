@@ -15,7 +15,7 @@ const Link = styled.a`
   font-size: 0.95em;
   line-height: 1em;
   text-align: center;
-  color: #006adc;
+  color: #66a0ff;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -43,7 +43,7 @@ const arrow = (
   >
     <path
       d="M1.09985 11L6.09985 6L1.09985 1"
-      stroke="#006ADC"
+      stroke="#66a0ff"
       stroke-width="1.66667"
       stroke-linecap="round"
       stroke-linejoin="round"
