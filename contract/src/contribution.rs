@@ -334,6 +334,27 @@ impl Contract {
             .collect()
     }
 
+    pub fn get_project_completed_contributions(
+        &self,
+        account_id: AccountId,
+    ) -> HashSet<((AccountId, String), AccountId)> {
+        self.get_project_contributions(account_id)
+            .into_iter()
+            .map(|(project_id, vendor_id)| {
+                self.contributions
+                    .get(&(project_id.clone(), vendor_id.clone()))
+                    .unwrap()
+                    .into_iter()
+                    .filter_map(move |(cid, versioned_contribution)| {
+                        let contribution: Contribution = versioned_contribution.into();
+                        matches!(contribution.status, ContributionStatus::Completed(_))
+                            .then_some(((project_id.clone(), cid.clone()), vendor_id.clone()))
+                    })
+            })
+            .flatten()
+            .collect()
+    }
+
     pub fn get_vendor_completed_contributions(
         &self,
         account_id: AccountId,
