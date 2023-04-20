@@ -67,20 +67,39 @@ State.init({
   request: null,
   requestIsFetched: false,
   message: "",
+  price: 0,
   vendorId: [],
   vendors: [],
   vendorsIsFetched: false,
-  contractTypes: [],
-  contractType: [],
+  requestTypes: [],
+  requestType: [],
   paymentTypes: [],
   paymentType: [],
-  sources: [],
-  source: [],
+  paymentSources: [],
+  paymentSource: [],
   startDate: "",
   endDate: "",
 });
 
 if (!state.vendorsIsFetched) {
+  Near.asyncView(ownerId, "get_payment_types", {}, "final", false).then(
+    (paymentTypes) =>
+      State.update({
+        paymentTypes: paymentTypes.map((value) => ({ value, text: value })),
+      })
+  );
+  Near.asyncView(ownerId, "get_payment_sources", {}, "final", false).then(
+    (paymentSources) =>
+      State.update({
+        paymentSources: paymentSources.map((value) => ({ value, text: value })),
+      })
+  );
+  Near.asyncView(ownerId, "get_request_types", {}, "final", false).then(
+    (requestTypes) =>
+      State.update({
+        requestTypes: requestTypes.map((value) => ({ value, text: value })),
+      })
+  );
   Near.asyncView(
     ownerId,
     "get_admin_vendors",
@@ -179,10 +198,11 @@ const DetailHeading = styled.div`
   font-size: 1em;
   line-height: 1.4em;
   color: #000000;
+  width: 100%;
 `;
 
 const DetailInput = styled.div`
-  width: 50%;
+  width: 48%;
 `;
 
 return (
@@ -236,9 +256,9 @@ return (
             src={`${ownerId}/widget/Inputs.Select`}
             props={{
               label: "Contract type",
-              options: state.contractTypes,
-              value: state.contractType,
-              onChange: (contractType) => State.update({ contractType }),
+              options: state.requestTypes,
+              value: state.requestTypes,
+              onChange: (requestType) => State.update({ requestType }),
             }}
           />
         </DetailInput>
@@ -247,9 +267,9 @@ return (
             src={`${ownerId}/widget/Inputs.Select`}
             props={{
               label: "Payment source",
-              options: state.sources,
-              value: state.source,
-              onChange: (source) => State.update({ source }),
+              options: state.paymentSources,
+              value: state.paymentSource,
+              onChange: (paymentSource) => State.update({ paymentSource }),
             }}
           />
         </DetailInput>
@@ -312,9 +332,21 @@ return (
               Send proposal
             </>
           ),
-          onClick: () => {
-            console.log("Send proposal");
-          },
+          onClick: () =>
+            Near.call(ownerId, "add_proposal", {
+              proposal: {
+                vendor_id: state.vendorId.value,
+                request_id: [accountId, cid],
+                title: state.request.title,
+                description: state.message,
+                price: Number(state.price),
+                payment_type: state.paymentType.value,
+                proposal_type: state.requestType.value,
+                payment_source: state.paymentSource.value,
+                start_date: `${new Date(state.startDate).getTime()}`,
+                end_date: `${new Date(state.endDate).getTime()}`,
+              },
+            }),
         }}
       />
     </Footer>
