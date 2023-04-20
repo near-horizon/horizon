@@ -294,9 +294,6 @@ return (
           props={{
             accountId,
             isAdmin: state.isAdmin,
-            onSave: (s) => {
-              console.log(s);
-            },
           }}
         />
       </Sidebar>

@@ -33,9 +33,11 @@ return (
     props={{
       accountId,
       isAdmin: props.isAdmin,
+      project: state.project,
       onSave: (project) => {
         State.update({
           project: {
+            ...state.project,
             application: { ...state.project.application, ...project },
           },
         });
