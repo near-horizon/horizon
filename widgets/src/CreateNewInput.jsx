@@ -180,11 +180,11 @@ return (
         <li>
           <DropdownDivider />
         </li>
-        {createNewButton({
+        {/*createNewButton({
           id: "createvendor",
           text: "Vendor",
           icon: "bi-diagram-2",
-        })}
+        })*/}
       </DropdownList>
     </DropdownMenu.Content>
   </DropdownMenu.Root>
