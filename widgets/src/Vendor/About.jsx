@@ -57,6 +57,7 @@ return (
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { description } } },
           }),
+        canEdit: props.isAdmin,
       }}
     />
     <Widget
@@ -69,6 +70,7 @@ return (
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { services } } },
           }),
+        canEdit: props.isAdmin,
       }}
     />
   </Container>

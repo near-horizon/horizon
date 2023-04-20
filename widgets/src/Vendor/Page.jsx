@@ -34,7 +34,15 @@ const HeaderDetails = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 100%;
+  width: 80%;
+`;
+
+const HeaderProgress = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 20%;
 `;
 
 const ContentContainer = styled.div`
@@ -91,15 +99,43 @@ const CTARow = styled.div`
   gap: 0.75em;
 `;
 
+State.init({
+  isAdmin: false,
+  isAdminIsFetched: false,
+});
+
+if (!state.isAdminIsFetched) {
+  if (!context.accountId) {
+    State.update({ isAdmin: false, isAdminIsFetched: true });
+  } else {
+    Near.asyncView(
+      ownerId,
+      "check_is_vendor_admin",
+      { vendor_id: accountId, account_id: context.accountId },
+      "final",
+      false
+    ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
+  }
+}
+
 const content = {
   overview: (
-    <Widget src={`${ownerId}/widget/Vendor.About`} props={{ accountId }} />
+    <Widget
+      src={`${ownerId}/widget/Vendor.About`}
+      props={{ accountId, isAdmin: state.isAdmin }}
+    />
   ),
   contracts: (
-    <Widget src={`${ownerId}/widget/Vendor.Contracts`} props={{ accountId }} />
+    <Widget
+      src={`${ownerId}/widget/Vendor.Contracts`}
+      props={{ accountId, isAdmin: state.isAdmin }}
+    />
   ),
   history: (
-    <Widget src={`${ownerId}/widget/Vendor.History`} props={{ accountId }} />
+    <Widget
+      src={`${ownerId}/widget/Vendor.History`}
+      props={{ accountId, isAdmin: state.isAdmin }}
+    />
   ),
 }[getContent(props.content)];
 
@@ -109,13 +145,17 @@ return (
       <HeaderDetails>
         <Widget
           src={`${ownerId}/widget/Vendor.HeaderDetails`}
-          props={{ accountId }}
+          props={{ accountId, isAdmin: state.isAdmin }}
         />
         <CTARow>
-          <Widget
-            src={`${ownerId}/widget/Vendor.RequestSideWindow`}
-            props={{ accountId }}
-          />
+          {state.isAdmin ? (
+            <></>
+          ) : (
+            <Widget
+              src={`${ownerId}/widget/Vendor.RequestSideWindow`}
+              props={{ accountId }}
+            />
+          )}
           {/*<Widget
             src={`${ownerId}/widget/Buttons.Grey`}
             props={{
@@ -127,6 +167,12 @@ return (
           />*/}
         </CTARow>
       </HeaderDetails>
+      <HeaderProgress>
+        <Widget
+          src={`${ownerId}/widget/Vendor.Progress`}
+          props={{ accountId }}
+        />
+      </HeaderProgress>
     </Header>
     <ContentContainer>
       <MainContent>
@@ -159,7 +205,7 @@ return (
       <Sidebar>
         <Widget
           src={`${ownerId}/widget/Vendor.Sidebar`}
-          props={{ accountId: "contribut3.near" }}
+          props={{ accountId, isAdmin: state.isAdmin }}
         />
       </Sidebar>
     </ContentContainer>

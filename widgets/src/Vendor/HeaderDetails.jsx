@@ -1,5 +1,6 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
+const isAdmin = props.isAdmin;
 
 State.init({
   profile: null,
@@ -38,14 +39,26 @@ const Details = styled.div`
   gap: 0.5em;
 `;
 
-const deposit = "000000000000000000000";
-
 return (
   <Container>
-    <Widget
-      src={`${ownerId}/widget/Vendor.Icon`}
-      props={{ accountId, size: "8em" }}
-    />
+    <div>
+      <Widget
+        src={`${ownerId}/widget/Inputs.Viewable.Logo`}
+        props={{
+          accountId,
+          value: state.profile.image,
+          isProject: false,
+          id: "image",
+          onSave: (image) =>
+            Near.call("social.near", "set", {
+              data: {
+                [accountId]: { profile: { image: { ipfs_cid: image.cid } } },
+              },
+            }),
+          canEdit: props.isAdmin,
+        }}
+      />
+    </div>
     <Details>
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.NameAndAccount`}
@@ -53,19 +66,11 @@ return (
           value: state.profile.name,
           id: "name",
           accountId,
-          onSave: (name) => {
-            const args = {
-              data: {
-                [accountId]: { profile: { name } },
-              },
-            };
-            Near.call({
-              contractName: "social.near",
-              methodName: "set",
-              args,
-              deposit,
-            });
-          },
+          onSave: (name) =>
+            Near.call("social.near", "set", {
+              data: { [accountId]: { profile: { name } } },
+            }),
+          canEdit: props.isAdmin,
         }}
       />
       <Widget
@@ -73,27 +78,19 @@ return (
         props={{
           value: state.profile.tagline,
           id: "tagline",
-          onSave: (tagline) => {
-            const args = {
-              data: {
-                [accountId]: { profile: { tagline } },
-              },
-            };
-            Near.call({
-              contractName: "social.near",
-              methodName: "set",
-              args,
-              deposit,
-            });
-          },
+          onSave: (tagline) =>
+            Near.call("social.near", "set", {
+              data: { [accountId]: { profile: { tagline } } },
+            }),
+          canEdit: props.isAdmin,
         }}
       />
-      <Widget
+      {/*<Widget
         src={`${ownerId}/widget/BadgeList`}
         props={{
           badges: [{ value: "Verified" }],
         }}
-      />
+      />*/}
     </Details>
   </Container>
 );

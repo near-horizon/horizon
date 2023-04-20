@@ -1,5 +1,5 @@
-const onSave = props.onSave ?? (() => {});
 const ownerId = "contribut3.near";
+const isAdmin = props.isAdmin;
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +22,33 @@ const Heading = styled.div`
   width: 100%;
 `;
 
+State.init({
+  profile: null,
+  profileIsFetched: false,
+});
+
+if (!state.profileIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${accountId}/profile/**`] },
+    "final",
+    false
+  ).then((profile) =>
+    State.update({
+      profile: profile[accountId].profile,
+      profileIsFetched: true,
+    })
+  );
+  return <>Loading...</>;
+}
+
+const onSave = (profile) => {
+  Near.call("social.near", "set", {
+    data: { [accountId]: { profile } },
+  });
+};
+
 return (
   <Container>
     <Heading>Details</Heading>
@@ -30,9 +57,10 @@ return (
       props={{
         label: "Website",
         id: "website",
-        value: "layers.gg",
-        link: "https://layers.gg",
-        onSave: (website) => onSave({ website }),
+        value: state.profile.linktree.website,
+        link: `https://${state.profile.linktree.website}`,
+        onSave: (website) => onSave({ linktree: { website } }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -40,8 +68,9 @@ return (
       props={{
         label: "Links",
         id: "links",
-        value: { github: "near-horizon", twitter: "nearhorizon" },
-        onSave: (links) => onSave({ links }),
+        value: state.profile.linktree,
+        onSave: (linktree) => onSave({ linktree }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -49,12 +78,13 @@ return (
       props={{
         label: "Vendor type",
         id: "type",
-        value: [{ name: "Individual contributor", id: "individual" }],
+        value: state.profile.vendor_type,
         options: [
           { name: "Individual contributor", id: "individual" },
           { name: "Organization", id: "organization" },
         ],
-        onSave: ([{ id: type }]) => onSave({ type }),
+        onSave: ([{ id: vendor_type }]) => onSave({ vendor_type }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -62,12 +92,9 @@ return (
       props={{
         label: "Skills",
         id: "skills",
-        value: [
-          { name: "defi" },
-          { name: "exchange" },
-          { name: "staking" },
-          { name: "farming" },
-        ],
+        value: Object.keys(state.profile.skills || {}).map((name) => ({
+          name,
+        })),
         options: [
           { name: "defi" },
           { name: "exchange" },
@@ -81,6 +108,7 @@ return (
               {}
             ),
           }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -88,7 +116,10 @@ return (
       props={{
         label: "Payment",
         id: "payment",
-        value: [{ name: "Fiat", id: "fiat" }],
+        value: Object.keys(state.profile.payments || {}).map((id) => ({
+          id,
+          name: id[0].toUpperCase() + id.slice(1),
+        })),
         options: [
           { name: "Fiat", id: "fiat" },
           { name: "Crypto", id: "crypto" },
@@ -101,6 +132,7 @@ return (
               {}
             ),
           }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -108,8 +140,9 @@ return (
       props={{
         label: "Rate",
         id: "rate",
-        value: 35,
+        value: state.profile.rate,
         onSave: (rate) => onSave({ rate }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -117,11 +150,15 @@ return (
       props={{
         label: "Available for",
         id: "work",
-        value: [
-          { name: "Short-term work", id: "short" },
-          { name: "Long-term work", id: "long" },
-          { name: "Full-time job", id: "full" },
-        ],
+        value: Object.keys(state.profile.work || {}).map((id) => ({
+          id,
+          name:
+            id === "short"
+              ? "Short-term work"
+              : id === "long"
+              ? "Long-term work"
+              : "Full-time job",
+        })),
         options: [
           { name: "Short-term work", id: "short" },
           { name: "Long-term work", id: "long" },
@@ -134,6 +171,7 @@ return (
               {}
             ),
           }),
+        canEdit: isAdmin,
       }}
     />
     <Widget
@@ -141,8 +179,9 @@ return (
       props={{
         label: "Location",
         id: "location",
-        value: "San Francisco, CA",
-        onSave: (geo) => onSave({ geo }),
+        value: state.profile.location,
+        onSave: (location) => onSave({ location }),
+        canEdit: isAdmin,
       }}
     />
   </Container>

@@ -12,6 +12,7 @@ return (
           args: { data: { [accountId]: { profile } } },
         });
       },
+      isAdmin: props.isAdmin,
     }}
   />
 );
