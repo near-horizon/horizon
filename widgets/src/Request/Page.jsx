@@ -30,13 +30,17 @@ if (!state.requestIsFetched) {
 }
 
 if (!state.isAdminIsFetched) {
-  Near.asyncView(
-    ownerId,
-    "check_is_project_admin",
-    { project_id: accountId, account_id: context.accountId },
-    "final",
-    false
-  ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
+  if (!context.accountId) {
+    State.update({ isAdmin: false, isAdminIsFetched: true });
+  } else {
+    Near.asyncView(
+      ownerId,
+      "check_is_project_admin",
+      { project_id: accountId, account_id: context.accountId },
+      "final",
+      false
+    ).then((isAdmin) => State.update({ isAdmin, isAdminIsFetched: true }));
+  }
 }
 
 if (!state.requestIsFetched || !state.isAdminIsFetched) {
