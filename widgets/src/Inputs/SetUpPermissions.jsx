@@ -8,6 +8,10 @@ State.init({
   accountsWithPermissionsIsFetched: false,
 });
 
+if (!context.accountId) {
+  return <>Please sign in to continue</>;
+}
+
 if (!state.followingIsFetched) {
   Near.asyncView(
     "social.near",
@@ -43,9 +47,9 @@ if (!state.accountsWithPermissionsIsFetched) {
   );
 }
 
-if (!state.followingIsFetched || !state.accountsWithPermissionsIsFetched) {
-  return <>Loading...</>;
-}
+// if (!state.followingIsFetched || !state.accountsWithPermissionsIsFetched) {
+//   return <>Loading...</>;
+// }
 
 const Accounts = styled.ul`
   font-style: normal;
