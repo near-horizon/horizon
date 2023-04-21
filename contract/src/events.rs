@@ -84,6 +84,16 @@ pub enum Events {
         vendor_id: AccountId,
         cid: String,
     },
+    RejectContribution {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
+    RemoveContribution {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
     AddContributionAction {
         project_id: AccountId,
         vendor_id: AccountId,

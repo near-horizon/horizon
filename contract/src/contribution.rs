@@ -29,6 +29,7 @@ pub enum ContributionStatus {
     Ongoing,
     Delivered(#[serde(with = "crate::dec_serde::u64_dec_format")] Timestamp),
     Completed(#[serde(with = "crate::dec_serde::u64_dec_format")] Timestamp),
+    Rejected(#[serde(with = "crate::dec_serde::u64_dec_format")] Timestamp),
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
@@ -127,6 +128,65 @@ impl Contract {
                 });
             });
         Events::AcceptContribution {
+            project_id,
+            vendor_id,
+            cid,
+        }
+        .emit();
+    }
+
+    pub fn reject_contribution(
+        &mut self,
+        project_id: AccountId,
+        cid: String,
+        vendor_id: AccountId,
+    ) {
+        self.assert_can_edit_vendor(&vendor_id, &near_sdk::env::predecessor_account_id());
+        self.assert_is_contribution(&project_id, &cid, &vendor_id);
+        self.contributions
+            // Get the contribution history between the project and vendor.
+            .entry((project_id.clone(), vendor_id.clone()))
+            // Modify the history entry.
+            .and_modify(|history| {
+                // Get the specific contribution entry and change its status to rejected.
+                history.entry(cid.clone()).and_modify(|old| {
+                    let mut contribution: Contribution = old.clone().into();
+                    contribution.status =
+                        ContributionStatus::Rejected(near_sdk::env::block_timestamp());
+                    *old = VersionedContribution::V0(contribution);
+                });
+            });
+        Events::RejectContribution {
+            project_id,
+            vendor_id,
+            cid,
+        }
+        .emit();
+    }
+
+    pub fn remove_contribution(
+        &mut self,
+        project_id: AccountId,
+        cid: String,
+        vendor_id: AccountId,
+    ) {
+        self.assert_can_edit_project(&project_id, &near_sdk::env::predecessor_account_id());
+        self.assert_is_contribution(&project_id, &cid, &vendor_id);
+        self.contributions
+            // Get the contribution history between the project and vendor.
+            .entry((project_id.clone(), vendor_id.clone()))
+            // Modify the history entry.
+            .and_modify(|history| {
+                let contribution: Contribution = history.get(&cid).unwrap().clone().into();
+                match contribution.status {
+                    ContributionStatus::Created(_) | ContributionStatus::Rejected(_) => {
+                        // Remove the specific contribution entry.
+                        history.remove(&cid);
+                    }
+                    _ => {}
+                };
+            });
+        Events::RemoveContribution {
             project_id,
             vendor_id,
             cid,
