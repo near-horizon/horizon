@@ -125,7 +125,7 @@ return (
           addInfo: (addInfo) => State.update({ addInfo }),
         }}
       />
-      {state.addInfo ? (
+      {state.addInfo && state.accountId !== context.accountId ? (
         <Widget
           src={`${ownerId}/widget/InfoSegment`}
           props={{
@@ -252,7 +252,7 @@ return (
           src={`${ownerId}/widget/Buttons.Green`}
           props={{
             onClick: () => {
-              Near.call([
+              const transactions = [
                 {
                   contractName: "social.near",
                   methodName: "set",
@@ -263,18 +263,22 @@ return (
                           name: state.name,
                           tagline: state.tagline,
                           description: state.description,
-                          tags: state.tags.map(
+                          tags: state.tags.reduce(
                             (acc, { name }) =>
                               Object.assign(acc, { [name]: "" }),
                             {}
                           ),
                           linktree: {
                             ...state.socials,
-                            website: state.website,
+                            website: state.website.startsWith("http://")
+                              ? state.website.substring(7)
+                              : state.website.startsWith("https://")
+                              ? state.website.substring(8)
+                              : state.website,
                           },
-                          category: state.category,
+                          category: state.category.value,
                           team: state.team,
-                          stage: state.dev,
+                          stage: state.dev.value,
                         },
                       },
                     },
@@ -292,13 +296,25 @@ return (
                     account_id: state.accountId,
                     project: {
                       application: {
-                        integration: state.integration,
+                        integration: state.integration.value,
                         geo: state.geo,
                       },
                     },
                   },
                 },
-              ]);
+              ];
+              if (state.addInfo && state.accountId === context.accountId) {
+                transactions.unshift({
+                  contractName: "social.near",
+                  methodName: "grant_write_permission",
+                  args: {
+                    predecessor_id: context.accountId,
+                    keys: [context.accountId],
+                  },
+                  deposit: "1",
+                });
+              }
+              Near.call(transactions);
             },
             text: (
               <>
