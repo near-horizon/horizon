@@ -86,6 +86,7 @@ const Button = styled.button`
   font-size: 0.95em;
   line-height: 1em;
   text-align: center;
+  width: 100%;
 `;
 
 const Description = styled.div`

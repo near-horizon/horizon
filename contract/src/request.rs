@@ -118,7 +118,7 @@ impl Contract {
         limit: Option<u64>,
     ) -> HashSet<(AccountId, String)> {
         let from_index = from_index.unwrap_or(0) as usize;
-        let limit = limit.unwrap_or(self.projects.len().into()) as usize;
+        let limit = limit.unwrap_or(self.requests.len().into()) as usize;
         self.requests
             .keys()
             .skip(from_index)
