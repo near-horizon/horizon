@@ -51,7 +51,7 @@ const tabContent = {
         search: state.search,
         content: state.content,
         update,
-        cid: state.cid
+        cid: state.cid,
       }}
     />
   ),

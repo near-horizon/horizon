@@ -141,6 +141,17 @@ if (!state.vendorsIsFetched) {
   return <>Loading...</>;
 }
 
+if (!state.requestIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_request",
+    { account_id: accountId, cid },
+    "final",
+    false
+  ).then((request) => State.update({ request, requestIsFetched: true }));
+  return <>Loading...</>;
+}
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
