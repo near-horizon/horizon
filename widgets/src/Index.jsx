@@ -67,6 +67,19 @@ const tabContent = {
       }}
     />
   ),
+  createrequest: (
+    <Widget
+      src={`${ownerId}/widget/Request.Form`}
+      props={{
+        search: state.search,
+        content: state.content,
+        accountId: props.accountId,
+        kind: state.kind,
+        cid: state.cid,
+        update,
+      }}
+    />
+  ),
   permissions: (
     <Widget
       src={`${ownerId}/widget/Inputs.SetUpPermissions`}
@@ -105,7 +118,11 @@ return (
   <div>
     <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
     <Content>
-      <Sidebar show={!["createproject", "permissions"].includes(state.tab)}>
+      <Sidebar
+        show={
+          !["createproject", "createrequest", "permissions"].includes(state.tab)
+        }
+      >
         <Widget
           src={`${ownerId}/widget/Sidebar`}
           props={{ tab: state.tab, update }}
