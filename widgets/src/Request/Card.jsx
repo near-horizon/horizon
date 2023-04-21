@@ -189,7 +189,6 @@ const FooterButton = styled.a`
   align-items: center;
   padding: 0.5em 1em;
   gap: 0.5em;
-  width: 48%;
   height: 2.5em;
   background: #fafafa;
   border: 1px solid #eceef0;
@@ -203,6 +202,7 @@ const FooterButton = styled.a`
   line-height: 1em;
   text-align: center;
   color: ${({ blue }) => (blue ? "#006ADC" : "#101828")};
+  width: 48%;
 `;
 
 const Footer = styled.div`
@@ -210,28 +210,27 @@ const Footer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 1em;
   width: 100%;
+`;
+
+const ProposeButton = styled.div`
+  width: 48%;
 `;
 
 const footer = (
   <Footer>
     <FooterButton
-      href={`/${ownerId}/widget/Index?tab=contributor&accountId=${accountId}`}
-      onClick={() =>
-        props.update({
-          tab: "contributor",
-          content: "",
-          search: "",
-          accountId,
-        })
-      }
+      href={`/${ownerId}/widget/Index?tab=request&accountId=${accountId}&cid=${cid}`}
     >
       View details
     </FooterButton>
-    <Widget
-      src={`${ownerId}/widget/Request.ProposeSideWindow`}
-      props={{ accountId, cid }}
-    />
+    <ProposeButton>
+      <Widget
+        src={`${ownerId}/widget/Request.ProposeSideWindow`}
+        props={{ accountId, cid }}
+      />
+    </ProposeButton>
   </Footer>
 );
 
