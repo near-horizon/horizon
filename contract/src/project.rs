@@ -1,5 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
+use near_sdk::serde_json::{self, Value};
 use near_sdk::{
     assert_one_yocto, env, ext_contract, near_bindgen, require, AccountId, Promise, Timestamp,
 };
@@ -34,7 +35,9 @@ impl Default for TechLead {
     }
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(
+    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
+)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Graduation {
     pub pitch_deck: String,
@@ -47,7 +50,9 @@ pub struct Graduation {
     pub code: String,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(
+    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
+)]
 #[serde(crate = "near_sdk::serde")]
 pub struct PrivateGraduation {
     pub legal: String,
@@ -57,7 +62,9 @@ pub struct PrivateGraduation {
     pub gtm: String,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(
+    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
+)]
 #[serde(crate = "near_sdk::serde")]
 pub struct PrivateData {
     pub risks: String,
@@ -77,13 +84,17 @@ pub struct PrivateData {
     Hash,
     Clone,
     Debug,
+    Default,
 )]
 #[serde(crate = "near_sdk::serde")]
 pub enum Permission {
+    #[default]
     Admin,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(
+    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
+)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Application {
     #[serde(default)]
@@ -110,6 +121,52 @@ pub struct Application {
     pub graduation: Option<Graduation>,
     #[serde(default)]
     pub private: Option<PrivateData>,
+}
+
+impl Application {
+    pub fn patch(&mut self, value: &Value) {
+        let application = value.as_object().unwrap();
+        if let Some(why) = application.get("why") {
+            self.why = serde_json::from_value(why.clone()).expect("ERR_INVALID_WHY");
+        }
+        if let Some(integration) = application.get("integration") {
+            self.integration =
+                serde_json::from_value(integration.clone()).expect("ERR_INVALID_INTEGRATION");
+        }
+        if let Some(success_position) = application.get("success_position") {
+            self.success_position = serde_json::from_value(success_position.clone())
+                .expect("ERR_INVALID_SUCCESS_POSITION");
+        }
+        if let Some(partners) = application.get("partners") {
+            self.partners = serde_json::from_value(partners.clone()).expect("ERR_INVALID_PARTNERS");
+        }
+        if let Some(team) = application.get("team") {
+            self.team = serde_json::from_value(team.clone()).expect("ERR_INVALID_TEAM");
+        }
+        if let Some(token) = application.get("token") {
+            self.token = serde_json::from_value(token.clone()).expect("ERR_INVALID_TOKEN");
+        }
+        if let Some(contact) = application.get("contact") {
+            self.contact = Some(contact.as_str().expect("ERR_INVALID_CONTACT").to_string());
+        }
+        if let Some(geo) = application.get("geo") {
+            self.geo = Some(geo.as_str().expect("ERR_INVALID_GEO").to_string());
+        }
+        if let Some(vision) = application.get("vision") {
+            self.vision = serde_json::from_value(vision.clone()).expect("ERR_INVALID_VISION");
+        }
+        if let Some(tech_lead) = application.get("tech_lead") {
+            self.tech_lead =
+                serde_json::from_value(tech_lead.clone()).expect("ERR_INVALID_TECH_LEAD");
+        }
+        if let Some(graduation) = application.get("graduation") {
+            self.graduation =
+                serde_json::from_value(graduation.clone()).expect("ERR_INVALID_GRADUATION");
+        }
+        if let Some(private) = application.get("private") {
+            self.private = serde_json::from_value(private.clone()).expect("ERR_INVALID_PRIVATE");
+        }
+    }
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
@@ -144,6 +201,32 @@ impl Project {
             } else {
                 false
             }
+    }
+
+    pub fn patch(&mut self, value: &Value) {
+        let project = value.as_object().expect("ERR_INVALID_PROJECT");
+        if let Some(founders) = project.get("founders") {
+            self.founders = HashSet::from_iter(
+                founders
+                    .as_array()
+                    .expect("ERR_INVALID_FOUNDERS")
+                    .iter()
+                    .map(|v| serde_json::from_value(v.clone()).expect("ERR_INVALID_FOUNDERS")),
+            );
+        }
+        if let Some(application_status) = project.get("application_status") {
+            self.application_status = serde_json::from_value(application_status.clone())
+                .expect("ERR_INVALID_APPLICATION_STATUS");
+        }
+        if let Some(graduation_status) = project.get("graduation_status") {
+            self.graduation_status = serde_json::from_value(graduation_status.clone())
+                .expect("ERR_INVALID_GRADUATION_STATUS");
+        }
+        if let Some(application) = project.get("application") {
+            let mut old_application = self.application.clone().unwrap_or_default();
+            old_application.patch(application);
+            self.application = Some(old_application);
+        }
     }
 }
 
@@ -212,14 +295,15 @@ impl Contract {
     }
 
     /// Edit project details.
-    pub fn edit_project(&mut self, account_id: AccountId, project: Project) {
+    pub fn edit_project(&mut self, account_id: AccountId, project: Value) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
             .entry(account_id.clone())
             .and_modify(|existing| {
-                *existing = VersionedProject::V0(project.clone());
-            })
-            .or_insert(VersionedProject::V0(project));
+                let mut old: Project = existing.clone().into();
+                old.patch(&project);
+                *existing = VersionedProject::V0(old);
+            });
         Events::EditProject { account_id }.emit();
     }
 
