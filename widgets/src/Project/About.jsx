@@ -90,6 +90,7 @@ return (
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { description } } },
           }),
+        canEdit: props.isAdmin,
       }}
     />
     <Widget
@@ -102,6 +103,7 @@ return (
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { problem } } },
           }),
+        canEdit: props.isAdmin,
       }}
     />
     <Widget
@@ -111,6 +113,7 @@ return (
         id: "success_position",
         value: state.project.application.success_position,
         onSave: (success_position) => onSave({ success_position }),
+        canEdit: props.isAdmin,
       }}
     />
     <Widget
@@ -120,6 +123,7 @@ return (
         id: "why",
         value: state.project.application.why,
         onSave: (why) => onSave({ why }),
+        canEdit: props.isAdmin,
       }}
     />
     <Widget
@@ -129,6 +133,7 @@ return (
         id: "vision",
         value: state.project.application.vision,
         onSave: (vision) => onSave({ vision }),
+        canEdit: props.isAdmin,
       }}
     />
     {/*<Widget

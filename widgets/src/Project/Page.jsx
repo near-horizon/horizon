@@ -169,7 +169,7 @@ const content = {
   overview: (
     <Widget
       src={`${ownerId}/widget/Project.About`}
-      props={{ accountId: props.accountId }}
+      props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
   requests: (
@@ -181,7 +181,7 @@ const content = {
   people: (
     <Widget
       src={`${ownerId}/widget/Project.People`}
-      props={{ accountId: props.accountId }}
+      props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
   history: (
@@ -193,7 +193,7 @@ const content = {
   documents: (
     <Widget
       src={`${ownerId}/widget/Project.Graduation`}
-      props={{ accountId: props.accountId }}
+      props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
 }[getContent(props.content)];
