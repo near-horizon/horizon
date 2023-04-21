@@ -1,11 +1,7 @@
 const ownerId = "contribut3.near";
-const id = props.id ?? "text";
+const id = props.id ?? "date";
 const label = props.label ?? "Input";
-const activeText = props.activeText ?? "Available";
-const inactiveText = props.inactiveText ?? "Not Available";
 const value = props.value ?? "";
-const link = props.link ?? "";
-const isLink = link !== "";
 const onSave = props.onSave ?? (() => {});
 const canEdit = props.canEdit;
 
@@ -53,31 +49,20 @@ return (
     src={`${ownerId}/widget/Inputs.Viewable`}
     props={{
       id,
-      noLabel: true,
+      label,
       value,
       edit: (update, v) => (
         <LabelArea>
-          <Widget
-            src={`${ownerId}/widget/Inputs.Toggle`}
-            props={{
-              id,
-              value: v,
-              onChange: update,
-            }}
+          <Input
+            id
+            type="date"
+            value={v}
+            onChange={(e) => update(e.target.value)}
           />
           <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: (
-        <Widget
-          src={`${ownerId}/widget/ActiveIndicator`}
-          props={{
-            active: value,
-            activeText,
-            inactiveText,
-          }}
-        />
-      ),
+      view: new Date(Number(value)).toLocaleDateString(),
       canEdit,
     }}
   />

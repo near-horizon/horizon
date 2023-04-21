@@ -119,6 +119,7 @@ return (
               Near.call("social.near", "set", {
                 data: { [accountId]: { profile: { active: "" + active } } },
               }),
+            canEdit: props.isAdmin,
           }}
         />
       </Value>

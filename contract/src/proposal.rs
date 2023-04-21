@@ -110,6 +110,20 @@ impl Contract {
         .emit();
     }
 
+    pub fn reject_proposal(&mut self, project_id: AccountId, cid: String, vendor_id: AccountId) {
+        self.assert_is_vendor(&vendor_id);
+        self.assert_is_request(&cid, &project_id);
+        self.assert_can_edit_project(&project_id, &near_sdk::env::predecessor_account_id());
+        let key = ((project_id.clone(), cid.clone()), vendor_id.clone());
+        self.proposals.remove(&key);
+        Events::RejectProposal {
+            project_id,
+            vendor_id,
+            cid,
+        }
+        .emit();
+    }
+
     /// Views
 
     pub fn get_project_proposals(

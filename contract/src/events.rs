@@ -60,6 +60,11 @@ pub enum Events {
         vendor_id: AccountId,
         cid: String,
     },
+    RejectProposal {
+        project_id: AccountId,
+        vendor_id: AccountId,
+        cid: String,
+    },
     AddInvestors {
         investors: HashSet<AccountId>,
     },

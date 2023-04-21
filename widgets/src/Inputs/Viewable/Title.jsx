@@ -1,11 +1,6 @@
 const ownerId = "contribut3.near";
 const id = props.id ?? "text";
-const label = props.label ?? "Input";
-const activeText = props.activeText ?? "Available";
-const inactiveText = props.inactiveText ?? "Not Available";
 const value = props.value ?? "";
-const link = props.link ?? "";
-const isLink = link !== "";
 const onSave = props.onSave ?? (() => {});
 const canEdit = props.canEdit;
 
@@ -15,7 +10,10 @@ const LabelArea = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.25em;
-  flex-wrap: wrap;
+  & input {
+    width: 100%;
+  }
+  width: 75%;
 `;
 
 const Input = styled.input`
@@ -48,6 +46,14 @@ const SaveButton = styled.button`
   color: #11181c;
 `;
 
+const Title = styled.h1`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.5em;
+  line-height: 1.5em;
+  color: #101828;
+`;
+
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
@@ -57,27 +63,16 @@ return (
       value,
       edit: (update, v) => (
         <LabelArea>
-          <Widget
-            src={`${ownerId}/widget/Inputs.Toggle`}
-            props={{
-              id,
-              value: v,
-              onChange: update,
-            }}
+          <Input
+            id
+            type="text"
+            value={v}
+            onChange={(e) => update(e.target.value)}
           />
           <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: (
-        <Widget
-          src={`${ownerId}/widget/ActiveIndicator`}
-          props={{
-            active: value,
-            activeText,
-            inactiveText,
-          }}
-        />
-      ),
+      view: <Title>{value}</Title>,
       canEdit,
     }}
   />

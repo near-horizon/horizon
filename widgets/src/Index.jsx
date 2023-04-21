@@ -43,6 +43,18 @@ const tabContent = {
       }}
     />
   ),
+  request: (
+    <Widget
+      src={`${ownerId}/widget/Request.Page`}
+      props={{
+        accountId: state.accountId,
+        search: state.search,
+        content: state.content,
+        update,
+        cid: state.cid,
+      }}
+    />
+  ),
   vendor: (
     <Widget
       src={`${ownerId}/widget/Vendor.Page`}
