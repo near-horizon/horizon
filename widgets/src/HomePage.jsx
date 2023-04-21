@@ -113,7 +113,7 @@ const Link = styled.a`
   font-size: 24px;
   line-height: 31px;
   text-align: center;
-  color: #ffffff;
+  color: #000000;
   background: #00ec97;
 
   &.white {
@@ -305,9 +305,9 @@ const mapImage = (src) => `https://ipfs.near.social/ipfs/${src}`;
 
 return (
   <Container>
-    <Section style={{ padding: "4em 0 0 0" }}>
+    <Section style={{ marginTop: "2em 0 0 0" }}>
       <Row style={{ padding: "0 0 4em 0" }}>
-        <img src={mapImage(mainImage)} />
+        <img src={mapImage(mainImage)} style={{ transform: "scale(.9)" }} />
         <MainSubSection>
           <svg
             fill="none"
@@ -372,7 +372,7 @@ return (
         <Widget src={`${ownerId}/widget/Stats.Link`} className="link" />
       </Stats>
     </Section>
-    <Section className="dark" style={{ padding: "4em 0" }}>
+    <Section className="dark" style={{ padding: "8em 0 0 0" }}>
       {/*<svg width="111" height="222" viewBox="0 0 222 444" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: "0 auto auto 0" }}>
         <path d="M0 443.126C141.506 344.16 87.0596 304.869 33.9785 266.562C21.7825 257.761 9.65857 249.012 0 239.602V443.126Z" fill="white" />
         <path d="M0 157.384C10.4491 145.188 25.4545 131.68 46.0689 116.546C68.4236 100.135 85.876 82.3307 102.188 65.6899C135.817 31.3826 164.6 2.02013 221.5 0H0V157.384Z" fill="white" />
@@ -464,9 +464,9 @@ return (
         </List>
       </Row>
     </Section>
-    <Section style={{ padding: "2em 0 4em 0" }}>
+    <Section style={{ padding: "0 0 4em 0" }}>
       <Narrow>
-        <SectionHeader>
+        <SectionHeader style={{ padding: "0 0 2em 0" }}>
           <svg
             width="56"
             height="56"
@@ -481,7 +481,7 @@ return (
           </svg>
           Web3 Founders
         </SectionHeader>
-        <Row>
+        <Row style={{ marginBottom: "5em" }}>
           <img
             src={mapImage(foundersImages[0])}
             alt="Join an acceleration program"
@@ -495,7 +495,7 @@ return (
             </p>
           </SubSection>
         </Row>
-        <Row className="reverse">
+        <Row className="reverse" style={{ marginBottom: "5em" }}>
           <img
             src={mapImage(foundersImages[1])}
             alt="Connect with top backers"
@@ -511,7 +511,7 @@ return (
             </p>
           </SubSection>
         </Row>
-        <Row>
+        <Row style={{ marginBottom: "5em" }}>
           <img
             src={mapImage(foundersImages[2])}
             alt="Fulfill your business needs"
@@ -540,7 +540,7 @@ return (
           </svg>
           Contributors
         </SectionHeader>
-        <Row className="reverse">
+        <Row className="reverse" style={{ marginBottom: "5em" }}>
           <img
             src={mapImage(contributorsImage)}
             alt="Contribute and earn as an individual"
@@ -570,7 +570,7 @@ return (
           </svg>
           Web3 Investors
         </SectionHeader>
-        <Row>
+        <Row style={{ marginBottom: "5em" }}>
           <img
             src={mapImage(investorsImage)}
             alt="Find the next big innovation in Web3"
@@ -583,13 +583,10 @@ return (
               white papers and more.
             </p>
           </SubSection>
-          {/*<svg width="214" height="184" viewBox="0 0 429 369" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", inset: "auto auto -1px 0" }}>
-            <path d="M0 368.43H428.538C369.254 357.09 341.966 331.14 312.723 303.331C284.964 276.933 255.443 248.86 195.123 230.014C67.5881 190.168 61.1408 155.097 52.6129 108.708C47.0914 78.6724 40.6976 43.8925 0 0V368.43Z" fill="white" />
-          </svg>*/}
         </Row>
       </Narrow>
     </Section>
-    <Footer style={{ padding: "2em 0 8em 0" }}>
+    <Footer style={{ padding: "8em 0" }}>
       <svg
         fill="none"
         height="307"
@@ -771,7 +768,11 @@ return (
         />
       </svg>
       <h2>Accelerate your Web3 Startup!</h2>
-      <Link href="/nearhorizon.near/widget/Index" className="white">
+      <Link
+        href="/nearhorizon.near/widget/Index"
+        className="white"
+        style={{ marginTop: "1em" }}
+      >
         Try it Now
       </Link>
     </Footer>
