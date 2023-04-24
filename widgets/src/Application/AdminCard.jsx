@@ -79,7 +79,6 @@ if (!state.projectIsFetched || !state.profileIsFetched) {
   return <>Loading...</>;
 }
 
-console.log(state.project);
 const text =
   typeof state.project.application_status === "string"
     ? state.project.application_status
