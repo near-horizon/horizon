@@ -36,6 +36,7 @@ return (
         id: "title",
         onSave: (title) =>
           Near.call(ownerId, "edit_request", {
+            cid,
             request: { ...state.request, title },
           }),
         canEdit: props.isAdmin,
@@ -50,6 +51,7 @@ return (
         value: state.request.open,
         onSave: (open) =>
           Near.call(ownerId, "edit_request", {
+            cid,
             request: { ...state.request, open },
           }),
         canEdit: props.isAdmin,

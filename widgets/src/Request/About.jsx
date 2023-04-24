@@ -41,6 +41,7 @@ return (
         value: state.request.description,
         onSave: (description) =>
           Near.call(ownerId, "edit_request", {
+            cid,
             request: { ...state.request, description },
           }),
         canEdit: props.isAdmin,
