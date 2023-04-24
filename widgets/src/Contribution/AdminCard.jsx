@@ -10,6 +10,8 @@ State.init({
   projectNameIsFetched: false,
   vendorName: null,
   vendorNameIsFetched: false,
+  proposal: null,
+  proposalIsFetched: false,
 });
 
 if (!state.contributionIsFetched) {
@@ -52,6 +54,25 @@ if (!state.vendorNameIsFetched) {
       vendorNameIsFetched: true,
     })
   );
+}
+
+if (!state.proposalIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_proposal",
+    { project_id: projectId, cid, vendor_id: vendorId },
+    "final",
+    false
+  ).then((proposal) => State.update({ proposal, proposalIsFetched: true }));
+}
+
+if (
+  !state.contributionIsFetched ||
+  !state.projectNameIsFetched ||
+  !state.vendorNameIsFetched ||
+  !state.proposalIsFetched
+) {
+  return <>Loading...</>;
 }
 
 const Owner = styled.a`
@@ -127,7 +148,7 @@ return (
     <Title
       href={`/${ownerId}/widget/Index?tab=contribution&projectId=${projectId}&cid=${cid}&vendorId=${vendorId}`}
     >
-      {state.contribution.title}
+      {state.proposal.title}
     </Title>
     <Other>{new Date().toLocaleDateString()}</Other>
     <Other>

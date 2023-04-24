@@ -218,7 +218,9 @@ const content = {
       src={`${ownerId}/widget/Contribution.Activity`}
       props={{
         projectId,
-        cid,
+        title: state.proposal.title,
+        actions: state.contribution.actions,
+        status: state.contribution.status,
         vendorId,
         isAdmin: state.isAdmin,
       }}
@@ -242,6 +244,10 @@ const content = {
         projectId,
         cid,
         vendorId,
+        status: state.contribution.status,
+        title: state.proposal.title,
+        projectFeedback: state.contribution.project_feedback,
+        vendorFeedback: state.contribution.vendor_feedback,
       }}
     />
   ),
@@ -255,82 +261,180 @@ const Title = styled.h1`
   color: #101828;
 `;
 
+const vendorCreatedView =
+  state.isVendorAdmin &&
+  typeof state.contribution.status !== "string" &&
+  "Created" in state.contribution.status ? (
+    <>
+      <Widget
+        src={`${ownerId}/widget/Buttons.Green`}
+        props={{
+          text: (
+            <>
+              <svg
+                width="14"
+                height="11"
+                viewBox="0 0 14 11"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13 1.5L4.75 9.75L1 6"
+                  stroke="#11181C"
+                  stroke-width="1.66667"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Accept contract
+            </>
+          ),
+          onClick: () =>
+            Near.call(ownerId, "accept_contribution", {
+              project_id: projectId,
+              cid,
+              vendor_id: vendorId,
+            }),
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Buttons.Red`}
+        props={{
+          text: (
+            <>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.5 1.5L1.5 10.5M1.5 1.5L10.5 10.5"
+                  stroke="#F44738"
+                  stroke-width="1.66667"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Decline contract
+            </>
+          ),
+          onClick: () =>
+            Near.call(ownerId, "reject_contribution", {
+              project_id: projectId,
+              cid,
+              vendor_id: vendorId,
+            }),
+        }}
+      />
+    </>
+  ) : (
+    <></>
+  );
+const vendorAcceptedView =
+  (state.isVendorAdmin && typeof state.contribution.status === "string") ||
+  "Accepted" in state.contribution.status ? (
+    <Widget
+      src={`${ownerId}/widget/Buttons.Grey`}
+      props={{
+        text: (
+          <>
+            <svg
+              width="15"
+              height="16"
+              viewBox="0 0 15 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 14.75L1 2M1 8.75H6.55C6.97004 8.75 7.18006 8.75 7.34049 8.66825C7.48161 8.59635 7.59635 8.48161 7.66825 8.34049C7.75 8.18006 7.75 7.97004 7.75 7.55V2.45C7.75 2.02996 7.75 1.81994 7.66825 1.65951C7.59635 1.51839 7.48161 1.40365 7.34049 1.33175C7.18006 1.25 6.97004 1.25 6.55 1.25H2.2C1.77996 1.25 1.56994 1.25 1.40951 1.33175C1.26839 1.40365 1.15365 1.51839 1.08175 1.65951C1 1.81994 1 2.02996 1 2.45V8.75ZM7.75 2.75H12.55C12.97 2.75 13.1801 2.75 13.3405 2.83175C13.4816 2.90365 13.5963 3.01839 13.6683 3.15951C13.75 3.31994 13.75 3.52996 13.75 3.95V9.05C13.75 9.47004 13.75 9.68006 13.6683 9.84049C13.5963 9.98161 13.4816 10.0963 13.3405 10.1683C13.1801 10.25 12.97 10.25 12.55 10.25H8.95C8.52996 10.25 8.31994 10.25 8.15951 10.1683C8.01839 10.0963 7.90365 9.98161 7.83175 9.84049C7.75 9.68006 7.75 9.47004 7.75 9.05V2.75Z"
+                stroke="#006ADC"
+                stroke-width="1.66667"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Deliver work
+          </>
+        ),
+        onClick: () =>
+          Near.call(ownerId, "deliver_contribution", {
+            project_id: projectId,
+            cid,
+            vendor_id: vendorId,
+          }),
+      }}
+    />
+  ) : (
+    <></>
+  );
+
+const projectDeliveredView =
+  state.isProjectAdmin &&
+  typeof state.contribution.status !== "string" &&
+  "Delivered" in state.contribution.status ? (
+    <Widget
+      src={`${ownerId}/widget/Buttons.Grey`}
+      props={{
+        text: (
+          <>
+            <svg
+              width="15"
+              height="16"
+              viewBox="0 0 15 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M1 14.75L1 2M1 8.75H6.55C6.97004 8.75 7.18006 8.75 7.34049 8.66825C7.48161 8.59635 7.59635 8.48161 7.66825 8.34049C7.75 8.18006 7.75 7.97004 7.75 7.55V2.45C7.75 2.02996 7.75 1.81994 7.66825 1.65951C7.59635 1.51839 7.48161 1.40365 7.34049 1.33175C7.18006 1.25 6.97004 1.25 6.55 1.25H2.2C1.77996 1.25 1.56994 1.25 1.40951 1.33175C1.26839 1.40365 1.15365 1.51839 1.08175 1.65951C1 1.81994 1 2.02996 1 2.45V8.75ZM7.75 2.75H12.55C12.97 2.75 13.1801 2.75 13.3405 2.83175C13.4816 2.90365 13.5963 3.01839 13.6683 3.15951C13.75 3.31994 13.75 3.52996 13.75 3.95V9.05C13.75 9.47004 13.75 9.68006 13.6683 9.84049C13.5963 9.98161 13.4816 10.0963 13.3405 10.1683C13.1801 10.25 12.97 10.25 12.55 10.25H8.95C8.52996 10.25 8.31994 10.25 8.15951 10.1683C8.01839 10.0963 7.90365 9.98161 7.83175 9.84049C7.75 9.68006 7.75 9.47004 7.75 9.05V2.75Z"
+                stroke="#006ADC"
+                stroke-width="1.66667"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            End contract
+          </>
+        ),
+        onClick: () =>
+          Near.call(ownerId, "complete_contribution", {
+            project_id: projectId,
+            cid,
+            vendor_id: vendorId,
+          }),
+      }}
+    />
+  ) : (
+    <></>
+  );
+
+const addActionView =
+  (typeof state.contribution.status !== "string" &&
+    "Accepted" in state.contribution.status) ||
+  state.contribution.status === "Ongoing" ? (
+    <Widget
+      src={`${ownerId}/widget/Contribution.ActionSideWindow`}
+      props={{
+        projectId,
+        vendorId,
+        cid,
+      }}
+    />
+  ) : (
+    <></>
+  );
+
 return (
   <Container>
     <Header>
       <HeaderDetails>
         <Title>{state.proposal.title}</Title>
         <CTARow>
-          {state.isVendorAdmin && "Created" in state.contribution.status ? (
-            <>
-              <Widget
-                src={`${ownerId}/widget/Buttons.Green`}
-                props={{
-                  text: (
-                    <>
-                      <svg
-                        width="14"
-                        height="11"
-                        viewBox="0 0 14 11"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M13 1.5L4.75 9.75L1 6"
-                          stroke="#11181C"
-                          stroke-width="1.66667"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      Accept contract
-                    </>
-                  ),
-                  onClick: () =>
-                    Near.call(ownerId, "accept_contribution", {
-                      project_id: projectId,
-                      cid,
-                      vendor_id: vendorId,
-                    }),
-                }}
-              />
-              <Widget
-                src={`${ownerId}/widget/Buttons.Red`}
-                props={{
-                  text: (
-                    <>
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M10.5 1.5L1.5 10.5M1.5 1.5L10.5 10.5"
-                          stroke="#F44738"
-                          stroke-width="1.66667"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      Decline contract
-                    </>
-                  ),
-                  onClick: () =>
-                    Near.call(ownerId, "reject_contribution", {
-                      project_id: projectId,
-                      cid,
-                      vendor_id: vendorId,
-                    }),
-                }}
-              />
-            </>
-          ) : state.isProjectAdmin && "Created" in state.contribution.status ? (
-            <></>
-          ) : (
-            <Widget src={`${ownerId}/widget/Buttons.Grey`} props={{}} />
-          )}
+          {vendorCreatedView}
+          {addActionView}
+          {vendorAcceptedView}
+          {projectDeliveredView}
         </CTARow>
       </HeaderDetails>
     </Header>
@@ -343,7 +447,8 @@ return (
             content: getContent(props.content),
             search: props.search,
             update: props.update,
-            accountId: props.accountId,
+            projectId,
+            vendorId,
             cid,
             buttons: [
               {
