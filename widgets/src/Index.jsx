@@ -114,6 +114,18 @@ const tabContent = {
       props={{ accountId: state.accountId }}
     />
   ),
+  learn: (
+    <Widget
+      src={`humanman.near/widget/FoundersResources`}
+      props={{ accountId: state.accountId }}
+    />
+  ),
+  help: (
+    <Widget
+      src={`humanman.near/widget/NH.getting-started`}
+      props={{ accountId: state.accountId }}
+    />
+  ),
 }[state.tab];
 
 const ContentContainer = styled.div`
