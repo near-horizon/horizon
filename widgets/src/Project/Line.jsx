@@ -1,6 +1,6 @@
 const ownerId = "contribut3.near";
 const accountId = props.accountId ?? context.accountId;
-const size = props.size ?? props.tall ? "5em" : "1em";
+const size = props.size ?? (props.tall ? "5em" : "1em");
 
 State.init({
   name: "",
