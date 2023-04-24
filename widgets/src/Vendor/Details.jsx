@@ -1,5 +1,6 @@
 const ownerId = "contribut3.near";
 const isAdmin = props.isAdmin;
+const accountId = props.accountId;
 
 const Container = styled.div`
   display: flex;

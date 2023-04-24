@@ -170,7 +170,7 @@ return (
       <HeaderProgress>
         <Widget
           src={`${ownerId}/widget/Vendor.Progress`}
-          props={{ accountId }}
+          props={{ accountId, isAdmin: state.isAdmin }}
         />
       </HeaderProgress>
     </Header>

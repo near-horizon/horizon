@@ -5,6 +5,7 @@ return (
   <Widget
     src={`${ownerId}/widget/Vendor.Details`}
     props={{
+      accountId,
       onSave: (profile) => {
         Near.call({
           contractName: "social.near",
