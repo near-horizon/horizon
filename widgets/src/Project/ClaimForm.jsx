@@ -1,4 +1,5 @@
 const ownerId = "contribut3.near";
+const accountId = props.accountId;
 
 State.init({
   message: "",
@@ -94,7 +95,10 @@ return (
             </>
           ),
           onClick: () => {
-            console.log("Send claiming request");
+            Near.call(ownerId, "add_claim", {
+              project_id: accountId,
+              message: state.message,
+            });
           },
         }}
       />

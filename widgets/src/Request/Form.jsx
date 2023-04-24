@@ -1,4 +1,5 @@
 const ownerId = "contribut3.near";
+const accountId = props.accountId;
 
 const LineContainer = styled.div`
   display: flex;
@@ -228,9 +229,22 @@ if (!state.projectsIsFetched) {
           value: accountId,
         })),
         projectsIsFetched: true,
+        ...(accountId
+          ? {
+              projectId: {
+                text: createProjectLine(
+                  accountId,
+                  data[accountId].profile.name,
+                  data[accountId].profile.image
+                ),
+                value: accountId,
+              },
+            }
+          : {}),
       })
     );
   });
+  return <>Loading...</>;
 }
 
 return (
