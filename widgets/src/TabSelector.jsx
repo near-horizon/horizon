@@ -4,6 +4,8 @@ const tab = props.tab;
 const accountId = props.accountId;
 const content = props.content;
 const cid = props.cid;
+const projectId = props.projectId;
+const vendorId = props.vendorId;
 
 const TabItem = styled.a`
   position: relative;
@@ -69,6 +71,8 @@ return (
           props.search ? "&search=" + props.search : ""
         }${accountId ? "&accountId=" + accountId : ""}${
           cid ? "&cid=" + cid : ""
+        }${projectId ? "&projectId=" + projectId : ""}${
+          vendorId ? "&vendorId=" + vendorId : ""
         }`}
         onClick={() =>
           props.update({
@@ -77,6 +81,8 @@ return (
             search: props.search,
             accountId,
             cid,
+            projectId,
+            vendorId,
           })
         }
         key={id}
