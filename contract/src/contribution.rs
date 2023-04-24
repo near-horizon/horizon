@@ -364,11 +364,20 @@ impl Contract {
     pub fn get_admin_contributions(
         &self,
         account_id: AccountId,
-    ) -> HashSet<(AccountId, AccountId)> {
+    ) -> HashSet<((AccountId, String), AccountId)> {
         self.contributions
             .keys()
-            .filter(|(project_id, _)| self.check_is_project_admin(&project_id, &account_id))
-            .cloned()
+            .filter_map(|(project_id, vendor_id)| {
+                self.check_is_project_admin(&project_id, &account_id)
+                    .then_some(
+                        self.contributions
+                            .get(&(project_id.clone(), vendor_id.clone()))
+                            .unwrap()
+                            .keys()
+                            .map(|cid| ((project_id.clone(), cid.clone()), vendor_id.clone())),
+                    )
+            })
+            .flatten()
             .collect()
     }
 
