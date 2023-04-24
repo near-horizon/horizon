@@ -14,6 +14,7 @@ const Button = styled.button`
   font-size: 0.95em;
   line-height: 1em;
   text-align: center;
+  white-space: nowrap;
 `;
 
 return <Button onClick={props.onClick}>{props.text}</Button>;
