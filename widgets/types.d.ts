@@ -111,6 +111,15 @@ declare global {
         from?: number;
       }
     ): null | unknown;
+
+    function set(
+      data: Record<string, any>,
+      options?: {
+        force?: boolean;
+        onCommit?: (data: Record<string, any>) => void;
+        onCancel?: () => void;
+      }
+    ): void;
   }
 
   namespace State {
