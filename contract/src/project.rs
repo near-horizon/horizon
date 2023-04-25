@@ -1,16 +1,14 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::serde_json::{self, Value};
-use near_sdk::{
-    assert_one_yocto, env, ext_contract, near_bindgen, require, AccountId, Promise, Timestamp,
-};
+use near_sdk::{assert_one_yocto, env, ext_contract, near_bindgen, require, AccountId, Timestamp};
 use near_sdk_contract_tools::owner::Owner;
 use near_sdk_contract_tools::standard::nep297::Event;
 use std::collections::{HashMap, HashSet};
 
 use crate::dec_serde::u64_dec_format;
 use crate::events::Events;
-use crate::{Contract, ContractExt, XCC_GAS};
+use crate::{Contract, ContractExt};
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
@@ -330,7 +328,8 @@ impl Contract {
     }
 
     #[payable]
-    pub fn approve_application(&mut self, account_id: AccountId) -> Promise {
+    pub fn approve_application(&mut self, account_id: AccountId) /*  -> Promise */
+    {
         self.assert_owner();
         assert_one_yocto();
         let project: Project = self
@@ -342,31 +341,32 @@ impl Contract {
             matches!(project.application_status, ApplicationStatus::Submitted(_)),
             "ERR_APPLICATION_NOT_SUBMITTED"
         );
-        token_ext::ext(self.credits_account_id.clone())
-            .with_static_gas(XCC_GAS)
-            .with_attached_deposit(1)
-            .fund_program_participant(account_id.clone())
-            .then(
-                Self::ext(near_sdk::env::current_account_id())
-                    .with_static_gas(XCC_GAS)
-                    .approve_application_callback(account_id),
-            )
+        Events::ApproveApplication { account_id }.emit();
+        // token_ext::ext(self.credits_account_id.clone())
+        //     .with_static_gas(XCC_GAS)
+        //     .with_attached_deposit(1)
+        //     .fund_program_participant(account_id.clone())
+        //     .then(
+        //         Self::ext(near_sdk::env::current_account_id())
+        //             .with_static_gas(XCC_GAS)
+        //             .approve_application_callback(account_id),
+        //     )
     }
 
-    #[private]
-    pub fn approve_application_callback(
-        &mut self,
-        account_id: AccountId,
-        #[callback_result] result: Result<(), near_sdk::PromiseError>,
-    ) {
-        result.expect("ERR_NOT_FUNDED");
-        self.projects.entry(account_id.clone()).and_modify(|old| {
-            let mut project: Project = old.clone().into();
-            project.application_status = ApplicationStatus::Accepted;
-            *old = VersionedProject::V0(project);
-        });
-        Events::ApproveApplication { account_id }.emit();
-    }
+    // #[private]
+    // pub fn approve_application_callback(
+    //     &mut self,
+    //     account_id: AccountId,
+    //     #[callback_result] result: Result<(), near_sdk::PromiseError>,
+    // ) {
+    //     result.expect("ERR_NOT_FUNDED");
+    //     self.projects.entry(account_id.clone()).and_modify(|old| {
+    //         let mut project: Project = old.clone().into();
+    //         project.application_status = ApplicationStatus::Accepted;
+    //         *old = VersionedProject::V0(project);
+    //     });
+    //     Events::ApproveApplication { account_id }.emit();
+    // }
 
     #[payable]
     pub fn reject_application(&mut self, account_id: AccountId, reason: String) {
