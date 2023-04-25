@@ -1,5 +1,17 @@
 const ownerId = "contribut3.near";
 
+if (!context.accountId) {
+  return (
+    <Widget
+      src={`${ownerId}/widget/InfoSegment`}
+      props={{
+        title: "Not logged in!",
+        description: "You must log in to look at your notifications!",
+      }}
+    />
+  );
+}
+
 const Wrapper = styled.div`
   padding-bottom: 48px;
 
@@ -21,30 +33,64 @@ const Header = styled.h1`
   color: #101828;
 `;
 
-const header = <Header>Inbox</Header>;
+State.init({
+  projects: null,
+  projectsIsFetched: false,
+  vendors: null,
+  vendorsIsFetched: false,
+});
 
-const index = {
-  action: "inbox",
-  key: context.accountId,
-  options: {
-    limit: 10,
-    order: "desc",
-    subscribe: true,
-  },
-};
+if (!state.projectsIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_admin_projects",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((projects) => State.update({ projects, projectsIsFetched: true }));
+}
 
-const renderItem = (item, i) => {
-  if (i === 0) {
-    Storage.set("lastBlockHeight", item.blockHeight);
-  }
-  return (
-    <Widget src={`${ownerId}/widget/Notification.Index`} key={i} props={item} />
-  );
-};
+if (!state.vendorsIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_admin_vendors",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((vendors) => State.update({ vendors, vendorsIsFetched: true }));
+}
+
+if (!state.projectsIsFetched || !state.vendorsIsFetched) {
+  return <>Loading...</>;
+}
+
+const notifications = [...new Set([...state.projects, ...state.vendors])]
+  .reduce((allNotifications, accountId) => {
+    const notificationsForAccount = Social.index("inbox", accountId, {
+      order: "desc",
+      subscribe: true,
+    });
+
+    if (!notificationsForAccount) {
+      return allNotifications;
+    }
+
+    return [...allNotifications, ...notificationsForAccount];
+  }, [])
+  .sort((a, b) => b.blockHeight - a.blockHeight);
 
 return (
   <Wrapper>
-    <Header>{header}</Header>
-    <Widget src="near/widget/IndexFeed" props={{ index, renderItem }} />
+    <Header>Inbox</Header>
+    <Widget
+      src={`${ownerId}/widget/List`}
+      props={{
+        search,
+        items: notifications,
+        createItem: (item) => (
+          <Widget src={`${ownerId}/widget/Notification.Index`} props={item} />
+        ),
+      }}
+    />
   </Wrapper>
 );
