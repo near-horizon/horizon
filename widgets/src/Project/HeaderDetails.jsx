@@ -78,7 +78,7 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.OneLiner`}
         props={{
-          value: "Simple solutions for complex tasks",
+          value: state.profile.tagline,
           id: "tagline",
           onSave: (tagline) =>
             Near.call("social.near", "set", {
