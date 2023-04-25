@@ -136,11 +136,20 @@ impl Contract {
     }
 
     /// List out requests from project with given account ID.
-    pub fn get_project_requests(&self, account_id: AccountId) -> HashSet<(AccountId, String)> {
+    pub fn get_project_requests(
+        &self,
+        account_id: AccountId,
+    ) -> HashSet<(AccountId, String, String)> {
         self.requests
             .keys()
             .filter(|(project_id, _)| project_id == &account_id)
-            .cloned()
+            .map(|(project_id, cid)| {
+                (
+                    project_id.clone(),
+                    cid.clone(),
+                    self.get_request(cid.clone(), account_id.clone()).title,
+                )
+            })
             .collect()
     }
 
