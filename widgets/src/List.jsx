@@ -25,6 +25,7 @@ const ListContainer = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.5em;
+  row-gap: 1.25em;
   width: 100%;
 `;
 

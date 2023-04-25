@@ -133,7 +133,7 @@ const ContentContainer = styled.div`
   background: #ffffff;
   border: 1px solid #eceef0;
   border-radius: 24px 24px 0px 0px;
-  padding: 2.5em 1.5em;
+  padding: 3em;
 
   * {
     margin: 0;
@@ -154,8 +154,10 @@ const Content = styled.div`
   width: 100%;
 `;
 
+const Container = styled.div``;
+
 return (
-  <div>
+  <Container>
     <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
     <Content>
       <Sidebar
@@ -170,5 +172,5 @@ return (
       </Sidebar>
       <ContentContainer>{tabContent}</ContentContainer>
     </Content>
-  </div>
+  </Container>
 );

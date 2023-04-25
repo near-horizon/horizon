@@ -14,7 +14,7 @@ const TabItem = styled.a`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 0.5em;
+  padding: 1em;
   margin: 0;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
@@ -22,7 +22,7 @@ const TabItem = styled.a`
     ${({ selected }) => (selected ? "#0091ff" : "transparent")};
   font-style: normal;
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 0.9em;
   line-height: 1em;
   color: ${({ selected }) => (selected ? "#11181c" : "#687076")};
 

@@ -102,6 +102,7 @@ const Filters = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  font-size: 0.9em;
 `;
 
 const Filter = styled.div`
@@ -118,6 +119,7 @@ const Stats = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   gap: 0.5em;
+  margin: 1em 0;
 
   div {
     width: 20%;

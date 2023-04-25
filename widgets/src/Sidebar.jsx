@@ -178,12 +178,12 @@ const NavItem = styled.a`
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.2s ease-in-out;
-  background-color: ${({ selected }) => (selected ? "#f2f4f7" : "white")};
+  background-color: ${({ selected }) => (selected ? "#f2f4f7" : "none")};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 0.5em;
+  gap: 0.75em;
 
   &:hover {
     color: #667085;
@@ -220,6 +220,7 @@ const NavContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-right: 2.5em;
+  gap: 0.8em;
 `;
 
 const Border = styled.hr`

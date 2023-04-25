@@ -22,8 +22,6 @@ const Navbar = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
-  border-bottom: 1px solid #eceef0;
   padding: 0.75em 0;
   flex: none;
   order: 0;
@@ -31,7 +29,6 @@ const Navbar = styled.div`
   flex-grow: 0;
   position: sticky;
   top: 0;
-  margin-bottom: 1.5em;
   transform: translateY(-1em);
 `;
 
@@ -42,8 +39,8 @@ const LogoArea = styled.a`
   gap: 0.7em;
   font-style: normal;
   font-weight: 700;
-  font-size: 1.2em;
-  line-height: 1.5em;
+  font-size: 1em;
+  line-height: 1em;
   color: #11181c;
 
   &:hover {
@@ -83,7 +80,7 @@ const Credits = styled.div`
   flex-grow: 0;
   font-style: normal;
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 0.9em;
   line-height: 1em;
   color: #11181c;
 `;

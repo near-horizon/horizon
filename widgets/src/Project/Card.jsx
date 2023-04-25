@@ -52,6 +52,7 @@ const Container = styled.div`
   justify-content: flex-start;
   gap: 1em;
   width: 100%;
+  margin-bottom: 0.25em;
 `;
 
 const Details = styled.div`
@@ -92,7 +93,7 @@ const body = (
           props={{
             accountId: props.accountId,
             name: state.profile.name,
-            nameSize: "1.125em",
+            nameSize: "1em",
           }}
         />
         {/*<Widget
