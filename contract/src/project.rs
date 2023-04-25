@@ -55,8 +55,6 @@ pub struct Graduation {
 pub struct PrivateGraduation {
     pub legal: String,
     pub budget: String,
-    pub monetazation: String,
-    pub valuation: String,
     pub gtm: String,
 }
 
@@ -431,7 +429,7 @@ impl Contract {
     pub fn get_team(&self, account_id: AccountId) -> HashSet<AccountId> {
         Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
             .application
-            .expect("ERR_NO_APPLICATION")
+            .unwrap_or_default()
             .team
             .keys()
             .cloned()
