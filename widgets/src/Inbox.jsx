@@ -23,10 +23,9 @@ const Header = styled.h1`
 
 const header = <Header>Inbox</Header>;
 
-
 const index = {
   action: "inbox",
-  key: accountId,
+  key: context.accountId,
   options: {
     limit: 10,
     order: "desc",
@@ -39,16 +38,13 @@ const renderItem = (item, i) => {
     Storage.set("lastBlockHeight", item.blockHeight);
   }
   return (
-    <Widget src={`${ownerId}/widget/Notification`} key={i} props={item} />
+    <Widget src={`${ownerId}/widget/Notification.Index`} key={i} props={item} />
   );
 };
 
 return (
   <Wrapper>
     <Header>{header}</Header>
-    <Widget
-      src="near/widget/IndexFeed"
-      props={{ index, renderItem }}
-    />
+    <Widget src="near/widget/IndexFeed" props={{ index, renderItem }} />
   </Wrapper>
 );
