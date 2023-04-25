@@ -233,42 +233,33 @@ return (
             </>
           ),
           onClick: () => {
-            Near.asyncView(ownerId, "get_vendor", {
-              account_id: props.accountId,
-            }).then(({ permissions }) => {
-              const data = Object.keys(permissions)
-                .filter((account) => permissions[account].includes("Admin"))
-                .map((account) => ({
-                  data: {
-                    [context.accountId]: {
-                      index: {
-                        graph: JSON.stringify({
-                          key: "project/invite",
-                          value: { accountId: state.projectId.value },
-                        }),
-                        inbox: JSON.stringify({
-                          key: account,
-                          value: {
-                            type: "project/invite",
-                            requestId: [
-                              state.projectId.value,
-                              state.requestId.value,
-                            ],
-                            message: state.message,
-                            vendorId: props.accountId,
-                          },
-                        }),
-                      },
+            Near.call({
+              contractName: "social.near",
+              methodName: "set",
+              args: {
+                data: {
+                  [context.accountId]: {
+                    index: {
+                      graph: JSON.stringify({
+                        key: "project/invite",
+                        value: { accountId: state.projectId.value },
+                      }),
+                      inbox: JSON.stringify({
+                        key: props.accountId,
+                        value: {
+                          type: "project/invite",
+                          requestId: [
+                            state.projectId.value,
+                            state.requestId.value,
+                          ],
+                          message: state.message,
+                          vendorId: props.accountId,
+                        },
+                      }),
                     },
                   },
-                }));
-              Near.call(
-                data.map((index) => ({
-                  contractName: "social.near",
-                  methodName: "set",
-                  args: index,
-                }))
-              );
+                },
+              },
             });
           },
         }}
