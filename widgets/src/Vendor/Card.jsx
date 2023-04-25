@@ -196,7 +196,11 @@ const body = (
       </Details>
     </Container>
     <Tagline>{state.profile.tagline}</Tagline>
-    <Description>{state.profile.description}</Description>
+    <Widget
+      src={`${ownerId}/widget/DescriptionArea`}
+      props={{ description: state.profile.description }}
+    />
+    {/* <Description>{state.profile.description}</Description> */}
     <Widget
       src={`${ownerId}/widget/Tags`}
       props={{ tags: state.profile.tags }}
@@ -255,20 +259,10 @@ const footer = (
     >
       View details
     </FooterButton>
-    <FooterButton
-      blue
-      // href={`/${ownerId}/widget/Index?tab=entity&accountId=${accountId}`}
-      // onClick={() =>
-      //   props.update({
-      //     tab: "entity",
-      //     content: "",
-      //     search: "",
-      //     accountId,
-      //   })
-      // }
-    >
-      Invite vendor
-    </FooterButton>
+    <Widget
+      src={`${ownerId}/widget/Vendor.InviteSideWindow`}
+      props={{ accountId }}
+    />
   </Footer>
 );
 

@@ -1,7 +1,6 @@
 const ownerId = "contribut3.near";
 const { requestId } = props.value;
 const [accountId, cid] = requestId;
-console.log(accountId, cid);
 
 State.init({
   request: null,
@@ -104,14 +103,11 @@ return (
       ago
     </Text>
     <div>
-      <Widget
-        src="near/widget/AccountProfileInline"
-        props={{ accountId: props.accountId }}
-      />
+      <Widget src="near/widget/AccountProfileInline" props={{ accountId }} />
       invited
       <Widget
         src="near/widget/AccountProfileInline"
-        props={{ accountId: context.accountId }}
+        props={{ accountId: props.value.vendorId }}
       />
       to contribute to request
       <Text bold>{state.request.title}.</Text>
