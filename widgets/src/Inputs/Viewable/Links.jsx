@@ -79,12 +79,13 @@ return (
       label,
       value,
       edit,
-      view: (
-        <Widget
-          src={`${ownerId}/widget/SocialLinks`}
-          props={{ links: value }}
-        />
-      ),
+      view:
+        !!value && Object.keys(value).length > 0 ? (
+          <Widget
+            src={`${ownerId}/widget/SocialLinks`}
+            props={{ links: value }}
+          />
+        ) : null,
       canEdit,
     }}
   />
