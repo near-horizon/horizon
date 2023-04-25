@@ -1,5 +1,17 @@
 const ownerId = "contribut3.near";
 
+if (!context.accountId) {
+  return (
+    <Widget
+      src={`${ownerId}/widget/InfoSegment`}
+      props={{
+        title: "Not logged in!",
+        description: "You must log in to create a new project!",
+      }}
+    />
+  );
+}
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -152,43 +164,24 @@ return (
         <></>
       )}
       <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
+        src={`${ownerId}/widget/Inputs.Category`}
         props={{
-          label: "Project category *",
-          placeholder: "Wallets",
-          options: [
-            { text: "Wallets", value: "wallets" },
-            { text: "Games", value: "games" },
-          ],
-          value: state.category,
-          onChange: (category) => State.update({ category }),
+          category: state.category,
+          update: (category) => State.update({ category }),
         }}
       />
       <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
+        src={`${ownerId}/widget/Inputs.Integration`}
         props={{
-          label: "Integration with NEAR *",
-          placeholder: "Native",
-          options: [
-            { text: "Native", value: "native" },
-            { text: "Multichain", value: "multichain" },
-          ],
-          value: state.integration,
-          onChange: (integration) => State.update({ integration }),
+          category: state.integration,
+          update: (integration) => State.update({ integration }),
         }}
       />
       <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
+        src={`${ownerId}/widget/Inputs.Phase`}
         props={{
-          label: "Development phase *",
-          placeholder: "Testnet launched",
-          options: [
-            { text: "Testnet launched", value: "testnet" },
-            { text: "Mainnet launched", value: "mainnet" },
-            { text: "In development", value: "development" },
-          ],
-          value: state.dev,
-          onChange: (dev) => State.update({ dev }),
+          category: state.dev,
+          update: (dev) => State.update({ dev }),
         }}
       />
       <Widget

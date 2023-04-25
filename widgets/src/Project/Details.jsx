@@ -76,18 +76,11 @@ return (
       }}
     />
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Select`}
+      src={`${ownerId}/widget/Inputs.Viewable.Category`}
       props={{
         label: "Category",
-        id: "category",
         value: state.profile.category,
-        options: [
-          { name: "Wallets" },
-          { name: "Games" },
-          { name: "Social" },
-          { name: "Other" },
-        ],
-        onSave: ([{ name: category }]) =>
+        onSave: ({ value: category }) =>
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { category } } },
           }),
@@ -95,31 +88,25 @@ return (
       }}
     />
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Select`}
+      src={`${ownerId}/widget/Inputs.Viewable.Integration`}
       props={{
         label: "Integration",
-        id: "integration",
         value: state.profile.integration,
-        options: [{ name: "Native" }, { name: "Multichain" }],
-        onSave: ([{ name: integration }]) => onSave({ integration }),
+        onSave: ({ value: integration }) =>
+          Near.call("social.near", "set", {
+            data: { [accountId]: { profile: { integration } } },
+          }),
         canEdit: isAdmin,
       }}
     />
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Select`}
+      src={`${ownerId}/widget/Inputs.Viewable.Phase`}
       props={{
         label: "Development phase",
-        id: "phase",
-        value: state.profile.phase,
-        options: [
-          { name: "Testnet launched" },
-          { name: "Mainnet launched" },
-          { name: "In development" },
-          { name: "Concept" },
-        ],
-        onSave: ([{ name: phase }]) =>
+        value: state.profile.dev,
+        onSave: ({ value: dev }) =>
           Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { phase } } },
+            data: { [accountId]: { profile: { dev } } },
           }),
         canEdit: isAdmin,
       }}
