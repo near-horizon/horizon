@@ -130,13 +130,14 @@ if (!state.requestsIsFetched) {
     false
   ).then((requests) =>
     State.update({
-      requests: requests.map(([accountId, cid]) => ({
-        name: (
-          <Widget
-            src={`${ownerId}/widget/Request.Line`}
-            props={{ accountId, cid, size: "1em" }}
-          />
-        ),
+      requests: requests.map(([_, cid, title]) => ({
+        // name: (
+        //   <Widget
+        //     src={`${ownerId}/widget/Request.Line`}
+        //     props={{ accountId, cid, size: "1em" }}
+        //   />
+        // ),
+        text: title,
         value: cid,
       })),
       requestsIsFetched: true,
@@ -318,7 +319,20 @@ return (
             </>
           ),
           onClick: () => {
-            console.log("Send proposal");
+            Near.call(ownerId, "add_proposal", {
+              proposal: {
+                vendor_id: state.vendorId.value,
+                request_id: [accountId, state.requestId.value],
+                title: state.requestId.text,
+                description: state.message,
+                price: Number(state.price),
+                payment_type: state.paymentType.value,
+                proposal_type: state.requestType.value,
+                payment_source: state.paymentSource.value,
+                start_date: `${new Date(state.startDate).getTime()}`,
+                end_date: `${new Date(state.endDate).getTime()}`,
+              },
+            });
           },
         }}
       />
