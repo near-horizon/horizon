@@ -99,11 +99,12 @@ impl Contract {
         self.vendors.contains_key(account_id)
     }
 
-    /// Get contributor details.
-    pub fn get_contributor(&self, account_id: AccountId) -> Option<Vendor> {
+    /// Get vendor details.
+    pub fn get_vendor(&self, account_id: AccountId) -> Vendor {
         self.vendors
             .get(&account_id)
-            .map(|contributor| contributor.clone().into())
+            .expect("ERR_VENDOR_NOT_FOUND")
+            .into()
     }
 
     /// Check if given account ID is admin or higher for givent vendor.
