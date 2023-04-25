@@ -1,20 +1,8 @@
 const ownerId = "contribut3.near";
-const creditId = `credits.${ownerId}`;
 
 State.init({
   credits: 0,
-  creditsIsFetched: false,
 });
-
-if (!state.creditsIsFetched) {
-  Near.asyncView(
-    creditId,
-    "ft_balance_of",
-    { account_id: context.accountId },
-    "final",
-    false
-  ).then((credits) => State.update({ credits, creditsIsFetched: true }));
-}
 
 const Navbar = styled.div`
   z-index: 2;
