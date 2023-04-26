@@ -1,3 +1,4 @@
+const ownerId = "contribut3.near";
 const projectId = props.projectId;
 const vendorId = props.vendorId;
 const status = props.status;
