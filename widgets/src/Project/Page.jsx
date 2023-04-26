@@ -192,7 +192,7 @@ const content = {
   ),
   documents: (
     <Widget
-      src={`${ownerId}/widget/Project.Graduation`}
+      src={`${ownerId}/widget/Project.Documents`}
       props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
