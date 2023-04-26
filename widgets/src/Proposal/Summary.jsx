@@ -188,7 +188,6 @@ return (
             </b>
           </Detail>
         </Row>
-        <Text bold>{state.proposal.title}</Text>
         <Widget
           src={`${ownerId}/widget/DescriptionArea`}
           props={{ description: state.proposal.description }}
