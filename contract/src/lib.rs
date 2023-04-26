@@ -9,6 +9,7 @@ use near_sdk_contract_tools::owner::OwnerExternal;
 use near_sdk_contract_tools::Upgrade;
 use near_sdk_contract_tools::{owner::Owner, Owner};
 
+use crate::claim::VersionedClaim;
 use crate::contribution::VersionedContribution;
 use crate::investor::VersionedInvestor;
 use crate::project::VersionedProject;
@@ -16,6 +17,7 @@ use crate::proposal::VersionedProposal;
 use crate::request::VersionedRequest;
 use crate::vendor::VersionedVendor;
 
+mod claim;
 mod contribution;
 mod dec_serde;
 mod events;
@@ -45,6 +47,7 @@ enum StorageKeys {
     Proposals,
     Contributions,
     ContributionHistory { accounts_hash: CryptoHash },
+    Claims,
 }
 
 #[near_bindgen]
@@ -59,6 +62,7 @@ pub struct Contract {
     proposals: UnorderedMap<((AccountId, String), AccountId), VersionedProposal>,
     contributions:
         UnorderedMap<(AccountId, AccountId), UnorderedMap<String, VersionedContribution>>,
+    claims: UnorderedMap<(AccountId, AccountId), VersionedClaim>,
 }
 
 #[near_bindgen]
@@ -73,6 +77,7 @@ impl Contract {
             requests: UnorderedMap::new(StorageKeys::Requests),
             proposals: UnorderedMap::new(StorageKeys::Proposals),
             contributions: UnorderedMap::new(StorageKeys::Contributions),
+            claims: UnorderedMap::new(StorageKeys::Claims),
         };
         Owner::init(&mut this, &owner_id);
         this
