@@ -153,6 +153,8 @@ return (
       ) : value.type === "project/feedback" ||
         value.type === "vendor/feedback" ? (
         <Widget src={`${ownerId}/widget/Notification.Feedback`} props={props} />
+      ) : value.type === "request/proposal" ? (
+        <Widget src={`${ownerId}/widget/Notification.Request.Proposal`} props={props} />
       ) : (
         <div>
           Unknown notification:{" "}
