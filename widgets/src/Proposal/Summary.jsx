@@ -8,7 +8,7 @@ State.init({
   proposal: null,
   proposalIsFetched: false,
   request: null,
-  requestIsFetched: false
+  requestIsFetched: false,
 });
 
 if (!state.proposalIsFetched) {
@@ -18,9 +18,8 @@ if (!state.proposalIsFetched) {
     { project_id: accountId, cid, vendor_id: vendorId },
     "final",
     false
-  ).then((request) => State.update({ proposal, proposalIsFetched: true }));
+  ).then((proposal) => State.update({ proposal, proposalIsFetched: true }));
 }
-
 
 if (!state.requestIsFetched) {
   Near.asyncView(
@@ -32,8 +31,7 @@ if (!state.requestIsFetched) {
   ).then((request) => State.update({ request, requestIsFetched: true }));
 }
 
-if (!proposalIsFetched || !requestIsFetched)
-  return <>Loading...</>;
+if (!state.proposalIsFetched || !state.requestIsFetched) return <>Loading...</>;
 
 const Container = styled.div`
   width: 100%;
@@ -55,7 +53,6 @@ const Title = styled.div`
   line-height: 1em;
   color: #101828;
 `;
-
 
 const Detail = styled.div`
   display: flex;
@@ -86,7 +83,6 @@ const Item = styled.div`
   color: #11181c;
 `;
 
-
 const Row = styled.div`
   display: flex;
   flex-direction: row;
@@ -105,7 +101,7 @@ const Column = styled.div`
   width: 100%;
 `;
 
-const Description = styled.div`
+const Quote = styled.div`
   padding-left: 1em;
   border-left: 3px solid #b2ddff;
   width: 100%;
@@ -137,7 +133,34 @@ const Price = styled.div`
   }
 `;
 
-const Quote = styles.div``;
+const Text = styled.p`
+  margin: 0;
+  line-height: 1.5rem;
+  color: ${(p) => (p.bold ? "#11181C" : "#687076")} !important;
+  font-weight: 400;
+  font-size: ${(p) => (p.small ? "12px" : "14px")};
+  overflow: ${(p) => (p.ellipsis ? "hidden" : "")};
+  text-overflow: ${(p) => (p.ellipsis ? "ellipsis" : "")};
+  white-space: ${(p) => (p.ellipsis ? "nowrap" : "")};
+  overflow-wrap: anywhere;
+
+  b {
+    font-weight: 600;
+    color: #11181c;
+  }
+
+  &[href] {
+    font-weight: 600;
+    color: #006adc !important;
+    display: inline-flex;
+    gap: 0.25rem;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+`;
 
 const price =
   state.proposal.price !== state.request.budget ? (
@@ -152,21 +175,25 @@ const price =
 
 return (
   <Container>
-    <Quote>
-      <Column>
+    <Column>
+      <Quote>
         <Row>
           <Detail>
             Type: <b>{state.proposal.proposal_type}</b>
           </Detail>
-          <Price>{price}</Price>
+          <Detail>
+            Price:{" "}
+            <b>
+              <Price>{price}</Price>
+            </b>
+          </Detail>
         </Row>
-        <Description>
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.proposal.description }}
-          />
-        </Description>
-      </Column>
-    </Quote>
+        <Text bold>{state.proposal.title}</Text>
+        <Widget
+          src={`${ownerId}/widget/DescriptionArea`}
+          props={{ description: state.proposal.description }}
+        />
+      </Quote>
+    </Column>
   </Container>
 );
