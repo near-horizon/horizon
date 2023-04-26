@@ -11,7 +11,22 @@ State.init({
   cid: props.cid,
   projectId: props.projectId,
   vendorId: props.vendorId,
+  tnc: true,
 });
+
+if (context.accountId) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${context.accountId}/profile/horizon_tnc`] },
+    "final",
+    false
+  ).then((data) =>
+    State.update({
+      tnc: data[context.accountId]?.profile?.horizon_tnc === "true",
+    })
+  );
+}
 
 const update = (state) => State.update(state);
 

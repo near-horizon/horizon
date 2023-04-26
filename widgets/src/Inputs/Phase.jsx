@@ -18,6 +18,16 @@ return (
       options,
       value: props.dev,
       onChange: (dev) => props.update(dev),
+      validate: () => {
+        if (!props.dev) {
+          props.setError("Please select a development phase");
+        }
+
+        if (!options.find(({ value }) => props.dev.value === value)) {
+          props.setError("Please select a valid development phase");
+        }
+      },
+      error: props.error,
     }}
   />
 );

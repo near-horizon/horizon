@@ -22,6 +22,16 @@ return (
       options,
       value: props.category,
       onChange: (category) => props.update(category),
+      validate: () => {
+        if (!props.category) {
+          props.setError("Please select a category");
+        }
+
+        if (!options.find(({ value }) => props.category.value === value)) {
+          props.setError("Please select a valid category");
+        }
+      },
+      error: props.error,
     }}
   />
 );

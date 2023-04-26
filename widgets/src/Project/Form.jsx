@@ -74,16 +74,27 @@ const FormFooter = styled.div`
 
 State.init({
   name: "",
+  nameError: "",
   accountId: "",
+  accountIdError: "",
   category: null,
+  categoryError: "",
   integration: null,
+  integrationError: "",
   dev: null,
+  devError: "",
   tagline: "",
+  taglineError: "",
   description: "",
+  descriptionError: "",
   tags: [],
+  tagsError: "",
   website: "",
+  websiteError: "",
   geo: "",
+  geoError: "",
   team: null,
+  teamError: "",
   accountsWithPermissions: [],
   accountsWithPermissionsIsFetched: false,
 });
@@ -106,15 +117,31 @@ if (!state.accountsWithPermissionsIsFetched) {
   );
 }
 
+const validateForm = () => {
+  return (
+    state.name &&
+    state.nameError === "" &&
+    state.accountId &&
+    state.accountIdError === "" &&
+    state.category &&
+    state.categoryError === "" &&
+    state.integration &&
+    state.integrationError === "" &&
+    state.dev &&
+    state.devError === "" &&
+    (!state.tagline || state.taglineError === "") &&
+    (!state.description || state.descriptionError === "") &&
+    (!state.tags || state.tagsError === "") &&
+    (!state.website || state.websiteError === "") &&
+    (!state.geo || state.geoError === "") &&
+    (!state.team || state.teamError === "")
+  );
+};
+
 return (
   <Container>
     <div>
       <Header>Create new project</Header>
-      <SubHeader>
-        Crypto ipsum bitcoin ethereum dogecoin litecoin. Ethereum kadena
-        polkadot ICON BitTorrent. Crypto ipsum bitcoin ethereum dogecoin
-        litecoin. Ethereum kadena
-      </SubHeader>
     </div>
     <Form>
       <FormHeader>General</FormHeader>
@@ -122,16 +149,33 @@ return (
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
           label: "Project name *",
-          placeholder: "Layers",
+          placeholder: "Enter project name",
           value: state.name,
           onChange: (name) => State.update({ name }),
+          validate: () => {
+            if (state.name.length < 3) {
+              State.update({ nameError: "Name must be at least 3 characters" });
+              return;
+            }
+
+            if (state.name.length > 50) {
+              State.update({
+                nameError: "Name must be less than 50 characters",
+              });
+              return;
+            }
+
+            State.update({ nameError: "" });
+          },
+          error: state.nameError,
         }}
       />
       <Widget
         src={`${ownerId}/widget/Inputs.AccountId`}
         props={{
           label: "NEAR Account *",
-          placeholder: "layers.near",
+          placeholder:
+            "Enter your NEAR account ID (wallet address like nearhorizon.near)",
           value: state.accountId,
           onChange: (accountId) => State.update({ accountId }),
           addInfo: (addInfo) => State.update({ addInfo }),
@@ -168,6 +212,8 @@ return (
         props={{
           category: state.category,
           update: (category) => State.update({ category }),
+          setError: (categoryError) => State.update({ categoryError }),
+          error: state.categoryError,
         }}
       />
       <Widget
@@ -175,6 +221,8 @@ return (
         props={{
           category: state.integration,
           update: (integration) => State.update({ integration }),
+          setError: (integrationError) => State.update({ integrationError }),
+          error: state.integrationError,
         }}
       />
       <Widget
@@ -182,25 +230,49 @@ return (
         props={{
           category: state.dev,
           update: (dev) => State.update({ dev }),
+          setError: (devError) => State.update({ devError }),
+          error: state.devError,
         }}
       />
       <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
           label: "Tagline",
-          placeholder: "Simple solutions for complex tasks",
+          placeholder: "Write a one liner about your project",
           value: state.tagline,
           onChange: (tagline) => State.update({ tagline }),
+          validate: () => {
+            if (state.tagline.length > 50) {
+              State.update({
+                taglineError: "Tagline must be less than 50 characters",
+              });
+              return;
+            }
+
+            State.update({ taglineError: "" });
+          },
+          error: state.taglineError,
         }}
       />
       <Widget
         src={`${ownerId}/widget/Inputs.TextArea`}
         props={{
           label: "Description",
-          placeholder:
-            "Crypto ipsum bitcoin ethereum dogecoin litecoin. Holo stacks fantom kava flow algorand. Gala dogecoin gala XRP binance flow. Algorand polygon bancor arweave avalanche. Holo kadena telcoin kusama BitTorrent flow holo velas horizen. TerraUSD helium filecoin terra shiba-inu. Serum algorand horizen kava flow maker telcoin algorand enjin. Dai bitcoin.",
+          placeholder: "Give a short description of your project",
           value: state.description,
           onChange: (description) => State.update({ description }),
+          validate: () => {
+            if (state.description.length > 500) {
+              State.update({
+                descriptionError:
+                  "Description must be less than 500 characters",
+              });
+              return;
+            }
+
+            State.update({ descriptionError: "" });
+          },
+          error: state.descriptionError,
         }}
       />
       <Widget
@@ -210,16 +282,31 @@ return (
           placeholder: "Add tags",
           options: [{ name: "wallets" }, { name: "games" }],
           value: state.tags,
-          onChange: (tags) => State.update({ tags }),
+          onChange: (tags) =>
+            State.update({
+              tags: tags.map(({ name }) => ({
+                name: name.trim().replaceAll(/\s+/g, "-"),
+              })),
+            }),
         }}
       />
       <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
           label: "Website",
-          placeholder: "https://layers.app",
+          placeholder: "Website URL (near.org)",
           value: state.website,
           onChange: (website) => State.update({ website }),
+          validate: () => {
+            if (state.website.length > 50) {
+              State.update({
+                websiteError: "The URL must be less than 50 characters",
+              });
+              return;
+            }
+
+            State.update({ websiteError: "" });
+          },
         }}
       />
       <Widget
@@ -229,6 +316,14 @@ return (
           placeholder: 10,
           value: state.team,
           onChange: (team) => State.update({ team }),
+          validate: () => {
+            if (state.team < 1) {
+              State.update({ teamError: "Team size must be at least 1" });
+              return;
+            }
+
+            State.update({ teamError: "" });
+          },
         }}
       />
       <Widget
@@ -238,13 +333,25 @@ return (
           placeholder: "San Fancisco, CA",
           value: state.geo,
           onChange: (geo) => State.update({ geo }),
+          validate: () => {
+            if (state.geo.length > 100) {
+              State.update({
+                geoError: "Location must be less than 100 characters",
+              });
+              return;
+            }
+
+            State.update({ geoError: "" });
+          },
         }}
       />
       <FormFooter>
         <Widget
           src={`${ownerId}/widget/Buttons.Green`}
           props={{
+            disabled: !validateForm(),
             onClick: () => {
+              if (!validateForm()) return;
               const transactions = [
                 {
                   contractName: "social.near",
@@ -254,24 +361,38 @@ return (
                       [state.accountId]: {
                         profile: {
                           name: state.name,
-                          tagline: state.tagline,
-                          description: state.description,
-                          tags: state.tags.reduce(
-                            (acc, { name }) =>
-                              Object.assign(acc, { [name]: "" }),
-                            {}
-                          ),
-                          linktree: {
-                            ...state.socials,
-                            website: state.website.startsWith("http://")
-                              ? state.website.substring(7)
-                              : state.website.startsWith("https://")
-                              ? state.website.substring(8)
-                              : state.website,
-                          },
                           category: state.category.value,
-                          team: state.team,
                           stage: state.dev.value,
+                          ...(state.team ? { team: state.team } : {}),
+                          ...(state.tagline ? { tagline: state.tagline } : {}),
+                          ...(state.description
+                            ? { description: state.description }
+                            : {}),
+                          ...(state.tags.length
+                            ? {
+                                tags: state.tags.reduce(
+                                  (acc, { name }) =>
+                                    Object.assign(acc, { [name]: "" }),
+                                  {}
+                                ),
+                              }
+                            : {}),
+                          ...(state.website || state.socials
+                            ? {
+                                ...state.socials,
+                                ...(state.website
+                                  ? {
+                                      website: state.website.startsWith(
+                                        "http://"
+                                      )
+                                        ? state.website.substring(7)
+                                        : state.website.startsWith("https://")
+                                        ? state.website.substring(8)
+                                        : state.website,
+                                    }
+                                  : {}),
+                              }
+                            : {}),
                         },
                       },
                     },
@@ -290,7 +411,7 @@ return (
                     project: {
                       application: {
                         integration: state.integration.value,
-                        geo: state.geo,
+                        ...(state.geo ? { geo: state.geo } : {}),
                       },
                     },
                   },

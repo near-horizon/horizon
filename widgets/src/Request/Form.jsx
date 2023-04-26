@@ -167,20 +167,48 @@ const CancelButton = styled.a`
 
 State.init({
   projectId: null,
+  projectIdError: "",
   projects: [],
   projectsIsFetched: false,
   tags: [],
+  tagsError: "",
   title: "",
+  titleError: "",
   description: "",
+  descriptionError: "",
   requestType: null,
   requestTypes: [],
+  requestTypeError: "",
   paymentType: null,
   paymentTypes: [],
+  paymentTypeError: "",
   paymentSource: null,
   paymentSources: [],
+  paymentSourceError: "",
   budget: null,
+  budgetError: "",
   deadline: null,
+  deadlineError: "",
 });
+
+const validateForm = () => {
+  return (
+    state.title &&
+    state.titleError === "" &&
+    state.description &&
+    state.descriptionError === "" &&
+    state.requestType &&
+    state.requestTypeError === "" &&
+    state.paymentType &&
+    state.paymentTypeError === "" &&
+    state.paymentSource &&
+    state.paymentSourceError === "" &&
+    state.budget &&
+    state.budgetError === "" &&
+    state.deadline &&
+    state.deadlineError === ""
+  );
+};
 
 if (!state.projectsIsFetched) {
   Near.asyncView(ownerId, "get_payment_types", {}, "final", false).then(
@@ -247,6 +275,27 @@ if (!state.projectsIsFetched) {
   return <>Loading...</>;
 }
 
+if (!state.projects.length) {
+  return (
+    <Widget
+      src={`${ownerId}/widget/InfoSegment`}
+      props={{
+        title: "No project to request for!",
+        description: (
+          <>
+            You need to log in with an account that has admin rights to a
+            project or create a{" "}
+            <a href={`/${ownerId}/widget/Index?tab=createproject`}>
+              new project
+            </a>
+            !
+          </>
+        ),
+      }}
+    />
+  );
+}
+
 return (
   <Container>
     {/*<ProgressBar className={state.step === "step1" ? "half" : ""}><div /><div /></ProgressBar>*/}
@@ -275,6 +324,24 @@ return (
           placeholder: "Looking for Rust developer to create smart contracts",
           value: state.title,
           onChange: (title) => State.update({ title }),
+          validate: () => {
+            if (state.title.length < 3) {
+              State.update({
+                titleError: "Title must be at least 3 characters",
+              });
+              return;
+            }
+
+            if (state.title.length > 50) {
+              State.update({
+                titleError: "Title must be less than 50 characters",
+              });
+              return;
+            }
+
+            State.update({ titleError: "" });
+          },
+          error: state.titleError,
         }}
       />
       <Widget
@@ -285,6 +352,24 @@ return (
             "Crypto ipsum bitcoin ethereum dogecoin litecoin. Holo stacks fantom kava flow algorand. Gala dogecoin gala XRP binance flow. Algorand polygon bancor arweave avalanche. Holo kadena telcoin kusama BitTorrent flow holo velas horizen. TerraUSD helium filecoin terra shiba-inu. Serum algorand horizen kava flow maker telcoin algorand enjin. Dai bitcoin.",
           value: state.description,
           onChange: (description) => State.update({ description }),
+          validate: () => {
+            if (state.description.length < 10) {
+              State.update({
+                descriptionError: "Description must be at least 10 characters",
+              });
+              return;
+            }
+
+            if (state.description.length > 500) {
+              State.update({
+                descriptionError: "Name must be less than 500 characters",
+              });
+              return;
+            }
+
+            State.update({ descriptionError: "" });
+          },
+          error: state.descriptionError,
         }}
       />
       <Widget
@@ -294,7 +379,12 @@ return (
           placeholder: "DeFi, Gaming...",
           options: [{ name: "Wallets" }, { name: "Games" }],
           value: state.tags,
-          onChange: (tags) => State.update({ tags }),
+          onChange: (tags) =>
+            State.update({
+              tags: tags.map(({ name }) => ({
+                name: name.trim().replaceAll(/\s+/g, "-"),
+              })),
+            }),
         }}
       />
       <Widget
@@ -331,6 +421,17 @@ return (
           placeholder: 1500,
           value: state.budget,
           onChange: (budget) => State.update({ budget }),
+          validate: () => {
+            if (state.budget < 1) {
+              State.update({
+                budgetError: "Budget must be at least 1",
+              });
+              return;
+            }
+
+            State.update({ budgetError: "" });
+          },
+          error: state.budgetError,
         }}
       />
       <Widget
@@ -339,13 +440,26 @@ return (
           label: "Deadline *",
           value: state.deadline,
           onChange: (deadline) => State.update({ deadline }),
+          validate: () => {
+            if (new Date(state.deadline) < new Date()) {
+              State.update({
+                deadlineError: "Deadline must be in the future",
+              });
+              return;
+            }
+
+            State.update({ deadlineError: "" });
+          },
+          error: state.deadlineError,
         }}
       />
       <FormFooter>
         <Widget
           src={`${ownerId}/widget/Buttons.Green`}
           props={{
+            disabled: !validateForm(),
             onClick: () => {
+              if (!validateForm()) return;
               Near.call(ownerId, "add_request", {
                 request: {
                   project_id: state.projectId.value,
