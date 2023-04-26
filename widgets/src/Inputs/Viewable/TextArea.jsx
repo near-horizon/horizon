@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "textarea";
 const label = props.label ?? "Input";
 const value = props.value ?? "";
@@ -75,11 +75,11 @@ return (
         </LabelArea>
       ),
       // view: <Widget src={`${ownerId}/widget/DescriptionArea`} props={{ description: value }} />,
-      view: (
+      view: value ? (
         <MarkdownText>
           <Markdown text={value} />
         </MarkdownText>
-      ),
+      ) : null,
       canEdit,
     }}
   />

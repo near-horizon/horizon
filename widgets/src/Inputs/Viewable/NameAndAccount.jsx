@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "text";
 const value = props.value ?? "";
 const onSave = props.onSave ?? (() => {});
@@ -63,8 +63,17 @@ return (
       ),
       view: (
         <Widget
-          src={`${ownerId}/widget/NameAndAccount`}
-          props={{ accountId: props.accountId, name: value }}
+          src="near/widget/AccountProfileOverlay"
+          props={{
+            accountId: props.accountId,
+            children: (
+              <Widget
+                src={`${ownerId}/widget/NameAndAccount`}
+                props={{ accountId: props.accountId, name: value }}
+              />
+            ),
+            inline: true,
+          }}
         />
       ),
       canEdit,

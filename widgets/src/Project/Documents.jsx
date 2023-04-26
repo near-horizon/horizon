@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const canEdit = props.isAdmin ?? false;
 const accountId = props.accountId;
 

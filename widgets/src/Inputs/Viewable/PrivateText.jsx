@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "textarea";
 const accountId = props.accountId ?? context.accountId;
 const label = props.label ?? "Input";

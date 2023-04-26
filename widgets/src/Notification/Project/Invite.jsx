@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const { requestId } = props.value;
 const [accountId, cid] = requestId;
 
@@ -107,7 +107,7 @@ return (
       invited
       <Widget
         src="near/widget/AccountProfileInline"
-        props={{ accountId: props.value.vendorId }}
+        props={{ accountId: props.value.vendorId || props.accountId }}
       />
       to contribute to request
       <Text bold>{state.request.title}.</Text>

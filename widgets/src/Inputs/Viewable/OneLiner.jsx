@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "text";
 const value = props.value ?? "";
 const onSave = props.onSave ?? (() => {});

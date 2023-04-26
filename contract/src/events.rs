@@ -122,4 +122,17 @@ pub enum Events {
         cid: String,
         feedback: String,
     },
+    AddClaim {
+        project_id: AccountId,
+        account_id: AccountId,
+        message: String,
+    },
+    AcceptClaim {
+        project_id: AccountId,
+        account_id: AccountId,
+    },
+    RejectClaim {
+        project_id: AccountId,
+        account_id: AccountId,
+    },
 }

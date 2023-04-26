@@ -54,7 +54,6 @@ enum StorageKeys {
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault, Owner, Upgrade)]
 #[upgrade(hook = "owner")]
 pub struct Contract {
-    credits_account_id: AccountId,
     projects: TreeMap<AccountId, VersionedProject>,
     vendors: TreeMap<AccountId, VersionedVendor>,
     investors: TreeMap<AccountId, VersionedInvestor>,
@@ -68,9 +67,8 @@ pub struct Contract {
 #[near_bindgen]
 impl Contract {
     #[init]
-    pub fn new(owner_id: AccountId, credits_account_id: AccountId) -> Self {
+    pub fn new(owner_id: AccountId) -> Self {
         let mut this = Self {
-            credits_account_id,
             projects: TreeMap::new(StorageKeys::Projects),
             vendors: TreeMap::new(StorageKeys::Vendors),
             investors: TreeMap::new(StorageKeys::Investors),

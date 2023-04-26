@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const creditsAccount = `credits.${ownerId}`;
 const accountId = props.accountId;
 

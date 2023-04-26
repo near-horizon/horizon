@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const name = props.name ?? "Type";
 const options = props.options ?? [
   { id: "option-1", text: "Option 1", href: "#" },

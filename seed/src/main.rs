@@ -182,5 +182,7 @@ async fn main() {
             .call(RpcBroadcastTxCommitRequest { signed_transaction })
             .await
             .expect("Error sending transaction!");
+
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
     }
 }

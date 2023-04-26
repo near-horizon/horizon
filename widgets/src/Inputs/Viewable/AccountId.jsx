@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "text";
 const label = props.label ?? "Input";
 const value = props.value ?? "";
@@ -159,9 +159,7 @@ return (
             }}
           />
         </Link>
-      ) : (
-        <></>
-      ),
+      ) : null,
       canEdit,
     }}
   />

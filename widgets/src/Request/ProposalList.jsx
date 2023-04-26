@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const search = props.search ?? "";
 const cid = props.cid;
 const accountId = props.accountId;

@@ -1,5 +1,5 @@
 const onSave = props.onSave ?? (() => {});
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const isAdmin = false;
 const contribution = props.contribution;
 const [[projectId, cid], vendorId] = contribution.proposal_id;

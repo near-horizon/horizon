@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const label = props.label ?? "File";
 const id = props.id ?? "file";
 const fileAccept = props.fileAccept ?? ["images/*", "video/*", ".pdf"];

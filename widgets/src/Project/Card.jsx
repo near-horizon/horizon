@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
 State.init({
@@ -37,12 +37,14 @@ if (!state.descriptionIsFetched) {
     { keys: [`${accountId}/profile/*`] },
     "final",
     false
-  ).then((data) =>
-    State.update({
-      profile: data[accountId].profile,
-      profileIsFetched: true,
-    })
-  );
+  ).then((data) => {
+    if (data) {
+      State.update({
+        profile: data[accountId].profile,
+        profileIsFetched: true,
+      });
+    }
+  });
 }
 
 const Container = styled.div`

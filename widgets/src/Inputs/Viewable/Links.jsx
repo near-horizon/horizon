@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "links";
 const label = props.label ?? "Input";
 const value = props.value ?? {};
