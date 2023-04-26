@@ -15,7 +15,6 @@ const Container = styled.div`
   padding: 0px;
   gap: 0.45em;
   width: 100%;
-  z-index: 2;
 `;
 
 const Label = styled.label`
@@ -82,6 +81,7 @@ const Content = styled.div`
   border: 1px solid #d0d5dd;
   border-radius: 4px;
   background: #ffffff;
+  z-index: 3 !important;
 
   /* &[data-state="open"] { */
   /*   animation: ${scaleOut} 0.2s ease-in-out; */

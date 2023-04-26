@@ -245,41 +245,47 @@ return (
           onChange: (proposalTerm) => State.update({ proposalTerm }),
         }}
       />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Service terms",
-          options: state.terms,
-          value: state.term,
-          onChange: (term) => State.update({ term }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Payment type",
-          options: state.paymentTypes,
-          value: state.paymentType,
-          onChange: (paymentType) => State.update({ paymentType }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Number`}
-        props={{
-          label: "Price",
-          value: state.price,
-          onChange: (price) => State.update({ price }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Payment method",
-          options: state.methods,
-          value: state.method,
-          onChange: (method) => State.update({ method }),
-        }}
-      />
+      {state.proposalTerm === "specify" ? (
+        <>
+          <Widget
+            src={`${ownerId}/widget/Inputs.Select`}
+            props={{
+              label: "Service terms",
+              options: state.terms,
+              value: state.term,
+              onChange: (term) => State.update({ term }),
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/Inputs.Select`}
+            props={{
+              label: "Payment type",
+              options: state.paymentTypes,
+              value: state.paymentType,
+              onChange: (paymentType) => State.update({ paymentType }),
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/Inputs.Number`}
+            props={{
+              label: "Price",
+              value: state.price,
+              onChange: (price) => State.update({ price }),
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/Inputs.Select`}
+            props={{
+              label: "Payment method",
+              options: state.methods,
+              value: state.method,
+              onChange: (method) => State.update({ method }),
+            }}
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <Widget
         src={`${ownerId}/widget/Inputs.Checkbox`}
         props={{

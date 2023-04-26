@@ -176,13 +176,8 @@ return (
               false
             ).then((requests) =>
               State.update({
-                requests: requests.map(([accountId, cid]) => ({
-                  name: (
-                    <Widget
-                      src={`${ownerId}/widget/Request.Line`}
-                      props={{ accountId, cid, size: "1em" }}
-                    />
-                  ),
+                requests: requests.map(([accountId, cid, title]) => ({
+                  name: title,
                   value: cid,
                 })),
                 requestsIsFetched: true,
@@ -238,7 +233,43 @@ return (
             </>
           ),
           onClick: () => {
-            // TODO: Send invite notification to vendor with state.message for request with ID state.requestId
+            Near.asyncView(ownerId, "get_vendor", {
+              account_id: props.accountId,
+            }).then(({ permissions }) => {
+              const data = Object.keys(permissions)
+                .filter((account) => permissions[account].includes("Admin"))
+                .map((account) => ({
+                  data: {
+                    [context.accountId]: {
+                      index: {
+                        graph: JSON.stringify({
+                          key: "project/invite",
+                          value: { accountId: state.projectId.value },
+                        }),
+                        inbox: JSON.stringify({
+                          key: account,
+                          value: {
+                            type: "project/invite",
+                            requestId: [
+                              state.projectId.value,
+                              state.requestId.value,
+                            ],
+                            message: state.message,
+                            vendorId: props.accountId,
+                          },
+                        }),
+                      },
+                    },
+                  },
+                }));
+              Near.call(
+                data.map((index) => ({
+                  contractName: "social.near",
+                  methodName: "set",
+                  args: index,
+                }))
+              );
+            });
           },
         }}
       />
