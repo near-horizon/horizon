@@ -28,7 +28,7 @@ return (
       createItem: ([accountId, cid]) => (
         <Widget
           src={`${ownerId}/widget/Request.Card`}
-          props={{ accountId, cid }}
+          props={{ accountId, cid, full: true }}
         />
       ),
     }}

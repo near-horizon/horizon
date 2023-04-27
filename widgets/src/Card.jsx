@@ -1,6 +1,7 @@
 const header = props.header ?? <></>;
 const body = props.body ?? <></>;
 const footer = props.footer ?? <></>;
+const full = props.full ?? false;
 
 const CardContainer = styled.div`
   display: flex;
@@ -14,11 +15,11 @@ const CardContainer = styled.div`
   width: 100%;
 
   @media (min-width: 768px) {
-    width: 49%;
+    width: ${({ full }) => (full ? "100%" : "49%")};
   }
 
   @media (min-width: 2560px) {
-    width: 31%;
+    width: ${({ full }) => (full ? "100%" : "32%")};
   }
 `;
 
@@ -64,7 +65,7 @@ const CardFooter = styled.div`
 `;
 
 return (
-  <CardContainer>
+  <CardContainer full={full}>
     <CardHeader show={!!props.header}>{header}</CardHeader>
     <CardBody>{body}</CardBody>
     <CardFooter>{footer}</CardFooter>
