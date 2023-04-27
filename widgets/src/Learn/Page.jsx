@@ -305,44 +305,88 @@ const props = {
 
 // TODO: Add sorting functionality
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2em;
+`;
+
+const Heading = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+
+  h1 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 2em;
+    color: #101828;
+  }
+
+  h2 {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1em;
+    line-height: 1.5em;
+    color: #475467;
+  }
+`;
+
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 1.5em;
+
+  h3 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.5em;
+    line-height: 36px;
+    color: #000000;
+  }
+`;
+
 return (
-  <div>
-    <div style={{ textAlign: "center", marginBottom: "50px" }}>
+  <Container>
+    <Heading>
       <h1>Resources for Founders</h1>
-      <h4>
+      <h2>
         Welcome! Below you will find a curated list of resources to best help
         you where you need it most
-      </h4>
-    </div>
-    <br />
-    <br />
-    <h2 style={{ marginBottom: "20px" }}>Business Fundamentals</h2>
-    <Widget
-      src={`${ownerId}/widget/CardGallery`}
-      props={{ cardData: props.bdBasics }}
-    />
-    <hr />
-    <br />
-    <h2 style={{ marginBottom: "20px" }}>Growth & Marketing</h2>
-    <Widget
-      src={`${ownerId}/widget/CardGallery`}
-      props={{ cardData: props.growth }}
-    />
-    <hr />
-    <br />
-    <h2 style={{ marginBottom: "20px" }}>Recruiting & Legal</h2>
-    <Widget
-      src={`${ownerId}/widget/CardGallery`}
-      props={{ cardData: props.legalHR }}
-    />
-    <hr />
-    <br />
-    <h2 style={{ marginBottom: "20px" }}>Technical</h2>
-    <Widget
-      src={`${ownerId}/widget/CardGallery`}
-      props={{ cardData: props.technical }}
-    />
-    <hr />
-    <br />
-  </div>
+      </h2>
+    </Heading>
+    <Section>
+      <h3>Business Fundamentals</h3>
+      <Widget
+        src={`${ownerId}/widget/Learn.List`}
+        props={{ cardData: props.bdBasics }}
+      />
+    </Section>
+    <Section>
+      <h3>Growth & Marketing</h3>
+      <Widget
+        src={`${ownerId}/widget/Learn.List`}
+        props={{ cardData: props.growth }}
+      />
+    </Section>
+    <Section>
+      <h3>Recruiting & Legal</h3>
+      <Widget
+        src={`${ownerId}/widget/Learn.List`}
+        props={{ cardData: props.legalHR }}
+      />
+    </Section>
+    <Section>
+      <h3>Technical</h3>
+      <Widget
+        src={`${ownerId}/widget/Learn.List`}
+        props={{ cardData: props.technical }}
+      />
+    </Section>
+  </Container>
 );

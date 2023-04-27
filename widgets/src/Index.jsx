@@ -131,13 +131,13 @@ const tabContent = {
   ),
   learn: (
     <Widget
-      src={`humanman.near/widget/FoundersResources`}
+      src={`${ownerId}/widget/Learn.Page`}
       props={{ accountId: state.accountId }}
     />
   ),
   help: (
     <Widget
-      src={`humanman.near/widget/NH.getting-started`}
+      src={`${ownerId}/widget/Help.Page`}
       props={{ accountId: state.accountId }}
     />
   ),
