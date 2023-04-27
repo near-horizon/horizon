@@ -366,13 +366,13 @@ return (
                   [context.accountId]: {
                     index: {
                       graph: JSON.stringify({
-                        key: "vendor/proposal",
+                        key: "vendor/propose",
                         value: { proposalId: state.projectId.value },
                       }),
                       inbox: JSON.stringify({
                         key: props.accountId,
                         value: {
-                          type: "vendor/proposal",
+                          type: "vendor/propose",
                           proposalId: [
                             state.projectId.value,
                             cid,
