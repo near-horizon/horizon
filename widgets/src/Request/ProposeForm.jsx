@@ -343,7 +343,7 @@ return (
               Send proposal
             </>
           ),
-          onClick: () =>
+          onClick: () => {
             Near.call(ownerId, "add_proposal", {
               proposal: {
                 vendor_id: state.vendorId.value,
@@ -357,7 +357,36 @@ return (
                 start_date: `${new Date(state.startDate).getTime()}`,
                 end_date: `${new Date(state.endDate).getTime()}`,
               },
-            }),
+            });
+            Near.call({
+              contractName: "social.near",
+              methodName: "set",
+              args: {
+                data: {
+                  [context.accountId]: {
+                    index: {
+                      graph: JSON.stringify({
+                        key: "vendor/proposal",
+                        value: { proposalId: state.projectId.value },
+                      }),
+                      inbox: JSON.stringify({
+                        key: props.accountId,
+                        value: {
+                          type: "vendor/proposal",
+                          proposalId: [
+                            state.projectId.value,
+                            cid,
+                          ],
+                          message: state.message,
+                          vendorId: props.accountId,
+                        },
+                      }),
+                    },
+                  },
+                }
+              }
+            })
+          }
         }}
       />
     </Footer>
