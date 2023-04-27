@@ -142,7 +142,7 @@ return (
         />
       ) : value.type === "vendor/propose" ? (
         <Widget
-          src={`${ownerId}/widget/Notification.Vendor.Propose`}
+          src={`${ownerId}/widget/Notification.Vendor.Proposal`}
           props={props}
         />
       ) : value.type === "vendor/contract" ? (
