@@ -104,8 +104,27 @@ const Text = styled.p`
   }
 `;
 
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25em;
+  width: 100%;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.25em;
+  width: 100%;
+`;
+
 return (
   <>
+  <Row>
     <Text bold>
       <Widget
         src="mob.near/widget/TimeAgo"
@@ -113,21 +132,24 @@ return (
       />
       ago
     </Text>
-    <div>
+    </Row>
+   <Row>
       <Widget
         src="near/widget/AccountProfileInline"
         props={{ accountId: vendorId }}
       />
       sent a proposal to your request
       <Text bold>{state.request.title}.</Text>
+      </Row>
+      <Row>
       <Widget
         src={`${ownerId}/widget/Proposal.Summary`}
         props={{ accountId, cid, vendorId}}
       />
-    </div>
-    <div>
+    </Row>
+    <Row>
       <Button class="primary">Hire</Button>
       <Button>Discuss</Button>
-    </div>
+      </Row>
   </>
 );
