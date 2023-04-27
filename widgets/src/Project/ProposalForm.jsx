@@ -80,6 +80,27 @@ State.init({
   method: [],
 });
 
+const validateForm = () => {
+  return (
+    state.message &&
+    state.messageError === "" &&
+    state.price &&
+    state.priceError === "" &&
+    state.vendorId &&
+    state.vendorIdError === "" &&
+    state.requestType &&
+    state.requestTypeError === "" &&
+    state.paymentType &&
+    state.paymentTypeError === "" &&
+    state.paymentSource &&
+    state.paymentSourceError === "" &&
+    state.startDate &&
+    state.startDateError === "" &&
+    state.endDate &&
+    state.endDateError === ""
+  );
+};
+
 if (!state.vendorsIsFetched) {
   Near.asyncView(
     ownerId,
@@ -324,7 +345,9 @@ return (
               Send proposal
             </>
           ),
+          disabled: !state.agree || !validateForm(),
           onClick: () => {
+            if (!state.agree || !validateForm()) return;
             Near.call(ownerId, "add_proposal", {
               proposal: {
                 vendor_id: state.vendorId.value,

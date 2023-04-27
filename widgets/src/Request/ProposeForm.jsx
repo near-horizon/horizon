@@ -6,7 +6,7 @@ const createDate = (date) => {
   const d = date ? new Date(date) : new Date();
   const month = `${d.getMonth() + 1}`;
   const day = `${d.getDate()}`;
-  return `${d.getFullYear()}-${month.padStart(2)}-${day.padStart(2)}`;
+  return `${d.getFullYear()}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
 
 const LineContainer = styled.div`
@@ -74,19 +74,48 @@ State.init({
   request: null,
   requestIsFetched: false,
   message: "",
+  messageError: "",
   price: 0,
+  priceError: "",
   vendorId: [],
+  vendorIdError: "",
   vendors: [],
   vendorsIsFetched: false,
   requestTypes: [],
   requestType: [],
+  requestTypeError: "",
   paymentTypes: [],
   paymentType: [],
+  paymentTypeError: "",
   paymentSources: [],
   paymentSource: [],
+  paymentSourceError: "",
   startDate: createDate(null),
+  startDateError: "",
   endDate: "",
+  endDateError: "",
 });
+
+const validateForm = () => {
+  return (
+    state.message &&
+    state.messageError === "" &&
+    state.price &&
+    state.priceError === "" &&
+    state.vendorId &&
+    state.vendorIdError === "" &&
+    state.requestType &&
+    state.requestTypeError === "" &&
+    state.paymentType &&
+    state.paymentTypeError === "" &&
+    state.paymentSource &&
+    state.paymentSourceError === "" &&
+    state.startDate &&
+    state.startDateError === "" &&
+    state.endDate &&
+    state.endDateError === ""
+  );
+};
 
 if (!state.vendorsIsFetched) {
   Near.asyncView(ownerId, "get_payment_types", {}, "final", false).then(
@@ -254,6 +283,17 @@ return (
           placeholder: "Describe the contribution you would like to request",
           value: state.message,
           onChange: (message) => State.update({ message }),
+          validate: () => {
+            if (state.message > 500) {
+              State.update({
+                messageError: "Message should be less than 500 characters",
+              });
+              return;
+            }
+
+            State.update({ messageError: "" });
+          },
+          error: state.messageError,
         }}
       />
       <Details>
@@ -276,6 +316,15 @@ return (
               label: "Price",
               value: state.price,
               onChange: (price) => State.update({ price }),
+              validate: () => {
+                if (state.price < 1) {
+                  State.update({ priceError: "Price should be more than 1" });
+                  return;
+                }
+
+                State.update({ priceError: "" });
+              },
+              error: state.priceError,
             }}
           />
         </DetailInput>
@@ -285,7 +334,7 @@ return (
             props={{
               label: "Contract type",
               options: state.requestTypes,
-              value: state.requestTypes,
+              value: state.requestType,
               onChange: (requestType) => State.update({ requestType }),
             }}
           />
@@ -325,8 +374,14 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.Checkbox`}
         props={{
-          label:
-            "Yes, I understand and agree with NEAR Horizon credit and payment system",
+          label: (
+            <>
+              Yes, I understand and agree with{" "}
+              <a href={`${ownerId}/widget/TNCPage`}>
+                NEAR Horizon credit and payment system
+              </a>
+            </>
+          ),
           value: state.agree,
           id: "agree",
           onChange: (agree) => State.update({ agree }),
@@ -360,7 +415,9 @@ return (
               Send proposal
             </>
           ),
-          onClick: () =>
+          disabled: !state.agree || !validateForm(),
+          onClick: () => {
+            if (!state.agree || !validateForm()) return;
             Near.call(ownerId, "add_proposal", {
               proposal: {
                 vendor_id: state.vendorId.value,
@@ -374,7 +431,8 @@ return (
                 start_date: `${new Date(state.startDate).getTime()}`,
                 end_date: `${new Date(state.endDate).getTime()}`,
               },
-            }),
+            });
+          },
         }}
       />
     </Footer>

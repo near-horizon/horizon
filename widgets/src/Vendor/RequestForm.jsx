@@ -62,14 +62,24 @@ const createProjectLine = (accountId, name, image) => {
 };
 
 State.init({
-  requestId: [],
   message: "",
-  projectId: [],
+  messageError: "",
+  projectId: null,
   projects: [],
   projectsIsFetched: false,
+  requestId: null,
   requests: [],
   requestsIsFetched: false,
 });
+
+const validateForm = () => {
+  return (
+    state.projectId &&
+    state.message &&
+    state.messageError === "" &&
+    state.requestId
+  );
+};
 
 if (!state.projectsIsFetched) {
   Near.asyncView(
@@ -202,6 +212,17 @@ return (
           placeholder: "Describe the contribution you would like to request",
           value: state.message,
           onChange: (message) => State.update({ message }),
+          validate: () => {
+            if (state.message > 500) {
+              State.update({
+                messageError: "Message should be less than 500 characters",
+              });
+              return;
+            }
+
+            State.update({ messageError: "" });
+          },
+          error: state.messageError,
         }}
       />
     </Form>
@@ -232,43 +253,36 @@ return (
               Send request
             </>
           ),
+          disabled: !validateForm(),
           onClick: () => {
-            Near.asyncView(ownerId, "get_vendor", {
-              account_id: props.accountId,
-            }).then(({ permissions }) => {
-              const data = Object.keys(permissions)
-                .filter((account) => permissions[account].includes("Admin"))
-                .map((account) => ({
-                  data: {
-                    [context.accountId]: {
-                      index: {
-                        graph: JSON.stringify({
-                          key: "project/invite",
-                          value: { accountId: state.projectId.value },
-                        }),
-                        inbox: JSON.stringify({
-                          key: account,
-                          value: {
-                            type: "project/invite",
-                            requestId: [
-                              state.projectId.value,
-                              state.requestId.value,
-                            ],
-                            message: state.message,
-                            vendorId: props.accountId,
-                          },
-                        }),
-                      },
+            if (!validateForm()) return;
+            Near.call({
+              contractName: "social.near",
+              methodName: "set",
+              args: {
+                data: {
+                  [context.accountId]: {
+                    index: {
+                      graph: JSON.stringify({
+                        key: "project/invite",
+                        value: { accountId: state.projectId.value },
+                      }),
+                      inbox: JSON.stringify({
+                        key: state.projectId.value,
+                        value: {
+                          type: "project/invite",
+                          requestId: [
+                            state.projectId.value,
+                            state.requestId.value,
+                          ],
+                          message: state.message,
+                          vendorId: props.accountId,
+                        },
+                      }),
                     },
                   },
-                }));
-              Near.call(
-                data.map((index) => ({
-                  contractName: "social.near",
-                  methodName: "set",
-                  args: index,
-                }))
-              );
+                },
+              },
             });
           },
         }}
