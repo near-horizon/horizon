@@ -83,6 +83,17 @@ const tabContent = {
       }}
     />
   ),
+  backer: (
+    <Widget
+      src={`${ownerId}/widget/Investor.Page`}
+      props={{
+        accountId: state.accountId,
+        search: state.search,
+        content: state.content,
+        update,
+      }}
+    />
+  ),
   contribution: (
     <Widget
       src={`${ownerId}/widget/Contribution.Page`}
