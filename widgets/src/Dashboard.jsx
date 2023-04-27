@@ -25,7 +25,7 @@ const contentSelector = (
         },
         {
           id: "vendors",
-          text: "Vendors",
+          text: "Contributors",
         },
         {
           id: "backers",
@@ -118,11 +118,24 @@ const Stats = styled.div`
   flex-direction: row;
   align-items: stretch;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 0.5em;
   margin: 1em 0;
 
   div {
-    width: 20%;
+    width: 19.5%;
+  }
+
+  @media (max-width: 768px) {
+    div {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    div {
+      width: 49%;
+    }
   }
 `;
 
