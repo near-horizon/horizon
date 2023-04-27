@@ -264,7 +264,10 @@ return (
         </CTARow>
       </HeaderDetails>
       <HeaderProgress>
-        <Widget src={`${ownerId}/widget/Project.Progress`} props={{}} />
+        <Widget
+          src={`${ownerId}/widget/Project.Progress`}
+          props={{ accountId }}
+        />
       </HeaderProgress>
     </Header>
     <ContentContainer>
