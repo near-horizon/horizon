@@ -123,7 +123,7 @@ const Stats = styled.div`
   margin: 1em 0;
 
   div {
-    width: 19.5%;
+    width: 18%;
   }
 
   @media (max-width: 768px) {
@@ -162,7 +162,7 @@ return (
       <Widget
         src={`${ownerId}/widget/Stats.Card`}
         props={{
-          value: "1077",
+          value: "750",
           label: "Projects",
         }}
       />
