@@ -1,10 +1,10 @@
 {
   "type": "module",
   "scripts": {
-    "prepare": "cd .. && husky install",
+    "prepare": "cd .. && husky install && cargo install --git https://github.com/FroVolod/bos-cli-rs",
     "format": "prettier **/*.{js,jsx,ts,tsx} --write --ignore-unknown",
-    "download": "near-social download contribut3.near network-config mainnet",
-    "deploy": "near-social deploy nearhorizon.near sign-as nearhorizon.near network-config mainnet sign-with-access-key-file ~/.near-credentials/mainnet/nearhorizon.near.json send",
+    "download": "bos download nearhorizon.near network-config mainnet",
+    "deploy": "bos components deploy nearhorizon.near sign-as nearhorizon.near network-config mainnet sign-with-access-key-file ~/.near-credentials/mainnet/nearhorizon.near.json send",
     "dev": "npm-watch"
   },
   "devDependencies": {
