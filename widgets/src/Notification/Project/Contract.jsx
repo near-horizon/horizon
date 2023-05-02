@@ -81,48 +81,23 @@ const Column = styled.div`
   width: 100%;
 `;
 
-
-const Button = styled.a`
-  display: inline-flex;
-  align-items: center;
+const GreyButton = styled.button`
+  display: flex;
+  flex-direction: row;
   justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  height: 32px;
-  border-radius: 100px;
+  align-items: center;
+  padding: 0.75em 1em;
+  gap: 0.5em;
+  background: #fafafa;
+  border: 1px solid #eceef0;
+  border-radius: 50px;
+  color: #006adc;
+  font-style: normal;
   font-weight: 600;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 0.95em;
+  line-height: 1em;
   text-align: center;
-  cursor: pointer;
-  background: #fbfcfd;
-  border: 1px solid #d7dbdf;
-  color: #006adc !important;
   white-space: nowrap;
-
-  &.button--primary {
-    width: 100%;
-    color: #006adc !important;
-
-    @media (max-width: 1200px) {
-      width: auto;
-    }
-  }
-
-  &:hover,
-  &:focus {
-    background: #ecedee;
-    text-decoration: none;
-    outline: none;
-  }
-
-  i {
-    color: #7e868c;
-  }
-
-  .bi-16 {
-    font-size: 16px;
-  }
 `;
 
 return (
@@ -137,7 +112,7 @@ return (
       </Text>
     </Row>
     <Row>
-   
+
       <Text>Contract</Text>
       <Text bold>
         <b>{state.proposal.title}</b>
@@ -145,9 +120,19 @@ return (
       <Text>has ended</Text>
     </Row>
     <Row>
-  
-      <Button>View feedback</Button>
 
+      <GreyButton
+        href={`/${ownerId}/widget/Index?tab=vendor&content=history&accountId=${vendorId}`}
+        onClick={() =>
+          props.update({
+            tab: "vendor",
+            content: "history",
+            search: "",
+            accountId: vendorId,
+          })
+        }>
+        View Feedback
+      </GreyButton>
     </Row>
   </>
 );

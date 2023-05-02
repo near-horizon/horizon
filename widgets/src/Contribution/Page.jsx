@@ -261,10 +261,55 @@ const Title = styled.h1`
   color: #101828;
 `;
 
+const contractAction = (actionType) => {
+  const methodName = actionType == "accept" ? "accept_contribution" : actionType == "reject" ? "reject_contribution" : "deliver_contribution";
+  const transactions = [
+    {
+      contractName: ownerId,
+      methodName: methodName,
+      args: {
+        project_id: projectId,
+        cid,
+        vendor_id: vendorId,
+      }
+    },
+    {
+      contractName: "social.near",
+      methodName: "set",
+      args: {
+        data: {
+          [context.accountId]: {
+            index: {
+              graph: JSON.stringify({
+                key: "vendor/contract",
+                value: { accountId: projectId },
+              }),
+              inbox: JSON.stringify({
+                key: projectId,
+                value: {
+                  type: "vendor/contract",
+                  contributionId: [
+                    projectId,
+                    cid,
+                  ],
+                  message: state.message,
+                  vendorId: vendorId,
+                  actionType: actionType
+                },
+              }),
+            },
+          },
+        }
+      }
+    }
+  ];
+  Near.Call(transactions);
+}
+
 const vendorCreatedView =
   state.isVendorAdmin &&
-  typeof state.contribution.status !== "string" &&
-  "Created" in state.contribution.status ? (
+    typeof state.contribution.status !== "string" &&
+    "Created" in state.contribution.status ? (
     <>
       <Widget
         src={`${ownerId}/widget/Buttons.Green`}
@@ -289,12 +334,7 @@ const vendorCreatedView =
               Accept contract
             </>
           ),
-          onClick: () =>
-            Near.call(ownerId, "accept_contribution", {
-              project_id: projectId,
-              cid,
-              vendor_id: vendorId,
-            }),
+          onClick: () => contractAction("accept")
         }}
       />
       <Widget
@@ -320,12 +360,7 @@ const vendorCreatedView =
               Decline contract
             </>
           ),
-          onClick: () =>
-            Near.call(ownerId, "reject_contribution", {
-              project_id: projectId,
-              cid,
-              vendor_id: vendorId,
-            }),
+          onClick: () => contractAction("reject")
         }}
       />
     </>
@@ -334,7 +369,7 @@ const vendorCreatedView =
   );
 const vendorAcceptedView =
   (state.isVendorAdmin && typeof state.contribution.status === "string") ||
-  "Accepted" in state.contribution.status ? (
+    "Accepted" in state.contribution.status ? (
     <Widget
       src={`${ownerId}/widget/Buttons.Grey`}
       props={{
@@ -358,12 +393,7 @@ const vendorAcceptedView =
             Deliver work
           </>
         ),
-        onClick: () =>
-          Near.call(ownerId, "deliver_contribution", {
-            project_id: projectId,
-            cid,
-            vendor_id: vendorId,
-          }),
+        onClick: () => contractAction("deliver")
       }}
     />
   ) : (
@@ -372,8 +402,8 @@ const vendorAcceptedView =
 
 const projectDeliveredView =
   state.isProjectAdmin &&
-  typeof state.contribution.status !== "string" &&
-  "Delivered" in state.contribution.status ? (
+    typeof state.contribution.status !== "string" &&
+    "Delivered" in state.contribution.status ? (
     <Widget
       src={`${ownerId}/widget/Buttons.Grey`}
       props={{
@@ -397,12 +427,48 @@ const projectDeliveredView =
             End contract
           </>
         ),
-        onClick: () =>
-          Near.call(ownerId, "complete_contribution", {
-            project_id: projectId,
-            cid,
-            vendor_id: vendorId,
-          }),
+        onClick: () => {
+          const transactions = [
+            {
+              contractName: ownerId,
+              methodName: "complete_contribution",
+              args: {
+                project_id: projectId,
+                cid,
+                vendor_id: vendorId,
+              }
+            },
+            {
+              contractName: "social.near",
+              methodName: "set",
+              args: {
+                data: {
+                  [context.accountId]: {
+                    index: {
+                      graph: JSON.stringify({
+                        key: "project/contract",
+                        value: { projectId },
+                      }),
+                      inbox: JSON.stringify({
+                        key: projectId,
+                        value: {
+                          type: "project/contract",
+                          contributionId: [
+                            projectId,
+                            cid,
+                          ],
+                          message: state.message,
+                          vendorId: vendorId,
+                        },
+                      }),
+                    },
+                  },
+                }
+              }
+            }
+          ];
+          Near.Call(transactions);
+        }
       }}
     />
   ) : (
@@ -412,7 +478,7 @@ const projectDeliveredView =
 const addActionView =
   (typeof state.contribution.status !== "string" &&
     "Accepted" in state.contribution.status) ||
-  state.contribution.status === "Ongoing" ? (
+    state.contribution.status === "Ongoing" ? (
     <Widget
       src={`${ownerId}/widget/Contribution.ActionSideWindow`}
       props={{

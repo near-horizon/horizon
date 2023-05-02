@@ -137,7 +137,57 @@ return (
       />
     </Row>
     <Row>
-      <Button class="primary">Hire</Button>
+      <Widget
+        src={`${ownerId}/widget/Buttons.Green`}
+        props={{
+          text: "Hire",
+          onClick: () => {
+            const transactions = [
+              {
+                contractName: ownerId,
+                methodName: "add_contribution",
+                args: {
+                  project_id: projectId,
+                  cid,
+                  vendor_id: vendorId,
+                }
+              },
+              {
+                contractName: "social.near",
+                methodName: "set",
+                args: {
+                  data: {
+                    [context.accountId]: {
+                      index: {
+                        graph: JSON.stringify({
+                          key: "vendor/contract",
+                          value: { accountId: projectId },
+                        }),
+                        inbox: JSON.stringify({
+                          key: projectId,
+                          value: {
+                            type: "vendor/contract",
+                            contributionId: [
+                              projectId,
+                              cid,
+                            ],
+                            message: state.message,
+                            vendorId: vendorId,
+                            actionType = "accept"
+                          },
+                        }),
+                      },
+                    },
+                  }
+                }
+              }
+            ];
+
+            Near.call(transactions);
+          }
+
+        }}
+      />
       <Button>Discuss</Button>
     </Row>
   </>

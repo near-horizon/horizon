@@ -34,17 +34,17 @@ if (!state.proposalIsFetched) {
 }
 
 if (!state.isProjectAdminIsFetched) {
-    Near.asyncView(
-      ownerId,
-      "check_is_project_admin",
-      { project_id: accountId, account_id: context.accountId },
-      "final",
-      false
-    ).then((isProjectAdmin) =>
-      State.update({ isProjectAdmin, isProjectAdminIsFetched: true })
-    );
-  }
-  
+  Near.asyncView(
+    ownerId,
+    "check_is_project_admin",
+    { project_id: accountId, account_id: context.accountId },
+    "final",
+    false
+  ).then((isProjectAdmin) =>
+    State.update({ isProjectAdmin, isProjectAdminIsFetched: true })
+  );
+}
+
 
 if (!state.contributionIsFetched || !state.proposalIsFetched || !state.isProjectAdminIsFetched) {
   return <>Loading...</>;
@@ -96,61 +96,55 @@ const Column = styled.div`
   width: 100%;
 `;
 
-const Button = styled.a`
-  display: inline-flex;
-  align-items: center;
+const GreyButton = styled.button`
+  display: flex;
+  flex-direction: row;
   justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  height: 32px;
-  border-radius: 100px;
+  align-items: center;
+  padding: 0.75em 1em;
+  gap: 0.5em;
+  background: #fafafa;
+  border: 1px solid #eceef0;
+  border-radius: 50px;
+  color: #006adc;
+  font-style: normal;
   font-weight: 600;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 0.95em;
+  line-height: 1em;
   text-align: center;
-  cursor: pointer;
-  background: #fbfcfd;
-  border: 1px solid #d7dbdf;
-  color: #006adc !important;
   white-space: nowrap;
-
-  &.button--primary {
-    width: 100%;
-    color: #006adc !important;
-
-    @media (max-width: 1200px) {
-      width: auto;
-    }
-  }
-
-  &:hover,
-  &:focus {
-    background: #ecedee;
-    text-decoration: none;
-    outline: none;
-  }
-
-  i {
-    color: #7e868c;
-  }
-
-  .bi-16 {
-    font-size: 16px;
-  }
 `;
 
 return (
   <>
-    <Widget
-      src={`${ownerId}/widget/Contribution.Feedback`}
-      props={{
-        projectId: accountId,
-        title: state.proposal.title,
-        vendorId,
-        status: state.contribution.status,
-        vendorFeedback: state.isProjectAdmin ? state.contribution.vendorFeedback: null,
-        projectFeedback: state.contribution.projectFeedback,
-      }}
-    />
+    <Row>
+      <Text>
+        <Widget
+          src="mob.near/widget/TimeAgo"
+          props={{ blockHeight: props.blockHeight }}
+        />
+        ago
+      </Text>
+    </Row>
+    <Row>
+      <Widget
+        src="near/widget/AccountProfileInline"
+        props={{ accountId: state.isProjectAdmin ? vendorId : accountId }}
+      />
+      <Text>give you feedback</Text>
+    </Row>
+
+    <GreyButton
+      href={`/${ownerId}/widget/Index?tab=${state.isProjectAdmin ? "project" : "vendor"}&content=history&accountId=${state.isProjectAdmin ? accountId : vendorId}`}
+      onClick={() =>
+        props.update({
+          tab: "vendor",
+          content: "history",
+          search: "",
+          accountId: state.isProjectAdmin ? accountId : vendorId,
+        })
+      }>
+      View Feedback
+    </GreyButton>
   </>
 );
