@@ -303,7 +303,7 @@ const contractAction = (actionType) => {
       }
     }
   ];
-  Near.Call(transactions);
+  Near.call(transactions);
 }
 
 const vendorCreatedView =
@@ -467,7 +467,7 @@ const projectDeliveredView =
               }
             }
           ];
-          Near.Call(transactions);
+          Near.call(transactions);
         }
       }}
     />

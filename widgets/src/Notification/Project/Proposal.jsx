@@ -173,7 +173,7 @@ return (
                             ],
                             message: state.message,
                             vendorId: vendorId,
-                            actionType = "accept"
+                            actionType:  "accept"
                           },
                         }),
                       },

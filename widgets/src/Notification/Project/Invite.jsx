@@ -160,7 +160,7 @@ return (
               }
             }
           ];
-          Near.Call(transactions);
+          Near.call(transactions);
       
         }
       }}

@@ -117,7 +117,7 @@ return (
       <Text bold>
         <b>{state.proposal.title}</b>
       </Text>
-      <Text>has ended</Text>
+      <Text>was ended</Text>
     </Row>
     <Row>
 

@@ -131,17 +131,17 @@ return (
         src="near/widget/AccountProfileInline"
         props={{ accountId: state.isProjectAdmin ? vendorId : accountId }}
       />
-      <Text>give you feedback</Text>
+      <Text>gave you feedback</Text>
     </Row>
 
     <GreyButton
-      href={`/${ownerId}/widget/Index?tab=${state.isProjectAdmin ? "project" : "vendor"}&content=history&accountId=${state.isProjectAdmin ? accountId : vendorId}`}
+      href={`${ownerId}/widget/Index?tab=contribution&projectId=${accountId}&vendorId=${vendorId}&cid=${cid}&content=feedback`}
       onClick={() =>
         props.update({
-          tab: "vendor",
-          content: "history",
+          tab: "contribution",
+          content: "feedback",
           search: "",
-          accountId: state.isProjectAdmin ? accountId : vendorId,
+          accountId,
         })
       }>
       View Feedback
