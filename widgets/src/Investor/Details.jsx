@@ -77,22 +77,6 @@ return (
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Select`}
       props={{
-        label: "Backer type",
-        id: "type",
-        value: state.profile.investor_type,
-        options: [
-          { name: "Investment fund", id: "fund" },
-          { name: "Angel investor", id: "angel" },
-          { name: "Venture capital", id: "vc" },
-          { name: "Institutional investor", id: "institutional" },
-        ],
-        onSave: ([{ id: investor_type }]) => onSave({ investor_type }),
-        canEdit: isAdmin,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Select`}
-      props={{
         label: "Specialization",
         id: "specialization",
         value: state.profile.specialization,

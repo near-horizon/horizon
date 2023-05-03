@@ -117,12 +117,7 @@ return (
           props={{ accountId, isAdmin: state.isAdmin }}
         />
       </HeaderDetails>
-      <HeaderProgress>
-        <Widget
-          src={`${ownerId}/widget/Investor.Progress`}
-          props={{ accountId, isAdmin: state.isAdmin }}
-        />
-      </HeaderProgress>
+      <HeaderProgress />
     </Header>
     <ContentContainer>
       <MainContent>
