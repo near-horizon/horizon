@@ -1,10 +1,12 @@
+const ownerId = "contribut3.near";
 const { requestId, vendorId } = props.value;
-const ownerId = "nearhorizon.near";
 const [accountId, cid] = requestId;
 
 State.init({
   request: null,
   requestIsFetched: false,
+  proposal: null,
+  proposalIsFetched: false,
 });
 
 if (!state.requestIsFetched) {
@@ -17,7 +19,16 @@ if (!state.requestIsFetched) {
   ).then((request) => State.update({ request, requestIsFetched: true }));
 }
 
-if (!state.requestIsFetched) {
+if (!state.proposalIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_proposal",
+    { project_id: accountId, cid, vendor_id: vendorId },
+    "final",
+    false
+  ).then((proposal) => State.update({ proposal, proposalIsFetched: true }));
+}
+if (!state.requestIsFetched || !state.proposalIsFetched) {
   return <>Loading...</>;
 }
 
@@ -93,8 +104,27 @@ const Text = styled.p`
   }
 `;
 
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25em;
+  width: 100%;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.25em;
+  width: 100%;
+`;
+
 return (
   <>
+  <Row>
     <Text bold>
       <Widget
         src="mob.near/widget/TimeAgo"
@@ -102,28 +132,32 @@ return (
       />
       ago
     </Text>
-    <div>
-      <Widget src="near/widget/AccountProfileInline" props={{ accountId }} />
-      invited
+    </Row>
+   <Row>
       <Widget
         src="near/widget/AccountProfileInline"
-        props={{ accountId: props.value.vendorId || props.accountId }}
+        props={{ accountId: vendorId }}
       />
-      to contribute to request
+      sent a proposal to your request
       <Text bold>{state.request.title}.</Text>
-      Make a proposal now!
-    </div>
-
-    <div>
+      </Row>
+      <Row>
+      <Widget
+        src={`${ownerId}/widget/Proposal.Summary`}
+        props={{ accountId, cid, vendorId}}
+      />
+    </Row>
+    <Row>
     <Widget
       src={`${ownerId}/widget/Buttons.Green`}
       props={{
-        text: "Accept",
-        onClick: () => {
+        text: "Hire",
+        onClick: () =>
+        {
           const transactions = [
             {
               contractName: ownerId,
-              methodName: "accept_contribution",
+              methodName: "add_contribution",
               args: {
                 project_id: accountId,
                 cid,
@@ -160,12 +194,12 @@ return (
               }
             }
           ];
+
           Near.call(transactions);
-      
         }
       }}
     />
       <Button>Discuss</Button>
-    </div>
+      </Row>
   </>
 );

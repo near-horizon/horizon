@@ -143,9 +143,14 @@ return (
         />
       ) : value.type === "vendor/propose" ? (
         <Widget
-          src={`${ownerId}/widget/Notification.Vendor.Propose`}
+          src={`${ownerId}/widget/Notification.Vendor.Proposal`}
           props={props}
         />
+        ) : value.type === "vendor/proposeToRequest" ? (
+          <Widget
+            src={`${ownerId}/widget/Notification.Vendor.RequestProposal`}
+            props={props}
+          />
       ) : value.type === "vendor/contract" ? (
         <Widget
           src={`${ownerId}/widget/Notification.Vendor.Contract`}
@@ -154,6 +159,8 @@ return (
       ) : value.type === "project/feedback" ||
         value.type === "vendor/feedback" ? (
         <Widget src={`${ownerId}/widget/Notification.Feedback`} props={props} />
+      ) : value.type === "vendor/propose" ? (
+        <Widget src={`${ownerId}/widget/Notification.Vendor.Proposal`} props={props} />
       ) : (
         <div>
           Unknown notification:{" "}

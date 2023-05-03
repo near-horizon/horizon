@@ -245,12 +245,49 @@ const footer = (
       src={`${ownerId}/widget/Buttons.Green`}
       props={{
         text: "Hire",
-        onClick: () =>
-          Near.call(ownerId, "add_contribution", {
-            project_id: projectId,
-            vendor_id: vendorId,
-            cid,
-          }),
+        onClick: () => {
+          const transactions = [
+            {
+              contractName: ownerId,
+              methodName: "add_contribution",
+              args: {
+                project_id: projectId,
+                cid,
+                vendor_id: vendorId,
+              }
+            },
+            {
+              contractName: "social.near",
+              methodName: "set",
+              args: {
+                data: {
+                  [context.accountId]: {
+                    index: {
+                      graph: JSON.stringify({
+                        key: "project/proposal",
+                        value: { accountId: projectId },
+                      }),
+                      inbox: JSON.stringify({
+                        key: projectId,
+                        value: {
+                          type: "project/proposal",
+                          proposalId: [
+                            projectId,
+                            cid,
+                          ],
+                          message: state.message,
+                          vendorId: vendorId,
+                        },
+                      }),
+                    },
+                  },
+                }
+              }
+            }
+          ];
+
+          Near.call(transactions);
+        }
       }}
     />
   </Row>
