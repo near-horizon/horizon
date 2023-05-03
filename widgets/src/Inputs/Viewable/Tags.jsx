@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "tags";
 const label = props.label ?? "Input";
 const value = props.value ?? [];
@@ -56,14 +56,18 @@ return (
       label,
       value,
       edit,
-      view: (
-        <Widget
-          src={`${ownerId}/widget/Tags`}
-          props={{
-            tags: value.reduce((acc, { name }) => ({ ...acc, [name]: "" }), {}),
-          }}
-        />
-      ),
+      view:
+        value && value.length > 0 ? (
+          <Widget
+            src={`${ownerId}/widget/Tags`}
+            props={{
+              tags: value.reduce(
+                (acc, { name }) => ({ ...acc, [name]: "" }),
+                {}
+              ),
+            }}
+          />
+        ) : null,
       canEdit,
     }}
   />

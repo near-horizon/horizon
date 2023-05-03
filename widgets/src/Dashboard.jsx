@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 
 const availableContent = ["projects", "vendors", "backers", "requests"];
 
@@ -25,7 +25,7 @@ const contentSelector = (
         },
         {
           id: "vendors",
-          text: "Vendors",
+          text: "Contributors",
         },
         {
           id: "backers",
@@ -118,13 +118,39 @@ const Stats = styled.div`
   flex-direction: row;
   align-items: stretch;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 0.5em;
   margin: 1em 0;
 
   div {
-    width: 20%;
+    width: 18%;
+  }
+
+  @media (max-width: 768px) {
+    div {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    div {
+      width: 49%;
+    }
   }
 `;
+
+State.init({
+  stats: null,
+  statsIsFetched: false,
+});
+
+if (!state.statsIsFetched) {
+  asyncFetch(
+    "https://api.flipsidecrypto.com/api/v2/queries/36637c73-6301-418b-ae83-7af6e8f34c0f/data/latest"
+  ).then((response) =>
+    State.update({ stats: response.body[0], statsIsFetched: true })
+  );
+}
 
 return (
   <Container>
@@ -136,21 +162,29 @@ return (
       <Widget
         src={`${ownerId}/widget/Stats.Card`}
         props={{
-          value: "1077",
+          value: "750",
           label: "Projects",
         }}
       />
       <Widget
         src={`${ownerId}/widget/Stats.Card`}
         props={{
-          value: "1M+",
+          value: state.statsIsFetched
+            ? Number(state.stats.MAU).toLocaleString("en-US", {
+                notation: "compact",
+              }) + "+"
+            : "Loading...",
           label: "Monthly active accounts",
         }}
       />
       <Widget
         src={`${ownerId}/widget/Stats.Card`}
         props={{
-          value: "25M+",
+          value: state.statsIsFetched
+            ? Number(state.stats.TOTAL_ACCOUNTS).toLocaleString("en-US", {
+                notation: "compact",
+              }) + "+"
+            : "Loading...",
           label: "Total accounts",
         }}
       />

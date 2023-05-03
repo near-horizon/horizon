@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 
 State.init({
   search: props.search ?? "",
@@ -11,7 +11,23 @@ State.init({
   cid: props.cid,
   projectId: props.projectId,
   vendorId: props.vendorId,
+  tnc: true,
 });
+
+if (context.accountId) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${context.accountId}/profile/horizon_tnc`] },
+    "final",
+    false
+  ).then((data) => {
+    console.log(data);
+    State.update({
+      tnc: data[context.accountId]?.profile?.horizon_tnc === "true",
+    });
+  });
+}
 
 const update = (state) => State.update(state);
 
@@ -68,6 +84,17 @@ const tabContent = {
       }}
     />
   ),
+  backer: (
+    <Widget
+      src={`${ownerId}/widget/Investor.Page`}
+      props={{
+        accountId: state.accountId,
+        search: state.search,
+        content: state.content,
+        update,
+      }}
+    />
+  ),
   contribution: (
     <Widget
       src={`${ownerId}/widget/Contribution.Page`}
@@ -116,16 +143,17 @@ const tabContent = {
   ),
   learn: (
     <Widget
-      src={`humanman.near/widget/FoundersResources`}
+      src={`${ownerId}/widget/Learn.Page`}
       props={{ accountId: state.accountId }}
     />
   ),
   help: (
     <Widget
-      src={`humanman.near/widget/NH.getting-started`}
+      src={`${ownerId}/widget/Help.Page`}
       props={{ accountId: state.accountId }}
     />
   ),
+  legal: <Widget src={`${ownerId}/widget/TNCPage`} />,
 }[state.tab];
 
 const ContentContainer = styled.div`
@@ -158,11 +186,24 @@ const Container = styled.div``;
 
 return (
   <Container>
+    <Widget
+      src={`${ownerId}/widget/TNCModal`}
+      props={{
+        open: !state.tnc,
+        accept: () =>
+          Social.set(
+            { profile: { horizon_tnc: true } },
+            { onCommit: () => State.update({ tnc: true }) }
+          ),
+      }}
+    />
     <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
     <Content>
       <Sidebar
         show={
-          !["createproject", "createrequest", "permissions"].includes(state.tab)
+          !["createproject", "createrequest", "permissions", "legal"].includes(
+            state.tab
+          )
         }
       >
         <Widget

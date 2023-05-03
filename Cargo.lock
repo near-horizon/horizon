@@ -2780,6 +2780,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "csv",
+ "itertools",
  "near-account-id 0.16.1",
  "near-crypto 0.16.1",
  "near-jsonrpc-client",

@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const account_id = props.accountId;
 const search = props.search ?? "";
 
@@ -28,7 +28,7 @@ return (
       createItem: ([accountId, cid]) => (
         <Widget
           src={`${ownerId}/widget/Request.Card`}
-          props={{ accountId, cid }}
+          props={{ accountId, cid, full: true }}
         />
       ),
     }}

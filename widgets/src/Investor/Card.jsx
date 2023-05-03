@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
 State.init({
@@ -88,10 +88,10 @@ const Footer = styled.div`
 const footer = (
   <Footer>
     <FooterButton
-      href={`/${ownerId}/widget/Index?tab=investor&accountId=${accountId}`}
+      href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}
       onClick={() =>
         props.update({
-          tab: "investor",
+          tab: "backer",
           content: "",
           search: "",
           accountId,

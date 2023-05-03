@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const projectId = props.projectId;
 const cid = props.cid;
 const vendorId = props.vendorId;

@@ -1,6 +1,7 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 const cid = props.cid;
+const full = props.full ?? false;
 
 State.init({
   request: null,
@@ -234,4 +235,4 @@ const footer = (
   </Footer>
 );
 
-return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer }} />;
+return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer, full }} />;

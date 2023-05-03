@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 
 const Container = styled.div`
   display: flex;
@@ -52,6 +52,83 @@ const Value = styled.div`
   width: 65%;
 `;
 
+State.init({
+  project: null,
+  projectIsFetched: false,
+  profile: null,
+  profileIsFetched: false,
+});
+
+if (!state.projectIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project",
+    { account_id: props.accountId },
+    "final",
+    false
+  ).then((project) => State.update({ project, projectIsFetched: true }));
+}
+
+if (!state.profileIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${props.accountId}/profile/**`] },
+    "final",
+    false
+  ).then((profile) =>
+    State.update({
+      profile: profile[props.accountId].profile,
+      profileIsFetched: true,
+    })
+  );
+}
+
+if (!state.projectIsFetched || !state.profileIsFetched) {
+  return <>Loading...</>;
+}
+
+const progress = () => {
+  let filledInFields = 0;
+  const totalFields = 23;
+  const application = state.project;
+  if (application) {
+    if (application.integration) filledInFields++;
+    if (application.why) filledInFields++;
+    if (application.vision) filledInFields++;
+    if (application.geo) filledInFields++;
+    if (application.success_position) filledInFields++;
+    if (application.tech_lead) filledInFields++;
+    if (application.team) filledInFields++;
+    const graduation = application.graduation;
+    if (graduation) {
+      if (graduation.pitch_deck) filledInFields++;
+      if (graduation.white_paper) filledInFields++;
+      if (graduation.roadmap) filledInFields++;
+      if (graduation.demo) filledInFields++;
+    }
+  }
+  const profile = state.profile;
+  if (profile) {
+    if (profile.name) filledInFields++;
+    if (profile.description) filledInFields++;
+    if (profile.linktree) filledInFields++;
+    if (profile.linktree.website) filledInFields++;
+    if (profile.logo) filledInFields++;
+    if (profile.tagline) filledInFields++;
+    if (profile.category) filledInFields++;
+    if (profile.stage) filledInFields++;
+    if (profile.team) filledInFields++;
+    if (profile.ceo) filledInFields++;
+    if (profile.tags) filledInFields++;
+    if (profile.userbase) filledInFields++;
+  }
+
+  return ((filledInFields / totalFields) * 100)
+    .toFixed(0)
+    .toLocaleString("en-US", { style: "percent" });
+};
+
 return (
   <Container>
     <Row>
@@ -66,7 +143,7 @@ return (
     </Row>
     <Row>
       <Label>Profile:</Label>
-      <Value>60%</Value>
+      <Value>{progress()}%</Value>
     </Row>
   </Container>
 );

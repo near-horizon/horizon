@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const search = props.search ?? "";
 const items = props.items ?? [];
 const createItem = props.createItem ?? (() => <></>);
@@ -12,9 +12,9 @@ State.init({
 
 const loadMore = () => {
   State.update({
-    shown: state.items.slice(0, state.from + limit),
+    shown: items.slice(0, state.from + limit),
     from: state.from + limit,
-    hasMore: state.from + limit < state.items.length,
+    hasMore: state.from + limit < items.length,
   });
 };
 

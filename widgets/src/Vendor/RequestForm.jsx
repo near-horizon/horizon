@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 
 const LineContainer = styled.div`
   display: flex;
@@ -62,14 +62,24 @@ const createProjectLine = (accountId, name, image) => {
 };
 
 State.init({
-  requestId: [],
   message: "",
-  projectId: [],
+  messageError: "",
+  projectId: null,
   projects: [],
   projectsIsFetched: false,
+  requestId: null,
   requests: [],
   requestsIsFetched: false,
 });
+
+const validateForm = () => {
+  return (
+    state.projectId &&
+    state.message &&
+    state.messageError === "" &&
+    state.requestId
+  );
+};
 
 if (!state.projectsIsFetched) {
   Near.asyncView(
@@ -176,13 +186,8 @@ return (
               false
             ).then((requests) =>
               State.update({
-                requests: requests.map(([accountId, cid]) => ({
-                  name: (
-                    <Widget
-                      src={`${ownerId}/widget/Request.Line`}
-                      props={{ accountId, cid, size: "1em" }}
-                    />
-                  ),
+                requests: requests.map(([accountId, cid, title]) => ({
+                  name: title,
                   value: cid,
                 })),
                 requestsIsFetched: true,
@@ -207,6 +212,17 @@ return (
           placeholder: "Describe the contribution you would like to request",
           value: state.message,
           onChange: (message) => State.update({ message }),
+          validate: () => {
+            if (state.message > 500) {
+              State.update({
+                messageError: "Message should be less than 500 characters",
+              });
+              return;
+            }
+
+            State.update({ messageError: "" });
+          },
+          error: state.messageError,
         }}
       />
     </Form>
@@ -237,8 +253,37 @@ return (
               Send request
             </>
           ),
+          disabled: !validateForm(),
           onClick: () => {
-            // TODO: Send invite notification to vendor with state.message for request with ID state.requestId
+            if (!validateForm()) return;
+            Near.call({
+              contractName: "social.near",
+              methodName: "set",
+              args: {
+                data: {
+                  [context.accountId]: {
+                    index: {
+                      graph: JSON.stringify({
+                        key: "project/invite",
+                        value: { accountId: state.projectId.value },
+                      }),
+                      inbox: JSON.stringify({
+                        key: state.projectId.value,
+                        value: {
+                          type: "project/invite",
+                          requestId: [
+                            state.projectId.value,
+                            state.requestId.value,
+                          ],
+                          message: state.message,
+                          vendorId: props.accountId,
+                        },
+                      }),
+                    },
+                  },
+                },
+              },
+            });
           },
         }}
       />

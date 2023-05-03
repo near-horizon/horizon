@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "links";
 const label = props.label ?? "Input";
 const value = props.value ?? {};
@@ -79,12 +79,13 @@ return (
       label,
       value,
       edit,
-      view: (
-        <Widget
-          src={`${ownerId}/widget/SocialLinks`}
-          props={{ links: value }}
-        />
-      ),
+      view:
+        !!value && Object.keys(value).length > 0 ? (
+          <Widget
+            src={`${ownerId}/widget/SocialLinks`}
+            props={{ links: value }}
+          />
+        ) : null,
       canEdit,
     }}
   />

@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId ?? context.accountId;
 
 State.init({
@@ -192,7 +192,7 @@ const content = {
   ),
   documents: (
     <Widget
-      src={`${ownerId}/widget/Project.Graduation`}
+      src={`${ownerId}/widget/Project.Documents`}
       props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
@@ -264,7 +264,10 @@ return (
         </CTARow>
       </HeaderDetails>
       <HeaderProgress>
-        <Widget src={`${ownerId}/widget/Project.Progress`} props={{}} />
+        <Widget
+          src={`${ownerId}/widget/Project.Progress`}
+          props={{ accountId }}
+        />
       </HeaderProgress>
     </Header>
     <ContentContainer>

@@ -1,7 +1,7 @@
 const id = props.id ?? "text";
 const label = props.label ?? "Input";
 const value = props.value ?? "";
-const view = props.view ?? (() => <></>);
+const view = props.view;
 const edit = props.edit ?? (() => <></>);
 const big = props.big ?? false;
 const noLabel = props.noLabel ?? false;
@@ -85,6 +85,13 @@ const EditButtonContainer = styled.div`
   height: 1em;
 `;
 
+const Italic = styled.i`
+  font-size: 0.9em;
+  font-weight: 400;
+  line-height: 1em;
+  color: #687076;
+`;
+
 return (
   <Container className={big ? "big" : ""}>
     <Stack className={"f-" + flexDirection}>
@@ -117,8 +124,10 @@ return (
       edit((value) => State.update({ value }), state.value)
     ) : noLabel ? (
       <></>
-    ) : (
+    ) : view ? (
       view
+    ) : (
+      <Italic>Not specified</Italic>
     )}
   </Container>
 );

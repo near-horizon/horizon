@@ -48,6 +48,45 @@ pub struct Graduation {
     pub code: String,
 }
 
+impl Graduation {
+    pub fn patch(&mut self, value: &Value) {
+        let graduation = value.as_object().unwrap();
+        if let Some(pitch_deck) = graduation.get("pitch_deck") {
+            self.pitch_deck = pitch_deck
+                .as_str()
+                .expect("ERR_INVALID_PITCH_DECK")
+                .to_string();
+        }
+        if let Some(white_paper) = graduation.get("white_paper") {
+            self.white_paper = white_paper
+                .as_str()
+                .expect("ERR_INVALID_WHITE_PAPER")
+                .to_string();
+        }
+        if let Some(roadmap) = graduation.get("roadmap") {
+            self.roadmap = roadmap.as_str().expect("ERR_INVALID_ROADMAP").to_string();
+        }
+        if let Some(team) = graduation.get("team") {
+            self.team = team.as_str().expect("ERR_INVALID_TEAM").to_string();
+        }
+        if let Some(tam) = graduation.get("tam") {
+            self.tam = tam.as_str().expect("ERR_INVALID_TAM").to_string();
+        }
+        if let Some(success_metrics) = graduation.get("success_metrics") {
+            self.success_metrics = success_metrics
+                .as_str()
+                .expect("ERR_INVALID_SUCCESS_METRICS")
+                .to_string();
+        }
+        if let Some(demo) = graduation.get("demo") {
+            self.demo = demo.as_str().expect("ERR_INVALID_DEMO").to_string();
+        }
+        if let Some(code) = graduation.get("code") {
+            self.code = code.as_str().expect("ERR_INVALID_CODE").to_string();
+        }
+    }
+}
+
 #[derive(
     BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
 )]
@@ -55,9 +94,22 @@ pub struct Graduation {
 pub struct PrivateGraduation {
     pub legal: String,
     pub budget: String,
-    pub monetazation: String,
-    pub valuation: String,
     pub gtm: String,
+}
+
+impl PrivateGraduation {
+    pub fn patch(&mut self, value: &Value) {
+        let graduation = value.as_object().unwrap();
+        if let Some(legal) = graduation.get("legal") {
+            self.legal = legal.as_str().expect("ERR_INVALID_LEGAL").to_string();
+        }
+        if let Some(budget) = graduation.get("budget") {
+            self.budget = budget.as_str().expect("ERR_INVALID_BUDGET").to_string();
+        }
+        if let Some(gtm) = graduation.get("gtm") {
+            self.gtm = gtm.as_str().expect("ERR_INVALID_GTM").to_string();
+        }
+    }
 }
 
 #[derive(
@@ -68,6 +120,21 @@ pub struct PrivateData {
     pub risks: String,
     pub needs: String,
     pub graduation: PrivateGraduation,
+}
+
+impl PrivateData {
+    pub fn patch(&mut self, value: &Value) {
+        let private_data = value.as_object().unwrap();
+        if let Some(risks) = private_data.get("risks") {
+            self.risks = risks.as_str().expect("ERR_INVALID_RISKS").to_string();
+        }
+        if let Some(needs) = private_data.get("needs") {
+            self.needs = needs.as_str().expect("ERR_INVALID_NEEDS").to_string();
+        }
+        if let Some(graduation) = private_data.get("graduation") {
+            self.graduation.patch(graduation);
+        }
+    }
 }
 
 /// Permissions table for interaction between a contributor and an entity.
@@ -145,10 +212,18 @@ impl Application {
             self.token = serde_json::from_value(token.clone()).expect("ERR_INVALID_TOKEN");
         }
         if let Some(contact) = application.get("contact") {
-            self.contact = Some(contact.as_str().expect("ERR_INVALID_CONTACT").to_string());
+            if contact.is_null() {
+                self.contact = None;
+            } else {
+                self.contact = Some(contact.as_str().expect("ERR_INVALID_CONTACT").to_string());
+            }
         }
         if let Some(geo) = application.get("geo") {
-            self.geo = Some(geo.as_str().expect("ERR_INVALID_GEO").to_string());
+            if geo.is_null() {
+                self.geo = None;
+            } else {
+                self.geo = Some(geo.as_str().expect("ERR_INVALID_GEO").to_string());
+            }
         }
         if let Some(vision) = application.get("vision") {
             self.vision = serde_json::from_value(vision.clone()).expect("ERR_INVALID_VISION");
@@ -158,11 +233,14 @@ impl Application {
                 serde_json::from_value(tech_lead.clone()).expect("ERR_INVALID_TECH_LEAD");
         }
         if let Some(graduation) = application.get("graduation") {
-            self.graduation =
-                serde_json::from_value(graduation.clone()).expect("ERR_INVALID_GRADUATION");
+            let mut old = self.graduation.clone().unwrap_or_default();
+            old.patch(graduation);
+            self.graduation = Some(old);
         }
         if let Some(private) = application.get("private") {
-            self.private = serde_json::from_value(private.clone()).expect("ERR_INVALID_PRIVATE");
+            let mut old = self.private.clone().unwrap_or_default();
+            old.patch(private);
+            self.private = Some(old);
         }
     }
 }
@@ -431,7 +509,7 @@ impl Contract {
     pub fn get_team(&self, account_id: AccountId) -> HashSet<AccountId> {
         Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
             .application
-            .expect("ERR_NO_APPLICATION")
+            .unwrap_or_default()
             .team
             .keys()
             .cloned()

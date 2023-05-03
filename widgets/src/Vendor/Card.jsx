@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
 State.init({
@@ -175,15 +175,23 @@ const body = (
           }}
         />
         <Row>
-          {state.profile.organization ? "Organization" : "Individual"}
-          <Widget
-            src={`${ownerId}/widget/ActiveIndicator`}
-            props={{
-              active: state.profile.active,
-              activeText: "Available",
-              inactiveText: "Not available",
-            }}
-          />
+          {state.profile.organization === "true"
+            ? "Organization"
+            : state.profile.organization === "false"
+            ? "Individual"
+            : ""}
+          {state.profile.active !== undefined ? (
+            <Widget
+              src={`${ownerId}/widget/ActiveIndicator`}
+              props={{
+                active: state.profile.active === "true",
+                activeText: "Available",
+                inactiveText: "Not available",
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </Row>
         {/*<Widget
           src={`${ownerId}/widget/BadgeList`}

@@ -6,12 +6,14 @@ use near_sdk_contract_tools::standard::nep297::Event;
 use std::collections::{HashMap, HashSet};
 
 use crate::events::Events;
+use crate::project::Permission;
 use crate::{Contract, ContractExt};
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone, Default)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Investor {
     contact: String,
+    permissions: HashMap<AccountId, Permission>,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone)]
@@ -99,5 +101,18 @@ impl Contract {
             .get(&account_id)
             .expect("ERR_NO_INVESTOR")
             .into()
+    }
+
+    pub fn check_is_investor_admin(&self, investor_id: AccountId, account_id: AccountId) -> bool {
+        self.investors
+            .get(&investor_id)
+            .map(|investor| {
+                let investor: Investor = investor.into();
+                matches!(
+                    investor.permissions.get(&account_id),
+                    Some(Permission::Admin)
+                )
+            })
+            .unwrap_or(false)
     }
 }

@@ -1,10 +1,11 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const projectId = props.projectId;
 const vendorId = props.vendorId;
 const cid = props.cid;
 
 State.init({
   description: "",
+  descriptionError: "",
 });
 
 const Container = styled.div`
@@ -81,6 +82,18 @@ return (
           placeholder: "Describe the contribution action",
           value: state.description,
           onChange: (description) => State.update({ description }),
+          validate: () => {
+            if (state.description.length > 500) {
+              State.update({
+                descriptionError:
+                  "Description must be less than 500 characters",
+              });
+              return;
+            }
+
+            State.update({ descriptionError: "" });
+          },
+          error: state.descriptionError,
         }}
       />
     </Form>
@@ -111,13 +124,16 @@ return (
               Add action
             </>
           ),
-          onClick: () =>
+          disabled: !validateForm(),
+          onClick: () => {
+            if (!validateForm()) return;
             Near.call(ownerId, "add_contribution_action", {
               project_id: projectId,
               vendor_id: vendorId,
               cid: cid,
               description: state.description,
-            }),
+            });
+          },
         }}
       />
     </Footer>

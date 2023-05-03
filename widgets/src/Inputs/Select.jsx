@@ -1,4 +1,5 @@
 const label = props.label ?? "Label";
+const noLabel = props.noLabel ?? false;
 const placeholder = props.placeholder ?? "Placeholder";
 const value = props.value ?? "";
 const options = props.options ?? [];
@@ -80,14 +81,15 @@ const Content = styled.div`
   border: 1px solid #d0d5dd;
   border-radius: 4px;
   background: #ffffff;
+  z-index: 3 !important;
 
-  &[data-state="open"] {
-    animation: ${scaleOut} 0.2s ease-in-out;
-  }
-
-  &[data-state="closed"] {
-    animation: ${scaleOut} 0.2s ease-in-out reverse;
-  }
+  /* &[data-state="open"] { */
+  /*   animation: ${scaleOut} 0.2s ease-in-out; */
+  /* } */
+  /**/
+  /* &[data-state="closed"] { */
+  /*   animation: ${scaleOut} 0.2s ease-in-out reverse; */
+  /* } */
 `;
 
 const Viewport = styled.div`
@@ -128,7 +130,7 @@ const Item = styled.button`
 
 return (
   <Container>
-    <Label>{label}</Label>
+    {noLabel ? <></> : <Label>{label}</Label>}
     <Select.Root
       value={value?.value}
       onValueChange={(value) =>

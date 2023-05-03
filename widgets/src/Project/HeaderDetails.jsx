@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId ?? context.accountId;
 const isAdmin = props.isAdmin;
 
@@ -78,7 +78,7 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.Viewable.OneLiner`}
         props={{
-          value: "Simple solutions for complex tasks",
+          value: state.profile.tagline,
           id: "tagline",
           onSave: (tagline) =>
             Near.call("social.near", "set", {

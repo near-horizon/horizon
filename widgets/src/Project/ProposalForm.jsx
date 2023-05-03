@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
 const LineContainer = styled.div`
@@ -80,6 +80,27 @@ State.init({
   method: [],
 });
 
+const validateForm = () => {
+  return (
+    state.message &&
+    state.messageError === "" &&
+    state.price &&
+    state.priceError === "" &&
+    state.vendorId &&
+    state.vendorIdError === "" &&
+    state.requestType &&
+    state.requestTypeError === "" &&
+    state.paymentType &&
+    state.paymentTypeError === "" &&
+    state.paymentSource &&
+    state.paymentSourceError === "" &&
+    state.startDate &&
+    state.startDateError === "" &&
+    state.endDate &&
+    state.endDateError === ""
+  );
+};
+
 if (!state.vendorsIsFetched) {
   Near.asyncView(
     ownerId,
@@ -130,13 +151,14 @@ if (!state.requestsIsFetched) {
     false
   ).then((requests) =>
     State.update({
-      requests: requests.map(([accountId, cid]) => ({
-        name: (
-          <Widget
-            src={`${ownerId}/widget/Request.Line`}
-            props={{ accountId, cid, size: "1em" }}
-          />
-        ),
+      requests: requests.map(([_, cid, title]) => ({
+        // name: (
+        //   <Widget
+        //     src={`${ownerId}/widget/Request.Line`}
+        //     props={{ accountId, cid, size: "1em" }}
+        //   />
+        // ),
+        text: title,
         value: cid,
       })),
       requestsIsFetched: true,
@@ -244,41 +266,47 @@ return (
           onChange: (proposalTerm) => State.update({ proposalTerm }),
         }}
       />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Service terms",
-          options: state.terms,
-          value: state.term,
-          onChange: (term) => State.update({ term }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Payment type",
-          options: state.paymentTypes,
-          value: state.paymentType,
-          onChange: (paymentType) => State.update({ paymentType }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Number`}
-        props={{
-          label: "Price",
-          value: state.price,
-          onChange: (price) => State.update({ price }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Payment method",
-          options: state.methods,
-          value: state.method,
-          onChange: (method) => State.update({ method }),
-        }}
-      />
+      {state.proposalTerm === "specify" ? (
+        <>
+          <Widget
+            src={`${ownerId}/widget/Inputs.Select`}
+            props={{
+              label: "Service terms",
+              options: state.terms,
+              value: state.term,
+              onChange: (term) => State.update({ term }),
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/Inputs.Select`}
+            props={{
+              label: "Payment type",
+              options: state.paymentTypes,
+              value: state.paymentType,
+              onChange: (paymentType) => State.update({ paymentType }),
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/Inputs.Number`}
+            props={{
+              label: "Price",
+              value: state.price,
+              onChange: (price) => State.update({ price }),
+            }}
+          />
+          <Widget
+            src={`${ownerId}/widget/Inputs.Select`}
+            props={{
+              label: "Payment method",
+              options: state.methods,
+              value: state.method,
+              onChange: (method) => State.update({ method }),
+            }}
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <Widget
         src={`${ownerId}/widget/Inputs.Checkbox`}
         props={{
@@ -317,8 +345,23 @@ return (
               Send proposal
             </>
           ),
+          disabled: !state.agree || !validateForm(),
           onClick: () => {
-            console.log("Send proposal");
+            if (!state.agree || !validateForm()) return;
+            Near.call(ownerId, "add_proposal", {
+              proposal: {
+                vendor_id: state.vendorId.value,
+                request_id: [accountId, state.requestId.value],
+                title: state.requestId.text,
+                description: state.message,
+                price: Number(state.price),
+                payment_type: state.paymentType.value,
+                proposal_type: state.requestType.value,
+                payment_source: state.paymentSource.value,
+                start_date: `${new Date(state.startDate).getTime()}`,
+                end_date: `${new Date(state.endDate).getTime()}`,
+              },
+            });
           },
         }}
       />

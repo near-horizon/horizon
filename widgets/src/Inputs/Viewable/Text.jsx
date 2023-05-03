@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const id = props.id ?? "text";
 const label = props.label ?? "Input";
 const value = props.value ?? "";
@@ -64,7 +64,7 @@ return (
           <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: isLink ? <a href={link}>{value}</a> : value,
+      view: isLink && value ? <a href={link}>{value}</a> : value,
       canEdit,
     }}
   />
