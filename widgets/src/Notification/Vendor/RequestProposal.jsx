@@ -1,4 +1,4 @@
-const ownerId = "contribut3.near";
+const ownerId = "nearhorizon.near";
 const { requestId, vendorId } = props.value;
 const [accountId, cid] = requestId;
 
@@ -124,82 +124,78 @@ const Column = styled.div`
 
 return (
   <>
-  <Row>
-    <Text bold>
-      <Widget
-        src="mob.near/widget/TimeAgo"
-        props={{ blockHeight: props.blockHeight }}
-      />
-      ago
-    </Text>
+    <Row>
+      <Text bold>
+        <Widget
+          src="mob.near/widget/TimeAgo"
+          props={{ blockHeight: props.blockHeight }}
+        />
+        ago
+      </Text>
     </Row>
-   <Row>
+    <Row>
       <Widget
         src="near/widget/AccountProfileInline"
         props={{ accountId: vendorId }}
       />
       sent a proposal to your request
       <Text bold>{state.request.title}.</Text>
-      </Row>
-      <Row>
+    </Row>
+    <Row>
       <Widget
         src={`${ownerId}/widget/Proposal.Summary`}
-        props={{ accountId, cid, vendorId}}
+        props={{ accountId, cid, vendorId }}
       />
     </Row>
     <Row>
-    <Widget
-      src={`${ownerId}/widget/Buttons.Green`}
-      props={{
-        text: "Hire",
-        onClick: () =>
-        {
-          const transactions = [
-            {
-              contractName: ownerId,
-              methodName: "add_contribution",
-              args: {
-                project_id: accountId,
-                cid,
-                vendor_id: vendorId,
-              }
-            },
-            {
-              contractName: "social.near",
-              methodName: "set",
-              args: {
-                data: {
-                  [context.accountId]: {
-                    index: {
-                      graph: JSON.stringify({
-                        key: "vendor/contract",
-                        value: { accountId: accountId },
-                      }),
-                      inbox: JSON.stringify({
-                        key: accountId,
-                        value: {
-                          type: "vendor/contract",
-                          contributionId: [
-                            accountId,
-                            cid,
-                          ],
-                          message: state.message,
-                          vendorId: vendorId,
-                          actionType: "accept"
-                        },
-                      }),
+      <Widget
+        src={`${ownerId}/widget/Buttons.Green`}
+        props={{
+          text: "Hire",
+          onClick: () => {
+            const transactions = [
+              {
+                contractName: ownerId,
+                methodName: "add_contribution",
+                args: {
+                  project_id: accountId,
+                  cid,
+                  vendor_id: vendorId,
+                },
+              },
+              {
+                contractName: "social.near",
+                methodName: "set",
+                args: {
+                  data: {
+                    [context.accountId]: {
+                      index: {
+                        graph: JSON.stringify({
+                          key: "vendor/contract",
+                          value: { accountId: accountId },
+                        }),
+                        inbox: JSON.stringify({
+                          key: accountId,
+                          value: {
+                            type: "vendor/contract",
+                            contributionId: [accountId, cid],
+                            message: state.message,
+                            vendorId: vendorId,
+                            actionType: "accept",
+                          },
+                        }),
+                      },
                     },
                   },
-                }
-              }
-            }
-          ];
+                },
+              },
+            ];
 
-          Near.call(transactions);
-        }
-      }}
-    />
+            Near.call(transactions);
+          },
+        }}
+      />
       <Button>Discuss</Button>
-      </Row>
+    </Row>
   </>
 );
