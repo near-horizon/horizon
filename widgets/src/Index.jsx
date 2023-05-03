@@ -153,6 +153,7 @@ const tabContent = {
       props={{ accountId: state.accountId }}
     />
   ),
+  legal: <Widget src={`${ownerId}/widget/TNCPage`} />,
 }[state.tab];
 
 const ContentContainer = styled.div`
@@ -200,7 +201,9 @@ return (
     <Content>
       <Sidebar
         show={
-          !["createproject", "createrequest", "permissions"].includes(state.tab)
+          !["createproject", "createrequest", "permissions", "legal"].includes(
+            state.tab
+          )
         }
       >
         <Widget
