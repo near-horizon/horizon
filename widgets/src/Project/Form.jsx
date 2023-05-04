@@ -193,7 +193,7 @@ return (
                 account id, and visit the{" "}
                 <a
                   target="_blank"
-                  href={`/${ownerId}/widget/Index?tab=permissions&accountId=${context.accountId}`}
+                  href={`/${ownerId}/widget/Index?tab=permissions&accountIds=${context.accountId}`}
                 >
                   link
                 </a>{" "}
@@ -417,17 +417,6 @@ return (
                   },
                 },
               ];
-              if (state.addInfo && state.accountId === context.accountId) {
-                transactions.unshift({
-                  contractName: "social.near",
-                  methodName: "grant_write_permission",
-                  args: {
-                    predecessor_id: context.accountId,
-                    keys: [context.accountId],
-                  },
-                  deposit: "1",
-                });
-              }
               Near.call(transactions);
             },
             text: (

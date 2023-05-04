@@ -3,10 +3,12 @@ const ownerId = "nearhorizon.near";
 State.init({
   following: [],
   followingIsFetched: false,
-  value: [{ name: props.accountId }],
+  value: (props.accountIds ?? "").split(",").map((name) => ({ name })),
   accountsWithPermissions: [],
   accountsWithPermissionsIsFetched: false,
 });
+
+console.log(state.value, props.accountIds);
 
 if (!context.accountId) {
   return <>Please sign in to continue</>;
@@ -19,14 +21,17 @@ if (!state.followingIsFetched) {
     { keys: [`${context.accountId}/graph/follow/*`] },
     "final",
     false
-  ).then((data) =>
+  ).then((data) => {
+    const following = (
+      Object.keys(data).length > 0
+        ? Object.keys(data[context.accountId]?.graph?.follow ?? {})
+        : []
+    ).map((name) => ({ name }));
     State.update({
-      following: Object.keys(data[context.accountId].graph.follow).map(
-        (name) => ({ name })
-      ),
+      following,
       followingIsFetched: true,
-    })
-  );
+    });
+  });
 }
 
 if (!state.accountsWithPermissionsIsFetched) {
