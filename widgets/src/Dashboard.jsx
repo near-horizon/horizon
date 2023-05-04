@@ -44,25 +44,25 @@ const content = {
   projects: (
     <Widget
       src={`${ownerId}/widget/Project.List`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   vendors: (
     <Widget
       src={`${ownerId}/widget/Vendor.List`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   backers: (
     <Widget
       src={`${ownerId}/widget/Investor.List`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   requests: (
     <Widget
       src={`${ownerId}/widget/Request.List`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
 }[getContent(props.content)];
@@ -142,6 +142,7 @@ const Stats = styled.div`
 State.init({
   stats: null,
   statsIsFetched: false,
+  search: "",
 });
 
 if (!state.statsIsFetched) {
@@ -201,7 +202,7 @@ return (
     <Filters>
       <Widget
         src={`${ownerId}/widget/SearchInput`}
-        props={{ search: props.search, update: props.update }}
+        props={{ search: state.search, update: (s) => State.update(s) }}
       />
       <Filter>
         <Widget

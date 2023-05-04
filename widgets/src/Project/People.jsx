@@ -56,6 +56,10 @@ if (!state.namesIsFetched) {
   });
 }
 
+if (!state.namesIsFetched) {
+  return <>Loading...</>;
+}
+
 const List = styled.ul`
   display: flex;
   flex-direction: column;
