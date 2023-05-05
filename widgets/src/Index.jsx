@@ -162,6 +162,11 @@ const ContentContainer = styled.div`
   border-radius: 24px 24px 0px 0px;
   padding: 3em;
 
+  &.form {
+    border: none;
+    background: #fafafa;
+  }
+
   * {
     margin: 0;
   }
@@ -183,6 +188,14 @@ const Content = styled.div`
 
 const Container = styled.div``;
 
+const showSidebar = ![
+  "createproject",
+  "createrequest",
+  "permissions",
+  "legal",
+].includes(state.tab);
+const isForm = ["createproject", "createrequest"].includes(state.tab);
+
 return (
   <Container>
     <Widget
@@ -198,19 +211,15 @@ return (
     />
     <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
     <Content>
-      <Sidebar
-        show={
-          !["createproject", "createrequest", "permissions", "legal"].includes(
-            state.tab
-          )
-        }
-      >
+      <Sidebar show={showSidebar}>
         <Widget
           src={`${ownerId}/widget/Sidebar`}
           props={{ tab: state.tab, update }}
         />
       </Sidebar>
-      <ContentContainer>{tabContent}</ContentContainer>
+      <ContentContainer className={isForm ? "form" : ""}>
+        {tabContent}
+      </ContentContainer>
     </Content>
   </Container>
 );

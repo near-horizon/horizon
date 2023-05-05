@@ -1,6 +1,13 @@
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
+const createDate = (date) => {
+  const d = date ? new Date(date) : new Date();
+  const month = `${d.getMonth() + 1}`;
+  const day = `${d.getDate()}`;
+  return `${d.getFullYear()}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+};
+
 const LineContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -65,7 +72,7 @@ const createProjectLine = (accountId, name, image) => {
 const Form = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 60%;
   gap: 1em;
@@ -101,6 +108,7 @@ const Container = styled.div`
   justify-content: center;
   width: 100%;
   gap: 3em;
+  padding-top: 2em;
   padding-bottom: 3em;
 `;
 
@@ -109,6 +117,7 @@ const Header = styled.h1`
   font-weight: 700;
   font-size: 2em;
   line-height: 1.4em;
+  margin-bottom: 0.5em;
   text-align: center;
   color: #000000;
 `;
@@ -187,7 +196,7 @@ State.init({
   paymentSourceError: "",
   budget: null,
   budgetError: "",
-  deadline: null,
+  deadline: createDate(),
   deadlineError: "",
 });
 
@@ -296,6 +305,10 @@ if (!state.projects.length) {
   );
 }
 
+const HalfWidth = styled.div`
+  width: 50%;
+`;
+
 return (
   <Container>
     {/*<ProgressBar className={state.step === "step1" ? "half" : ""}><div /><div /></ProgressBar>*/}
@@ -321,7 +334,7 @@ return (
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
           label: "Title",
-          placeholder: "Looking for Rust developer to create smart contracts",
+          placeholder: "",
           value: state.title,
           onChange: (title) => State.update({ title }),
           validate: () => {
@@ -348,8 +361,7 @@ return (
         src={`${ownerId}/widget/Inputs.TextArea`}
         props={{
           label: "Description",
-          placeholder:
-            "Crypto ipsum bitcoin ethereum dogecoin litecoin. Holo stacks fantom kava flow algorand. Gala dogecoin gala XRP binance flow. Algorand polygon bancor arweave avalanche. Holo kadena telcoin kusama BitTorrent flow holo velas horizen. TerraUSD helium filecoin terra shiba-inu. Serum algorand horizen kava flow maker telcoin algorand enjin. Dai bitcoin.",
+          placeholder: "",
           value: state.description,
           onChange: (description) => State.update({ description }),
           validate: () => {
@@ -377,7 +389,7 @@ return (
         src={`${ownerId}/widget/Inputs.MultiSelect`}
         props={{
           label: "Tags",
-          placeholder: "DeFi, Gaming...",
+          placeholder: "Start typing",
           options: [{ name: "Wallets" }, { name: "Games" }],
           value: state.tags,
           onChange: (tags) =>
@@ -388,72 +400,83 @@ return (
             }),
         }}
       />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Request type *",
-          options: state.requestTypes,
-          value: state.requestType,
-          onChange: (requestType) => State.update({ requestType }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Payment type *",
-          options: state.paymentTypes,
-          value: state.paymentType,
-          onChange: (paymentType) => State.update({ paymentType }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Select`}
-        props={{
-          label: "Payment source *",
-          options: state.paymentSources,
-          value: state.paymentSource,
-          onChange: (paymentSource) => State.update({ paymentSource }),
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Number`}
-        props={{
-          label: "Budget *",
-          placeholder: 1500,
-          value: state.budget,
-          onChange: (budget) => State.update({ budget }),
-          validate: () => {
-            if (state.budget < 1) {
-              State.update({
-                budgetError: "Budget must be at least 1",
-              });
-              return;
-            }
+      <HalfWidth>
+        <Widget
+          src={`${ownerId}/widget/Inputs.Select`}
+          props={{
+            label: "Request type *",
+            options: state.requestTypes,
+            value: state.requestType,
+            onChange: (requestType) => State.update({ requestType }),
+          }}
+        />
+      </HalfWidth>
+      <HalfWidth>
+        <Widget
+          src={`${ownerId}/widget/Inputs.Select`}
+          props={{
+            label: "Payment type *",
+            options: state.paymentTypes,
+            value: state.paymentType,
+            onChange: (paymentType) => State.update({ paymentType }),
+          }}
+        />
+      </HalfWidth>
+      <HalfWidth>
+        <Widget
+          src={`${ownerId}/widget/Inputs.Select`}
+          props={{
+            label: "Payment source *",
+            options: state.paymentSources,
+            value: state.paymentSource,
+            onChange: (paymentSource) => State.update({ paymentSource }),
+          }}
+        />
+      </HalfWidth>
+      <HalfWidth>
+        <Widget
+          src={`${ownerId}/widget/Inputs.Number`}
+          props={{
+            label: "Budget *",
+            placeholder: 0.0,
+            hasDollar: true,
+            value: state.budget,
+            onChange: (budget) => State.update({ budget }),
+            validate: () => {
+              if (state.budget < 1) {
+                State.update({
+                  budgetError: "Budget must be at least 1",
+                });
+                return;
+              }
 
-            State.update({ budgetError: "" });
-          },
-          error: state.budgetError,
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Date`}
-        props={{
-          label: "Deadline *",
-          value: state.deadline,
-          onChange: (deadline) => State.update({ deadline }),
-          validate: () => {
-            if (new Date(state.deadline) < new Date()) {
-              State.update({
-                deadlineError: "Deadline must be in the future",
-              });
-              return;
-            }
+              State.update({ budgetError: "" });
+            },
+            error: state.budgetError,
+          }}
+        />
+      </HalfWidth>
+      <HalfWidth>
+        <Widget
+          src={`${ownerId}/widget/Inputs.Date`}
+          props={{
+            label: "Deadline *",
+            value: state.deadline,
+            onChange: (deadline) => State.update({ deadline }),
+            validate: () => {
+              if (new Date(state.deadline) < new Date()) {
+                State.update({
+                  deadlineError: "Deadline must be in the future",
+                });
+                return;
+              }
 
-            State.update({ deadlineError: "" });
-          },
-          error: state.deadlineError,
-        }}
-      />
+              State.update({ deadlineError: "" });
+            },
+            error: state.deadlineError,
+          }}
+        />
+      </HalfWidth>
       <FormFooter>
         <Widget
           src={`${ownerId}/widget/Buttons.Green`}

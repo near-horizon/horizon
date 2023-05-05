@@ -1,6 +1,7 @@
 const label = props.label ?? "Label";
 const placeholder = props.placeholder ?? "Placeholder";
 const value = props.value ?? "";
+const hasDollar = props.hasDollar ?? false;
 const onChange = props.onChange ?? (() => {});
 const validate = props.validate ?? (() => {});
 const error = props.error ?? "";
@@ -51,19 +52,35 @@ const Input = styled.input`
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   border-radius: 4px;
   color: #101828;
-  width: 60%;
+  width: 100%;
+  ${hasDollar ? "padding-left: 1.75em;" : ""}
+`;
+
+const Dollar = styled.span`
+  position: absolute;
+  left: 0.75em;
+  top: 0.55em;
+  display: ${hasDollar ? "block" : "none"};
+`;
+
+const InputContainer = styled.div`
+  position: relative;
+  width: 100%;
 `;
 
 return (
   <Container>
     <Label>{label}</Label>
-    <Input
-      type="number"
-      placeholder={placeholder}
-      value={value}
-      onChange={({ target: { value } }) => onChange(value)}
-      onBlur={() => validate()}
-    />
+    <InputContainer>
+      <Input
+        type="number"
+        placeholder={placeholder}
+        value={value}
+        onChange={({ target: { value } }) => onChange(value)}
+        onBlur={() => validate()}
+      />
+      <Dollar>$</Dollar>
+    </InputContainer>
     <Error className={error ? "show" : ""}>{error}</Error>
   </Container>
 );

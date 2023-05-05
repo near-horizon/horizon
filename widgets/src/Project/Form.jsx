@@ -97,6 +97,8 @@ State.init({
   teamError: "",
   accountsWithPermissions: [],
   accountsWithPermissionsIsFetched: false,
+  oss: null,
+  ossError: "",
 });
 
 if (!state.accountsWithPermissionsIsFetched) {
@@ -117,6 +119,36 @@ if (!state.accountsWithPermissionsIsFetched) {
   );
 }
 
+const slideDown = styled.keyframes`
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+`;
+
+const slideUp = styled.keyframes`
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+`;
+
+const Hidable = styled("Collapsible.Content")`
+  overflow: hidden;
+
+  &[data-state="open"] {
+    animation: ${slideDown} 0.3s ease-in-out;
+  }
+
+  &[data-state="closed"] {
+    animation: ${slideUp} 0.3s ease-in-out;
+  }
+`;
+
 const validateForm = () => {
   return (
     state.name &&
@@ -134,7 +166,8 @@ const validateForm = () => {
     (!state.tags || state.tagsError === "") &&
     (!state.website || state.websiteError === "") &&
     (!state.geo || state.geoError === "") &&
-    (!state.team || state.teamError === "")
+    (!state.team || state.teamError === "") &&
+    (!state.oss || state.ossError === "")
   );
 };
 
@@ -225,6 +258,28 @@ return (
           error: state.integrationError,
         }}
       />
+      <Collapsible.Root
+        open={state.integration.value === "multichain"}
+        style={{ width: "100%" }}
+      >
+        <Hidable>
+          <Widget
+            src={`${ownerId}/widget/Inputs.MultiSelect`}
+            props={{
+              label: "Other chains",
+              placeholder:
+                "What other chain(s) are you currently integrating with?",
+              value: state.chains,
+              onChange: (chains) =>
+                State.update({
+                  chains: chains.map(({ name }) => ({
+                    name: name.trim().replaceAll(/\s+/g, "-"),
+                  })),
+                }),
+            }}
+          />
+        </Hidable>
+      </Collapsible.Root>
       <Widget
         src={`${ownerId}/widget/Inputs.Phase`}
         props={{
@@ -273,6 +328,15 @@ return (
             State.update({ descriptionError: "" });
           },
           error: state.descriptionError,
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Inputs.OSS`}
+        props={{
+          category: state.oss,
+          update: (oss) => State.update({ oss }),
+          setError: (ossError) => State.update({ ossError }),
+          error: state.ossError,
         }}
       />
       <Widget

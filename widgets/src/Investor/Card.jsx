@@ -4,45 +4,51 @@ const accountId = props.accountId;
 State.init({
   tags: null,
   tagsIsFetched: false,
-  description: null,
-  descriptionIsFetched: false,
+  profile: null,
+  profileIsFetched: false,
 });
 
-if (!state.foundersIsFetched) {
+if (!state.profileIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
-    { keys: [`${accountId}/profile/tags`] },
+    { keys: [`${accountId}/profile/**`] },
     "final",
     false
-  ).then((tags) => State.update({ tags, tagsIsFetched: true }));
-}
-
-if (!state.descriptionIsFetched) {
-  Near.asyncView(
-    "social.near",
-    "get",
-    { keys: [`${accountId}/profile/description`] },
-    "final",
-    false
-  ).then((description) =>
-    State.update({ description, descriptionIsFetched: true })
+  ).then((data) =>
+    State.update({ profile: data[accountId]?.profile, profileIsFetched: true })
   );
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1em;
+  width: 100%;
+  margin-bottom: 0.25em;
+`;
+
 const body = (
   <>
-    <Widget
-      src={`${ownerId}/widget/ProfileLine`}
-      props={{
-        accountId,
-        imageSize: "3em",
-        update: props.update,
-      }}
-    />
+    <Container>
+      <Widget
+        src={`${ownerId}/widget/Vendor.Icon`}
+        props={{ accountId, size: "4em" }}
+      />
+      <Widget
+        src={`${ownerId}/widget/NameAndAccount`}
+        props={{
+          accountId,
+          name: state.profile.name,
+          nameSize: "1.125em",
+        }}
+      />
+    </Container>
     <Widget
       src={`${ownerId}/widget/DescriptionArea`}
-      props={{ description: state.description }}
+      props={{ description: state.profile.description }}
     />
   </>
 );
