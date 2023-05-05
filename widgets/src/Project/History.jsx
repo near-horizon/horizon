@@ -28,7 +28,7 @@ return (
     <Widget
       src={`${ownerId}/widget/List`}
       props={{
-        search,
+        filter: ([[projectId]]) => projectId.includes(search),
         items: state.items,
         createItem: ([[project_id, cid], vendor_id]) => (
           <Widget

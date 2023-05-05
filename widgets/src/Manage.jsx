@@ -50,35 +50,39 @@ const contentSelector = (
   />
 );
 
+State.init({
+  search: "",
+});
+
 const content = {
   projects: (
     <Widget
       src={`${ownerId}/widget/Project.AdminList`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   requests: (
     <Widget
       src={`${ownerId}/widget/Request.AdminList`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   proposals: (
     <Widget
       src={`${ownerId}/widget/Proposal.AdminList`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   contracts: (
     <Widget
       src={`${ownerId}/widget/Contribution.AdminList`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
   applications: (
     <Widget
       src={`${ownerId}/widget/Application.AdminList`}
-      props={{ search: props.search, update: props.update }}
+      props={{ search: state.search, update: props.update }}
     />
   ),
 }[getContent(props.content)];
@@ -138,7 +142,7 @@ return (
     <Filters>
       <Widget
         src={`${ownerId}/widget/SearchInput`}
-        props={{ search: props.search, update: props.update }}
+        props={{ search: state.search, update: (s) => State.update(s) }}
       />
       <Filter>
         <Widget

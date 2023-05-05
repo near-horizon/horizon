@@ -85,7 +85,7 @@ return (
     <Widget
       src={`${ownerId}/widget/List`}
       props={{
-        search,
+        filter: () => {},
         items: notifications,
         createItem: (item) => (
           <Widget src={`${ownerId}/widget/Notification.Index`} props={item} />
