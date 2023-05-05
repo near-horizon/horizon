@@ -118,7 +118,7 @@ return (
     </List>
     <Heading>Team</Heading>
     <List>
-      {state.team.map((member) => (
+      {Object.keys(state.team).map((member) => (
         <Item>
           <Widget
             src={`${ownerId}/widget/Vendor.Icon`}
