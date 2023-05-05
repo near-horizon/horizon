@@ -18,7 +18,7 @@ do
   unset SLICE
 done
 
-near deploy $ACCOUNT_ID ./res/near_contribute.wasm
+near deploy $ACCOUNT_ID ./res/horizon.wasm
 
 unset NEAR_ENV
 

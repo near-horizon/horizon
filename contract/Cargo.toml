@@ -1,5 +1,5 @@
 [package]
-name = "near-contribute"
+name = "horizon"
 version = "0.1.0"
 authors = ["Illia Polosukhin <ilblackdragon@gmail.com>, Petar Vujović <petarvujovic98@gmail.com>"]
 edition = "2021"

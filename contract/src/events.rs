@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use near_sdk::AccountId;
 use near_sdk_contract_tools::event;
 
-#[event(standard = "near_contribute", version = "1", serde = "near_sdk::serde")]
+#[event(standard = "horizon", version = "1", serde = "near_sdk::serde")]
 pub enum Events {
     AddProject {
         account_id: AccountId,

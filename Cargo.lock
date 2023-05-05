@@ -1174,6 +1174,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "horizon"
+version = "0.1.0"
+dependencies = [
+ "cid",
+ "near-contract-standards",
+ "near-sdk",
+ "near-sdk-contract-tools",
+]
+
+[[package]]
 name = "http"
 version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1622,16 +1632,6 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "near-contribute"
-version = "0.1.0"
-dependencies = [
- "cid",
- "near-contract-standards",
- "near-sdk",
- "near-sdk-contract-tools",
 ]
 
 [[package]]
