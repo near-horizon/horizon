@@ -390,6 +390,75 @@ impl Contract {
         Events::RemoveProject { account_id }.emit();
     }
 
+    /// Add founders to project.
+    pub fn add_founders(&mut self, account_id: AccountId, founders: Vec<AccountId>) {
+        self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
+        self.projects
+            .entry(account_id.clone())
+            .and_modify(|existing| {
+                let mut old: Project = existing.clone().into();
+                old.founders.extend(founders);
+                *existing = VersionedProject::V0(old);
+            });
+    }
+
+    /// Remove founders from project.
+    pub fn remove_founders(&mut self, account_id: AccountId, founders: Vec<AccountId>) {
+        self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
+        self.projects
+            .entry(account_id.clone())
+            .and_modify(|existing| {
+                let mut old: Project = existing.clone().into();
+                for founder in founders {
+                    old.founders.remove(&founder);
+                }
+                *existing = VersionedProject::V0(old);
+            });
+    }
+
+    /// Add team members to project or edit existing team members' permissions.
+    pub fn add_team(
+        &mut self,
+        account_id: AccountId,
+        team: HashMap<AccountId, HashSet<Permission>>,
+    ) {
+        self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
+        self.projects
+            .entry(account_id.clone())
+            .and_modify(|existing| {
+                let mut old: Project = existing.clone().into();
+                let mut application = old.application.clone().unwrap_or_default();
+                for (account_id, permissions) in team {
+                    application.team.insert(account_id, permissions);
+                }
+                old.application = Some(application);
+                *existing = VersionedProject::V0(old);
+            });
+    }
+
+    /// Remove team members from project.
+    pub fn remove_team(
+        &mut self,
+        account_id: AccountId,
+        team: HashMap<AccountId, HashSet<Permission>>,
+    ) {
+        self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
+        self.projects
+            .entry(account_id.clone())
+            .and_modify(|existing| {
+                let mut old: Project = existing.clone().into();
+                if old.application.is_none() {
+                    return;
+                }
+                let mut application = old.application.clone().unwrap();
+                for (account_id, _) in team {
+                    application.team.remove(&account_id);
+                }
+                old.application = Some(application);
+                *existing = VersionedProject::V0(old);
+            });
+    }
+
     pub fn apply_for_program(&mut self, account_id: AccountId) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.entry(account_id.clone()).and_modify(|old| {
