@@ -1,7 +1,7 @@
 const ownerId = "nearhorizon.near";
 const id = props.id ?? "select";
 const label = props.label ?? "Input";
-const value = props.value ?? [];
+const value = props.value ?? {};
 const options = props.options ?? [];
 const onSave = props.onSave ?? (() => {});
 const canEdit = props.canEdit;
@@ -55,6 +55,19 @@ const edit = (update, v) => (
   </LabelArea>
 );
 
+const optionsMap = {
+  wallets: "Wallets",
+  "gaming/metaverse": "Gaming/Metaverse",
+  desci: "DeSci",
+  infrastructure: "Infrastructure",
+  nft: "NFT",
+  dao: "DAO",
+  "social-impact": "Social impact",
+  web2: "Web2 expansion",
+  "web3-product-partner": "Web3 Product Partner",
+  other: "Other",
+};
+
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
@@ -63,7 +76,7 @@ return (
       label,
       value,
       edit,
-      view: value[0].name,
+      view: optionsMap[value],
       canEdit,
     }}
   />

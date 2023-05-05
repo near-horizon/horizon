@@ -27,6 +27,8 @@ const Heading = styled.div`
 State.init({
   profile: null,
   profileIsFetched: false,
+  project: null,
+  projectIsFetched: false,
 });
 
 if (!state.profileIsFetched) {
@@ -42,6 +44,19 @@ if (!state.profileIsFetched) {
       profileIsFetched: true,
     })
   );
+}
+
+if (!state.projectIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((project) => State.update({ project, projectIsFetched: true }));
+}
+
+if (!state.profileIsFetched || !state.projectIsFetched) {
   return <>Loading...</>;
 }
 
@@ -91,7 +106,7 @@ return (
       src={`${ownerId}/widget/Inputs.Viewable.Integration`}
       props={{
         label: "Integration",
-        value: state.profile.integration,
+        value: state.project.application.integration,
         onSave: ({ value: integration }) =>
           Near.call("social.near", "set", {
             data: { [accountId]: { profile: { integration } } },

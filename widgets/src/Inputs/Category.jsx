@@ -10,6 +10,7 @@ const options = [
   { text: "Social impact", value: "social-impact" },
   { text: "Web2 expansion", value: "web2" },
   { text: "Web3 Product Partner", value: "web3-product-partner" },
+  { text: "Other", value: "other" },
 ];
 
 return (
