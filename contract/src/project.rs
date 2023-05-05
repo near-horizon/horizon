@@ -157,6 +157,8 @@ pub enum Permission {
     Admin,
 }
 
+type Permissions = HashMap<AccountId, HashSet<Permission>>;
+
 #[derive(
     BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
 )]
@@ -181,7 +183,7 @@ pub struct Application {
     #[serde(default)]
     pub tech_lead: TechLead,
     #[serde(default)]
-    pub team: HashMap<AccountId, HashSet<Permission>>,
+    pub team: Permissions,
     #[serde(default)]
     pub graduation: Option<Graduation>,
     #[serde(default)]
@@ -575,14 +577,11 @@ impl Contract {
     }
 
     /// List project team.
-    pub fn get_team(&self, account_id: AccountId) -> HashSet<AccountId> {
+    pub fn get_team(&self, account_id: AccountId) -> Permissions {
         Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
             .application
             .unwrap_or_default()
             .team
-            .keys()
-            .cloned()
-            .collect()
     }
 
     /// Check if account ID is an project.
