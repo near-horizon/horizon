@@ -115,4 +115,8 @@ impl Contract {
             })
             .unwrap_or(false)
     }
+
+    pub fn check_is_investor(&self, account_id: AccountId) -> bool {
+        self.investors.contains_key(&account_id)
+    }
 }
