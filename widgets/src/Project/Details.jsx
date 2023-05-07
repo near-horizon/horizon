@@ -68,7 +68,7 @@ return (
       props={{
         label: "Website",
         id: "website",
-        value: state.profile.linktree?.website ?? "",
+        value: state.profile.linktree?.website ?? state.profile.website ?? "",
         link: `https://${state.profile.linktree.website}`,
         onSave: (website) =>
           Near.call("social.near", "set", {
@@ -118,10 +118,10 @@ return (
       src={`${ownerId}/widget/Inputs.Viewable.Phase`}
       props={{
         label: "Development phase",
-        value: state.profile.dev,
-        onSave: ({ value: dev }) =>
+        value: state.profile.stage,
+        onSave: ({ value: stage }) =>
           Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { dev } } },
+            data: { [accountId]: { profile: { stage } } },
           }),
         canEdit: isAdmin,
       }}
