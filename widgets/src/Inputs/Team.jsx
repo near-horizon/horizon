@@ -134,23 +134,25 @@ return (
       <Other />
     </Header>
     {teamMembers.map((accountId) => (
-      <Widget
-        src={`${ownerId}/widget/Inputs.TeamMember`}
-        props={{
-          accountId,
-          name: team[accountId]?.name ?? accountId,
-          permission: getPermission(accountId),
-          onToggle: (id) => {
-            const permissions = id === "Admin" ? ["Admin"] : [];
-            Object.assign(team, { [accountId]: permissions });
-            update(team);
-          },
-          onRemove: () => {
-            delete team[accountId];
-            update(team);
-          },
-        }}
-      />
+      <div key={accountId}>
+        <Widget
+          src={`${ownerId}/widget/Inputs.TeamMember`}
+          props={{
+            accountId,
+            name: team[accountId]?.name ?? accountId,
+            permission: getPermission(accountId),
+            onToggle: (id) => {
+              const permissions = id === "Admin" ? ["Admin"] : [];
+              Object.assign(team, { [accountId]: permissions });
+              update(team);
+            },
+            onRemove: () => {
+              delete team[accountId];
+              update(team);
+            },
+          }}
+        />
+      </div>
     ))}
     <SaveButton onClick={() => onSave(team)}>Save changes</SaveButton>
   </Container>
