@@ -131,10 +131,10 @@ return (
       props={{
         label: "User base (MAA)",
         id: "userbase",
-        value: state.userbase,
+        value: state.profile.userbase,
         onSave: (userbase) =>
           Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { userbase } } },
+            data: { [accountId]: { profile: { userbase: `${userbase}` } } },
           }),
         canEdit: isAdmin,
       }}
@@ -213,7 +213,7 @@ return (
         value: state.team,
         onSave: (team) =>
           Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { team } } },
+            data: { [accountId]: { profile: { team: `${team}` } } },
           }),
         canEdit: isAdmin,
       }}
