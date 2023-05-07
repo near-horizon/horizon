@@ -419,11 +419,7 @@ impl Contract {
     }
 
     /// Add team members to project or edit existing team members' permissions.
-    pub fn add_team(
-        &mut self,
-        account_id: AccountId,
-        team: HashMap<AccountId, HashSet<Permission>>,
-    ) {
+    pub fn add_team(&mut self, account_id: AccountId, team: Permissions) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
             .entry(account_id.clone())
