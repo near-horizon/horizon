@@ -427,7 +427,7 @@ return (
                           name: state.name,
                           category: state.category.value,
                           stage: state.dev.value,
-                          ...(state.team ? { team: state.team } : {}),
+                          ...(state.team ? { team: `${state.team}` } : {}),
                           ...(state.tagline ? { tagline: state.tagline } : {}),
                           ...(state.description
                             ? { description: state.description }

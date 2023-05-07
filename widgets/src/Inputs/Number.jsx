@@ -53,7 +53,10 @@ const Input = styled.input`
   border-radius: 4px;
   color: #101828;
   width: 100%;
-  ${hasDollar ? "padding-left: 1.75em;" : ""}
+
+  &.hasDollar {
+    padding-left: 1.75em;
+  }
 `;
 
 const Dollar = styled.span`
@@ -73,10 +76,12 @@ return (
     <Label>{label}</Label>
     <InputContainer>
       <Input
+        className={hasDollar ? "hasDollar" : ""}
+        id={label}
         type="number"
         placeholder={placeholder}
         value={value}
-        onChange={({ target: { value } }) => onChange(value)}
+        onChange={({ target: { value } }) => onChange(Number(value))}
         onBlur={() => validate()}
       />
       <Dollar>$</Dollar>
