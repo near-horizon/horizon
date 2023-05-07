@@ -98,24 +98,39 @@ const Container = styled.div`
 return (
   <Container>
     <Heading>Founders</Heading>
-    <List>
-      {state.founders.map((founder) => (
-        <Item>
-          <Widget
-            src={`${ownerId}/widget/Vendor.Icon`}
-            props={{ accountId: founder, size: "2em" }}
-          />
-          <Widget
-            src={`${ownerId}/widget/NameAndAccount`}
-            props={{
-              accountId: founder,
-              name: state.names.get(founder),
-              nameSize: ".9em",
-            }}
-          />
-        </Item>
-      ))}
-    </List>
+    {props.isAdmin ? (
+      <Widget
+        src={`${ownerId}/widget/Inputs.Founders`}
+        props={{
+          founders: state.founders,
+          update: (founders) => State.update({ founders }),
+          onSave: (founders) =>
+            Near.call(ownerId, "add_founders", {
+              account_id: accountId,
+              founders,
+            }),
+        }}
+      />
+    ) : (
+      <List>
+        {state.founders.map((founder) => (
+          <Item>
+            <Widget
+              src={`${ownerId}/widget/Vendor.Icon`}
+              props={{ accountId: founder, size: "2em" }}
+            />
+            <Widget
+              src={`${ownerId}/widget/NameAndAccount`}
+              props={{
+                accountId: founder,
+                name: state.names.get(founder),
+                nameSize: ".9em",
+              }}
+            />
+          </Item>
+        ))}
+      </List>
+    )}
     <Heading>Team</Heading>
     {props.isAdmin ? (
       <Widget
