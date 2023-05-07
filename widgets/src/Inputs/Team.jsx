@@ -1,6 +1,7 @@
 const ownerId = "nearhorizon.near";
-const search = props.search ?? "";
-const team = props.team ?? [];
+const team = props.team ?? {};
+const update = props.update ?? (() => {});
+const onSave = props.onSave ?? (() => {});
 
 const Header = styled.div`
   display: flex;
@@ -34,24 +35,123 @@ const Container = styled.div`
   }
 `;
 
+State.init({
+  team: [],
+  following: [],
+  followingIsFetched: false,
+  followers: [],
+  followersIsFetched: false,
+});
+
+if (!state.followingIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${context.accountId}/graph/follow/*`] },
+    "final",
+    false
+  ).then((data) => {
+    const following = (
+      Object.keys(data).length > 0
+        ? Object.keys(data[context.accountId]?.graph?.follow ?? {})
+        : []
+    ).map((name) => ({ name }));
+    State.update({
+      following,
+      followingIsFetched: true,
+    });
+  });
+}
+
+if (!state.followersIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`*/graph/follow/${context.accountId}`] },
+    "final",
+    false
+  ).then((data) => {
+    const followers = Object.keys(data ?? {}).map((name) => ({ name }));
+    State.update({
+      followers,
+      followersIsFetched: true,
+    });
+  });
+}
+
+const SaveButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em 1em;
+  background: #00ec97;
+  border-radius: 50px;
+  border: none;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.95em;
+  line-height: 1em;
+  text-align: center;
+  color: #11181c;
+  margin-top: 1em;
+`;
+
+const teamMembers = Object.keys(team);
+
+const getPermission = (accountId) => {
+  let [permission] = team[accountId] ?? [];
+  if (!permission) {
+    permission = "Member";
+  }
+  return { id: permission, text: permission };
+};
+
 return (
   <Container>
-    <Widget src={`${ownerId}/widget/Inputs.MultiSelect`} props={{}} />
+    <Widget
+      src={`${ownerId}/widget/Inputs.MultiSelect`}
+      props={{
+        label: "Add team members",
+        placeholder: "Start typing",
+        options: [...state.followers, ...state.following].filter(
+          ({ name }) => !teamMembers.includes(name)
+        ),
+        value: state.team,
+        onChange: (team) => {
+          State.update({ team });
+          Object.assign(
+            props.team,
+            ...team.map(({ name }) => ({ [name]: [] }))
+          );
+          update(props.team);
+        },
+      }}
+    />
     <Header>
       <Name>User</Name>
       <Other>Permissions</Other>
       <Other />
     </Header>
-    {team.map(({ accountId, name }) => (
+    {teamMembers.map((accountId) => (
       <Widget
         src={`${ownerId}/widget/Inputs.TeamMember`}
         props={{
           accountId,
-          name,
-          onToggle: () => {},
-          onRemove: () => {},
+          name: team[accountId]?.name ?? accountId,
+          permission: getPermission(accountId),
+          onToggle: (id) => {
+            const permissions = id === "Admin" ? ["Admin"] : [];
+            Object.assign(team, { [accountId]: permissions });
+            update(team);
+          },
+          onRemove: () => {
+            delete team[accountId];
+            update(team);
+          },
         }}
       />
     ))}
+    <SaveButton onClick={() => onSave(team)}>Save changes</SaveButton>
   </Container>
 );

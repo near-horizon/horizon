@@ -88,7 +88,7 @@ const DropdownLi = styled.li`
 `;
 
 const createNewButton = ({ id, text, icon }) => (
-  <DropdownMenu.Item asChild={true}>
+  <DropdownMenu.Item asChild>
     <DropdownLi>
       <DropdownItem
         href={`/${ownerId}/widget/Index?tab=${id}`}
@@ -165,11 +165,11 @@ const MenuText = styled.span`
 
 return (
   <DropdownMenu.Root
-    asChild={true}
+    asChild
     onOpenChange={(show) => State.update({ show })}
     open={state.show}
   >
-    <DropdownMenu.Trigger asChild={true}>
+    <DropdownMenu.Trigger asChild>
       <MenuIcon>
         {icon}
         <MenuText>Create new...</MenuText>
@@ -177,7 +177,7 @@ return (
       </MenuIcon>
     </DropdownMenu.Trigger>
 
-    <DropdownMenu.Content asChild={true}>
+    <DropdownMenu.Content asChild>
       <DropdownList className={state.show ? "show" : ""}>
         {createNewButton({
           id: "createproject",

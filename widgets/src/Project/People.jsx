@@ -117,23 +117,35 @@ return (
       ))}
     </List>
     <Heading>Team</Heading>
-    <List>
-      {Object.keys(state.team).map((member) => (
-        <Item>
-          <Widget
-            src={`${ownerId}/widget/Vendor.Icon`}
-            props={{ accountId: member, size: "2em" }}
-          />
-          <Widget
-            src={`${ownerId}/widget/NameAndAccount`}
-            props={{
-              accountId: member,
-              name: state.names.get(member),
-              nameSize: ".9em",
-            }}
-          />
-        </Item>
-      ))}
-    </List>
+    {props.isAdmin ? (
+      <Widget
+        src={`${ownerId}/widget/Inputs.Team`}
+        props={{
+          team: state.team,
+          update: (team) => State.update({ team }),
+          onSave: (team) =>
+            Near.call(ownerId, "add_team", { account_id: accountId, team }),
+        }}
+      />
+    ) : (
+      <List>
+        {Object.keys(state.team).map((member) => (
+          <Item>
+            <Widget
+              src={`${ownerId}/widget/Vendor.Icon`}
+              props={{ accountId: member, size: "2em" }}
+            />
+            <Widget
+              src={`${ownerId}/widget/NameAndAccount`}
+              props={{
+                accountId: member,
+                name: state.names.get(member),
+                nameSize: ".9em",
+              }}
+            />
+          </Item>
+        ))}
+      </List>
+    )}
   </Container>
 );

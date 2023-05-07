@@ -1,16 +1,22 @@
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 const name = props.name;
-const premission = props.premission;
+const permission = props.permission;
 const onToggle = props.onToggle;
 const onRemove = props.onRemove;
 
 const Name = styled.a`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5em;
   font-style: normal;
   font-weight: 600;
   font-size: 0.95em;
   line-height: 1em;
   color: #101828;
+  width: 70%;
 `;
 
 const Other = styled.div`
@@ -59,13 +65,13 @@ return (
       <Widget
         src={`${ownerId}/widget/Filter`}
         props={{
-          name: "",
+          noLabel: true,
           options: [
-            { id: "Admin", name: "Admin" },
-            { id: "Member", name: "Member" },
+            { id: "Admin", text: "Admin" },
+            { id: "Member", text: "Member" },
           ],
-          selected: premission,
-          update: (premission) => onToggle(premission),
+          selected: permission.id,
+          update: (permission) => onToggle(permission),
         }}
       />
     </Other>
