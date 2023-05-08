@@ -196,6 +196,7 @@ return (
           placeholder:
             "Enter the NEAR account ID of your backer (wallet address like nearhorizon.near)",
           value: state.accountId,
+          type: "investor",
           onChange: (accountId) => State.update({ accountId }),
           addInfo: (addInfo) => State.update({ addInfo }),
         }}

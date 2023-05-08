@@ -196,6 +196,7 @@ return (
           placeholder:
             "Enter the NEAR account ID of your contributor (wallet address like nearhorizon.near)",
           value: state.accountId,
+          type: "vendor",
           onChange: (accountId) => State.update({ accountId }),
           addInfo: (addInfo) => State.update({ addInfo }),
         }}

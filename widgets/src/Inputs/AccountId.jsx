@@ -27,6 +27,32 @@ const checkIsProject = (accountId) => {
   );
 };
 
+const checkIsVendor = (accountId) => {
+  return Near.asyncView(
+    ownerId,
+    "check_is_vendor",
+    { account_id: accountId },
+    "final",
+    false
+  );
+};
+
+const checkIsInvestor = (accountId) => {
+  return Near.asyncView(
+    ownerId,
+    "check_is_investor",
+    { account_id: accountId },
+    "final",
+    false
+  );
+};
+
+const checkIsTaken = {
+  project: checkIsProject,
+  vendor: checkIsVendor,
+  investor: checkIsInvestor,
+}[props.type ?? "project"];
+
 State.init({
   valid: true,
   errorMessage: <></>,
@@ -80,7 +106,7 @@ const validate = async () => {
     return;
   }
 
-  checkIsProject(value).then((isProject) => {
+  checkIsTaken(value).then((isProject) => {
     if (isProject) {
       State.update({
         valid: false,
