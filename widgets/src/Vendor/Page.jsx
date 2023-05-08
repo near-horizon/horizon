@@ -8,6 +8,10 @@ const getContent = (content) => {
     return "overview";
   }
 
+  if (content === "admins" && !state.isAdmin) {
+    return "overview";
+  }
+
   return content;
 };
 
