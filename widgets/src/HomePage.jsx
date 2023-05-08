@@ -386,7 +386,7 @@ return (
         <Widget
           src={`${ownerId}/widget/Stats.Card`}
           props={{
-            value: "$88M+",
+            value: "$578M+",
             label: "Raised",
           }}
         />
