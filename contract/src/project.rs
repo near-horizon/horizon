@@ -157,7 +157,7 @@ pub enum Permission {
     Admin,
 }
 
-type Permissions = HashMap<AccountId, HashSet<Permission>>;
+pub type Permissions = HashMap<AccountId, HashSet<Permission>>;
 
 #[derive(
     BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,

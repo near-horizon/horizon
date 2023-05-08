@@ -5,13 +5,13 @@ use near_sdk_contract_tools::owner::Owner;
 use near_sdk_contract_tools::standard::nep297::Event;
 use std::collections::{HashMap, HashSet};
 
-use crate::project::Permission;
+use crate::project::{Permission, Permissions};
 use crate::{events::Events, Contract, ContractExt};
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone, Default)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Vendor {
-    permissions: HashMap<AccountId, HashSet<Permission>>,
+    permissions: Permissions,
 }
 
 impl Vendor {
