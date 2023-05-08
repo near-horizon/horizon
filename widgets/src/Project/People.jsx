@@ -105,9 +105,9 @@ return (
           founders: state.founders,
           update: (founders) => State.update({ founders }),
           onSave: (founders) =>
-            Near.call(ownerId, "add_founders", {
+            Near.call(ownerId, "edit_project", {
               account_id: accountId,
-              founders,
+              project: { founders },
             }),
         }}
       />
@@ -139,7 +139,10 @@ return (
           team: state.team,
           update: (team) => State.update({ team }),
           onSave: (team) =>
-            Near.call(ownerId, "add_team", { account_id: accountId, team }),
+            Near.call(ownerId, "edit_project", {
+              account_id: accountId,
+              project: { application: { team } },
+            }),
         }}
       />
     ) : (
