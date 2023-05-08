@@ -134,6 +134,32 @@ const tabContent = {
       }}
     />
   ),
+  createvendor: (
+    <Widget
+      src={`${ownerId}/widget/Vendor.Form`}
+      props={{
+        search: state.search,
+        content: state.content,
+        accountId: props.accountId,
+        kind: state.kind,
+        cid: state.cid,
+        update,
+      }}
+    />
+  ),
+  createbacker: (
+    <Widget
+      src={`${ownerId}/widget/Investor.Form`}
+      props={{
+        search: state.search,
+        content: state.content,
+        accountId: props.accountId,
+        kind: state.kind,
+        cid: state.cid,
+        update,
+      }}
+    />
+  ),
   permissions: (
     <Widget
       src={`${ownerId}/widget/Inputs.SetUpPermissions`}
@@ -191,10 +217,17 @@ const Container = styled.div``;
 const showSidebar = ![
   "createproject",
   "createrequest",
+  "createvendor",
+  "createbacker",
   "permissions",
   "legal",
 ].includes(state.tab);
-const isForm = ["createproject", "createrequest"].includes(state.tab);
+const isForm = [
+  "createproject",
+  "createrequest",
+  "createvendor",
+  "createbacker",
+].includes(state.tab);
 
 return (
   <Container>

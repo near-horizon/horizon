@@ -6,7 +6,7 @@ if (!context.accountId) {
       src={`${ownerId}/widget/InfoSegment`}
       props={{
         title: "Not logged in!",
-        description: "You must log in to create a new project!",
+        description: "You must log in to create a new backer!",
       }}
     />
   );
@@ -79,10 +79,6 @@ State.init({
   accountIdError: "",
   category: null,
   categoryError: "",
-  integration: null,
-  integrationError: "",
-  dev: null,
-  devError: "",
   tagline: "",
   taglineError: "",
   description: "",
@@ -93,12 +89,8 @@ State.init({
   websiteError: "",
   geo: "",
   geoError: "",
-  team: null,
-  teamError: "",
   accountsWithPermissions: [],
   accountsWithPermissionsIsFetched: false,
-  oss: null,
-  ossError: "",
 });
 
 if (!state.accountsWithPermissionsIsFetched) {
@@ -157,17 +149,11 @@ const validateForm = () => {
     state.accountIdError === "" &&
     state.category &&
     state.categoryError === "" &&
-    state.integration &&
-    state.integrationError === "" &&
-    state.dev &&
-    state.devError === "" &&
     (!state.tagline || state.taglineError === "") &&
     (!state.description || state.descriptionError === "") &&
     (!state.tags || state.tagsError === "") &&
     (!state.website || state.websiteError === "") &&
-    (!state.geo || state.geoError === "") &&
-    (!state.team || state.teamError === "") &&
-    (!state.oss || state.ossError === "")
+    (!state.geo || state.geoError === "")
   );
 };
 
@@ -181,8 +167,8 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
-          label: "Project name *",
-          placeholder: "Enter project name",
+          label: "Backer name *",
+          placeholder: "Enter backer name",
           value: state.name,
           onChange: (name) => State.update({ name }),
           validate: () => {
@@ -208,7 +194,7 @@ return (
         props={{
           label: "NEAR Account *",
           placeholder:
-            "Enter the NEAR account ID of your project (wallet address like nearhorizon.near)",
+            "Enter the NEAR account ID of your backer (wallet address like nearhorizon.near)",
           value: state.accountId,
           onChange: (accountId) => State.update({ accountId }),
           addInfo: (addInfo) => State.update({ addInfo }),
@@ -218,11 +204,11 @@ return (
         <Widget
           src={`${ownerId}/widget/InfoSegment`}
           props={{
-            title: "Account ID of project",
+            title: "Account ID of backer",
             description: (
               <>
-                Your project has its own account. In order to add admins on a
-                project, including yourself, you must log in with the project
+                Your backer has its own account. In order to add admins on a
+                backer, including yourself, you must log in with the backer
                 account id, and visit the{" "}
                 <a
                   target="_blank"
@@ -250,50 +236,10 @@ return (
         }}
       />
       <Widget
-        src={`${ownerId}/widget/Inputs.Integration`}
-        props={{
-          category: state.integration,
-          update: (integration) => State.update({ integration }),
-          setError: (integrationError) => State.update({ integrationError }),
-          error: state.integrationError,
-        }}
-      />
-      <Collapsible.Root
-        open={state.integration.value === "multichain"}
-        style={{ width: "100%" }}
-      >
-        <Hidable>
-          <Widget
-            src={`${ownerId}/widget/Inputs.MultiSelect`}
-            props={{
-              label: "Other chains",
-              placeholder:
-                "What other chain(s) are you currently integrating with?",
-              value: state.chains,
-              onChange: (chains) =>
-                State.update({
-                  chains: chains.map(({ name }) => ({
-                    name: name.trim().replaceAll(/\s+/g, "-"),
-                  })),
-                }),
-            }}
-          />
-        </Hidable>
-      </Collapsible.Root>
-      <Widget
-        src={`${ownerId}/widget/Inputs.Phase`}
-        props={{
-          category: state.dev,
-          update: (dev) => State.update({ dev }),
-          setError: (devError) => State.update({ devError }),
-          error: state.devError,
-        }}
-      />
-      <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
           label: "Tagline",
-          placeholder: "Write a one liner about your project",
+          placeholder: "Write a one liner about your backer",
           value: state.tagline,
           onChange: (tagline) => State.update({ tagline }),
           validate: () => {
@@ -313,7 +259,7 @@ return (
         src={`${ownerId}/widget/Inputs.TextArea`}
         props={{
           label: "Description",
-          placeholder: "Give a short description of your project",
+          placeholder: "Give a short description of your backer",
           value: state.description,
           onChange: (description) => State.update({ description }),
           validate: () => {
@@ -328,15 +274,6 @@ return (
             State.update({ descriptionError: "" });
           },
           error: state.descriptionError,
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.OSS`}
-        props={{
-          category: state.oss,
-          update: (oss) => State.update({ oss }),
-          setError: (ossError) => State.update({ ossError }),
-          error: state.ossError,
         }}
       />
       <Widget
@@ -370,23 +307,6 @@ return (
             }
 
             State.update({ websiteError: "" });
-          },
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Inputs.Number`}
-        props={{
-          label: "Team size",
-          placeholder: 10,
-          value: state.team,
-          onChange: (team) => State.update({ team }),
-          validate: () => {
-            if (state.team < 1) {
-              State.update({ teamError: "Team size must be at least 1" });
-              return;
-            }
-
-            State.update({ teamError: "" });
           },
         }}
       />
@@ -426,8 +346,6 @@ return (
                         profile: {
                           name: state.name,
                           category: state.category.value,
-                          stage: state.dev.value,
-                          ...(state.team ? { team: `${state.team}` } : {}),
                           ...(state.tagline ? { tagline: state.tagline } : {}),
                           ...(state.description
                             ? { description: state.description }
@@ -464,21 +382,8 @@ return (
                 },
                 {
                   contractName: ownerId,
-                  methodName: "add_project",
+                  methodName: "add_backer",
                   args: { account_id: state.accountId },
-                },
-                {
-                  contractName: ownerId,
-                  methodName: "edit_project",
-                  args: {
-                    account_id: state.accountId,
-                    project: {
-                      application: {
-                        integration: state.integration.value,
-                        ...(state.geo ? { geo: state.geo } : {}),
-                      },
-                    },
-                  },
                 },
               ];
               Near.call(transactions);
@@ -500,7 +405,7 @@ return (
                     stroke-linejoin="round"
                   />
                 </svg>
-                Create project
+                Create backer
               </>
             ),
           }}
