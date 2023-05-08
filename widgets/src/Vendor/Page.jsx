@@ -1,7 +1,7 @@
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId ?? context.accountId;
 
-const availableContent = ["overview", "contracts", "history"];
+const availableContent = ["overview", "admins", "contracts", "history"];
 
 const getContent = (content) => {
   if (!content || !availableContent.includes(content)) {
@@ -125,6 +125,12 @@ const content = {
       props={{ accountId, isAdmin: state.isAdmin }}
     />
   ),
+  admins: (
+    <Widget
+      src={`${ownerId}/widget/Vendor.Admins`}
+      props={{ accountId, isAdmin: state.isAdmin }}
+    />
+  ),
   contracts: (
     <Widget
       src={`${ownerId}/widget/Vendor.Contracts`}
@@ -189,6 +195,7 @@ return (
                 id: "overview",
                 text: "Overview",
               },
+              state.isAdmin ? { id: "admins", text: "Admins" } : null,
               {
                 id: "contracts",
                 text: "Contracts",
@@ -197,7 +204,7 @@ return (
                 id: "history",
                 text: "Work history",
               },
-            ],
+            ].filter((x) => !!x),
           }}
         />
         {content}
