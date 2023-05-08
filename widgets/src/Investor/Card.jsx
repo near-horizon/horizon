@@ -2,8 +2,8 @@ const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
 State.init({
-  tags: null,
-  tagsIsFetched: false,
+  investor: null,
+  investorIsFetched: false,
   profile: null,
   profileIsFetched: false,
 });
@@ -18,6 +18,16 @@ if (!state.profileIsFetched) {
   ).then((data) =>
     State.update({ profile: data[accountId]?.profile, profileIsFetched: true })
   );
+}
+
+if (!state.investorIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_investor",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((investor) => State.update({ investor, investorIsFetched: true }));
 }
 
 const Container = styled.div`
@@ -45,6 +55,16 @@ const body = (
           nameSize: "1.125em",
         }}
       />
+      {state.investor.verified ? (
+        <Widget
+          src={`${ownerId}/widget/BadgeList`}
+          props={{
+            badges: [{ value: "Verified" }],
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </Container>
     <Widget
       src={`${ownerId}/widget/DescriptionArea`}
