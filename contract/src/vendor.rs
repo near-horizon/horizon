@@ -10,8 +10,15 @@ use crate::{events::Events, Contract, ContractExt};
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone, Default)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Vendor {
+pub struct VendorV0 {
     permissions: Permissions,
+}
+
+#[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "near_sdk::serde")]
+pub struct Vendor {
+    pub permissions: Permissions,
+    pub verified: bool,
 }
 
 impl Vendor {
@@ -26,13 +33,18 @@ impl Vendor {
 
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedVendor {
-    V0(Vendor),
+    V0(VendorV0),
+    V1(Vendor),
 }
 
 impl From<VersionedVendor> for Vendor {
     fn from(value: VersionedVendor) -> Self {
         match value {
-            VersionedVendor::V0(c) => c,
+            VersionedVendor::V0(c) => Vendor {
+                permissions: c.permissions,
+                verified: false,
+            },
+            VersionedVendor::V1(c) => c,
         }
     }
 }
@@ -40,35 +52,68 @@ impl From<VersionedVendor> for Vendor {
 impl From<&VersionedVendor> for Vendor {
     fn from(value: &VersionedVendor) -> Self {
         match value {
-            VersionedVendor::V0(c) => c.clone(),
+            VersionedVendor::V0(c) => Vendor {
+                permissions: c.permissions.clone(),
+                verified: false,
+            },
+            VersionedVendor::V1(c) => c.clone(),
         }
     }
 }
 
 #[near_bindgen]
 impl Contract {
-    pub fn add_vendor(
-        &mut self,
-        account_id: AccountId,
-        permissions: HashMap<AccountId, HashSet<Permission>>,
-    ) {
+    pub fn add_vendor(&mut self, account_id: AccountId, permissions: Permissions) {
         self.assert_owner();
         self.vendors.insert(
             account_id.clone(),
-            VersionedVendor::V0(Vendor { permissions }),
+            VersionedVendor::V1(Vendor {
+                permissions,
+                verified: true,
+            }),
         );
         Events::AddVendor { account_id }.emit();
     }
 
+    pub fn register_vendor(&mut self, account_id: AccountId) {
+        require!(!self.vendors.contains_key(&account_id), "ERR_VENDOR_EXISTS");
+        self.vendors.insert(
+            account_id.clone(),
+            VersionedVendor::V1(Vendor {
+                permissions: {
+                    let mut map = HashMap::new();
+                    map.insert(account_id.clone(), {
+                        let mut set = HashSet::new();
+                        set.insert(Permission::Admin);
+                        set
+                    });
+                    map.insert(env::predecessor_account_id(), {
+                        let mut set = HashSet::new();
+                        set.insert(Permission::Admin);
+                        set
+                    });
+                    map
+                },
+                verified: false,
+            }),
+        );
+        Events::RegisterVendor { account_id }.emit();
+    }
+
     /// Edit vendor details.
-    pub fn edit_vendor(&mut self, account_id: AccountId, vendor: Vendor) {
+    pub fn edit_vendor(&mut self, account_id: AccountId, vendor: VendorV0) {
         self.assert_can_edit_vendor(&account_id, &env::predecessor_account_id());
         self.vendors
             .entry(account_id.clone())
             .and_modify(|old| {
-                *old = VersionedVendor::V0(vendor.clone());
+                let mut old_v: Vendor = old.clone().into();
+                old_v.permissions = vendor.permissions.clone();
+                *old = VersionedVendor::V1(old_v.clone());
             })
-            .or_insert(VersionedVendor::V0(vendor));
+            .or_insert(VersionedVendor::V1(Vendor {
+                permissions: vendor.permissions.clone(),
+                verified: false,
+            }));
         Events::EditVendor { account_id }.emit();
     }
 
@@ -77,6 +122,30 @@ impl Contract {
         self.assert_can_edit_vendor(&account_id, &env::predecessor_account_id());
         self.vendors.remove(&account_id);
         Events::RemoveVendor { account_id }.emit();
+    }
+
+    pub fn verify_vendor(&mut self, account_id: AccountId) {
+        self.assert_owner();
+        self.vendors
+            .entry(account_id.clone())
+            .and_modify(|vendor| {
+                let mut old: Vendor = vendor.clone().into();
+                old.verified = true;
+                *vendor = VersionedVendor::V1(old);
+            })
+            .or_insert(VersionedVendor::V1(Vendor {
+                permissions: {
+                    let mut permissions = HashMap::new();
+                    permissions.insert(account_id.clone(), {
+                        let mut permissions = HashSet::new();
+                        permissions.insert(Permission::Admin);
+                        permissions
+                    });
+                    permissions
+                },
+                verified: true,
+            }));
+        Events::VerifyVendor { account_id }.emit();
     }
 
     /// Views
@@ -89,7 +158,7 @@ impl Contract {
     pub fn get_admin_vendors(&self, account_id: AccountId) -> HashSet<AccountId> {
         self.vendors
             .into_iter()
-            .filter(|(_, vendor)| Vendor::from(vendor.clone()).is_admin(&account_id))
+            .filter(|(_, vendor)| Vendor::from(*vendor).is_admin(&account_id))
             .map(|(vendor_id, _)| vendor_id.clone())
             .collect()
     }

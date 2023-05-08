@@ -27,10 +27,16 @@ pub enum Events {
     AddVendor {
         account_id: AccountId,
     },
+    RegisterVendor {
+        account_id: AccountId,
+    },
     EditVendor {
         account_id: AccountId,
     },
     RemoveVendor {
+        account_id: AccountId,
+    },
+    VerifyVendor {
         account_id: AccountId,
     },
     AddRequest {
@@ -68,11 +74,17 @@ pub enum Events {
     AddInvestors {
         investors: HashSet<AccountId>,
     },
+    RegisterInvestor {
+        account_id: AccountId,
+    },
     RemoveInvestors {
         investors: HashSet<AccountId>,
     },
     EditInvestors {
         investors: HashSet<AccountId>,
+    },
+    VerifyInvestor {
+        account_id: AccountId,
     },
     AddContribution {
         project_id: AccountId,
