@@ -13,14 +13,6 @@ const CardContainer = styled.div`
   border-radius: 8px;
   flex-shrink: 0;
   width: 100%;
-
-  @media (min-width: 768px) {
-    width: ${({ full }) => (full ? "100%" : "49%")};
-  }
-
-  @media (min-width: 2560px) {
-    width: ${({ full }) => (full ? "100%" : "32%")};
-  }
 `;
 
 const CardHeader = styled.div`
