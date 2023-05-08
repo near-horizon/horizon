@@ -4,6 +4,7 @@ const label = props.label ?? "Input";
 const value = props.value ?? {};
 const onSave = props.onSave ?? (() => {});
 const canEdit = props.canEdit;
+delete value.website;
 
 const supportedLinks = [
   {
