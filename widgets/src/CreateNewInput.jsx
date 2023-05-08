@@ -201,6 +201,22 @@ return (
           <DropdownDivider />
         </li>
         {createNewButton({
+          id: "createvendor",
+          text: "Vendor",
+          icon: "",
+        })}
+        <li>
+          <DropdownDivider />
+        </li>
+        {createNewButton({
+          id: "createbacker",
+          text: "Backer",
+          icon: "",
+        })}
+        <li>
+          <DropdownDivider />
+        </li>
+        {createNewButton({
           id: "createrequest",
           text: "Request",
           icon: (
@@ -224,11 +240,6 @@ return (
             </svg>
           ),
         })}
-        {/*createNewButton({
-          id: "createvendor",
-          text: "Vendor",
-          icon: "bi-diagram-2",
-        })*/}
       </DropdownList>
     </DropdownMenu.Content>
   </DropdownMenu.Root>

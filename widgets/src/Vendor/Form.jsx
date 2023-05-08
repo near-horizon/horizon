@@ -384,7 +384,7 @@ return (
                 },
                 {
                   contractName: ownerId,
-                  methodName: "add_vendor",
+                  methodName: "register_vendor",
                   args: { account_id: state.accountId },
                 },
               ];

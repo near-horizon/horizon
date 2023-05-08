@@ -383,7 +383,7 @@ return (
                 },
                 {
                   contractName: ownerId,
-                  methodName: "add_backer",
+                  methodName: "register_investor",
                   args: { account_id: state.accountId },
                 },
               ];
