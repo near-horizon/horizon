@@ -83,9 +83,10 @@ const Button = styled.button`
   color: #006adc;
   font-style: normal;
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 0.9em;
   line-height: 1em;
   text-align: center;
+  white-space: nowrap;
   width: 100%;
 `;
 

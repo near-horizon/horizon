@@ -8,9 +8,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 1em;
+  gap: 1.5em;
   padding: 0.5em 0.2em;
   max-width: 100%;
+  font-size: 0.9em;
 `;
 
 const Heading = styled.div`

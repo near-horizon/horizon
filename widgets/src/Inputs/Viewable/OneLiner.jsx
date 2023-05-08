@@ -46,6 +46,10 @@ const SaveButton = styled.button`
   color: #11181c;
 `;
 
+const Tagline = styled.div`
+  font-size: 0.9em;
+`;
+
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Viewable`}
@@ -64,7 +68,7 @@ return (
           <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
         </LabelArea>
       ),
-      view: value,
+      view: <Tagline>{value}</Tagline>,
       canEdit,
     }}
   />

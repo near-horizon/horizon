@@ -46,12 +46,13 @@ const SaveButton = styled.button`
 `;
 
 const MarkdownText = styled.div`
-  font-size: 0.95em;
+  font-size: 0.9em;
   line-height: 1.25em;
 
   p {
     color: #101828;
     font-weight: 400;
+    margin-bottom: 1em;
   }
 `;
 

@@ -77,7 +77,7 @@ return (
           src={`${ownerId}/widget/${
             props.isProject ? "Project" : "Vendor"
           }.Icon`}
-          props={{ accountId: props.accountId, size: "8em" }}
+          props={{ accountId: props.accountId, size: "6.5em" }}
         />
       ),
       canEdit,
