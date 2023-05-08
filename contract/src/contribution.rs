@@ -368,7 +368,7 @@ impl Contract {
         self.contributions
             .keys()
             .filter_map(|(project_id, vendor_id)| {
-                self.check_is_project_admin(&project_id, &account_id)
+                self.check_is_project_admin(project_id, &account_id)
                     .then_some(
                         self.contributions
                             .get(&(project_id.clone(), vendor_id.clone()))
@@ -409,7 +409,7 @@ impl Contract {
     ) -> HashSet<((AccountId, String), AccountId)> {
         self.get_project_contributions(account_id)
             .into_iter()
-            .map(|(project_id, vendor_id)| {
+            .flat_map(|(project_id, vendor_id)| {
                 self.contributions
                     .get(&(project_id.clone(), vendor_id.clone()))
                     .unwrap()
@@ -420,7 +420,6 @@ impl Contract {
                             .then_some(((project_id.clone(), cid.clone()), vendor_id.clone()))
                     })
             })
-            .flatten()
             .collect()
     }
 
@@ -430,7 +429,7 @@ impl Contract {
     ) -> HashSet<((AccountId, String), AccountId)> {
         self.get_vendor_contributions(account_id)
             .into_iter()
-            .map(|(project_id, vendor_id)| {
+            .flat_map(|(project_id, vendor_id)| {
                 self.contributions
                     .get(&(project_id.clone(), vendor_id.clone()))
                     .unwrap()
@@ -441,7 +440,6 @@ impl Contract {
                             .then_some(((project_id.clone(), cid.clone()), vendor_id.clone()))
                     })
             })
-            .flatten()
             .collect()
     }
 

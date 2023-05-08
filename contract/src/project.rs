@@ -396,7 +396,7 @@ impl Contract {
     pub fn add_founders(&mut self, account_id: AccountId, founders: Vec<AccountId>) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
-            .entry(account_id.clone())
+            .entry(account_id)
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 old.founders.extend(founders);
@@ -408,7 +408,7 @@ impl Contract {
     pub fn remove_founders(&mut self, account_id: AccountId, founders: Vec<AccountId>) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
-            .entry(account_id.clone())
+            .entry(account_id)
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 for founder in founders {
@@ -422,7 +422,7 @@ impl Contract {
     pub fn add_team(&mut self, account_id: AccountId, team: Permissions) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
-            .entry(account_id.clone())
+            .entry(account_id)
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 let mut application = old.application.clone().unwrap_or_default();
@@ -442,7 +442,7 @@ impl Contract {
     ) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects
-            .entry(account_id.clone())
+            .entry(account_id)
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 if old.application.is_none() {

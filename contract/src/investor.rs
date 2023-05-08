@@ -155,7 +155,7 @@ impl Contract {
                 *investor = VersionedInvestor::V1(old);
             })
             .or_insert(VersionedInvestor::V1(Investor {
-                contact: account_id.clone().to_string(),
+                contact: account_id.to_string(),
                 permissions: {
                     let mut map = HashMap::new();
                     let mut set = HashSet::new();

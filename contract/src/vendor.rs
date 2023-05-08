@@ -108,7 +108,7 @@ impl Contract {
             .and_modify(|old| {
                 let mut old_v: Vendor = old.clone().into();
                 old_v.permissions = vendor.permissions.clone();
-                *old = VersionedVendor::V1(old_v.clone());
+                *old = VersionedVendor::V1(old_v);
             })
             .or_insert(VersionedVendor::V1(Vendor {
                 permissions: vendor.permissions.clone(),
