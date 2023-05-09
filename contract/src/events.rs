@@ -14,6 +14,9 @@ pub enum Events {
     RemoveProject {
         account_id: AccountId,
     },
+    VerifyProject {
+        account_id: AccountId,
+    },
     SubmitApplication {
         account_id: AccountId,
     },
