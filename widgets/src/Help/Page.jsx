@@ -44,6 +44,29 @@ const Section = styled.div`
   }
 `;
 
+const FirstSubSection = styled.div`
+  position: relative;
+  width: 90%;
+  margin: auto;
+
+  p {
+    text-align: center;
+    margin-top: 1em;
+  }
+
+  img.play {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+  }
+
+  img.image {
+    width: 100%;
+  }
+`;
+
 return (
   <Container>
     <Heading>
@@ -55,36 +78,27 @@ return (
       </h2>
     </Heading>
     <Section>
-      <br />
-      <div style={{ position: `relative`, width: `90%`, margin: `auto` }}>
+      <FirstSubSection>
         <a href="https://youtu.be/EN7TIUr_fkg">
           <img
-            style={{
-              position: `absolute`,
-              top: `35%`,
-              left: `50%`,
-              marginRight: `-50%`,
-              transform: `translate -50% -50%`,
-            }}
+            className="play"
             src="https://nearhorizonassets.s3.amazonaws.com/icon_circled-play.png"
           />
           <img
-            style={{ width: `100%` }}
+            className="image"
             src="https://nearhorizonassets.s3.amazonaws.com/petar-nh-walkthrough_thumbnail.jpg"
             alt="NH Application Walkthrough"
           />
         </a>
-        <p style={{ textAlign: `center`, marginTop: `10px` }}>
-          Video Walkthrough of the Horizon Application
-        </p>
-      </div>
+        <p>Video Walkthrough of the Horizon Application</p>
+      </FirstSubSection>
       <br />
       <br />
       <h3>Landing Page</h3>
       <p>
         Whether you've navigated to the NEAR Horizon landing page from a shared
         link or found it through a BOS Gateway, you'll be greeted with a
-        personalized dashboard.{" "}
+        personalized dashboard.
       </p>
       <img
         alt="near horizon landing page"
