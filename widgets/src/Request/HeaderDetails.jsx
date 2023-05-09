@@ -25,6 +25,7 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
+  width: 100%;
 `;
 
 return (

@@ -10,6 +10,7 @@ const Container = styled.div`
   gap: 1em;
   padding: 0.5em 0.2em;
   max-width: 100%;
+  font-size: 0.9em;
 `;
 
 const Heading = styled.div`

@@ -29,6 +29,7 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
+  width: 100%;
 `;
 
 const Details = styled.div`
@@ -37,6 +38,7 @@ const Details = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 0.5em;
+  width: 100%;
 `;
 
 return (

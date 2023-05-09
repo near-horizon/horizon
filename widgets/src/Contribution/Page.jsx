@@ -200,6 +200,7 @@ const CTARow = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.75em;
+  margin-top: 1em;
 `;
 
 const Heading = styled.div`
@@ -262,7 +263,12 @@ const Title = styled.h1`
 `;
 
 const contractAction = (actionType) => {
-  const methodName = actionType == "accept" ? "accept_contribution" : actionType == "reject" ? "reject_contribution" : "deliver_contribution";
+  const methodName =
+    actionType == "accept"
+      ? "accept_contribution"
+      : actionType == "reject"
+      ? "reject_contribution"
+      : "deliver_contribution";
   const transactions = [
     {
       contractName: ownerId,
@@ -271,7 +277,7 @@ const contractAction = (actionType) => {
         project_id: projectId,
         cid,
         vendor_id: vendorId,
-      }
+      },
     },
     {
       contractName: "social.near",
@@ -288,28 +294,25 @@ const contractAction = (actionType) => {
                 key: projectId,
                 value: {
                   type: "vendor/contract",
-                  contributionId: [
-                    projectId,
-                    cid,
-                  ],
+                  contributionId: [projectId, cid],
                   message: state.message,
                   vendorId: vendorId,
-                  actionType: actionType
+                  actionType: actionType,
                 },
               }),
             },
           },
-        }
-      }
-    }
+        },
+      },
+    },
   ];
   Near.call(transactions);
-}
+};
 
 const vendorCreatedView =
   state.isVendorAdmin &&
-    typeof state.contribution.status !== "string" &&
-    "Created" in state.contribution.status ? (
+  typeof state.contribution.status !== "string" &&
+  "Created" in state.contribution.status ? (
     <>
       <Widget
         src={`${ownerId}/widget/Buttons.Green`}
@@ -334,7 +337,7 @@ const vendorCreatedView =
               Accept contract
             </>
           ),
-          onClick: () => contractAction("accept")
+          onClick: () => contractAction("accept"),
         }}
       />
       <Widget
@@ -360,7 +363,7 @@ const vendorCreatedView =
               Decline contract
             </>
           ),
-          onClick: () => contractAction("reject")
+          onClick: () => contractAction("reject"),
         }}
       />
     </>
@@ -369,7 +372,7 @@ const vendorCreatedView =
   );
 const vendorAcceptedView =
   (state.isVendorAdmin && typeof state.contribution.status === "string") ||
-    "Accepted" in state.contribution.status ? (
+  "Accepted" in state.contribution.status ? (
     <Widget
       src={`${ownerId}/widget/Buttons.Grey`}
       props={{
@@ -393,7 +396,7 @@ const vendorAcceptedView =
             Deliver work
           </>
         ),
-        onClick: () => contractAction("deliver")
+        onClick: () => contractAction("deliver"),
       }}
     />
   ) : (
@@ -402,8 +405,8 @@ const vendorAcceptedView =
 
 const projectDeliveredView =
   state.isProjectAdmin &&
-    typeof state.contribution.status !== "string" &&
-    "Delivered" in state.contribution.status ? (
+  typeof state.contribution.status !== "string" &&
+  "Delivered" in state.contribution.status ? (
     <Widget
       src={`${ownerId}/widget/Buttons.Grey`}
       props={{
@@ -436,7 +439,7 @@ const projectDeliveredView =
                 project_id: projectId,
                 cid,
                 vendor_id: vendorId,
-              }
+              },
             },
             {
               contractName: "social.near",
@@ -453,22 +456,19 @@ const projectDeliveredView =
                         key: projectId,
                         value: {
                           type: "project/contract",
-                          contributionId: [
-                            projectId,
-                            cid,
-                          ],
+                          contributionId: [projectId, cid],
                           message: state.message,
                           vendorId: vendorId,
                         },
                       }),
                     },
                   },
-                }
-              }
-            }
+                },
+              },
+            },
           ];
           Near.call(transactions);
-        }
+        },
       }}
     />
   ) : (
@@ -478,7 +478,7 @@ const projectDeliveredView =
 const addActionView =
   (typeof state.contribution.status !== "string" &&
     "Accepted" in state.contribution.status) ||
-    state.contribution.status === "Ongoing" ? (
+  state.contribution.status === "Ongoing" ? (
     <Widget
       src={`${ownerId}/widget/Contribution.ActionSideWindow`}
       props={{

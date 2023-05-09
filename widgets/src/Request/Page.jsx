@@ -168,6 +168,7 @@ const CTARow = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 0.75em;
+  margin-top: 1em;
 `;
 
 const Heading = styled.div`
