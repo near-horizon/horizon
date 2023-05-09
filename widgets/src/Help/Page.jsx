@@ -56,6 +56,31 @@ return (
     </Heading>
     <Section>
       <h3>Landing Page</h3>
+      <br/>
+      <div style={{ position: `relative`, width: `90%`, margin: `auto` }}>
+        <a href="https://youtu.be/EN7TIUr_fkg">
+          <img
+            style={{
+              position: `absolute`,
+              top: `35%`,
+              left: `50%`,
+              marginRight: `-50%`,
+              transform: `translate -50% -50%`,
+            }}
+            src="https://nearhorizonassets.s3.amazonaws.com/icon_circled-play.png"
+          />
+          <img
+            style={{ width: `100%` }}
+            src="https://nearhorizonassets.s3.amazonaws.com/petar-nh-walkthrough_thumbnail.jpg"
+            alt="NH Application Walkthrough"
+          />
+        </a>
+        <p style={{ textAlign: `center`, marginTop: `10px` }}>
+          Video Walkthrough of the Horizon Application
+        </p>
+      </div>
+      <br />
+      <br />
       <p>
         Whether you've navigated to the NEAR Horizon landing page from a shared
         link or found it through a BOS Gateway, you'll be greeted with a
