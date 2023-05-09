@@ -95,6 +95,14 @@ const Container = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   gap: 1.5em;
+
+  h2 {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.3em;
+    line-height: 1.5em;
+    color: #475467;
+  }
 `;
 
 const Filters = styled.div`
@@ -159,45 +167,48 @@ return (
       <h1>Discover NEAR Horizon</h1>
       <h2>Explore projects, vendors, investors and contribution requests</h2>
     </Heading>
-    <Stats>
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: "750",
-          label: "Projects",
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: state.statsIsFetched
-            ? Number(state.stats.MAU).toLocaleString("en-US", {
-                notation: "compact",
-              }) + "+"
-            : "Loading...",
-          label: "Monthly active accounts",
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: state.statsIsFetched
-            ? Number(state.stats.TOTAL_ACCOUNTS).toLocaleString("en-US", {
-                notation: "compact",
-              }) + "+"
-            : "Loading...",
-          label: "Total accounts",
-        }}
-      />
-      <Widget
-        src={`${ownerId}/widget/Stats.Card`}
-        props={{
-          value: "$578M+",
-          label: "Raised",
-        }}
-      />
-      <Widget src={`${ownerId}/widget/Stats.Link`} />
-    </Stats>
+    <div>
+      <h2>Ecosystem stats</h2>
+      <Stats>
+        <Widget
+          src={`${ownerId}/widget/Stats.Card`}
+          props={{
+            value: "750",
+            label: "Projects",
+          }}
+        />
+        <Widget
+          src={`${ownerId}/widget/Stats.Card`}
+          props={{
+            value: state.statsIsFetched
+              ? Number(state.stats.MAU).toLocaleString("en-US", {
+                  notation: "compact",
+                }) + "+"
+              : "Loading...",
+            label: "Monthly active accounts",
+          }}
+        />
+        <Widget
+          src={`${ownerId}/widget/Stats.Card`}
+          props={{
+            value: state.statsIsFetched
+              ? Number(state.stats.TOTAL_ACCOUNTS).toLocaleString("en-US", {
+                  notation: "compact",
+                }) + "+"
+              : "Loading...",
+            label: "Total accounts",
+          }}
+        />
+        <Widget
+          src={`${ownerId}/widget/Stats.Card`}
+          props={{
+            value: "$578M+",
+            label: "Raised",
+          }}
+        />
+        <Widget src={`${ownerId}/widget/Stats.Link`} />
+      </Stats>
+    </div>
     <div>{contentSelector}</div>
     <Filters>
       <Widget
