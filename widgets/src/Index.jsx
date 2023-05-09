@@ -12,9 +12,10 @@ State.init({
   projectId: props.projectId,
   vendorId: props.vendorId,
   tnc: true,
+  tncIsFetched: false,
 });
 
-if (context.accountId) {
+if (context.accountId && !state.tncIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
@@ -24,6 +25,7 @@ if (context.accountId) {
   ).then((data) =>
     State.update({
       tnc: data[context.accountId]?.profile?.horizon_tnc === "true",
+      tncIsFetched: true,
     })
   );
 }
@@ -238,7 +240,11 @@ return (
         accept: () =>
           Social.set(
             { profile: { horizon_tnc: true } },
-            { onCommit: () => State.update({ tnc: true }) }
+            {
+              onCommit: () => {
+                State.update({ tnc: true });
+              },
+            }
           ),
       }}
     />
