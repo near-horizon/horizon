@@ -47,7 +47,14 @@ const Section = styled.div`
 const FirstSubSection = styled.div`
   position: relative;
   width: 90%;
-  margin: auto;
+
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 
   p {
     text-align: center;
@@ -56,9 +63,8 @@ const FirstSubSection = styled.div`
 
   img.play {
     position: absolute;
-    top: 35%;
+    top: 50%;
     left: 50%;
-    margin-right: -50%;
     transform: translate(-50%, -50%);
   }
 
