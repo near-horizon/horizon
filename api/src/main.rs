@@ -4,7 +4,7 @@ use axum::{
     debug_handler,
     extract::{Path, State},
     http::{HeaderMap, StatusCode},
-    routing::post,
+    routing::{get, post},
     Json, Router,
 };
 use base58::{FromBase58, ToBase58};
@@ -88,6 +88,8 @@ impl PrivateData {
 struct AppState {
     client: Client,
     contract_id: AccountId,
+    total_fundraise_route: String,
+    total_fundraise_auth: String,
     key: sodiumoxide::crypto::secretbox::Key,
 }
 
@@ -96,20 +98,27 @@ async fn main() {
     let contract_id =
         AccountId::from_str(&std::env::var("CONTRACT_ID").expect("CONTRACT_ID must be set"))
             .expect("Invalid contract id");
-    let key = hex::decode(&std::env::var("ENCRYPTION_KEY").expect("ENCRYPTION_KEY must be set"))
+    let key = hex::decode(std::env::var("ENCRYPTION_KEY").expect("ENCRYPTION_KEY must be set"))
         .expect("Invalid key");
     let key = sodiumoxide::crypto::secretbox::Key::from_slice(&key).expect("Invalid key");
     let port = std::env::var("PORT").unwrap_or("3000".to_string());
+    let total_fundraise_route =
+        std::env::var("TOTAL_FUNDRAISE_ROUTE").expect("TOTAL_FUNDRAISE_ROUTE must be set");
+    let total_fundraise_auth =
+        std::env::var("TOTAL_FUNDRAISE_AUTH").expect("TOTAL_FUNDRAISE_AUTH must be set");
 
     let state = AppState {
         client: Client::new(),
         contract_id,
         key,
+        total_fundraise_route,
+        total_fundraise_auth,
     };
 
     let app = Router::new()
         .route("/decrypt/:account_id", post(decrypt))
         .route("/encrypt/:account_id", post(encrypt))
+        .route("/total-supply", get(total_raised))
         .with_state(state);
 
     let address = format!("0.0.0.0:{port}");
@@ -171,7 +180,7 @@ async fn verify_signature(message: &str, signature: &str, public_key: &str) -> b
     public_key.verify(message.as_bytes(), &signature).is_ok()
 }
 
-const RPC_URL: &'static str = "https://rpc.mainnet.near.org";
+const RPC_URL: &str = "https://rpc.mainnet.near.org";
 
 async fn verify_public_key(public_key: &str, account_id: &str, client: &Client) -> bool {
     let Ok(account_id) = AccountId::from_str(account_id) else {
@@ -253,11 +262,11 @@ async fn authenticate(
     };
     let hash = hash.to_str().unwrap();
 
-    if !verify_public_key(public_key, account_id, &client).await {
+    if !verify_public_key(public_key, account_id, client).await {
         return Err((StatusCode::UNAUTHORIZED, "Invalid public key".to_string()));
     }
 
-    if !verify_recency(hash, &client).await {
+    if !verify_recency(hash, client).await {
         return Err((StatusCode::UNAUTHORIZED, "Invalid block hash".to_string()));
     }
 
@@ -314,10 +323,9 @@ async fn verify_permissions(
         result
             .as_array()
             .unwrap()
-            .into_iter()
+            .iter()
             .map(|v| v.as_u64().unwrap() as u8)
-            .collect::<Vec<u8>>()
-            .clone(),
+            .collect::<Vec<u8>>(),
     )
     .unwrap();
     bool::from_str(&s).unwrap()
@@ -355,4 +363,47 @@ async fn encrypt(
     )
     .await?;
     Ok(Json(private_data.encrypt(&state.key)))
+}
+
+#[debug_handler(state = AppState)]
+async fn total_raised(State(state): State<AppState>) -> Result<Json<u64>, (StatusCode, String)> {
+    let response = state
+        .client
+        .get(state.total_fundraise_route)
+        .bearer_auth(&state.total_fundraise_auth)
+        .send()
+        .await
+        .map_err(|e| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to get total supply: {}", e),
+            )
+        })?
+        .json::<serde_json::Value>()
+        .await
+        .map_err(|e| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to deserialize total supply: {}", e),
+            )
+        })?;
+    let Some(fields) = response.get("fields") else {
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Missing fields in total supply response".to_string(),
+        ));
+    };
+    let Some(total_fundraise) = fields.get("Total Fundraise") else {
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Missing total supply in total supply response".to_string(),
+        ));
+    };
+    let Some(total_fundraise) = total_fundraise.as_u64() else {
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Invalid total supply in total supply response".to_string(),
+        ));
+    };
+    Ok(Json(total_fundraise))
 }
