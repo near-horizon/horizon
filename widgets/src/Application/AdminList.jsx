@@ -64,6 +64,7 @@ return (
     <Widget
       src={`${ownerId}/widget/List`}
       props={{
+        full: true,
         filter: (accountId) => accountId.includes(search),
         items: state.items,
         createItem: (accountId) => (

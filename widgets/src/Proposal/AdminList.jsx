@@ -66,6 +66,7 @@ return (
     <Widget
       src={`${ownerId}/widget/List`}
       props={{
+        full: true,
         filter: ([[projectId], vendorId]) =>
           projectId.includes(search) || vendorId.includes(search),
         items: state.items,
