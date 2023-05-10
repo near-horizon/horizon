@@ -9,6 +9,7 @@ const Container = styled.div`
   justify-content: flex-start;
   gap: 1em;
   padding: 0.5em 0.2em;
+  width: 100%;
 `;
 
 const Heading = styled.div`

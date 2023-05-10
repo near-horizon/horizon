@@ -160,7 +160,7 @@ const validateForm = () => {
 return (
   <Container>
     <div>
-      <Header>Create new project</Header>
+      <Header>Create new backer</Header>
     </div>
     <Form>
       <FormHeader>General</FormHeader>
@@ -177,9 +177,9 @@ return (
               return;
             }
 
-            if (state.name.length > 50) {
+            if (state.name.length > 100) {
               State.update({
-                nameError: "Name must be less than 50 characters",
+                nameError: "Name must be less than 100 characters",
               });
               return;
             }
