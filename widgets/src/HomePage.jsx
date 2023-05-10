@@ -306,6 +306,8 @@ const mapImage = (src) => `https://ipfs.near.social/ipfs/${src}`;
 State.init({
   stats: null,
   statsIsFetched: false,
+  totalRaised: 578920000,
+  totalRaisedIsFetched: false,
 });
 
 if (!state.statsIsFetched) {
@@ -313,6 +315,18 @@ if (!state.statsIsFetched) {
     "https://api.flipsidecrypto.com/api/v2/queries/36637c73-6301-418b-ae83-7af6e8f34c0f/data/latest"
   ).then((response) =>
     State.update({ stats: response.body[0], statsIsFetched: true })
+  );
+}
+
+if (!state.totalRaisedIsFetched) {
+  asyncFetch("https://encryption-service-73dm.onrender.com/total-raised", {
+    headers: {
+      "Access-Control-Request-Method": "no-cors",
+    },
+  }).then(
+    (response) =>
+      response.ok &&
+      State.update({ totalRaised: response.body, totalRaisedIsFetched: true })
   );
 }
 
@@ -386,7 +400,10 @@ return (
         <Widget
           src={`${ownerId}/widget/Stats.Card`}
           props={{
-            value: "$578M+",
+            value:
+              Number(state.totalRaised).toLocaleString("en-US", {
+                notation: "compact",
+              }) + "+",
             label: "Raised",
           }}
         />
