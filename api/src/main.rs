@@ -118,7 +118,7 @@ async fn main() {
     let app = Router::new()
         .route("/decrypt/:account_id", post(decrypt))
         .route("/encrypt/:account_id", post(encrypt))
-        .route("/total-supply", get(total_raised))
+        .route("/total-raised", get(total_raised))
         .with_state(state);
 
     let address = format!("0.0.0.0:{port}");
