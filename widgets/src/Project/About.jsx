@@ -57,24 +57,16 @@ if (!state.projectIsFetched || !state.profileIsFetched) {
   return <>Loading...</>;
 }
 
-const onPrivateSave = (value) => {
+const onSave = (project) => {
   Near.call(ownerId, "edit_project", {
     account_id: accountId,
-    project: {
-      ...state.project,
-      application: { ...state.project.application, private: value },
-    },
+    project,
   });
 };
 
-const onSave = (value) => {
-  Near.call(ownerId, "edit_project", {
-    account_id: accountId,
-    project: {
-      ...state.project,
-      application: { ...state.project.application, ...value },
-    },
-  });
+const onPrivateSave = (project) => {
+  // TODO: Call encryption service to encrypt the project data
+  onSave(project);
 };
 
 const onSocialSave = (data) => {
@@ -102,8 +94,8 @@ return (
       props={{
         label: "What problem(s) are you solving?",
         id: "problem",
-        value: state.profile.problem,
-        onSave: (problem) => onSocialSave({ profile: { problem } }),
+        value: state.project.problem,
+        onSave: (problem) => onSave({ problem }),
         canEdit: props.isAdmin,
       }}
     />
@@ -112,7 +104,7 @@ return (
       props={{
         label: "What makes your team uniquely positioned for success?",
         id: "success_position",
-        value: state.project.application.success_position,
+        value: state.project.success_position,
         onSave: (success_position) => onSave({ success_position }),
         canEdit: props.isAdmin,
       }}
@@ -122,7 +114,7 @@ return (
       props={{
         label: "Why are you building on NEAR?",
         id: "why",
-        value: state.project.application.why,
+        value: state.project.why,
         onSave: (why) => onSave({ why }),
         canEdit: props.isAdmin,
       }}
@@ -132,7 +124,7 @@ return (
       props={{
         label: "What's your 5 year vision? 1B users project evolution?",
         id: "vision",
-        value: state.project.application.vision,
+        value: state.project.vision,
         onSave: (vision) => onSave({ vision }),
         canEdit: props.isAdmin,
       }}

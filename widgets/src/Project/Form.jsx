@@ -474,10 +474,8 @@ return (
                   args: {
                     account_id: state.accountId,
                     project: {
-                      application: {
-                        integration: state.integration.value,
-                        ...(state.geo ? { geo: state.geo } : {}),
-                      },
+                      integration: state.integration.value,
+                      ...(state.geo ? { geo: state.geo } : {}),
                     },
                   },
                 },
