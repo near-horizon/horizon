@@ -174,6 +174,54 @@ impl Project {
             })
     }
 
+    pub fn completion(&self) -> (u8, u8) {
+        let mut completed = 0;
+        let total = 14;
+        if !self.founders.is_empty() {
+            completed += 1;
+        }
+        if !self.team.is_empty() {
+            completed += 1;
+        }
+        if !self.why.is_empty() {
+            completed += 1;
+        }
+        if !self.tam.is_empty() {
+            completed += 1;
+        }
+        if !self.roadmap.is_empty() {
+            completed += 1;
+        }
+        if !self.success_position.is_empty() {
+            completed += 1;
+        }
+        if !self.white_paper.is_empty() {
+            completed += 1;
+        }
+        if !self.integration.is_empty() {
+            completed += 1;
+        }
+        if !self.team_deck.is_empty() {
+            completed += 1;
+        }
+        if !self.problem.is_empty() {
+            completed += 1;
+        }
+        if !self.vision.is_empty() {
+            completed += 1;
+        }
+        if !self.demo.is_empty() {
+            completed += 1;
+        }
+        if !self.geo.is_empty() {
+            completed += 1;
+        }
+        if !self.deck.is_empty() {
+            completed += 1;
+        }
+        (completed, total)
+    }
+
     pub fn patch(&mut self, value: &Value) {
         let project = value.as_object().expect("ERR_INVALID_PROJECT");
         if let Some(founders) = project.get("founders") {
@@ -574,56 +622,7 @@ impl Contract {
     }
 
     pub fn get_project_profile_completion(&self, account_id: AccountId) -> (u8, u8) {
-        let project: Project = self
-            .projects
-            .get(&account_id)
-            .expect("ERR_NO_ENTITY")
-            .into();
-        let mut completed = 0;
-        let total = 14;
-        if !project.founders.is_empty() {
-            completed += 1;
-        }
-        if !project.team.is_empty() {
-            completed += 1;
-        }
-        if !project.why.is_empty() {
-            completed += 1;
-        }
-        if !project.tam.is_empty() {
-            completed += 1;
-        }
-        if !project.roadmap.is_empty() {
-            completed += 1;
-        }
-        if !project.success_position.is_empty() {
-            completed += 1;
-        }
-        if !project.white_paper.is_empty() {
-            completed += 1;
-        }
-        if !project.integration.is_empty() {
-            completed += 1;
-        }
-        if !project.team_deck.is_empty() {
-            completed += 1;
-        }
-        if !project.problem.is_empty() {
-            completed += 1;
-        }
-        if !project.vision.is_empty() {
-            completed += 1;
-        }
-        if !project.demo.is_empty() {
-            completed += 1;
-        }
-        if !project.geo.is_empty() {
-            completed += 1;
-        }
-        if !project.deck.is_empty() {
-            completed += 1;
-        }
-        (completed, total)
+        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY")).completion()
     }
 
     /// Assertions
