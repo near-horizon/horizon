@@ -75,6 +75,19 @@ const FirstSubSection = styled.div`
 
 return (
   <Container>
+    <Widget
+      src={"nearhorizon.near/widget/InfoSegment"}
+      props={{
+        title: "Need help?",
+        description: (
+          <>
+            Reach out to us at{" "}
+            <a href="mailto:horizon@near.foundation">horizon@near.foundation</a>
+            !
+          </>
+        ),
+      }}
+    />
     <Heading>
       <h1>NEAR Horizon Getting Started Guide</h1>
       <h2>
