@@ -385,7 +385,7 @@ return (
           error: state.descriptionError,
         }}
       />
-      <Widget
+      {/*<Widget
         src={`${ownerId}/widget/Inputs.MultiSelect`}
         props={{
           label: "Tags",
@@ -399,7 +399,7 @@ return (
               })),
             }),
         }}
-      />
+      />*/}
       <HalfWidth>
         <Widget
           src={`${ownerId}/widget/Inputs.Select`}

@@ -339,7 +339,7 @@ return (
           error: state.ossError,
         }}
       />
-      <Widget
+      {/*<Widget
         src={`${ownerId}/widget/Inputs.MultiSelect`}
         props={{
           label: "Tags",
@@ -353,7 +353,7 @@ return (
               })),
             }),
         }}
-      />
+      />*/}
       <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
