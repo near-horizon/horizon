@@ -86,10 +86,7 @@ return (
         label: "Description",
         id: "description",
         value: state.profile.description,
-        onSave: (description) =>
-          Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { description } } },
-          }),
+        onSave: (description) => Social.set({ profile: { description } }),
         canEdit: props.isAdmin,
       }}
     />
@@ -99,10 +96,7 @@ return (
         label: "What problem(s) are you solving?",
         id: "problem",
         value: state.profile.problem,
-        onSave: (problem) =>
-          Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { problem } } },
-          }),
+        onSave: (problem) => Social.set({ profile: { problem } }),
         canEdit: props.isAdmin,
       }}
     />

@@ -6,13 +6,7 @@ return (
     src={`${ownerId}/widget/Investor.Details`}
     props={{
       accountId,
-      onSave: (profile) => {
-        Near.call({
-          contractName: "social.near",
-          methodName: "set",
-          args: { data: { [accountId]: { profile } } },
-        });
-      },
+      onSave: (profile) => Social.set({ profile }),
       isAdmin: props.isAdmin,
     }}
   />

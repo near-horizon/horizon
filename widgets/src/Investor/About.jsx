@@ -52,10 +52,7 @@ return (
         label: "Description",
         id: "description",
         value: state.description,
-        onSave: (description) =>
-          Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { description } } },
-          }),
+        onSave: (description) => Social.set({ profile: { description } }),
         canEdit: props.isAdmin,
       }}
     />

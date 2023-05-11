@@ -256,32 +256,21 @@ return (
           disabled: !validateForm(),
           onClick: () => {
             if (!validateForm()) return;
-            Near.call({
-              contractName: "social.near",
-              methodName: "set",
-              args: {
-                data: {
-                  [context.accountId]: {
-                    index: {
-                      graph: JSON.stringify({
-                        key: "project/invite",
-                        value: { accountId: state.projectId.value },
-                      }),
-                      inbox: JSON.stringify({
-                        key: state.projectId.value,
-                        value: {
-                          type: "project/invite",
-                          requestId: [
-                            state.projectId.value,
-                            state.requestId.value,
-                          ],
-                          message: state.message,
-                          vendorId: props.accountId,
-                        },
-                      }),
-                    },
+            Social.set({
+              index: {
+                graph: JSON.stringify({
+                  key: "project/invite",
+                  value: { accountId: state.projectId.value },
+                }),
+                inbox: JSON.stringify({
+                  key: state.projectId.value,
+                  value: {
+                    type: "project/invite",
+                    requestId: [state.projectId.value, state.requestId.value],
+                    message: state.message,
+                    vendorId: props.accountId,
                   },
-                },
+                }),
               },
             });
           },

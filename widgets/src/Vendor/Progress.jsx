@@ -116,9 +116,7 @@ return (
             id: "active",
             value: state.active === "true",
             onSave: (active) =>
-              Near.call("social.near", "set", {
-                data: { [accountId]: { profile: { active: "" + active } } },
-              }),
+              Social.set({ profile: { active: `${active}` } }),
             canEdit: props.isAdmin,
           }}
         />

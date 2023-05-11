@@ -53,10 +53,7 @@ return (
         label: "Description",
         id: "description",
         value: state.description,
-        onSave: (description) =>
-          Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { description } } },
-          }),
+        onSave: (description) => Social.set({ profile: { description } }),
         canEdit: props.isAdmin,
       }}
     />
@@ -66,10 +63,7 @@ return (
         label: "Skills and services",
         id: "services",
         value: state.services,
-        onSave: (services) =>
-          Near.call("social.near", "set", {
-            data: { [accountId]: { profile: { services } } },
-          }),
+        onSave: (services) => Social.set({ profile: { services } }),
         canEdit: props.isAdmin,
       }}
     />

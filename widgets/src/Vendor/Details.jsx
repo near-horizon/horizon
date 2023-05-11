@@ -46,9 +46,7 @@ if (!state.profileIsFetched) {
 }
 
 const onSave = (profile) => {
-  Near.call("social.near", "set", {
-    data: { [accountId]: { profile } },
-  });
+  Social.set({ profile });
 };
 
 return (

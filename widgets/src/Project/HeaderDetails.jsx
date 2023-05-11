@@ -50,11 +50,7 @@ return (
           value: state.profile.image,
           id: "image",
           onSave: (image) =>
-            Near.call("social.near", "set", {
-              data: {
-                [accountId]: { profile: { image: { ipfs_cid: image.cid } } },
-              },
-            }),
+            Social.set({ profile: { image: { ipfs_cid: image.cid } } }),
           isProject: true,
           canEdit: isAdmin,
         }}
@@ -67,10 +63,7 @@ return (
           value: state.profile.name,
           id: "name",
           accountId,
-          onSave: (name) =>
-            Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { name } } },
-            }),
+          onSave: (name) => Social.set({ profile: { name } }),
           canEdit: isAdmin,
         }}
       />
@@ -80,10 +73,7 @@ return (
         props={{
           value: state.profile.tagline,
           id: "tagline",
-          onSave: (tagline) =>
-            Near.call("social.near", "set", {
-              data: { [accountId]: { profile: { tagline } } },
-            }),
+          onSave: (tagline) => Social.set({ profile: { tagline } }),
           canEdit: isAdmin,
         }}
       />
