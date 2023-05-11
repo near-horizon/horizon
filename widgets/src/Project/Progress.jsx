@@ -137,13 +137,25 @@ return (
         0 NHZN{" "}
         <Widget
           src={`${ownerId}/widget/Tooltip`}
-          props={{ content: "Test use case" }}
+          props={{
+            content:
+              "Horizon Credits (NHZN) help track service usage and inform payments distributed to Horizon service partners.",
+          }}
         />
       </Value>
     </Row>
     <Row>
       <Label>Profile:</Label>
-      <Value>{progress()}%</Value>
+      <Value>
+        {progress()}%
+        <Widget
+          src={`${ownerId}/widget/Tooltip`}
+          props={{
+            content:
+              "Completion status of your profile. Once fully complete, your project will be more discoverable by others in the community",
+          }}
+        />
+      </Value>
     </Row>
   </Container>
 );
