@@ -81,7 +81,7 @@ const Other = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 13%;
+  width: 16.25%;
 `;
 
 const Badge = styled.div`
@@ -104,13 +104,9 @@ if (!state.projectIsFetched || !state.profileIsFetched) {
 }
 
 const text =
-  typeof state.project.application_status === "string"
-    ? state.project.application_status
-    : Object.keys(state.project.application_status)[0];
-const graduationText =
-  typeof state.project.graduation_status === "string"
-    ? state.project.graduation_status
-    : Object.keys(state.project.graduation_status)[0];
+  typeof state.project.application === "string"
+    ? state.project.application
+    : Object.keys(state.project.application)[0];
 
 return (
   <Container>
@@ -138,9 +134,6 @@ return (
     </Other>
     <Other>
       <Badge>{text}</Badge>
-    </Other>
-    <Other>
-      <Badge>{graduationText}</Badge>
     </Other>
     <Other>{new Date().toLocaleDateString()}</Other>
     <Other>
