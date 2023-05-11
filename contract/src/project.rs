@@ -101,7 +101,9 @@ pub struct PrivateGraduation {
 
 impl PrivateGraduation {
     pub fn patch(&mut self, value: &Value) {
-        let graduation = value.as_object().unwrap();
+        let Some(graduation) = value.as_object() else {
+            return;
+        };
         if let Some(legal) = graduation.get("legal") {
             self.legal = legal.as_str().expect("ERR_INVALID_LEGAL").to_string();
         }
@@ -126,7 +128,9 @@ pub struct PrivateData {
 
 impl PrivateData {
     pub fn patch(&mut self, value: &Value) {
-        let private_data = value.as_object().unwrap();
+        let Some(private_data) = value.as_object() else {
+            return;
+        };
         if let Some(risks) = private_data.get("risks") {
             self.risks = risks.as_str().expect("ERR_INVALID_RISKS").to_string();
         }
@@ -194,7 +198,9 @@ pub struct Application {
 
 impl Application {
     pub fn patch(&mut self, value: &Value) {
-        let application = value.as_object().unwrap();
+        let Some(application) = value.as_object() else {
+            return;
+        };
         if let Some(why) = application.get("why") {
             self.why = serde_json::from_value(why.clone()).expect("ERR_INVALID_WHY");
         }
