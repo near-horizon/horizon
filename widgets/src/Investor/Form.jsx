@@ -337,49 +337,50 @@ return (
             disabled: !validateForm(),
             onClick: () => {
               if (!validateForm()) return;
+              const data = {
+                [state.accountId]: {
+                  profile: {
+                    name: state.name,
+                    category: state.category.value,
+                    ...(state.tagline ? { tagline: state.tagline } : {}),
+                    ...(state.description
+                      ? { description: state.description }
+                      : {}),
+                    ...(state.tags.length
+                      ? {
+                          tags: state.tags.reduce(
+                            (acc, { name }) =>
+                              Object.assign(acc, { [name]: "" }),
+                            {}
+                          ),
+                        }
+                      : {}),
+                    ...(state.website || state.socials
+                      ? {
+                          ...state.socials,
+                          ...(state.website
+                            ? {
+                                website: state.website.startsWith("http://")
+                                  ? state.website.substring(7)
+                                  : state.website.startsWith("https://")
+                                  ? state.website.substring(8)
+                                  : state.website,
+                              }
+                            : {}),
+                        }
+                      : {}),
+                  },
+                },
+              };
+              const deposit = Big(JSON.stringify(data).length * 3).mul(
+                Big(10).pow(19)
+              );
               const transactions = [
                 {
                   contractName: "social.near",
                   methodName: "set",
-                  args: {
-                    data: {
-                      [state.accountId]: {
-                        profile: {
-                          name: state.name,
-                          category: state.category.value,
-                          ...(state.tagline ? { tagline: state.tagline } : {}),
-                          ...(state.description
-                            ? { description: state.description }
-                            : {}),
-                          ...(state.tags.length
-                            ? {
-                                tags: state.tags.reduce(
-                                  (acc, { name }) =>
-                                    Object.assign(acc, { [name]: "" }),
-                                  {}
-                                ),
-                              }
-                            : {}),
-                          ...(state.website || state.socials
-                            ? {
-                                ...state.socials,
-                                ...(state.website
-                                  ? {
-                                      website: state.website.startsWith(
-                                        "http://"
-                                      )
-                                        ? state.website.substring(7)
-                                        : state.website.startsWith("https://")
-                                        ? state.website.substring(8)
-                                        : state.website,
-                                    }
-                                  : {}),
-                              }
-                            : {}),
-                        },
-                      },
-                    },
-                  },
+                  deposit,
+                  args: { data },
                 },
                 {
                   contractName: ownerId,
