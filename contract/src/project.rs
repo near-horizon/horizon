@@ -48,47 +48,6 @@ pub struct Graduation {
     pub code: String,
 }
 
-impl Graduation {
-    pub fn patch(&mut self, value: &Value) {
-        let Some(graduation) = value.as_object() else {
-            return;
-        };
-        if let Some(pitch_deck) = graduation.get("pitch_deck") {
-            self.pitch_deck = pitch_deck
-                .as_str()
-                .expect("ERR_INVALID_PITCH_DECK")
-                .to_string();
-        }
-        if let Some(white_paper) = graduation.get("white_paper") {
-            self.white_paper = white_paper
-                .as_str()
-                .expect("ERR_INVALID_WHITE_PAPER")
-                .to_string();
-        }
-        if let Some(roadmap) = graduation.get("roadmap") {
-            self.roadmap = roadmap.as_str().expect("ERR_INVALID_ROADMAP").to_string();
-        }
-        if let Some(team) = graduation.get("team") {
-            self.team = team.as_str().expect("ERR_INVALID_TEAM").to_string();
-        }
-        if let Some(tam) = graduation.get("tam") {
-            self.tam = tam.as_str().expect("ERR_INVALID_TAM").to_string();
-        }
-        if let Some(success_metrics) = graduation.get("success_metrics") {
-            self.success_metrics = success_metrics
-                .as_str()
-                .expect("ERR_INVALID_SUCCESS_METRICS")
-                .to_string();
-        }
-        if let Some(demo) = graduation.get("demo") {
-            self.demo = demo.as_str().expect("ERR_INVALID_DEMO").to_string();
-        }
-        if let Some(code) = graduation.get("code") {
-            self.code = code.as_str().expect("ERR_INVALID_CODE").to_string();
-        }
-    }
-}
-
 #[derive(
     BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
 )]
@@ -99,23 +58,6 @@ pub struct PrivateGraduation {
     pub gtm: String,
 }
 
-impl PrivateGraduation {
-    pub fn patch(&mut self, value: &Value) {
-        let Some(graduation) = value.as_object() else {
-            return;
-        };
-        if let Some(legal) = graduation.get("legal") {
-            self.legal = legal.as_str().expect("ERR_INVALID_LEGAL").to_string();
-        }
-        if let Some(budget) = graduation.get("budget") {
-            self.budget = budget.as_str().expect("ERR_INVALID_BUDGET").to_string();
-        }
-        if let Some(gtm) = graduation.get("gtm") {
-            self.gtm = gtm.as_str().expect("ERR_INVALID_GTM").to_string();
-        }
-    }
-}
-
 #[derive(
     BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
 )]
@@ -124,23 +66,6 @@ pub struct PrivateData {
     pub risks: String,
     pub needs: String,
     pub graduation: PrivateGraduation,
-}
-
-impl PrivateData {
-    pub fn patch(&mut self, value: &Value) {
-        let Some(private_data) = value.as_object() else {
-            return;
-        };
-        if let Some(risks) = private_data.get("risks") {
-            self.risks = risks.as_str().expect("ERR_INVALID_RISKS").to_string();
-        }
-        if let Some(needs) = private_data.get("needs") {
-            self.needs = needs.as_str().expect("ERR_INVALID_NEEDS").to_string();
-        }
-        if let Some(graduation) = private_data.get("graduation") {
-            self.graduation.patch(graduation);
-        }
-    }
 }
 
 /// Permissions table for interaction between a contributor and an entity.
@@ -196,65 +121,6 @@ pub struct Application {
     pub private: Option<PrivateData>,
 }
 
-impl Application {
-    pub fn patch(&mut self, value: &Value) {
-        let Some(application) = value.as_object() else {
-            return;
-        };
-        if let Some(why) = application.get("why") {
-            self.why = serde_json::from_value(why.clone()).expect("ERR_INVALID_WHY");
-        }
-        if let Some(integration) = application.get("integration") {
-            self.integration =
-                serde_json::from_value(integration.clone()).expect("ERR_INVALID_INTEGRATION");
-        }
-        if let Some(success_position) = application.get("success_position") {
-            self.success_position = serde_json::from_value(success_position.clone())
-                .expect("ERR_INVALID_SUCCESS_POSITION");
-        }
-        if let Some(partners) = application.get("partners") {
-            self.partners = serde_json::from_value(partners.clone()).expect("ERR_INVALID_PARTNERS");
-        }
-        if let Some(team) = application.get("team") {
-            self.team = serde_json::from_value(team.clone()).expect("ERR_INVALID_TEAM");
-        }
-        if let Some(token) = application.get("token") {
-            self.token = serde_json::from_value(token.clone()).expect("ERR_INVALID_TOKEN");
-        }
-        if let Some(contact) = application.get("contact") {
-            if contact.is_null() {
-                self.contact = None;
-            } else {
-                self.contact = Some(contact.as_str().expect("ERR_INVALID_CONTACT").to_string());
-            }
-        }
-        if let Some(geo) = application.get("geo") {
-            if geo.is_null() {
-                self.geo = None;
-            } else {
-                self.geo = Some(geo.as_str().expect("ERR_INVALID_GEO").to_string());
-            }
-        }
-        if let Some(vision) = application.get("vision") {
-            self.vision = serde_json::from_value(vision.clone()).expect("ERR_INVALID_VISION");
-        }
-        if let Some(tech_lead) = application.get("tech_lead") {
-            self.tech_lead =
-                serde_json::from_value(tech_lead.clone()).expect("ERR_INVALID_TECH_LEAD");
-        }
-        if let Some(graduation) = application.get("graduation") {
-            let mut old = self.graduation.clone().unwrap_or_default();
-            old.patch(graduation);
-            self.graduation = Some(old);
-        }
-        if let Some(private) = application.get("private") {
-            let mut old = self.private.clone().unwrap_or_default();
-            old.patch(private);
-            self.private = Some(old);
-        }
-    }
-}
-
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum ApplicationStatus {
@@ -272,21 +138,88 @@ impl Default for ApplicationStatus {
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Project {
+pub struct ProjectV0 {
     pub founders: HashSet<AccountId>,
     pub application: Option<Application>,
     pub application_status: ApplicationStatus,
     pub graduation_status: ApplicationStatus,
 }
 
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]
+#[serde(crate = "near_sdk::serde")]
+pub struct Project {
+    pub founders: HashSet<AccountId>,
+    pub team: Permissions,
+    pub why: String,
+    pub integration: String,
+    pub success_position: String,
+    pub problem: String,
+    pub vision: String,
+    pub deck: String,
+    pub white_paper: String,
+    pub roadmap: String,
+    pub team_deck: String,
+    pub demo: String,
+    pub tam: String,
+    pub geo: String,
+    pub verified: bool,
+    pub application: ApplicationStatus,
+}
+
 impl Project {
     pub fn is_admin(&self, account_id: &AccountId) -> bool {
         self.founders.contains(account_id)
-            || if let Some(application) = &self.application {
-                application.team.contains_key(account_id)
-            } else {
-                false
-            }
+            || self.team.get(account_id).map_or(false, |permissions| {
+                permissions.contains(&Permission::Admin)
+            })
+    }
+
+    pub fn completion(&self) -> (u8, u8) {
+        let mut completed = 0;
+        let total = 14;
+        if !self.founders.is_empty() {
+            completed += 1;
+        }
+        if !self.team.is_empty() {
+            completed += 1;
+        }
+        if !self.why.is_empty() {
+            completed += 1;
+        }
+        if !self.tam.is_empty() {
+            completed += 1;
+        }
+        if !self.roadmap.is_empty() {
+            completed += 1;
+        }
+        if !self.success_position.is_empty() {
+            completed += 1;
+        }
+        if !self.white_paper.is_empty() {
+            completed += 1;
+        }
+        if !self.integration.is_empty() {
+            completed += 1;
+        }
+        if !self.team_deck.is_empty() {
+            completed += 1;
+        }
+        if !self.problem.is_empty() {
+            completed += 1;
+        }
+        if !self.vision.is_empty() {
+            completed += 1;
+        }
+        if !self.demo.is_empty() {
+            completed += 1;
+        }
+        if !self.geo.is_empty() {
+            completed += 1;
+        }
+        if !self.deck.is_empty() {
+            completed += 1;
+        }
+        (completed, total)
     }
 
     pub fn patch(&mut self, value: &Value) {
@@ -300,34 +233,76 @@ impl Project {
                     .map(|v| serde_json::from_value(v.clone()).expect("ERR_INVALID_FOUNDERS")),
             );
         }
-        if let Some(application_status) = project.get("application_status") {
-            self.application_status = serde_json::from_value(application_status.clone())
-                .expect("ERR_INVALID_APPLICATION_STATUS");
-        }
-        if let Some(graduation_status) = project.get("graduation_status") {
-            self.graduation_status = serde_json::from_value(graduation_status.clone())
-                .expect("ERR_INVALID_GRADUATION_STATUS");
+        if let Some(team) = project.get("team") {
+            self.team = serde_json::from_value(team.clone()).expect("ERR_INVALID_TEAM");
         }
         if let Some(application) = project.get("application") {
-            let mut old_application = self.application.clone().unwrap_or_default();
-            old_application.patch(application);
-            self.application = Some(old_application);
+            self.application = serde_json::from_value(application.clone())
+                .expect("ERR_INVALID_APPLICATION_STATUS");
+        }
+        if let Some(why) = project.get("why") {
+            self.why = serde_json::from_value(why.clone()).expect("ERR_INVALID_WHY");
+        }
+        if let Some(integration) = project.get("integration") {
+            self.integration =
+                serde_json::from_value(integration.clone()).expect("ERR_INVALID_INTEGRATION");
+        }
+        if let Some(success_position) = project.get("success_position") {
+            self.success_position = serde_json::from_value(success_position.clone())
+                .expect("ERR_INVALID_SUCCESS_POSITION");
+        }
+        if let Some(problem) = project.get("problem") {
+            self.problem = serde_json::from_value(problem.clone()).expect("ERR_INVALID_PROBLEM");
+        }
+        if let Some(vision) = project.get("vision") {
+            self.vision = serde_json::from_value(vision.clone()).expect("ERR_INVALID_VISION");
+        }
+        if let Some(deck) = project.get("deck") {
+            self.deck = serde_json::from_value(deck.clone()).expect("ERR_INVALID_DECK");
+        }
+        if let Some(white_paper) = project.get("white_paper") {
+            self.white_paper =
+                serde_json::from_value(white_paper.clone()).expect("ERR_INVALID_WHITE_PAPER");
+        }
+        if let Some(roadmap) = project.get("roadmap") {
+            self.roadmap = serde_json::from_value(roadmap.clone()).expect("ERR_INVALID_ROADMAP");
+        }
+        if let Some(team_deck) = project.get("team_deck") {
+            self.team_deck =
+                serde_json::from_value(team_deck.clone()).expect("ERR_INVALID_TEAM_DECK");
+        }
+        if let Some(demo) = project.get("demo") {
+            self.demo = serde_json::from_value(demo.clone()).expect("ERR_INVALID_DEMO");
+        }
+        if let Some(tam) = project.get("tam") {
+            self.tam = serde_json::from_value(tam.clone()).expect("ERR_INVALID_TAM");
+        }
+        if let Some(geo) = project.get("geo") {
+            self.geo = serde_json::from_value(geo.clone()).expect("ERR_INVALID_GEO");
         }
     }
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedProject {
-    V0(Project),
+    V0(ProjectV0),
+    V1(Project),
+}
+
+impl VersionedProject {
+    pub fn is_v0(&self) -> bool {
+        matches!(self, VersionedProject::V0(_))
+    }
 }
 
 impl Default for VersionedProject {
     fn default() -> Self {
-        Self::V0(Project {
+        Self::V1(Project {
             founders: HashSet::new(),
-            application: None,
-            application_status: ApplicationStatus::NotSubmitted,
-            graduation_status: ApplicationStatus::NotSubmitted,
+            application: ApplicationStatus::NotSubmitted,
+            team: HashMap::new(),
+            verified: false,
+            ..Default::default()
         })
     }
 }
@@ -335,7 +310,30 @@ impl Default for VersionedProject {
 impl From<VersionedProject> for Project {
     fn from(value: VersionedProject) -> Self {
         match value {
-            VersionedProject::V0(e) => e,
+            VersionedProject::V0(e) => {
+                let application = e.application.unwrap_or_default();
+                let graduation = application.graduation.unwrap_or_default();
+
+                Project {
+                    founders: e.founders,
+                    application: e.application_status,
+                    verified: false,
+                    team: application.team,
+                    why: application.why,
+                    integration: application.integration,
+                    success_position: application.success_position,
+                    problem: String::new(),
+                    vision: application.vision,
+                    deck: graduation.pitch_deck,
+                    white_paper: graduation.white_paper,
+                    roadmap: graduation.roadmap,
+                    team_deck: graduation.team,
+                    demo: graduation.demo,
+                    tam: graduation.tam,
+                    geo: application.geo.unwrap_or_default(),
+                }
+            }
+            VersionedProject::V1(e) => e,
         }
     }
 }
@@ -343,18 +341,39 @@ impl From<VersionedProject> for Project {
 impl From<&VersionedProject> for Project {
     fn from(value: &VersionedProject) -> Self {
         match value {
-            VersionedProject::V0(e) => e.clone(),
+            VersionedProject::V0(e) => {
+                let application = e.clone().application.unwrap_or_default();
+                let graduation = application.graduation.unwrap_or_default();
+
+                Project {
+                    founders: e.founders.clone(),
+                    application: e.application_status.clone(),
+                    verified: false,
+                    team: application.team,
+                    why: application.why,
+                    integration: application.integration,
+                    success_position: application.success_position,
+                    problem: String::new(),
+                    vision: application.vision,
+                    deck: graduation.pitch_deck,
+                    white_paper: graduation.white_paper,
+                    roadmap: graduation.roadmap,
+                    team_deck: graduation.team,
+                    demo: graduation.demo,
+                    tam: graduation.tam,
+                    geo: application.geo.unwrap_or_default(),
+                }
+            }
+            VersionedProject::V1(e) => e.clone(),
         }
     }
 }
 
 impl VersionedProject {
     pub fn new(founders: HashSet<AccountId>) -> Self {
-        Self::V0(Project {
+        Self::V1(Project {
             founders,
-            application: None,
-            application_status: ApplicationStatus::NotSubmitted,
-            graduation_status: ApplicationStatus::NotSubmitted,
+            ..Default::default()
         })
     }
 }
@@ -388,7 +407,7 @@ impl Contract {
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 old.patch(&project);
-                *existing = VersionedProject::V0(old);
+                *existing = VersionedProject::V1(old);
             });
         Events::EditProject { account_id }.emit();
     }
@@ -400,13 +419,25 @@ impl Contract {
         Events::RemoveProject { account_id }.emit();
     }
 
+    pub fn verify_project(&mut self, account_id: AccountId) {
+        self.assert_owner();
+        self.projects
+            .entry(account_id.clone())
+            .and_modify(|existing| {
+                let mut old: Project = existing.clone().into();
+                old.verified = true;
+                *existing = VersionedProject::V1(old);
+            });
+        Events::VerifyProject { account_id }.emit();
+    }
+
     /// Add founders to project.
     pub fn add_founders(&mut self, account_id: AccountId, founders: Vec<AccountId>) {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
             old.founders.extend(founders);
-            *existing = VersionedProject::V0(old);
+            *existing = VersionedProject::V1(old);
         });
     }
 
@@ -418,7 +449,7 @@ impl Contract {
             for founder in founders {
                 old.founders.remove(&founder);
             }
-            *existing = VersionedProject::V0(old);
+            *existing = VersionedProject::V1(old);
         });
     }
 
@@ -427,12 +458,10 @@ impl Contract {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
-            let mut application = old.application.clone().unwrap_or_default();
             for (account_id, permissions) in team {
-                application.team.insert(account_id, permissions);
+                old.team.insert(account_id, permissions);
             }
-            old.application = Some(application);
-            *existing = VersionedProject::V0(old);
+            *existing = VersionedProject::V1(old);
         });
     }
 
@@ -445,15 +474,10 @@ impl Contract {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
-            if old.application.is_none() {
-                return;
-            }
-            let mut application = old.application.clone().unwrap();
             for (account_id, _) in team {
-                application.team.remove(&account_id);
+                old.team.remove(&account_id);
             }
-            old.application = Some(application);
-            *existing = VersionedProject::V0(old);
+            *existing = VersionedProject::V1(old);
         });
     }
 
@@ -461,13 +485,12 @@ impl Contract {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
-            require!(
-                project.application.is_some(),
-                "ERR_APPLICATION_NOT_FILLED_OUT"
-            );
-            project.application_status =
-                ApplicationStatus::Submitted(near_sdk::env::block_timestamp());
-            *old = VersionedProject::V0(project);
+            // require!(
+            //     project.application.is_some(),
+            //     "ERR_APPLICATION_NOT_FILLED_OUT"
+            // );
+            project.application = ApplicationStatus::Submitted(near_sdk::env::block_timestamp());
+            *old = VersionedProject::V1(project);
         });
         Events::SubmitApplication { account_id }.emit();
     }
@@ -483,7 +506,7 @@ impl Contract {
             .expect("ERR_NOT_PROJECT")
             .into();
         require!(
-            matches!(project.application_status, ApplicationStatus::Submitted(_)),
+            matches!(project.application, ApplicationStatus::Submitted(_)),
             "ERR_APPLICATION_NOT_SUBMITTED"
         );
         Events::ApproveApplication { account_id }.emit();
@@ -523,13 +546,13 @@ impl Contract {
             .expect("ERR_NOT_PROJECT")
             .into();
         require!(
-            matches!(project.application_status, ApplicationStatus::Submitted(_)),
+            matches!(project.application, ApplicationStatus::Submitted(_)),
             "ERR_APPLICATION_NOT_SUBMITTED"
         );
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
-            project.application_status = ApplicationStatus::Rejected(reason.clone());
-            *old = VersionedProject::V0(project);
+            project.application = ApplicationStatus::Rejected(reason.clone());
+            *old = VersionedProject::V1(project);
         });
         Events::RejectApplication { account_id, reason }.emit();
     }
@@ -574,10 +597,7 @@ impl Contract {
 
     /// List project team.
     pub fn get_team(&self, account_id: AccountId) -> Permissions {
-        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
-            .application
-            .unwrap_or_default()
-            .team
+        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY")).team
     }
 
     /// Check if account ID is an project.
@@ -592,6 +612,17 @@ impl Contract {
         };
         let project: Project = versioned_project.into();
         project.is_admin(account_id)
+    }
+
+    pub fn count_v0_projects(&self) -> usize {
+        self.projects
+            .values()
+            .filter(|versioned_project| versioned_project.is_v0())
+            .count()
+    }
+
+    pub fn get_project_profile_completion(&self, account_id: AccountId) -> (u8, u8) {
+        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY")).completion()
     }
 
     /// Assertions

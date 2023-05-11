@@ -229,8 +229,8 @@ return (
         <CTARow>
           {state.isAdmin ? (
             <>
-              {state.project.application_status === "NotSubmitted" ||
-              "Rejected" in state.project.application_status ? (
+              {state.project.application === "NotSubmitted" ||
+              "Rejected" in state.project.application ? (
                 <Widget
                   src={`${ownerId}/widget/Buttons.Green`}
                   props={{

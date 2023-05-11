@@ -45,7 +45,7 @@ const Name = styled.div`
 
 const Other = styled.div`
   text-align: center;
-  width: 13%;
+  width: 16.25%;
 `;
 
 const Container = styled.div`
@@ -60,7 +60,6 @@ return (
       <Name>Name</Name>
       <Other>Admins</Other>
       <Other>Accelerator</Other>
-      <Other>Graduation</Other>
       <Other>Created</Other>
       <Other>Status</Other>
     </Header>

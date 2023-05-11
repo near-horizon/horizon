@@ -165,7 +165,7 @@ const body = (
       src={`${ownerId}/widget/DescriptionArea`}
       props={{ description: state.request.description }}
     />
-    <Widget
+    {/*<Widget
       src={`${ownerId}/widget/Tags`}
       props={{
         tags: state.request.tags.reduce(
@@ -173,7 +173,7 @@ const body = (
           {}
         ),
       }}
-    />
+    />*/}
     <Details>
       {deadline}
       {budget}

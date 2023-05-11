@@ -172,7 +172,7 @@ return (
         canEdit: isAdmin,
       }}
     />
-    <Widget
+    {/*<Widget
       src={`${ownerId}/widget/Inputs.Viewable.Tags`}
       props={{
         label: "Tags",
@@ -187,6 +187,6 @@ return (
         onSave: (tags) => onSave({ tags: tags.map(({ name }) => name) }),
         canEdit: isAdmin,
       }}
-    />
+    />*/}
   </Container>
 );

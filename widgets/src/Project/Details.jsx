@@ -105,9 +105,8 @@ return (
       src={`${ownerId}/widget/Inputs.Viewable.Integration`}
       props={{
         label: "Integration",
-        value: state.project.application.integration,
-        onSave: ({ value: integration }) =>
-          onSave({ profile: { integration } }),
+        value: state.project.integration,
+        onSave: ({ value: integration }) => props.onSave({ integration }),
         canEdit: isAdmin,
       }}
     />
@@ -200,7 +199,7 @@ return (
         canEdit: isAdmin,
       }}
     />
-    <Widget
+    {/*<Widget
       src={`${ownerId}/widget/Inputs.Viewable.Tags`}
       props={{
         label: "Tags",
@@ -223,13 +222,13 @@ return (
           }),
         canEdit: isAdmin,
       }}
-    />
+    />*/}
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Text`}
       props={{
         label: "Location",
         id: "location",
-        value: props.project.application.geo,
+        value: state.project.geo,
         onSave: (geo) => props.onSave({ geo }),
         canEdit: isAdmin,
       }}

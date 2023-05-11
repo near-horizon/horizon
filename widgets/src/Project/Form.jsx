@@ -339,7 +339,7 @@ return (
           error: state.ossError,
         }}
       />
-      <Widget
+      {/*<Widget
         src={`${ownerId}/widget/Inputs.MultiSelect`}
         props={{
           label: "Tags",
@@ -353,7 +353,7 @@ return (
               })),
             }),
         }}
-      />
+      />*/}
       <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
@@ -474,10 +474,8 @@ return (
                   args: {
                     account_id: state.accountId,
                     project: {
-                      application: {
-                        integration: state.integration.value,
-                        ...(state.geo ? { geo: state.geo } : {}),
-                      },
+                      integration: state.integration.value,
+                      ...(state.geo ? { geo: state.geo } : {}),
                     },
                   },
                 },

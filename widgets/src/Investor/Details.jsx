@@ -90,7 +90,7 @@ return (
         canEdit: isAdmin,
       }}
     />
-    <Widget
+    {/*<Widget
       src={`${ownerId}/widget/Inputs.Viewable.Tags`}
       props={{
         label: "Area of interest",
@@ -113,7 +113,7 @@ return (
           }),
         canEdit: isAdmin,
       }}
-    />
+    />*/}
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Text`}
       props={{

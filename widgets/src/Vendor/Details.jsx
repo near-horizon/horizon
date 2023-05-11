@@ -93,7 +93,7 @@ return (
         canEdit: isAdmin,
       }}
     />
-    <Widget
+    {/*<Widget
       src={`${ownerId}/widget/Inputs.Viewable.Tags`}
       props={{
         label: "Skills",
@@ -116,7 +116,7 @@ return (
           }),
         canEdit: isAdmin,
       }}
-    />
+    />*/}
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.MultiSelect`}
       props={{

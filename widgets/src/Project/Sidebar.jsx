@@ -38,7 +38,7 @@ return (
         State.update({
           project: {
             ...state.project,
-            application: { ...state.project.application, ...project },
+            ...project,
           },
         });
         Near.call(
