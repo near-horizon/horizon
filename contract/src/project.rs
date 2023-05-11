@@ -185,6 +185,9 @@ impl Project {
                     .map(|v| serde_json::from_value(v.clone()).expect("ERR_INVALID_FOUNDERS")),
             );
         }
+        if let Some(team) = project.get("team") {
+            self.team = serde_json::from_value(team.clone()).expect("ERR_INVALID_TEAM");
+        }
         if let Some(application) = project.get("application") {
             self.application = serde_json::from_value(application.clone())
                 .expect("ERR_INVALID_APPLICATION_STATUS");
