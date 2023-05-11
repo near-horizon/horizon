@@ -116,7 +116,10 @@ return (
             id: "active",
             value: state.active === "true",
             onSave: (active) =>
-              Social.set({ profile: { active: `${active}` } }),
+              Social.set(
+                { profile: { active: `${active}` } },
+                { onCommit: () => State.update({ active }) }
+              ),
             canEdit: props.isAdmin,
           }}
         />

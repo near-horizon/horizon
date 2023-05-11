@@ -41,6 +41,13 @@ const Details = styled.div`
   width: 100%;
 `;
 
+const onSave = (data) => {
+  Social.set(data, {
+    onCommit: () =>
+      State.update({ profile: { ...state.profile, ...data.profile } }),
+  });
+};
+
 return (
   <Container>
     <div>
@@ -64,7 +71,7 @@ return (
           value: state.profile.name,
           id: "name",
           accountId,
-          onSave: (name) => Social.set({ profile: { name } }),
+          onSave: (name) => onSave({ profile: { name } }),
           canEdit: props.isAdmin,
         }}
       />
@@ -73,7 +80,7 @@ return (
         props={{
           value: state.profile.tagline,
           id: "tagline",
-          onSave: (tagline) => Social.set({ profile: { tagline } }),
+          onSave: (tagline) => onSave({ profile: { tagline } }),
           canEdit: props.isAdmin,
         }}
       />

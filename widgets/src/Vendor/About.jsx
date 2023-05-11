@@ -1,4 +1,4 @@
-const onSave = props.onSave ?? (() => {});
+// const onSave = props.onSave ?? (() => {});
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 
@@ -44,6 +44,13 @@ if (!state.descriptionIsFetched) {
   return <>Loading...</>;
 }
 
+const onSave = (data) => {
+  Social.set(data, {
+    onCommit: () =>
+      State.update({ profile: { ...state.profile, ...data.profile } }),
+  });
+};
+
 return (
   <Container>
     <Heading>About vendor</Heading>
@@ -53,7 +60,7 @@ return (
         label: "Description",
         id: "description",
         value: state.description,
-        onSave: (description) => Social.set({ profile: { description } }),
+        onSave: (description) => onSave({ profile: { description } }),
         canEdit: props.isAdmin,
       }}
     />
@@ -63,7 +70,7 @@ return (
         label: "Skills and services",
         id: "services",
         value: state.services,
-        onSave: (services) => Social.set({ profile: { services } }),
+        onSave: (services) => onSave({ profile: { services } }),
         canEdit: props.isAdmin,
       }}
     />

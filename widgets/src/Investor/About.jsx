@@ -52,7 +52,11 @@ return (
         label: "Description",
         id: "description",
         value: state.description,
-        onSave: (description) => Social.set({ profile: { description } }),
+        onSave: (description) =>
+          Social.set(
+            { profile: { description } },
+            { onCommit: () => State.update({ description }) }
+          ),
         canEdit: props.isAdmin,
       }}
     />

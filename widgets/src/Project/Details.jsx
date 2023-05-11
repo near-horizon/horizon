@@ -62,7 +62,10 @@ if (!state.profileIsFetched || !state.projectIsFetched) {
 }
 
 const onSave = (data) => {
-  Social.set(data);
+  Social.set(data, {
+    onCommit: () =>
+      State.update({ profile: { ...state.profile, ...data.profile } }),
+  });
 };
 
 return (

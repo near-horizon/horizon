@@ -77,6 +77,13 @@ const onSave = (value) => {
   });
 };
 
+const onSocialSave = (data) => {
+  Social.set(data, {
+    onCommit: () =>
+      State.update({ profile: { ...state.profile, ...data.profile } }),
+  });
+};
+
 return (
   <Container>
     <Heading>About project</Heading>
@@ -86,7 +93,7 @@ return (
         label: "Description",
         id: "description",
         value: state.profile.description,
-        onSave: (description) => Social.set({ profile: { description } }),
+        onSave: (description) => onSocialSave({ profile: { description } }),
         canEdit: props.isAdmin,
       }}
     />
@@ -96,7 +103,7 @@ return (
         label: "What problem(s) are you solving?",
         id: "problem",
         value: state.profile.problem,
-        onSave: (problem) => Social.set({ profile: { problem } }),
+        onSave: (problem) => onSocialSave({ profile: { problem } }),
         canEdit: props.isAdmin,
       }}
     />

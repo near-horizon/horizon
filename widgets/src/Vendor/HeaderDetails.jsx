@@ -42,7 +42,10 @@ const Details = styled.div`
 `;
 
 const onSave = (data) => {
-  Social.set(data);
+  Social.set(data, {
+    onCommit: () =>
+      State.update({ profile: { ...state.profile, ...data.profile } }),
+  });
 };
 
 return (

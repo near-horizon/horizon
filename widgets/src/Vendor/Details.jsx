@@ -46,7 +46,13 @@ if (!state.profileIsFetched) {
 }
 
 const onSave = (profile) => {
-  Social.set({ profile });
+  Social.set(
+    { profile },
+    {
+      onCommit: () =>
+        State.update({ profile: { ...state.profile, ...profile } }),
+    }
+  );
 };
 
 return (
