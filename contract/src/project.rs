@@ -570,6 +570,59 @@ impl Contract {
             .count()
     }
 
+    pub fn get_project_profile_completion(&self, account_id: AccountId) -> (u8, u8) {
+        let project: Project = self
+            .projects
+            .get(&account_id)
+            .expect("ERR_NO_ENTITY")
+            .into();
+        let mut completed = 0;
+        let total = 14;
+        if !project.founders.is_empty() {
+            completed += 1;
+        }
+        if !project.team.is_empty() {
+            completed += 1;
+        }
+        if !project.why.is_empty() {
+            completed += 1;
+        }
+        if !project.tam.is_empty() {
+            completed += 1;
+        }
+        if !project.roadmap.is_empty() {
+            completed += 1;
+        }
+        if !project.success_position.is_empty() {
+            completed += 1;
+        }
+        if !project.white_paper.is_empty() {
+            completed += 1;
+        }
+        if !project.integration.is_empty() {
+            completed += 1;
+        }
+        if !project.team_deck.is_empty() {
+            completed += 1;
+        }
+        if !project.problem.is_empty() {
+            completed += 1;
+        }
+        if !project.vision.is_empty() {
+            completed += 1;
+        }
+        if !project.demo.is_empty() {
+            completed += 1;
+        }
+        if !project.geo.is_empty() {
+            completed += 1;
+        }
+        if !project.deck.is_empty() {
+            completed += 1;
+        }
+        (completed, total)
+    }
+
     /// Assertions
 
     /// Check whether the given account ID can edit the project with the given ID.
