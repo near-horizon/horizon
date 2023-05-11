@@ -16,7 +16,7 @@
   "request": {
     "9.1": {
       "detailsBudget": "Your projected budget in USD and the estimated equivalent in Horizon credits (NHZN). Note: Horizon credits can only be transferred to approved Horizon service partners.",
-      "detailsPaymentSource": "Describes whether payment to  contributors will occur either directly from you (peer-to-peer) or through Horizon's NHZN credit system (credits)"
+      "detailsPaymentSource": "Describes whether payment to contributors will occur either directly from you (peer-to-peer) or through Horizon's NHZN credit system (credits)"
     },
     "10.5.1": "Once the scope of work has been fulfilled (and payment has been processed for P2P contracts), both parties (project owner and contributor) need to approve ending the contract or it will remain active."
   },
