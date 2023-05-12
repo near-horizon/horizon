@@ -453,8 +453,8 @@ return (
                   },
                 },
               };
-              const deposit = Big(JSON.stringify(data).length * 3).mul(
-                Big(10).pow(19)
+              const deposit = Big(JSON.stringify(data).length * 16).mul(
+                Big(10).pow(20)
               );
               const transactions = [
                 {
