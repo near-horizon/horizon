@@ -121,19 +121,16 @@ pub struct Application {
     pub private: Option<PrivateData>,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
+#[derive(
+    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
+)]
 #[serde(crate = "near_sdk::serde")]
 pub enum ApplicationStatus {
+    #[default]
     NotSubmitted,
     Submitted(#[serde(with = "u64_dec_format")] Timestamp),
     Rejected(String),
     Accepted,
-}
-
-impl Default for ApplicationStatus {
-    fn default() -> Self {
-        Self::NotSubmitted
-    }
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]

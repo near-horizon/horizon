@@ -94,6 +94,19 @@ impl Contract {
         .emit();
     }
 
+    /// Views
+
+    pub fn get_claims(&self) -> Vec<(AccountId, AccountId)> {
+        self.claims.keys().cloned().collect()
+    }
+
+    pub fn get_claim(&self, project_id: AccountId, account_id: AccountId) -> Claim {
+        self.claims
+            .get(&(project_id.clone(), account_id.clone()))
+            .expect("ERR_NOT_CLAIM")
+            .into()
+    }
+
     /// Assertions
 
     pub fn assert_is_claim(&self, project_id: &AccountId, account_id: &AccountId) {
