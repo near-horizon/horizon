@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     near_bindgen, require,
@@ -6,7 +8,11 @@ use near_sdk::{
 };
 use near_sdk_contract_tools::standard::nep297::Event;
 
-use crate::{events::Events, Contract, ContractExt};
+use crate::{
+    events::Events,
+    project::{Project, VersionedProject},
+    Contract, ContractExt,
+};
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
 #[serde(crate = "near_sdk::serde")]
@@ -71,6 +77,16 @@ impl Contract {
             .and_modify(|claim| {
                 *claim = VersionedClaim::V0(Claim::Accepted(near_sdk::env::block_timestamp()));
             });
+        self.projects
+            .entry(project_id.clone())
+            .and_modify(|old| {
+                let mut project: Project = old.clone().into();
+                project.founders.insert(account_id.clone());
+                *old = VersionedProject::V1(project);
+            })
+            .or_insert(VersionedProject::new(HashSet::from_iter([
+                account_id.clone()
+            ])));
         Events::AcceptClaim {
             project_id,
             account_id,
