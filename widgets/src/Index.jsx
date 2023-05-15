@@ -233,6 +233,7 @@ const isForm = [
 
 return (
   <Container>
+    <Widget src={`${ownerId}/widget/Help.FeedbackButton`} props={{ update }} />
     <Widget
       src={`${ownerId}/widget/TNCModal`}
       props={{
