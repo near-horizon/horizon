@@ -24,6 +24,9 @@ const Account = styled.span`
   font-weight: 400;
   font-size: ${accountSize};
   line-height: 1.4em;
+  overflow: hidden;
+  max-width: 30ch;
+  text-overflow: ellipsis;
   color: #687076;
 `;
 
