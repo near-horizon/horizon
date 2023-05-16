@@ -10,64 +10,6 @@ use crate::dec_serde::u64_dec_format;
 use crate::events::Events;
 use crate::{Contract, ContractExt};
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
-#[serde(crate = "near_sdk::serde")]
-pub struct TokenDetail {
-    pub name: String,
-    pub symbol: String,
-    pub link: String,
-}
-
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
-#[serde(crate = "near_sdk::serde")]
-#[allow(clippy::upper_case_acronyms)]
-pub enum TechLead {
-    CTO(AccountId),
-    Founder(AccountId),
-    None,
-}
-
-impl Default for TechLead {
-    fn default() -> Self {
-        Self::None
-    }
-}
-
-#[derive(
-    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
-)]
-#[serde(crate = "near_sdk::serde")]
-pub struct Graduation {
-    pub pitch_deck: String,
-    pub white_paper: String,
-    pub roadmap: String,
-    pub team: String,
-    pub tam: String,
-    pub success_metrics: String,
-    pub demo: String,
-    pub code: String,
-}
-
-#[derive(
-    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
-)]
-#[serde(crate = "near_sdk::serde")]
-pub struct PrivateGraduation {
-    pub legal: String,
-    pub budget: String,
-    pub gtm: String,
-}
-
-#[derive(
-    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
-)]
-#[serde(crate = "near_sdk::serde")]
-pub struct PrivateData {
-    pub risks: String,
-    pub needs: String,
-    pub graduation: PrivateGraduation,
-}
-
 /// Permissions table for interaction between a contributor and an entity.
 #[derive(
     BorshSerialize,
@@ -94,52 +36,12 @@ pub type Permissions = HashMap<AccountId, HashSet<Permission>>;
     BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
 )]
 #[serde(crate = "near_sdk::serde")]
-pub struct Application {
-    #[serde(default)]
-    pub integration: String,
-    #[serde(default)]
-    pub why: String,
-    #[serde(default)]
-    pub partners: String,
-    #[serde(default)]
-    pub token: Option<TokenDetail>,
-    #[serde(default)]
-    pub contact: Option<String>,
-    #[serde(default)]
-    pub geo: Option<String>,
-    #[serde(default)]
-    pub success_position: String,
-    #[serde(default)]
-    pub vision: String,
-    #[serde(default)]
-    pub tech_lead: TechLead,
-    #[serde(default)]
-    pub team: Permissions,
-    #[serde(default)]
-    pub graduation: Option<Graduation>,
-    #[serde(default)]
-    pub private: Option<PrivateData>,
-}
-
-#[derive(
-    BorshSerialize, BorshDeserialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug, Default,
-)]
-#[serde(crate = "near_sdk::serde")]
 pub enum ApplicationStatus {
     #[default]
     NotSubmitted,
     Submitted(#[serde(with = "u64_dec_format")] Timestamp),
     Rejected(String),
     Accepted,
-}
-
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]
-#[serde(crate = "near_sdk::serde")]
-pub struct ProjectV0 {
-    pub founders: HashSet<AccountId>,
-    pub application: Option<Application>,
-    pub application_status: ApplicationStatus,
-    pub graduation_status: ApplicationStatus,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]
@@ -282,13 +184,13 @@ impl Project {
 
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedProject {
-    V0(ProjectV0),
+    V0,
     V1(Project),
 }
 
 impl VersionedProject {
     pub fn is_v0(&self) -> bool {
-        matches!(self, VersionedProject::V0(_))
+        matches!(self, VersionedProject::V0)
     }
 }
 
@@ -307,28 +209,8 @@ impl Default for VersionedProject {
 impl From<VersionedProject> for Project {
     fn from(value: VersionedProject) -> Self {
         match value {
-            VersionedProject::V0(e) => {
-                let application = e.application.unwrap_or_default();
-                let graduation = application.graduation.unwrap_or_default();
-
-                Project {
-                    founders: e.founders,
-                    application: e.application_status,
-                    verified: false,
-                    team: application.team,
-                    why: application.why,
-                    integration: application.integration,
-                    success_position: application.success_position,
-                    problem: String::new(),
-                    vision: application.vision,
-                    deck: graduation.pitch_deck,
-                    white_paper: graduation.white_paper,
-                    roadmap: graduation.roadmap,
-                    team_deck: graduation.team,
-                    demo: graduation.demo,
-                    tam: graduation.tam,
-                    geo: application.geo.unwrap_or_default(),
-                }
+            VersionedProject::V0 => {
+                unreachable!("ERR_INVALID_PROJECT_VERSION: V0");
             }
             VersionedProject::V1(e) => e,
         }
@@ -338,28 +220,8 @@ impl From<VersionedProject> for Project {
 impl From<&VersionedProject> for Project {
     fn from(value: &VersionedProject) -> Self {
         match value {
-            VersionedProject::V0(e) => {
-                let application = e.clone().application.unwrap_or_default();
-                let graduation = application.graduation.unwrap_or_default();
-
-                Project {
-                    founders: e.founders.clone(),
-                    application: e.application_status.clone(),
-                    verified: false,
-                    team: application.team,
-                    why: application.why,
-                    integration: application.integration,
-                    success_position: application.success_position,
-                    problem: String::new(),
-                    vision: application.vision,
-                    deck: graduation.pitch_deck,
-                    white_paper: graduation.white_paper,
-                    roadmap: graduation.roadmap,
-                    team_deck: graduation.team,
-                    demo: graduation.demo,
-                    tam: graduation.tam,
-                    geo: application.geo.unwrap_or_default(),
-                }
+            VersionedProject::V0 => {
+                unreachable!("ERR_INVALID_PROJECT_VERSION: V0");
             }
             VersionedProject::V1(e) => e.clone(),
         }
