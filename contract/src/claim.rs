@@ -118,7 +118,7 @@ impl Contract {
 
     pub fn get_claim(&self, project_id: AccountId, account_id: AccountId) -> Claim {
         self.claims
-            .get(&(project_id.clone(), account_id.clone()))
+            .get(&(project_id, account_id))
             .expect("ERR_NOT_CLAIM")
             .into()
     }
