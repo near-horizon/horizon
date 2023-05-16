@@ -34,6 +34,14 @@ const DetailsSection = styled.div`
   width: 100%;
   flex-grow: 1;
 
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+  }
+
   h4 {
     font-style: normal;
     font-weight: 600;
