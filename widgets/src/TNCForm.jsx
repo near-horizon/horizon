@@ -36,7 +36,7 @@ return (
             <>
               By checking this box you acknowledge that you understand and agree
               with{" "}
-              <a href={`${ownerId}/widget/TNCPage`}>
+              <a href={`/${ownerId}/widget/Index?tab=legal`}>
                 NEAR Horizon Terms and Conditions
               </a>
             </>
