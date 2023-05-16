@@ -190,6 +190,13 @@ const NavItem = styled.a`
     text-decoration: none;
     background-color: #f9fafb;
   }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 `;
 
 const CountIndicator = styled.div`
@@ -277,7 +284,7 @@ return (
       id: "help",
     })}
     {navItem({
-      text: "Legal",
+      text: "Terms & Conditions",
       icon: legalIcon,
       id: "legal",
     })}
