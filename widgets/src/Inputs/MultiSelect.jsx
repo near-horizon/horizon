@@ -5,6 +5,7 @@ const options = props.options ?? [];
 const onChange = props.onChange ?? (() => {});
 const validate = props.validate ?? (() => {});
 const error = props.error ?? "";
+const labelKey = props.labelKey ?? "name";
 
 const Container = styled.div`
   display: flex;
@@ -76,7 +77,7 @@ return (
     <Typeahead
       id
       placeholder={placeholder}
-      labelKey="name"
+      labelKey={labelKey}
       onChange={onChange}
       options={options}
       selected={value}

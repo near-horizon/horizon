@@ -77,8 +77,8 @@ State.init({
   nameError: "",
   accountId: "",
   accountIdError: "",
-  category: null,
-  categoryError: "",
+  verticals: [],
+  verticalsError: "",
   tagline: "",
   taglineError: "",
   description: "",
@@ -147,8 +147,8 @@ const validateForm = () => {
     state.nameError === "" &&
     state.accountId &&
     state.accountIdError === "" &&
-    state.category &&
-    state.categoryError === "" &&
+    state.verticals &&
+    state.verticalsError === "" &&
     (!state.tagline || state.taglineError === "") &&
     (!state.description || state.descriptionError === "") &&
     (!state.tags || state.tagsError === "") &&
@@ -228,12 +228,12 @@ return (
         <></>
       )}
       <Widget
-        src={`${ownerId}/widget/Inputs.Category`}
+        src={`${ownerId}/widget/Inputs.Verticals`}
         props={{
-          category: state.category,
-          update: (category) => State.update({ category }),
-          setError: (categoryError) => State.update({ categoryError }),
-          error: state.categoryError,
+          verticals: state.verticals,
+          update: (verticals) => State.update({ verticals }),
+          setError: (verticalsError) => State.update({ verticalsError }),
+          error: state.verticalsError,
         }}
       />
       <Widget
@@ -341,7 +341,10 @@ return (
                 [state.accountId]: {
                   profile: {
                     name: state.name,
-                    category: state.category.value,
+                    verticals: state.verticals.reduce(
+                      (acc, name) => Object.assign(acc, { [name]: "" }),
+                      {}
+                    ),
                     ...(state.tagline ? { tagline: state.tagline } : {}),
                     ...(state.description
                       ? { description: state.description }

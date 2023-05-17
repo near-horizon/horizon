@@ -93,11 +93,36 @@ return (
       }}
     />
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Category`}
+      src={`${ownerId}/widget/Inputs.Viewable.Verticals`}
       props={{
-        label: "Category",
-        value: state.profile.category,
-        onSave: ({ value: category }) => onSave({ profile: { category } }),
+        label: "Verticals",
+        value: state.profile.verticals ?? { [state.profile.category]: "" },
+        onSave: (verticals) =>
+          onSave({
+            profile: {
+              verticals: verticals.reduce(
+                (acc, vertical) => Object.assign(acc, { [vertical]: "" }),
+                {}
+              ),
+            },
+          }),
+        canEdit: isAdmin,
+      }}
+    />
+    <Widget
+      src={`${ownerId}/widget/Inputs.Viewable.ProductType`}
+      props={{
+        label: "Product Type",
+        value: state.profile.product_type,
+        onSave: (productType) =>
+          onSave({
+            profile: {
+              product_type: productType.reduce(
+                (acc, productType) => Object.assign(acc, { [productType]: "" }),
+                {}
+              ),
+            },
+          }),
         canEdit: isAdmin,
       }}
     />

@@ -77,8 +77,10 @@ State.init({
   nameError: "",
   accountId: "",
   accountIdError: "",
-  category: null,
-  categoryError: "",
+  verticals: [],
+  verticalsError: "",
+  productType: [],
+  productTypeError: "",
   integration: null,
   integrationError: "",
   dev: null,
@@ -155,8 +157,10 @@ const validateForm = () => {
     state.nameError === "" &&
     state.accountId &&
     state.accountIdError === "" &&
-    state.category &&
-    state.categoryError === "" &&
+    state.verticals &&
+    state.verticalsError === "" &&
+    state.productType &&
+    state.productTypeError === "" &&
     state.integration &&
     state.integrationError === "" &&
     state.dev &&
@@ -241,12 +245,21 @@ return (
         <></>
       )}
       <Widget
-        src={`${ownerId}/widget/Inputs.Category`}
+        src={`${ownerId}/widget/Inputs.Verticals`}
         props={{
-          category: state.category,
-          update: (category) => State.update({ category }),
-          setError: (categoryError) => State.update({ categoryError }),
-          error: state.categoryError,
+          verticals: state.verticals,
+          update: (verticals) => State.update({ verticals }),
+          setError: (verticalsError) => State.update({ verticalsError }),
+          error: state.verticalsError,
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Inputs.ProductType`}
+        props={{
+          productType: state.productType,
+          update: (productType) => State.update({ productType }),
+          setError: (productTypeError) => State.update({ productTypeError }),
+          error: state.productTypeError,
         }}
       />
       <Widget
@@ -420,7 +433,14 @@ return (
                 [state.accountId]: {
                   profile: {
                     name: state.name,
-                    category: state.category.value,
+                    verticals: state.verticals.reduce(
+                      (acc, name) => Object.assign(acc, { [name]: "" }),
+                      {}
+                    ),
+                    product_type: state.productType.reduce(
+                      (acc, name) => Object.assign(acc, { [name]: "" }),
+                      {}
+                    ),
                     stage: state.dev.value,
                     ...(state.team ? { team: `${state.team}` } : {}),
                     ...(state.tagline ? { tagline: state.tagline } : {}),
