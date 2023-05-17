@@ -1,14 +1,16 @@
 use std::str::FromStr;
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use base64::Engine as _;
 use clap::Parser;
+use itertools::Itertools;
+use near_lake_framework::near_indexer_primitives::views::BlockView;
 use tokio::sync::mpsc;
 use tracing::info;
 
 use near_lake_framework::near_indexer_primitives::{
-    self, IndexerChunkView, IndexerExecutionOutcomeWithReceipt, IndexerShard,
+    self, CryptoHash, IndexerExecutionOutcomeWithReceipt, StreamerMessage,
 };
 use near_lake_framework::LakeConfig;
 
@@ -50,125 +52,111 @@ async fn listen_blocks(
     mut stream: mpsc::Receiver<near_indexer_primitives::StreamerMessage>,
     watching_list: Vec<near_indexer_primitives::types::AccountId>,
 ) {
-    eprintln!("listen_blocks");
     // This will be a map of correspondence between transactions and receipts
-    let mut tx_receipt_ids = HashMap::<String, String>::new();
+    let mut tx_receipt_ids = HashMap::new();
     // This will be a list of receipt ids we're following
-    let mut wanted_receipt_ids = HashSet::<String>::new();
     let engine = base64::engine::general_purpose::STANDARD;
 
     // Boilerplate code to listen the stream
     while let Some(streamer_message) = stream.recv().await {
-        eprintln!("Block height: {}", streamer_message.block.header.height);
-        for shard in streamer_message.shards {
-            process_shard(
-                shard,
-                &mut tx_receipt_ids,
-                &mut wanted_receipt_ids,
-                &engine,
-                &watching_list,
-            );
+        tx_receipt_ids.extend(collect_transactions(&streamer_message, &watching_list));
+        for (outcome, tx_hash) in filter_outcomes(&streamer_message, &mut tx_receipt_ids) {
+            process_outcome(outcome, tx_hash, &engine, &streamer_message.block);
         }
     }
 }
 
-fn process_shard(
-    shard: IndexerShard,
-    tx_receipt_ids: &mut HashMap<String, String>,
-    wanted_receipt_ids: &mut HashSet<String>,
-    engine: &base64::engine::GeneralPurpose,
+fn collect_transactions(
+    message: &StreamerMessage,
     watching_list: &[near_indexer_primitives::types::AccountId],
-) {
-    let Some(chunk) =  shard.chunk else {
-        return;
-    };
-
-    let receipts = get_receipts_and_hashes(&chunk, watching_list);
-
-    // add `converted_into_receipt_id` to the list of receipt ids we are interested in
-    wanted_receipt_ids.extend(receipts.iter().map(|(receipt_id, _)| receipt_id.clone()));
-
-    // add key value pair of transaction hash and in which receipt id it was converted for further lookup
-    tx_receipt_ids.extend(receipts);
-
-    for execution_outcome in shard.receipt_execution_outcomes {
-        process_outcome(
-            execution_outcome,
-            wanted_receipt_ids,
-            tx_receipt_ids,
-            engine,
-        );
-    }
+) -> HashMap<CryptoHash, CryptoHash> {
+    message
+        .shards
+        .iter()
+        .flat_map(|shard| {
+            let Some(chunk) = shard.chunk.as_ref() else {
+                return vec![];
+            };
+            chunk
+                .transactions
+                .iter()
+                .filter_map(|transaction| {
+                    is_tx_receiver_watched(&transaction, watching_list).then(|| {
+                        (
+                            transaction
+                                .outcome
+                                .execution_outcome
+                                .outcome
+                                .receipt_ids
+                                .first()
+                                .expect("`receipt_ids` must contain one Receipt Id")
+                                .clone(),
+                            transaction.transaction.hash.clone(),
+                        )
+                    })
+                })
+                .collect()
+        })
+        .collect()
 }
 
-fn get_receipts_and_hashes(
-    chunk: &IndexerChunkView,
-    watching_list: &[near_indexer_primitives::types::AccountId],
-) -> Vec<(String, String)> {
-    chunk
-        .transactions
+fn filter_outcomes(
+    message: &StreamerMessage,
+    tx_receipt_ids: &mut HashMap<CryptoHash, CryptoHash>,
+) -> Vec<(IndexerExecutionOutcomeWithReceipt, CryptoHash)> {
+    message
+        .shards
         .iter()
-        // Check if transaction receiver id is one of the list we are interested in
-        .filter(|transaction| is_tx_receiver_watched(transaction, watching_list))
-        .map(|transaction| {
-            (
-                // extract receipt_id transaction was converted into
-                transaction
-                    .outcome
-                    .execution_outcome
-                    .outcome
-                    .receipt_ids
-                    .first()
-                    .expect("`receipt_ids` must contain one Receipt Id")
-                    .to_string(),
-                transaction.transaction.hash.to_string(),
-            )
+        .flat_map(|shard| {
+            shard
+                .receipt_execution_outcomes
+                .iter()
+                .filter_map(|outcome| {
+                    tx_receipt_ids
+                        .remove(&outcome.receipt.receipt_id)
+                        .map(|tx_hash| (outcome.clone(), tx_hash))
+                })
+                .collect_vec()
         })
         .collect()
 }
 
 fn process_outcome(
     execution_outcome: IndexerExecutionOutcomeWithReceipt,
-    wanted_receipt_ids: &mut HashSet<String>,
-    tx_receipt_ids: &mut HashMap<String, String>,
+    tx_hash: CryptoHash,
     engine: &base64::engine::GeneralPurpose,
+    block: &BlockView,
 ) {
-    let Some(receipt_id) = wanted_receipt_ids.take(&execution_outcome.receipt.receipt_id.to_string()) else {
-        return;
-    };
-    // log the tx because we've found it
-    info!(
-        target: "indexer_example",
-        "Transaction hash {:?} related to {} executed with status {:?}",
-        tx_receipt_ids.get(receipt_id.as_str()),
-        &execution_outcome.receipt.receiver_id,
-        execution_outcome.execution_outcome.outcome.status
-    );
-
     if let near_indexer_primitives::views::ReceiptEnumView::Action {
         signer_id, actions, ..
     } = execution_outcome.receipt.receipt
     {
         eprintln!("{}", signer_id);
 
-        for action in actions {
-            let near_indexer_primitives::views::ActionView::FunctionCall { args, .. } = action else {
+        for (action, log) in actions
+            .into_iter()
+            .zip(execution_outcome.execution_outcome.outcome.logs)
+        {
+            let near_indexer_primitives::views::ActionView::FunctionCall { args, method_name, .. } = action else {
                 eprintln!("Not a function call");
                 continue;
             };
             let decoded_args = engine.decode(args.clone()).unwrap_or({
-                eprintln!("Can't decode args, possibly already decoded");
+                info!("Can't decode args, possibly already decoded");
                 args
             });
             let Ok(args_json) = serde_json::from_slice::<serde_json::Value>(&decoded_args) else {
                 eprintln!("Can't parse args");
                 continue;
             };
+            eprintln!("block_hash: {}", block.header.hash);
+            eprintln!("timestamp: {}", block.header.timestamp);
+            eprintln!("tx_hash: {tx_hash}");
+            eprintln!("method_name: {method_name}");
             eprintln!("{args_json:#?}");
+            eprintln!("log: {log:?}",);
         }
     }
-    // remove tx from hashmap
-    tx_receipt_ids.remove(receipt_id.as_str());
 }
 
 fn is_tx_receiver_watched(
