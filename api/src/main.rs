@@ -91,6 +91,7 @@ struct AppState {
     total_fundraise_route: String,
     total_fundraise_auth: String,
     key: sodiumoxide::crypto::secretbox::Key,
+    pool: sqlx::PgPool,
 }
 
 #[tokio::main]
@@ -106,6 +107,12 @@ async fn main() {
         std::env::var("TOTAL_FUNDRAISE_ROUTE").expect("TOTAL_FUNDRAISE_ROUTE must be set");
     let total_fundraise_auth =
         std::env::var("TOTAL_FUNDRAISE_AUTH").expect("TOTAL_FUNDRAISE_AUTH must be set");
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&db_url)
+        .await
+        .expect("Failed to connect to database");
 
     let state = AppState {
         client: Client::new(),
@@ -113,12 +120,14 @@ async fn main() {
         key,
         total_fundraise_route,
         total_fundraise_auth,
+        pool,
     };
 
     let app = Router::new()
         .route("/decrypt/:account_id", post(decrypt))
         .route("/encrypt/:account_id", post(encrypt))
         .route("/total-raised", get(total_raised))
+        .route("/transactions", get(get_transactions))
         .with_state(state);
 
     let address = format!("0.0.0.0:{port}");
@@ -363,6 +372,36 @@ async fn encrypt(
     )
     .await?;
     Ok(Json(private_data.encrypt(&state.key)))
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Transaction {
+    pub hash: String,
+    pub signer_id: String,
+    pub method_name: String,
+    pub args: serde_json::Value,
+    pub log: String,
+    pub block_hash: String,
+    pub timestamp: i64,
+}
+
+#[debug_handler(state = AppState)]
+async fn get_transactions(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<Vec<Transaction>>, (StatusCode, String)> {
+    Ok(sqlx::query_as!(
+        Transaction,
+        "SELECT * FROM transactions ORDER BY timestamp DESC LIMIT 100"
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get transactions: {}", e),
+        )
+    })
+    .map(Json)?)
 }
 
 #[debug_handler(state = AppState)]
