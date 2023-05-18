@@ -1,15 +1,13 @@
 use std::collections::HashMap;
 use std::str::FromStr;
 
-use clap::Parser;
 use indexer::collect_transactions;
 use indexer::filter_outcomes;
 use indexer::process_outcome;
 use itertools::Itertools;
 use near_lake_framework::near_indexer_primitives;
-use near_lake_framework::LakeConfig;
 
-use configs::{init_logging, Opts};
+use configs::init_logging;
 use tokio::sync::mpsc;
 
 mod configs;
@@ -23,10 +21,7 @@ mod configs;
 async fn main() -> Result<(), tokio::io::Error> {
     init_logging();
 
-    let opts: Opts = Opts::parse();
-
-    let config: LakeConfig = opts.clone().into();
-
+    let accounts = std::env::var("ACCOUNTS").expect("ACCOUNTS is not set");
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set");
 
     let pool = sqlx::postgres::PgPoolOptions::new()
@@ -40,10 +35,20 @@ async fn main() -> Result<(), tokio::io::Error> {
         .await
         .expect("Migration failed");
 
+    let block_height: Option<i64> = sqlx::query_scalar!("SELECT MAX(height) FROM block_height")
+        .fetch_one(&pool)
+        .await
+        .expect("Failed to fetch max block height");
+
+    let config = near_lake_framework::LakeConfigBuilder::default()
+        .start_block_height(block_height.map(|h| h as u64).unwrap_or(86240997))
+        .mainnet()
+        .build()
+        .expect("Failed to build LakeConfig");
+
     let (_, stream) = near_lake_framework::streamer(config);
 
-    let watching_list = opts
-        .accounts
+    let watching_list = accounts
         .split(',')
         .map(|elem| {
             near_indexer_primitives::types::AccountId::from_str(elem).expect("AccountId is invalid")
@@ -81,5 +86,18 @@ pub async fn listen_blocks(
                 .await
                 .expect("Failed to insert transaction");
         }
+
+        sqlx::query!(
+            r#"
+            INSERT INTO block_height (hash, height)
+            VALUES ($1, $2)
+            ON CONFLICT (hash) DO NOTHING
+            "#,
+            streamer_message.block.header.hash.to_string(),
+            streamer_message.block.header.height as i64,
+        )
+        .execute(pool)
+        .await
+        .expect("Failed to insert block height");
     }
 }

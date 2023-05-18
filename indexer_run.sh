@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
-ACCOUNTS=$1
-BLOCK_HEIGHT=$2
+export ACCOUNTS=$1
 
 cd indexer;
 
-cargo run --release -- --accounts $ACCOUNTS --block-height $BLOCK_HEIGHT mainnet;
+cargo run --release;
+
+unset ACCOUNTS;
 
 cd ..;
