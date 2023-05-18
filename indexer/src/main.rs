@@ -35,13 +35,13 @@ async fn main() -> Result<(), tokio::io::Error> {
         .await
         .expect("Migration failed");
 
-    let block_height: Option<i64> = sqlx::query_scalar!("SELECT MAX(height) FROM block_height")
+    let block_height: i64 = sqlx::query_scalar!("SELECT height FROM last_visited WHERE id = 1")
         .fetch_one(&pool)
         .await
         .expect("Failed to fetch max block height");
 
     let config = near_lake_framework::LakeConfigBuilder::default()
-        .start_block_height(block_height.map(|h| h as u64).unwrap_or(86240997))
+        .start_block_height(block_height as u64)
         .mainnet()
         .build()
         .expect("Failed to build LakeConfig");
@@ -89,11 +89,11 @@ pub async fn listen_blocks(
 
         sqlx::query!(
             r#"
-            INSERT INTO block_height (hash, height)
+            INSERT INTO last_visited (id, height)
             VALUES ($1, $2)
-            ON CONFLICT (hash) DO NOTHING
+            ON CONFLICT (id) DO UPDATE SET height = $2
             "#,
-            streamer_message.block.header.hash.to_string(),
+            1,
             streamer_message.block.header.height as i64,
         )
         .execute(pool)
