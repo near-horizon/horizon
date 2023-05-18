@@ -38,6 +38,7 @@ impl Transaction {
             r#"
             INSERT INTO transactions (hash, signer_id, method_name, args, log, block_hash, timestamp)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
+            ON CONFLICT (hash) DO NOTHING
             "#,
             self.hash.to_string(),
             self.signer_id.to_string(),
