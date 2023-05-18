@@ -77,8 +77,6 @@ State.init({
   nameError: "",
   accountId: "",
   accountIdError: "",
-  category: null,
-  categoryError: "",
   tagline: "",
   taglineError: "",
   description: "",
@@ -147,8 +145,6 @@ const validateForm = () => {
     state.nameError === "" &&
     state.accountId &&
     state.accountIdError === "" &&
-    state.category &&
-    state.categoryError === "" &&
     (!state.tagline || state.taglineError === "") &&
     (!state.description || state.descriptionError === "") &&
     (!state.tags || state.tagsError === "") &&
@@ -227,15 +223,6 @@ return (
       ) : (
         <></>
       )}
-      <Widget
-        src={`${ownerId}/widget/Inputs.Category`}
-        props={{
-          category: state.category,
-          update: (category) => State.update({ category }),
-          setError: (categoryError) => State.update({ categoryError }),
-          error: state.categoryError,
-        }}
-      />
       <Widget
         src={`${ownerId}/widget/Inputs.Text`}
         props={{
@@ -341,7 +328,7 @@ return (
                 [state.accountId]: {
                   profile: {
                     name: state.name,
-                    category: state.category.value,
+                    // category: state.category.value,
                     ...(state.team ? { team: `${state.team}` } : {}),
                     ...(state.tagline ? { tagline: state.tagline } : {}),
                     ...(state.description
