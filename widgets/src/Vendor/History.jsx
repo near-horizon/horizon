@@ -28,6 +28,8 @@ return (
     <Widget
       src={`${ownerId}/widget/List`}
       props={{
+        full: true,
+        filter: ([[projectId]]) => projectId.includes(search),
         search,
         items: state.items,
         createItem: ([[project_id, cid], vendor_id]) => (
