@@ -210,7 +210,7 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.AccountId`}
         props={{
-          label: "NEAR Account *",
+          label: "Your project's NEAR Account *",
           placeholder:
             "Enter the NEAR account ID of your project (wallet address like nearhorizon.near)",
           value: state.accountId,

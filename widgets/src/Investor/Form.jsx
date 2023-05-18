@@ -192,7 +192,7 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.AccountId`}
         props={{
-          label: "NEAR Account *",
+          label: "The NEAR Account of the investor profile *",
           placeholder:
             "Enter the NEAR account ID of your backer (wallet address like nearhorizon.near)",
           value: state.accountId,
