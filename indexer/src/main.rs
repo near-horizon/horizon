@@ -81,6 +81,17 @@ pub async fn listen_blocks(
                 process_outcome(outcome, tx_hash, &engine, &streamer_message.block)
             })
             .collect_vec();
+
+        eprintln!(
+            "{} transactions still waiting for receipts",
+            tx_receipt_ids.len()
+        );
+        eprintln!(
+            "Collected {} transactions at block height: {}. Inserting...",
+            txs.len(),
+            streamer_message.block.header.height
+        );
+
         for tx in txs {
             tx.insert(&pool)
                 .await
