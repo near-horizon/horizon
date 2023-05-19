@@ -68,10 +68,10 @@ return (
     <Tooltip.Provider>
       <Tooltip.Root>
         <Container>
-          <b>Send feedback</b>
+          <b>Give feedback</b>
         </Container>
         <StyledTooltip align="center">
-          Click here to send us any feedback you want via email
+          Click here to give us any feedback you want via email
           <Tooltip.Arrow className="arrow" />
         </StyledTooltip>
       </Tooltip.Root>
