@@ -1,6 +1,6 @@
 [workspace]
 members = ["contract", "seed", "token", "awesome-near-fetcher"]
-exclude = ["api", "indexer"]
+exclude = ["api", "indexer", "agregator"]
 
 [profile.release]
 codegen-units = 1
