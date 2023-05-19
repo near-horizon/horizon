@@ -181,6 +181,12 @@ const tabContent = {
     />
   ),
   legal: <Widget src={`${ownerId}/widget/TNCPage`} />,
+  admin: (
+    <Widget
+      src={`${ownerId}/widget/Admin.Page`}
+      props={{ update, content: state.content }}
+    />
+  ),
 }[state.tab];
 
 const ContentContainer = styled.div`

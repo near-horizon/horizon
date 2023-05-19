@@ -1,5 +1,20 @@
 const ownerId = "nearhorizon.near";
 
+State.init({
+  isOwner: false,
+  isOwnerFetched: false,
+});
+
+if (context.accountId && !state.isOwnerFetched) {
+  Near.asyncView(
+    ownerId,
+    "check_is_owner",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((isOwner) => State.update({ isOwner, isOwnerFetched: true }));
+}
+
 const inboxCount = Social.index("inbox", context.accountId).length;
 
 const mail = (
@@ -252,6 +267,24 @@ const legalIcon = (
   </svg>
 );
 
+const admin = (
+  <svg
+    width="18"
+    height="22"
+    viewBox="0 0 18 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6 10.4999L8 12.4999L12.5 7.99987M17 10.9999C17 15.9083 11.646 19.4783 9.69799 20.6147C9.4766 20.7439 9.3659 20.8085 9.20968 20.842C9.08844 20.868 8.91156 20.868 8.79032 20.842C8.6341 20.8085 8.5234 20.7439 8.30201 20.6147C6.35396 19.4783 1 15.9083 1 10.9999V6.21747C1 5.41796 1 5.0182 1.13076 4.67457C1.24627 4.37101 1.43398 4.10015 1.67766 3.8854C1.9535 3.64231 2.3278 3.50195 3.0764 3.22122L8.4382 1.21054C8.6461 1.13258 8.75005 1.0936 8.85698 1.07815C8.95184 1.06444 9.04816 1.06444 9.14302 1.07815C9.24995 1.0936 9.3539 1.13258 9.5618 1.21054L14.9236 3.22122C15.6722 3.50195 16.0465 3.64231 16.3223 3.8854C16.566 4.10015 16.7537 4.37101 16.8692 4.67457C17 5.0182 17 5.41796 17 6.21747V10.9999Z"
+      stroke="#3A3F42"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
 return (
   <NavContainer>
     {navItem({ text: "Discover", icon: discover, id: "home" })}
@@ -278,6 +311,15 @@ return (
       id: "learn",
     })}
     <Border />
+    {state.isOwnerFetched && state.isOwner ? (
+      navItem({
+        text: "Admin Dashboard",
+        icon: admin,
+        id: "admin",
+      })
+    ) : (
+      <></>
+    )}
     {navItem({
       text: "Help",
       icon: about,
