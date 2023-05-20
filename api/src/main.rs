@@ -390,19 +390,18 @@ pub struct Transaction {
 async fn get_transactions(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<Vec<Transaction>>, (StatusCode, String)> {
-    Ok(sqlx::query_as!(
-        Transaction,
-        "SELECT * FROM transactions ORDER BY timestamp DESC LIMIT 100"
+    Ok(
+        sqlx::query_as!(Transaction, "SELECT * FROM transactions ORDER BY id DESC")
+            .fetch_all(&pool)
+            .await
+            .map_err(|e| {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Failed to get transactions: {}", e),
+                )
+            })
+            .map(Json)?,
     )
-    .fetch_all(&pool)
-    .await
-    .map_err(|e| {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get transactions: {}", e),
-        )
-    })
-    .map(Json)?)
 }
 
 #[debug_handler(state = AppState)]
