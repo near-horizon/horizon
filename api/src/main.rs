@@ -376,6 +376,7 @@ async fn encrypt(
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Transaction {
+    pub id: i32,
     pub hash: String,
     pub signer_id: String,
     pub method_name: String,
