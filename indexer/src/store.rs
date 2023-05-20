@@ -34,11 +34,12 @@ impl Transaction {
     }
 
     pub async fn insert(&self, pool: &sqlx::PgPool) -> Result<(), sqlx::Error> {
+        eprintln!("Inserting transaction: {self:#?}");
+
         sqlx::query!(
             r#"
             INSERT INTO transactions (hash, signer_id, method_name, args, log, block_hash, timestamp)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
-            ON CONFLICT (hash) DO NOTHING
             "#,
             self.hash.to_string(),
             self.signer_id.to_string(),
@@ -51,7 +52,7 @@ impl Transaction {
         .execute(pool)
         .await?;
 
-        eprintln!("Transaction inserted: {self:#?}");
+        eprintln!("Transaction inserted");
 
         Ok(())
     }
