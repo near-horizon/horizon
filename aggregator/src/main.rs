@@ -1,176 +1,95 @@
-use std::collections::HashMap;
-
-use futures::stream::StreamExt;
-use itertools::Itertools;
-use near_account_id::AccountId;
-use near_jsonrpc_client::{methods::query::RpcQueryRequest, JsonRpcClient, NEAR_MAINNET_RPC_URL};
-use near_jsonrpc_primitives::types::query::{QueryResponseKind, RpcQueryResponse};
-use near_primitives::{
-    types::{BlockReference, Finality::Final, FunctionArgs},
-    views::{CallResult, QueryRequest::CallFunction},
-};
-use serde_json::{json, Value};
+use near_jsonrpc_client::{JsonRpcClient, NEAR_MAINNET_RPC_URL};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set");
+    //
+    // let pool = sqlx::postgres::PgPoolOptions::new()
+    //     .max_connections(5)
+    //     .connect(&db_url)
+    //     .await
+    //     .expect("Failed to connect to Postgres");
+    //
+    // sqlx::migrate!("../migrations")
+    //     .run(&pool)
+    //     .await
+    //     .expect("Migration failed");
+
     let client = JsonRpcClient::connect(NEAR_MAINNET_RPC_URL);
-    let account_id = "nearhorizon.near".parse().unwrap();
+    let horizon_account = "nearhorizon.near".parse().unwrap();
+    let social_account = "social.near".parse().unwrap();
 
-    let RpcQueryResponse { kind, .. } = client
-        .call(RpcQueryRequest {
-            block_reference: BlockReference::Finality(Final),
-            request: CallFunction {
-                account_id,
-                method_name: "get_projects".to_string(),
-                args: FunctionArgs::from(json!({}).to_string().into_bytes()),
-            },
+    let project_ids = aggregator::project::get_project_ids(&client, &horizon_account).await?;
+
+    let projects = aggregator::project::get_projects_data(
+        &client,
+        horizon_account,
+        social_account,
+        &project_ids,
+    )
+    .await?;
+
+    let filled_out = projects
+        .iter()
+        .filter(|(_, value)| value.completion().0 > 3)
+        .count();
+    let filled = projects
+        .values()
+        .map(|value| {
+            let (completed, total) = value.completion();
+            completed as f64 / total as f64
         })
-        .await?;
-    let QueryResponseKind::CallResult(CallResult{result, ..}) = kind else {
-        panic!("Unexpected response kind");
-    };
+        .sum::<f64>()
+        / projects.len() as f64;
+    println!("{:#?}/{:#?}", filled_out, projects.len());
+    println!("Avarage completion: {:#?}", filled);
 
-    let mut projects_profiles = HashMap::<AccountId, Value>::new();
+    let mut writer = csv::WriterBuilder::new().from_path("contact.csv")?;
 
-    let projects: Vec<AccountId> = serde_json::from_slice(&result)?;
+    writer.write_record([
+        "project_id",
+        "project_name",
+        "website",
+        "twitter",
+        "discord",
+        "reddit",
+    ])?;
 
-    for project_batch in &projects.iter().chunks(10) {
-        let keys = project_batch
-            .map(|project_id| (format!("{project_id}/profile/**"), project_id.clone()))
-            .collect::<Vec<_>>();
-
-        let accounts = keys
-            .iter()
-            .map(|(_, account)| account.clone())
-            .collect::<Vec<_>>();
-        let keys = keys.iter().map(|(key, _)| key).collect::<Vec<_>>();
-
-        let keys = json!({ "keys": keys }).to_string().into_bytes();
-        let account_id = "social.near".parse().unwrap();
-
-        let RpcQueryResponse { kind, .. } = client
-            .call(RpcQueryRequest {
-                block_reference: BlockReference::Finality(Final),
-                request: CallFunction {
-                    account_id,
-                    method_name: "get".to_string(),
-                    args: FunctionArgs::from(keys),
-                },
-            })
-            .await?;
-
-        let QueryResponseKind::CallResult(CallResult{result, ..}) = kind else {
-          panic!("Unexpected response kind");
+    for (project_id, project) in projects {
+        let website = if !project.profile.website.is_empty() {
+            project.profile.website
+        } else if let Some(link) = project.profile.linktree.get("website") {
+            link.to_owned()
+        } else {
+            String::new()
         };
-
-        let profiles_batch: HashMap<AccountId, Value> = serde_json::from_slice(&result)?;
-
-        let details_batch = futures::stream::iter(
-            accounts
-                .iter()
-                .map(|project_id| async { get_project(project_id.clone(), &client).await }),
-        )
-        .buffer_unordered(10)
-        .collect::<Vec<Result<_, _>>>()
-        .await
-        .into_iter()
-        .try_fold(profiles_batch, |mut acc, result| {
-            let (project_id, details) = result?;
-            acc.entry(project_id)
-                .and_modify(|profile| {
-                    profile
-                        .as_object_mut()
-                        .unwrap()
-                        .insert("horizon".to_string(), details.clone());
-                })
-                .or_insert_with(|| {
-                    let mut profile = serde_json::Map::new();
-                    profile.insert("horizon".to_string(), details);
-                    profile.into()
-                });
-            Ok::<HashMap<AccountId, Value>, Box<dyn std::error::Error>>(acc)
-        })?;
-
-        projects_profiles.extend(details_batch);
+        let twitter = if let Some(twitter) = project.profile.linktree.get("twitter") {
+            twitter.to_owned()
+        } else {
+            String::new()
+        };
+        let discord = if let Some(discord) = project.profile.linktree.get("discord") {
+            discord.to_owned()
+        } else {
+            String::new()
+        };
+        let reddit = if let Some(reddit) = project.profile.linktree.get("reddit") {
+            reddit.to_owned()
+        } else {
+            String::new()
+        };
+        let name = project.profile.name;
+        writer.write_record([
+            project_id.to_string(),
+            name,
+            website,
+            twitter,
+            discord,
+            reddit,
+        ])?;
     }
 
-    println!("{:#?}", json!(projects_profiles));
-    let filled_out = projects_profiles
-        .into_iter()
-        .filter(|(_, value)| is_filled_out(value))
-        .collect::<HashMap<_, _>>();
-    println!("{:#?}/{:#?}", filled_out.len(), projects.len());
+    writer.flush()?;
 
     Ok(())
-}
-
-async fn get_project(
-    project_id: AccountId,
-    client: &JsonRpcClient,
-) -> Result<(AccountId, Value), Box<dyn std::error::Error>> {
-    let account_id = "nearhorizon.near".parse().unwrap();
-
-    let RpcQueryResponse { kind, .. } = client
-        .call(RpcQueryRequest {
-            block_reference: BlockReference::Finality(Final),
-            request: CallFunction {
-                account_id,
-                method_name: "get_project".to_string(),
-                args: FunctionArgs::from(
-                    json!({ "account_id": project_id }).to_string().into_bytes(),
-                ),
-            },
-        })
-        .await?;
-    let QueryResponseKind::CallResult(CallResult{result, ..}) = kind else {
-                panic!("Unexpected response kind");
-            };
-
-    let details: Value = serde_json::from_slice(&result)?;
-
-    Ok((project_id, details))
-}
-
-fn is_not_null(value: &Value) -> bool {
-    match value {
-        Value::Null => false,
-        Value::Array(array) => !array.is_empty() && array.iter().any(is_not_null),
-        Value::Object(object) => !object.is_empty() && object.values().any(is_not_null),
-        Value::String(string) => !string.is_empty(),
-        _ => true,
-    }
-}
-
-fn is_filled_out(value: &Value) -> bool {
-    let Some(profile) = value.get("profile") else {return false};
-    let base = profile.get("name").map(is_not_null).unwrap_or(false)
-        && profile.get("description").map(is_not_null).unwrap_or(false);
-    if !base {
-        return false;
-    }
-
-    let Some(horizon) = value.get("horizon") else {return false};
-
-    [
-        "integration",
-        "why",
-        "vision",
-        "geo",
-        "success_position",
-        "team",
-        "problem",
-        "deck",
-        "white_paper",
-        "roadmap",
-        "team_deck",
-        "demo",
-        "tam",
-    ]
-    .iter()
-    .any(|key| horizon.get(key).map(is_not_null).unwrap_or(false))
-        || [
-            "linktree", "website", "logo", "tagline", "vertical", "category", "stage", "userbase",
-        ]
-        .iter()
-        .all(|key| profile.get(key).map(is_not_null).unwrap_or(false))
 }
