@@ -44,7 +44,7 @@ pub enum ApplicationStatus {
     Accepted,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default)]
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Project {
     pub founders: HashSet<AccountId>,

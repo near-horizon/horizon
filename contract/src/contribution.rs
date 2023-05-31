@@ -14,11 +14,11 @@ use crate::{events::Events, proposal::Proposal, Contract, ContractExt, StorageKe
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct ContributionAction {
-    description: String,
+    pub description: String,
     #[serde(with = "crate::dec_serde::u64_dec_format")]
-    start_date: Timestamp,
+    pub start_date: Timestamp,
     #[serde(with = "crate::dec_serde::option_u64_dec_format")]
-    end_date: Option<Timestamp>,
+    pub end_date: Option<Timestamp>,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
@@ -35,15 +35,15 @@ pub enum ContributionStatus {
 #[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Contribution {
-    proposal_id: ((AccountId, String), AccountId),
-    status: ContributionStatus,
+    pub proposal_id: ((AccountId, String), AccountId),
+    pub status: ContributionStatus,
     #[serde(default)]
-    actions: Vec<ContributionAction>,
+    pub actions: Vec<ContributionAction>,
     #[serde(default)]
-    vendor_feedback: Option<String>,
+    pub vendor_feedback: Option<String>,
     #[serde(default)]
-    project_feedback: Option<String>,
-    price: u128,
+    pub project_feedback: Option<String>,
+    pub price: u128,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone)]

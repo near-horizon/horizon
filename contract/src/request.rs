@@ -10,21 +10,21 @@ use near_sdk_contract_tools::standard::nep297::Event;
 
 use crate::{events::Events, Contract, ContractExt};
 
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum PaymentType {
     FlatRate,
     TimeBased,
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum PaymentSource {
     Credits,
     Other,
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, PartialEq, Eq, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub enum RequestType {
     OneTime,
@@ -33,20 +33,20 @@ pub enum RequestType {
     FullTime,
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Request {
-    project_id: AccountId,
-    title: String,
-    description: String,
-    open: bool,
-    request_type: RequestType,
-    payment_type: PaymentType,
-    tags: HashSet<String>,
-    source: PaymentSource,
+    pub project_id: AccountId,
+    pub title: String,
+    pub description: String,
+    pub open: bool,
+    pub request_type: RequestType,
+    pub payment_type: PaymentType,
+    pub tags: HashSet<String>,
+    pub source: PaymentSource,
     #[serde(with = "crate::dec_serde::u64_dec_format")]
-    deadline: Timestamp,
-    budget: u128,
+    pub deadline: Timestamp,
+    pub budget: u128,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone)]

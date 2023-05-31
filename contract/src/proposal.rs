@@ -14,7 +14,7 @@ use crate::{
     Contract, ContractExt,
 };
 
-#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone)]
+#[derive(BorshDeserialize, BorshSerialize, Deserialize, Serialize, Clone, Debug)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Proposal {
     pub request_id: (AccountId, String),

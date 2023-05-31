@@ -17,15 +17,15 @@ use crate::proposal::VersionedProposal;
 use crate::request::VersionedRequest;
 use crate::vendor::VersionedVendor;
 
-mod claim;
-mod contribution;
-mod dec_serde;
-mod events;
-mod investor;
-mod project;
-mod proposal;
-mod request;
-mod vendor;
+pub mod claim;
+pub mod contribution;
+pub mod dec_serde;
+pub mod events;
+pub mod investor;
+pub mod project;
+pub mod proposal;
+pub mod request;
+pub mod vendor;
 
 const RAW: u64 = 0x55;
 pub const TGAS: u64 = 1_000_000_000_000;
