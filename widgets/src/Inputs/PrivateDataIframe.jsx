@@ -71,7 +71,7 @@ return (
     sandbox="allow-scripts allow-same-origin"
     message={{
       accountId: context.accountId,
-      url: `https://encryption-service-73dm.onrender.com${
+      url: `https://api-op3o.onrender.com${
         props.encrypt ? "/encrypt/" : "/decrypt/"
       }${props.accountId}`,
       body: props.body,

@@ -164,9 +164,7 @@ if (!state.statsIsFetched) {
 }
 
 if (!state.totalRaisedIsFetched) {
-  asyncFetch(
-    "https://encryption-service-73dm.onrender.com/atlas/total-raised"
-  ).then(
+  asyncFetch("https://api-op3o.onrender.com/atlas/total-raised").then(
     (response) =>
       response.ok &&
       State.update({ totalRaised: response.body, totalRaisedIsFetched: true })

@@ -7,7 +7,7 @@ State.init({
 });
 
 asyncFetch(
-  `https://encryption-service-73dm.onrender.com/data/projects?sort=timedesc&q=${search}`
+  `https://api-op3o.onrender.com/data/projects?sort=timedesc&q=${search}`
 ).then(({ body: items }) => State.update({ items, itemsIsFetched: true }));
 
 if (!state.itemsIsFetched) {
