@@ -126,6 +126,8 @@ pub struct Params {
     // pub oss: Option<bool>,
     pub from: Option<u32>,
     pub limit: Option<u32>,
+    #[serde(rename = "q")]
+    pub search: Option<String>,
 }
 
 #[debug_handler(state = AppState)]
@@ -180,7 +182,7 @@ pub async fn all_projects(
             builder.push(" AND ");
         } else {
             builder.push("WHERE ");
-            // has_where = true;
+            has_where = true;
         }
         builder.push("(SELECT COUNT(*) FROM jsonb_object_keys(projects.team)) + array_length(projects.founders, 1) BETWEEN ");
         builder.push_bind(from as i32);
@@ -197,6 +199,21 @@ pub async fn all_projects(
     //     builder.push("projects.oss = ");
     //     builder.push_bind(oss);
     // }
+
+    if let Some(search) = params.search {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+        }
+        let search = format!("%{}%", search);
+        builder.push("projects.name ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.description ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.id ILIKE ");
+        builder.push_bind(search);
+    }
 
     builder.push(format!(" {order_by}"));
 
