@@ -209,9 +209,11 @@ pub async fn all_projects(
         let search = format!("%{}%", search);
         builder.push("projects.name ILIKE ");
         builder.push_bind(search.clone());
-        builder.push(" OR projects.description ILIKE ");
-        builder.push_bind(search.clone());
         builder.push(" OR projects.id ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.tagline ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.description ILIKE ");
         builder.push_bind(search);
     }
 
