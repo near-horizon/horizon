@@ -13,6 +13,12 @@ use aggregator::{
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set");
+    let horizon_account = std::env::var("CONTRACT_ID")
+        .expect("CONTRACT_ID is not set")
+        .parse()?;
+    let social_account = std::env::var("SOCIAL_CONTRACT")
+        .unwrap_or("social.near".to_string())
+        .parse()?;
 
     let pool = sqlx::postgres::PgPoolOptions::new()
         .max_connections(5)
@@ -26,8 +32,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .expect("Migration failed");
 
     let client = JsonRpcClient::connect(NEAR_MAINNET_RPC_URL);
-    let horizon_account = "nearhorizon.near".parse().unwrap();
-    let social_account = "social.near".parse().unwrap();
 
     eprintln!("Projects:");
     let projects = Project::fetch_all(&client, &horizon_account, &social_account).await?;
