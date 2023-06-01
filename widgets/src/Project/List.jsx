@@ -6,11 +6,11 @@ State.init({
   itemsIsFetched: false,
 });
 
-if (!state.itemsIsFetched) {
-  Near.asyncView(ownerId, "get_projects", {}, "final", false).then((items) =>
-    State.update({ items, itemsIsFetched: true })
-  );
+asyncFetch(
+  `https://encryption-service-73dm.onrender.com/data/projects?sort=timedesc&q=${search}`
+).then(({ body: items }) => State.update({ items, itemsIsFetched: true }));
 
+if (!state.itemsIsFetched) {
   return <>Loading...</>;
 }
 
@@ -18,7 +18,7 @@ return (
   <Widget
     src={`${ownerId}/widget/List`}
     props={{
-      filter: (accountId) => accountId.includes(search),
+      filter: (accountId) => state.items.includes(accountId),
       items: state.items,
       createItem: (accountId) => (
         <Widget src={`${ownerId}/widget/Project.Card`} props={{ accountId }} />

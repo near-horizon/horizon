@@ -164,11 +164,9 @@ if (!state.statsIsFetched) {
 }
 
 if (!state.totalRaisedIsFetched) {
-  asyncFetch("https://encryption-service-73dm.onrender.com/total-raised", {
-    headers: {
-      "Access-Control-Request-Method": "no-cors",
-    },
-  }).then(
+  asyncFetch(
+    "https://encryption-service-73dm.onrender.com/atlas/total-raised"
+  ).then(
     (response) =>
       response.ok &&
       State.update({ totalRaised: response.body, totalRaisedIsFetched: true })
