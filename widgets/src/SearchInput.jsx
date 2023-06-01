@@ -42,14 +42,21 @@ const Container = styled.div`
   position: relative;
 `;
 
+State.init({ search: props.search });
+
 return (
   <Container>
     <Icon>{icon}</Icon>
     <SearchInput
       type="search"
-      value={props.search}
+      value={state.search}
       placeholder="Search"
-      onChange={(e) => props.update({ search: e.target.value })}
+      onChange={(e) => State.update({ search: e.target.value })}
+      onKeyUp={(e) => {
+        if (e.key === "Enter") {
+          props.update({ search: state.search });
+        }
+      }}
     />
   </Container>
 );

@@ -4,6 +4,7 @@ const createItem = props.createItem ?? (() => <></>);
 const limit = 10;
 
 State.init({
+  all: items,
   shown: items.slice(0, limit),
   from: limit,
   hasMore: items.length > limit,
@@ -11,9 +12,9 @@ State.init({
 
 const loadMore = () => {
   State.update({
-    shown: items.slice(0, state.from + limit),
+    shown: state.all.slice(0, state.from + limit),
     from: state.from + limit,
-    hasMore: state.from + limit < items.length,
+    hasMore: state.from + limit < state.all.length,
   });
 };
 
