@@ -3,6 +3,9 @@ use std::str::FromStr;
 use api::{ensure_var, AppState};
 use near_account_id::AccountId;
 use reqwest::Client;
+use tower::ServiceBuilder;
+use tower_http::cors::{Any, CorsLayer};
+use tower_http::trace::TraceLayer;
 
 #[allow(dead_code)]
 fn generate_key() -> String {
@@ -37,7 +40,15 @@ async fn main() {
         pool,
     };
 
-    let app = api::routes::create_router().with_state(state);
+    tracing_subscriber::fmt::init();
+
+    let trace = TraceLayer::new_for_http();
+    let cors = CorsLayer::new().allow_methods(Any).allow_origin(Any);
+    let middleware = ServiceBuilder::new().layer(trace).layer(cors);
+
+    let app = api::routes::create_router()
+        .with_state(state)
+        .layer(middleware);
 
     let address = format!("0.0.0.0:{port}");
 
