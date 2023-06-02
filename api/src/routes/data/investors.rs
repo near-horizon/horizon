@@ -118,8 +118,6 @@ pub async fn all_investors(
         builder.push(" OR investors.tagline ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR investors.description ILIKE ");
-        builder.push_bind(search.clone());
-        builder.push(" OR investors.services ILIKE ");
         builder.push_bind(search);
     }
 
