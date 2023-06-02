@@ -6,11 +6,11 @@ State.init({
   itemsIsFetched: false,
 });
 
-if (!state.itemsIsFetched) {
-  Near.asyncView(ownerId, "get_vendors", {}, "final", false).then((items) =>
-    State.update({ items, itemsIsFetched: true })
-  );
+asyncFetch(
+  `https://api-op3o.onrender.com/data/vendors?sort=timedesc&q=${search}`
+).then(({ body: items }) => State.update({ items, itemsIsFetched: true }));
 
+if (!state.itemsIsFetched) {
   return <>Loading...</>;
 }
 
@@ -18,7 +18,7 @@ return (
   <Widget
     src={`${ownerId}/widget/List`}
     props={{
-      filter: (accountId) => accountId.includes(search),
+      filter: (accountId) => state.items.includes(accountId),
       items: state.items,
       createItem: (accountId) => (
         <Widget src={`${ownerId}/widget/Vendor.Card`} props={{ accountId }} />
