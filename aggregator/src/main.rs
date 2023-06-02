@@ -2,7 +2,7 @@ use itertools::Itertools;
 use near_jsonrpc_client::{JsonRpcClient, NEAR_MAINNET_RPC_URL};
 
 use aggregator::{
-    contribution,
+    claims, contribution,
     investor::{self, Investor},
     project::{self, Project},
     request,
@@ -69,6 +69,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     eprintln!("Contributions: {:#?}", contributions.len());
     eprintln!("Inserting...");
     contribution::insert_many(&pool, contributions).await?;
+
+    let claims = claims::get_all_claims(&client, &horizon_account).await?;
+    eprintln!("Claims: {:#?}", claims.len());
+    eprintln!("Inserting...");
+    claims::insert_many(&pool, claims.into_iter().collect_vec()).await?;
+
+    eprintln!("Done");
 
     Ok(())
 }

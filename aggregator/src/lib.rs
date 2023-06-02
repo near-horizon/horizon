@@ -12,6 +12,7 @@ use near_primitives::{
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+pub mod claims;
 pub mod contribution;
 pub mod investor;
 pub mod project;
