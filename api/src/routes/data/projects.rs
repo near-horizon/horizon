@@ -24,7 +24,7 @@ where
     if parts.is_empty() {
         return Ok(None);
     }
-    let Some(from) = parts.get(0) else {
+    let Some(from) = parts.first() else {
         return Ok(None);
     };
     let Some(to) = parts.get(1) else {
