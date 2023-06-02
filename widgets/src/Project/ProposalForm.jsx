@@ -170,6 +170,27 @@ if (!state.requestsIsFetched || !state.vendorsIsFetched) {
   return <>Loading...</>;
 }
 
+if (!state.vendors || state.vendors.length === 0) {
+  return (
+    <Widget
+      src={`${ownerId}/widget/InfoSegment`}
+      props={{
+        title: "No contributor to request as!",
+        description: (
+          <>
+            You need to log in with an account that has admin rights to a
+            contributor or create a{" "}
+            <a href={`/${ownerId}/widget/Index?tab=createvendor`}>
+              new contributor
+            </a>
+            !
+          </>
+        ),
+      }}
+    />
+  );
+}
+
 // if (!state.requestsIsFetched) {
 //   Near.asyncView(
 //     ownerId,
