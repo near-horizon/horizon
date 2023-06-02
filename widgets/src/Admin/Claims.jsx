@@ -6,11 +6,11 @@ State.init({
   itemsIsFetched: false,
 });
 
-if (!state.itemsIsFetched) {
-  Near.asyncView(ownerId, "get_claims", {}, "final", false).then((items) =>
-    State.update({ items, itemsIsFetched: true })
-  );
+asyncFetch(
+  `https://api-op3o.onrender.com/data/claims?sort=timedesc&q=${search}`
+).then(({ body: items }) => State.update({ items, itemsIsFetched: true }));
 
+if (!state.itemsIsFetched) {
   return <>Loading...</>;
 }
 
@@ -19,7 +19,9 @@ return (
     src={`${ownerId}/widget/List`}
     props={{
       filter: ([projectId, accountId]) =>
-        projectId.includes(search) || accountId.includes(search),
+        state.items.some(
+          ([pId, aId]) => pId === projectId && aId === accountId
+        ),
       items: state.items,
       full: true,
       createItem: ([projectId, accountId]) => (
