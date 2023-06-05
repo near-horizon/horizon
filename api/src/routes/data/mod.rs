@@ -1,4 +1,5 @@
 use axum::Router;
+use serde::{Deserialize, Serialize};
 
 use crate::AppState;
 
@@ -7,6 +8,18 @@ pub mod investors;
 pub mod projects;
 pub mod requests;
 pub mod vendors;
+
+#[derive(Deserialize, Serialize, Debug, Clone, Default)]
+pub struct CompletionPair {
+    id: String,
+    completion: f64,
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone, Default)]
+pub struct Completion {
+    avg: f64,
+    list: Vec<CompletionPair>,
+}
 
 pub fn create_router() -> Router<AppState> {
     Router::new()

@@ -10,7 +10,10 @@ use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
-use crate::AppState;
+use crate::{
+    routes::data::{Completion, CompletionPair},
+    AppState,
+};
 
 pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<(u32, u32)>, D::Error>
 where
@@ -251,6 +254,34 @@ pub async fn all_projects(
     }))
 }
 
+#[debug_handler(state = AppState)]
+async fn get_completion(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<Completion>, (StatusCode, String)> {
+    let list = sqlx::query_as!(
+        CompletionPair,
+        r#"
+        SELECT projects.id, projects.completion
+        FROM projects
+        ORDER BY projects.completion DESC
+        "#
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get project completions: {}", e),
+        )
+    })?;
+
+    let avg = list.iter().map(|c| c.completion).sum::<f64>() / list.len() as f64;
+
+    Ok(Json(Completion { avg, list }))
+}
+
 pub fn create_router() -> Router<AppState> {
-    Router::new().route("/", get(all_projects))
+    Router::new()
+        .route("/", get(all_projects))
+        .route("/completion", get(get_completion))
 }
