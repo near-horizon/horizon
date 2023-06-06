@@ -3,6 +3,6 @@ set -e
 
 ACCOUNT_ID=$1
 
-./build.sh;
+./build.sh
 
-near deploy $ACCOUNT_ID ./res/horizon.wasm
+NEAR_ENV=mainnet near deploy $ACCOUNT_ID ./res/horizon.wasm -f
