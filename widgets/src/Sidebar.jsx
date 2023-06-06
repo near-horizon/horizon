@@ -289,12 +289,12 @@ return (
   <NavContainer>
     {navItem({ text: "Discover", icon: discover, id: "home" })}
     {/* navItem({ text: "Pulse", icon: pulse, id: "pulse" }) */}
-    {navItem({
+    {/* navItem({
       text: "Inbox",
       icon: mail,
       id: "inbox",
       count: inboxCount,
-    })}
+    }) */}
     {navItem({
       text: "Manage",
       icon: manage,
