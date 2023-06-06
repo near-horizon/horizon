@@ -17,6 +17,9 @@ pub enum Events {
     VerifyProject {
         account_id: AccountId,
     },
+    ProjectAllowCredits {
+        account_id: AccountId,
+    },
     SubmitApplication {
         account_id: AccountId,
     },
@@ -40,6 +43,9 @@ pub enum Events {
         account_id: AccountId,
     },
     VerifyVendor {
+        account_id: AccountId,
+    },
+    VendorAllowCredits {
         account_id: AccountId,
     },
     AddRequest {

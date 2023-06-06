@@ -46,6 +46,27 @@ pub enum ApplicationStatus {
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default, Debug)]
 #[serde(crate = "near_sdk::serde")]
+pub struct OldProject {
+    pub founders: HashSet<AccountId>,
+    pub team: Permissions,
+    pub why: String,
+    pub integration: String,
+    pub success_position: String,
+    pub problem: String,
+    pub vision: String,
+    pub deck: String,
+    pub white_paper: String,
+    pub roadmap: String,
+    pub team_deck: String,
+    pub demo: String,
+    pub tam: String,
+    pub geo: String,
+    pub verified: bool,
+    pub application: ApplicationStatus,
+}
+
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default, Debug)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Project {
     pub founders: HashSet<AccountId>,
     pub team: Permissions,
@@ -63,6 +84,7 @@ pub struct Project {
     pub geo: String,
     pub verified: bool,
     pub application: ApplicationStatus,
+    pub credits: bool,
 }
 
 impl Project {
@@ -184,23 +206,24 @@ impl Project {
 
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedProject {
-    V0,
-    V1(Project),
+    V2(Project),
+    V1(OldProject),
 }
 
 impl VersionedProject {
-    pub fn is_v0(&self) -> bool {
-        matches!(self, VersionedProject::V0)
+    pub fn is_v1(&self) -> bool {
+        matches!(self, VersionedProject::V1(_))
     }
 }
 
 impl Default for VersionedProject {
     fn default() -> Self {
-        Self::V1(Project {
+        Self::V2(Project {
             founders: HashSet::new(),
             application: ApplicationStatus::NotSubmitted,
             team: HashMap::new(),
             verified: false,
+            credits: false,
             ..Default::default()
         })
     }
@@ -209,10 +232,26 @@ impl Default for VersionedProject {
 impl From<VersionedProject> for Project {
     fn from(value: VersionedProject) -> Self {
         match value {
-            VersionedProject::V0 => {
-                unreachable!("ERR_INVALID_PROJECT_VERSION: V0");
-            }
-            VersionedProject::V1(e) => e,
+            VersionedProject::V1(o) => Project {
+                credits: false,
+                founders: o.founders,
+                team: o.team,
+                why: o.why,
+                integration: o.integration,
+                success_position: o.success_position,
+                problem: o.problem,
+                vision: o.vision,
+                deck: o.deck,
+                white_paper: o.white_paper,
+                roadmap: o.roadmap,
+                team_deck: o.team_deck,
+                demo: o.demo,
+                tam: o.tam,
+                geo: o.geo,
+                verified: o.verified,
+                application: o.application,
+            },
+            VersionedProject::V2(e) => e,
         }
     }
 }
@@ -220,17 +259,33 @@ impl From<VersionedProject> for Project {
 impl From<&VersionedProject> for Project {
     fn from(value: &VersionedProject) -> Self {
         match value {
-            VersionedProject::V0 => {
-                unreachable!("ERR_INVALID_PROJECT_VERSION: V0");
-            }
-            VersionedProject::V1(e) => e.clone(),
+            VersionedProject::V1(o) => Project {
+                credits: false,
+                founders: o.founders.clone(),
+                team: o.team.clone(),
+                why: o.why.clone(),
+                integration: o.integration.clone(),
+                success_position: o.success_position.clone(),
+                problem: o.problem.clone(),
+                vision: o.vision.clone(),
+                deck: o.deck.clone(),
+                white_paper: o.white_paper.clone(),
+                roadmap: o.roadmap.clone(),
+                team_deck: o.team_deck.clone(),
+                demo: o.demo.clone(),
+                tam: o.tam.clone(),
+                geo: o.geo.clone(),
+                verified: o.verified,
+                application: o.application.clone(),
+            },
+            VersionedProject::V2(e) => e.clone(),
         }
     }
 }
 
 impl VersionedProject {
     pub fn new(founders: HashSet<AccountId>) -> Self {
-        Self::V1(Project {
+        Self::V2(Project {
             founders,
             ..Default::default()
         })
@@ -266,7 +321,7 @@ impl Contract {
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 old.patch(&project);
-                *existing = VersionedProject::V1(old);
+                *existing = VersionedProject::V2(old);
             });
         Events::EditProject { account_id }.emit();
     }
@@ -285,9 +340,21 @@ impl Contract {
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 old.verified = true;
-                *existing = VersionedProject::V1(old);
+                *existing = VersionedProject::V2(old);
             });
         Events::VerifyProject { account_id }.emit();
+    }
+
+    pub fn project_allow_credits(&mut self, account_id: AccountId) {
+        self.assert_owner();
+        self.projects
+            .entry(account_id.clone())
+            .and_modify(|existing| {
+                let mut old: Project = existing.clone().into();
+                old.credits = true;
+                *existing = VersionedProject::V2(old);
+            });
+        Events::ProjectAllowCredits { account_id }.emit();
     }
 
     /// Add founders to project.
@@ -296,7 +363,7 @@ impl Contract {
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
             old.founders.extend(founders);
-            *existing = VersionedProject::V1(old);
+            *existing = VersionedProject::V2(old);
         });
     }
 
@@ -308,7 +375,7 @@ impl Contract {
             for founder in founders {
                 old.founders.remove(&founder);
             }
-            *existing = VersionedProject::V1(old);
+            *existing = VersionedProject::V2(old);
         });
     }
 
@@ -320,7 +387,7 @@ impl Contract {
             for (account_id, permissions) in team {
                 old.team.insert(account_id, permissions);
             }
-            *existing = VersionedProject::V1(old);
+            *existing = VersionedProject::V2(old);
         });
     }
 
@@ -336,7 +403,7 @@ impl Contract {
             for (account_id, _) in team {
                 old.team.remove(&account_id);
             }
-            *existing = VersionedProject::V1(old);
+            *existing = VersionedProject::V2(old);
         });
     }
 
@@ -349,7 +416,7 @@ impl Contract {
             //     "ERR_APPLICATION_NOT_FILLED_OUT"
             // );
             project.application = ApplicationStatus::Submitted(near_sdk::env::block_timestamp());
-            *old = VersionedProject::V1(project);
+            *old = VersionedProject::V2(project);
         });
         Events::SubmitApplication { account_id }.emit();
     }
@@ -411,7 +478,7 @@ impl Contract {
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
             project.application = ApplicationStatus::Rejected(reason.clone());
-            *old = VersionedProject::V1(project);
+            *old = VersionedProject::V2(project);
         });
         Events::RejectApplication { account_id, reason }.emit();
     }
@@ -473,10 +540,10 @@ impl Contract {
         project.is_admin(account_id)
     }
 
-    pub fn count_v0_projects(&self) -> usize {
+    pub fn count_v1_projects(&self) -> usize {
         self.projects
             .values()
-            .filter(|versioned_project| versioned_project.is_v0())
+            .filter(|versioned_project| versioned_project.is_v1())
             .count()
     }
 

@@ -16,9 +16,17 @@ pub struct VendorV0 {
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone, Default)]
 #[serde(crate = "near_sdk::serde")]
+pub struct VendorV1 {
+    pub permissions: Permissions,
+    pub verified: bool,
+}
+
+#[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize, Clone, Default)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Vendor {
     pub permissions: Permissions,
     pub verified: bool,
+    pub credits: bool,
 }
 
 impl Vendor {
@@ -35,6 +43,7 @@ impl Vendor {
 pub enum VersionedVendor {
     V0(VendorV0),
     V1(Vendor),
+    V2(Vendor),
 }
 
 impl From<VersionedVendor> for Vendor {
@@ -43,8 +52,14 @@ impl From<VersionedVendor> for Vendor {
             VersionedVendor::V0(c) => Vendor {
                 permissions: c.permissions,
                 verified: false,
+                credits: false,
             },
-            VersionedVendor::V1(c) => c,
+            VersionedVendor::V1(c) => Vendor {
+                permissions: c.permissions,
+                verified: c.verified,
+                credits: false,
+            },
+            VersionedVendor::V2(c) => c,
         }
     }
 }
@@ -55,8 +70,14 @@ impl From<&VersionedVendor> for Vendor {
             VersionedVendor::V0(c) => Vendor {
                 permissions: c.permissions.clone(),
                 verified: false,
+                credits: false,
             },
-            VersionedVendor::V1(c) => c.clone(),
+            VersionedVendor::V1(c) => Vendor {
+                permissions: c.permissions.clone(),
+                verified: c.verified,
+                credits: false,
+            },
+            VersionedVendor::V2(c) => c.clone(),
         }
     }
 }
@@ -67,9 +88,10 @@ impl Contract {
         self.assert_owner();
         self.vendors.insert(
             account_id.clone(),
-            VersionedVendor::V1(Vendor {
+            VersionedVendor::V2(Vendor {
                 permissions,
                 verified: true,
+                credits: false,
             }),
         );
         Events::AddVendor { account_id }.emit();
@@ -79,7 +101,7 @@ impl Contract {
         require!(!self.vendors.contains_key(&account_id), "ERR_VENDOR_EXISTS");
         self.vendors.insert(
             account_id.clone(),
-            VersionedVendor::V1(Vendor {
+            VersionedVendor::V2(Vendor {
                 permissions: {
                     let mut map = HashMap::new();
                     map.insert(account_id.clone(), {
@@ -95,6 +117,7 @@ impl Contract {
                     map
                 },
                 verified: false,
+                credits: false,
             }),
         );
         Events::RegisterVendor { account_id }.emit();
@@ -108,11 +131,12 @@ impl Contract {
             .and_modify(|old| {
                 let mut old_v: Vendor = old.clone().into();
                 old_v.permissions = vendor.permissions.clone();
-                *old = VersionedVendor::V1(old_v);
+                *old = VersionedVendor::V2(old_v);
             })
-            .or_insert(VersionedVendor::V1(Vendor {
+            .or_insert(VersionedVendor::V2(Vendor {
                 permissions: vendor.permissions.clone(),
                 verified: false,
+                credits: false,
             }));
         Events::EditVendor { account_id }.emit();
     }
@@ -131,9 +155,9 @@ impl Contract {
             .and_modify(|vendor| {
                 let mut old: Vendor = vendor.clone().into();
                 old.verified = true;
-                *vendor = VersionedVendor::V1(old);
+                *vendor = VersionedVendor::V2(old);
             })
-            .or_insert(VersionedVendor::V1(Vendor {
+            .or_insert(VersionedVendor::V2(Vendor {
                 permissions: {
                     let mut permissions = HashMap::new();
                     permissions.insert(account_id.clone(), {
@@ -144,8 +168,34 @@ impl Contract {
                     permissions
                 },
                 verified: true,
+                credits: false,
             }));
         Events::VerifyVendor { account_id }.emit();
+    }
+
+    pub fn vendor_allow_credits(&mut self, account_id: AccountId) {
+        self.assert_owner();
+        self.vendors
+            .entry(account_id.clone())
+            .and_modify(|vendor| {
+                let mut old: Vendor = vendor.clone().into();
+                old.credits = true;
+                *vendor = VersionedVendor::V2(old);
+            })
+            .or_insert(VersionedVendor::V2(Vendor {
+                permissions: {
+                    let mut permissions = HashMap::new();
+                    permissions.insert(account_id.clone(), {
+                        let mut permissions = HashSet::new();
+                        permissions.insert(Permission::Admin);
+                        permissions
+                    });
+                    permissions
+                },
+                verified: true,
+                credits: true,
+            }));
+        Events::VendorAllowCredits { account_id }.emit();
     }
 
     /// Views

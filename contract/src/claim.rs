@@ -82,7 +82,7 @@ impl Contract {
             .and_modify(|old| {
                 let mut project: Project = old.clone().into();
                 project.founders.insert(account_id.clone());
-                *old = VersionedProject::V1(project);
+                *old = VersionedProject::V2(project);
             })
             .or_insert(VersionedProject::new(HashSet::from_iter([
                 account_id.clone()

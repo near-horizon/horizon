@@ -136,10 +136,11 @@ pub async fn insert_many(pool: &PgPool, vendors: Vec<Vendor>) -> anyhow::Result<
                     vendor_type,
                     payments,
                     rate,
-                    work
+                    work,
+                    credits
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-                    $11, $12, $13, $14, $15, $16
+                    $11, $12, $13, $14, $15, $16, $17
                 ) ON CONFLICT (id) DO
                 UPDATE SET
                     permissions = EXCLUDED.permissions,
@@ -156,7 +157,8 @@ pub async fn insert_many(pool: &PgPool, vendors: Vec<Vendor>) -> anyhow::Result<
                     vendor_type = EXCLUDED.vendor_type,
                     payments = EXCLUDED.payments,
                     rate = EXCLUDED.rate,
-                    work = EXCLUDED.work;
+                    work = EXCLUDED.work,
+                    credits = EXCLUDED.credits;
                 ",
             vendor.id,
             serde_json::to_value(vendor.horizon.permissions)?,
@@ -184,6 +186,7 @@ pub async fn insert_many(pool: &PgPool, vendors: Vec<Vendor>) -> anyhow::Result<
                 .keys()
                 .map(|key| serde_json::to_string(key).expect("Failed to serialize work"))
                 .collect_vec(),
+            vendor.horizon.credits,
         )
         .execute(&mut tx)
         .await

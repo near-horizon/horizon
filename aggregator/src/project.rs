@@ -110,11 +110,12 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
                     linktree,
                     vertical,
                     stage,
-                    userbase
+                    userbase,
+                    credits
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
                     $11, $12, $13, $14, $15, $16, $17, $18,
-                    $19, $20, $21, $22, $23, $24, $25, $26
+                    $19, $20, $21, $22, $23, $24, $25, $26, $27
                 ) ON CONFLICT (id) DO
                 UPDATE SET
                     founders = EXCLUDED.founders,
@@ -141,7 +142,8 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
                     linktree = EXCLUDED.linktree,
                     vertical = EXCLUDED.vertical,
                     stage = EXCLUDED.stage,
-                    userbase = EXCLUDED.userbase;
+                    userbase = EXCLUDED.userbase,
+                    credits = EXCLUDED.credits;
                 ",
             project.id,
             &project
@@ -174,6 +176,7 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             serde_json::to_value(project.profile.vertical)?,
             project.profile.stage,
             project.profile.userbase.parse::<i32>().unwrap_or(0),
+            project.horizon.credits,
         )
         .execute(&mut tx)
         .await
