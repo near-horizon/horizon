@@ -91,6 +91,7 @@ pub struct Params {
     #[serde(default)]
     pub sort: Sort,
     pub from: Option<u32>,
+    pub verified: Option<bool>,
     pub limit: Option<u32>,
     #[serde(rename = "q")]
     pub search: Option<String>,
@@ -112,9 +113,22 @@ pub async fn all_vendors(
 
     builder.push(join);
 
+    let mut has_where = false;
+
+    if let Some(verified) = params.verified {
+        builder.push(" WHERE vendors.verified = ");
+        builder.push_bind(verified);
+        has_where = true;
+    }
+
     if let Some(search) = params.search {
         let search = format!("%{}%", search);
-        builder.push(" WHERE vendors.name ILIKE ");
+        if !has_where {
+            builder.push(" WHERE ");
+        } else {
+            builder.push(" AND ");
+        }
+        builder.push(" vendors.name ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR vendors.id ILIKE ");
         builder.push_bind(search.clone());
