@@ -1,5 +1,4 @@
 const ownerId = "nearhorizon.near";
-const creditsAccount = `credits.${ownerId}`;
 const accountId = props.accountId;
 
 const Container = styled.div`
@@ -55,25 +54,30 @@ const Value = styled.div`
 `;
 
 State.init({
+  showCredits: false,
+  showCreditsIsFetched: false,
   earned: 0,
   earnedIsFetched: false,
   active: false,
   activeIsFetched: false,
 });
 
-if (!state.earnedIsFetched) {
+if (!state.showCreditsIsFetched) {
   Near.asyncView(
-    creditsAccount,
-    "ft_balance_of",
+    ownerId,
+    "get_vendor",
     { account_id: accountId },
     "final",
     false
-  ).then((earned) =>
-    State.update({
-      earned: Number(earned) / 1000,
-      earnedIsFetched: true,
-    })
+  ).then(({ credits: showCredits }) =>
+    State.update({ showCredits, showCreditsIsFetched: true })
   );
+}
+
+if (state.showCredits && !state.earnedIsFetched) {
+  asyncFetch(
+    `https://api-op3o.onrender.com/data/credits/vendors/${accountId}/balance`
+  ).then(({ body: earned }) => State.update({ earned, earnedIsFetched: true }));
 }
 
 if (!state.activeIsFetched) {
@@ -97,16 +101,20 @@ if (!state.activeIsFetched) {
 
 return (
   <Container>
-    <Row>
-      <Label>Earned:</Label>
-      <Value>
-        {state.earned} NHZN{" "}
-        <Widget
-          src={`${ownerId}/widget/Tooltip`}
-          props={{ content: "Test use case" }}
-        />
-      </Value>
-    </Row>
+    {state.showCredits ? (
+      <Row>
+        <Label>Earned:</Label>
+        <Value>
+          {state.earned} NHZN{" "}
+          <Widget
+            src={`${ownerId}/widget/Tooltip`}
+            props={{ content: "Test use case" }}
+          />
+        </Value>
+      </Row>
+    ) : (
+      <></>
+    )}
     <Row>
       <Label>Status:</Label>
       <Value>
