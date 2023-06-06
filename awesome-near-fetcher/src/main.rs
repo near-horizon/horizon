@@ -2,7 +2,7 @@ use reqwest::header;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
-const AWESOME_NEAR_API: &'static str = "https://awesomenear.com/api/graphql";
+const AWESOME_NEAR_API: &str = "https://awesomenear.com/api/graphql";
 
 #[derive(Deserialize, Debug)]
 struct SimpleProject {

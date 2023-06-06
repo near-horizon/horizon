@@ -130,15 +130,14 @@ async fn main() {
         .expect("Invalid RECEIVER_ID!");
 
     let entries = read_entries(&data_path);
-    let gas = TGAS * 300 / 50 as u64;
+    let gas = TGAS * 300 / 50_u64;
 
     let actions = entries
         .iter()
-        .map(|entry| {
+        .flat_map(|entry| {
             let (add, edit) = create_action(entry, gas);
             vec![add, edit]
         })
-        .flatten()
         .collect::<Vec<Action>>();
 
     let client = JsonRpcClient::connect("https://rpc.mainnet.near.org");

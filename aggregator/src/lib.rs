@@ -170,7 +170,7 @@ where
 
             profiles.extend(details_batch.into_iter().map(|(k, v)| {
                 (k.clone(), {
-                    let mut v = v.clone();
+                    let mut v = v;
                     v.as_object_mut()
                         .unwrap()
                         .insert("id".to_string(), k.to_string().into());
