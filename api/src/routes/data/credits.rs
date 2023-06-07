@@ -96,9 +96,70 @@ async fn get_credit_applications(
     .map(|result| Json(result.into_iter().map(|r| r.id).collect()))
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+struct Transfer {
+    sender: String,
+    receiver: String,
+    amount: i64,
+    timestamp: i64,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "lowercase")]
+enum TransferType {
+    Sent,
+    Received,
+}
+
+#[debug_handler(state = AppState)]
+async fn get_credit_transfers(
+    Path((account_id, tranfer_type)): Path<(AccountId, TransferType)>,
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<Vec<Transfer>>, (StatusCode, String)> {
+    sqlx::query_as!(
+        Transfer,
+        r#"
+        SELECT 
+          contributions.project_id AS sender,
+          contributions.vendor_id AS receiver,
+          contributions.price AS amount,
+          transactions.timestamp AS timestamp
+        FROM 
+          contributions
+          LEFT JOIN transactions ON contributions.project_id = transactions.args->>'project_id'
+          AND contributions.vendor_id = transactions.args->>'vendor_id'
+          AND contributions.cid = transactions.args->>'cid'
+        WHERE 
+          contributions.status ? 'Completed'
+          AND transactions.method_name = 'complete_contribution'
+          AND CASE 
+            WHEN $2 THEN contributions.project_id = $1
+            ELSE contributions.vendor_id = $1
+          END
+        ORDER BY 
+          transactions.timestamp DESC
+        "#,
+        account_id.to_string(),
+        matches!(tranfer_type, TransferType::Sent),
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get credit transfers for {account_id}: {e}"),
+        )
+    })
+    .map(Json)
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/projects/:account_id/balance", get(get_projects_balance))
         .route("/vendors/:account_id/balance", get(get_vendors_balance))
         .route("/applications", get(get_credit_applications))
+        .route(
+            "/:account_id/transfers/:transfer_type",
+            get(get_credit_transfers),
+        )
 }
