@@ -404,8 +404,7 @@ impl Contract {
     }
 
     #[payable]
-    pub fn approve_application(&mut self, account_id: AccountId) /*  -> Promise */
-    {
+    pub fn approve_application(&mut self, account_id: AccountId) {
         self.assert_owner();
         assert_one_yocto();
         let project: Project = self
