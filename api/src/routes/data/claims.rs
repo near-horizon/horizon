@@ -148,7 +148,7 @@ pub async fn all_claims(
         } else {
             builder.push("WHERE ");
         }
-        let search = format!("%{}%", search);
+        let search = format!("%{search}%");
         builder.push("claims.project_id ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR claims.account_id ILIKE ");
@@ -172,7 +172,7 @@ pub async fn all_claims(
     let result = builder.build().fetch_all(&pool).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get claims: {}", e),
+            format!("Failed to get claims: {e}"),
         )
     })?;
 

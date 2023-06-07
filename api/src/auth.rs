@@ -25,7 +25,7 @@ pub async fn verify_public_key(public_key: &str, account_id: &str, client: &Clie
                 "request_type": "view_access_key",
                 "finality": "final",
                 "account_id": account_id.to_string(),
-                "public_key": format!("ed25519:{}", decoded),
+                "public_key": format!("ed25519:{decoded}"),
             }
         }))
         .send()
@@ -181,7 +181,7 @@ pub fn encrypt_string(value: &str, key: &sodiumoxide::crypto::secretbox::Key) ->
     let encrypted = sodiumoxide::crypto::secretbox::seal(value.as_bytes(), &nonce, key);
     let encoded = encrypted.to_base58();
     let encoded_nonce = nonce.0.to_base58();
-    format!("{}:{}", encoded_nonce, encoded)
+    format!("{encoded_nonce}:{encoded}")
 }
 
 pub fn decrypt_string(value: &str, key: &sodiumoxide::crypto::secretbox::Key) -> String {

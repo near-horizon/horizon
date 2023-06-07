@@ -266,7 +266,7 @@ pub async fn all_requests(
         } else {
             builder.push(" WHERE ");
         }
-        let search = format!("%{}%", search);
+        let search = format!("%{search}%");
         builder.push(" (requests.title ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR requests.project_id ILIKE ");
@@ -293,7 +293,7 @@ pub async fn all_requests(
     let result = builder.build().fetch_all(&pool).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get requests: {}", e),
+            format!("Failed to get requests: {e}"),
         )
     })?;
 

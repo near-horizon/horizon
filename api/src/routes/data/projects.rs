@@ -209,7 +209,7 @@ pub async fn all_projects(
         } else {
             builder.push(" WHERE ");
         }
-        let search = format!("%{}%", search);
+        let search = format!("%{search}%");
         builder.push(" (projects.name ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR projects.id ILIKE ");
@@ -236,7 +236,7 @@ pub async fn all_projects(
     let result = builder.build().fetch_all(&pool).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get projects: {}", e),
+            format!("Failed to get projects: {e}"),
         )
     })?;
 
@@ -272,7 +272,7 @@ async fn get_completion(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get project completions: {}", e),
+            format!("Failed to get project completions: {e}"),
         )
     })?;
 

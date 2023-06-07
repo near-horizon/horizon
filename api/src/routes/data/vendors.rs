@@ -122,7 +122,7 @@ pub async fn all_vendors(
     }
 
     if let Some(search) = params.search {
-        let search = format!("%{}%", search);
+        let search = format!("%{search}%");
         if !has_where {
             builder.push(" WHERE ");
         } else {
@@ -156,7 +156,7 @@ pub async fn all_vendors(
     let result = builder.build().fetch_all(&pool).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get vendors: {}", e),
+            format!("Failed to get vendors: {e}"),
         )
     })?;
 
@@ -192,7 +192,7 @@ async fn get_completion(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get vendor completions: {}", e),
+            format!("Failed to get vendor completions: {e}"),
         )
     })?;
 

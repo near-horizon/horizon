@@ -113,7 +113,7 @@ pub async fn all_investors(
     builder.push(join);
 
     if let Some(search) = params.search {
-        let search = format!("%{}%", search);
+        let search = format!("%{search}%");
         builder.push(" WHERE (investors.name ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR investors.id ILIKE ");
@@ -140,7 +140,7 @@ pub async fn all_investors(
     let result = builder.build().fetch_all(&pool).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get investors: {}", e),
+            format!("Failed to get investors: {e}"),
         )
     })?;
 
@@ -176,7 +176,7 @@ async fn get_completion(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get investor completions: {}", e),
+            format!("Failed to get investor completions: {e}"),
         )
     })?;
 

@@ -6,6 +6,7 @@ use axum::{
 };
 use near_account_id::AccountId;
 use reqwest::StatusCode;
+use serde::{Deserialize, Serialize};
 
 use crate::AppState;
 
@@ -29,7 +30,7 @@ async fn get_projects_balance(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get balance: {}", e),
+            format!("Failed to get balance: {e}"),
         )
     })
     .map(|result| Json(result.balance))
@@ -55,7 +56,7 @@ async fn get_vendors_balance(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get balance: {}", e),
+            format!("Failed to get balance: {e}"),
         )
     })
     .map(|result| Json(result.balance))
@@ -90,7 +91,7 @@ async fn get_credit_applications(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get credit applications: {}", e),
+            format!("Failed to get credit applications: {e}"),
         )
     })
     .map(|result| Json(result.into_iter().map(|r| r.id).collect()))

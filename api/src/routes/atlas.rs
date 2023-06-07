@@ -14,7 +14,7 @@ async fn total_raised(State(state): State<AppState>) -> Result<Json<u64>, (Statu
         .map_err(|e| {
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Failed to get total supply: {}", e),
+                format!("Failed to get total supply: {e}"),
             )
         })?
         .json::<serde_json::Value>()
@@ -22,7 +22,7 @@ async fn total_raised(State(state): State<AppState>) -> Result<Json<u64>, (Statu
         .map_err(|e| {
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Failed to deserialize total supply: {}", e),
+                format!("Failed to deserialize total supply: {e}"),
             )
         })?;
     let Some(fields) = response.get("fields") else {

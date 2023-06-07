@@ -32,7 +32,7 @@ pub async fn get_transactions(
         .map_err(|e| {
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Failed to get transactions: {}", e),
+                format!("Failed to get transactions: {e}"),
             )
         })
         .map(Json)
@@ -147,7 +147,7 @@ async fn get_created_entity_count(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Failed to get transactions: {}", e),
+            format!("Failed to get transactions: {e}"),
         )
     })
     .map(|result| Json(result.unwrap_or(0)))
