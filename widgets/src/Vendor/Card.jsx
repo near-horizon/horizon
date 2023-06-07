@@ -10,6 +10,8 @@ State.init({
   contributionsIsFetched: false,
   vendor: null,
   vendorIsFetched: false,
+  isSuperAdmin: false,
+  isSuperAdminFetched: false,
 });
 
 if (!state.foundersIsFetched) {
@@ -54,6 +56,18 @@ if (!state.vendorIsFetched) {
     "final",
     false
   ).then((vendor) => State.update({ vendor, vendorIsFetched: true }));
+}
+
+if (!state.isSuperAdminFetched && context.accountId) {
+  Near.asyncView(
+    ownerId,
+    "check_is_owner",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((isSuperAdmin) =>
+    State.update({ isSuperAdmin, isSuperAdminFetched: true })
+  );
 }
 
 const Container = styled.div`
@@ -266,6 +280,25 @@ const Footer = styled.div`
   width: 100%;
 `;
 
+const SecondCta = state.isSuperAdmin ? (
+  <FooterButton
+    onClick={() =>
+      Near.call({
+        contractName: ownerId,
+        methodName: "verify_vendor",
+        args: { account_id: accountId },
+      })
+    }
+  >
+    Verify vendor
+  </FooterButton>
+) : (
+  <Widget
+    src={`${ownerId}/widget/Vendor.InviteSideWindow`}
+    props={{ accountId }}
+  />
+);
+
 const footer = (
   <Footer>
     <FooterButton
@@ -281,10 +314,7 @@ const footer = (
     >
       View details
     </FooterButton>
-    <Widget
-      src={`${ownerId}/widget/Vendor.InviteSideWindow`}
-      props={{ accountId }}
-    />
+    {SecondCta}
   </Footer>
 );
 
