@@ -9,6 +9,7 @@ edition = "2021"
 axum = { version = "0.6.15", features = ["macros"] }
 base58 = "0.2.0"
 borsh = "0.10.3"
+chrono = "0.4.26"
 ed25519-dalek = "1.0.1"
 hex = "0.4.3"
 near-account-id = "0.16.1"
