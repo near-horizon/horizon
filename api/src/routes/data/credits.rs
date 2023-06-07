@@ -69,9 +69,20 @@ async fn get_credit_applications(
         r#"
         SELECT projects.id
         FROM projects
+        LEFT JOIN (
+          SELECT DISTINCT ON (transactions.args->>'account_id')
+            transactions.args->>'account_id' AS project_id,
+            transactions.timestamp AS timestamp
+          FROM transactions
+          WHERE transactions.method_name = 'apply_for_program'
+          ORDER BY 
+            transactions.args->>'account_id' DESC,
+            transactions.timestamp DESC
+        ) as txs ON txs.project_id = projects.id
         WHERE
           (projects.application ILIKE '%Submitted%' AND projects.application NOT ILIKE '%NotSubmitted%')
           OR projects.application ILIKE '%Rejected%'
+        ORDER BY txs.timestamp DESC
         "#,
     )
     .fetch_all(&pool)
