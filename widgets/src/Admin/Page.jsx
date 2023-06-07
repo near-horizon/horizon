@@ -1,6 +1,6 @@
 const ownerId = "nearhorizon.near";
 
-const availableContent = ["claims", "applications", "vendors", "backers"];
+const availableContent = ["claims", "applications", "vendors", "completion"];
 
 const getContent = (content) => {
   if (!content || !availableContent.includes(content)) {
@@ -175,9 +175,9 @@ const content = {
       props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
-  backers: (
+  completion: (
     <Widget
-      src={`${ownerId}/widget/Admin.Backers`}
+      src={`${ownerId}/widget/Admin.Completion`}
       props={{ accountId: props.accountId }}
     />
   ),
@@ -215,8 +215,8 @@ return (
                 text: "Vendors",
               },
               {
-                id: "backers",
-                text: "Backers",
+                id: "completion",
+                text: "Completion",
               },
             ],
           }}

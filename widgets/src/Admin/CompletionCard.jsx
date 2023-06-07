@@ -1,5 +1,7 @@
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
+const isVendor = props.isVendor ?? false;
+const completion = props.completion ?? 0;
 
 State.init({
   project: null,
@@ -57,7 +59,7 @@ const Other = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 15%;
+  width: 30%;
 `;
 
 const Badge = styled.div`
@@ -79,24 +81,13 @@ if (!state.projectIsFetched || !state.profileIsFetched) {
   return <>Loading...</>;
 }
 
-const text =
-  typeof state.project.application === "string"
-    ? state.project.application
-    : Object.keys(state.project.application)[0];
-
-const date =
-  typeof state.project.application !== "string" &&
-  "Submitted" in state.project.application
-    ? new Date(Number(state.project.application.Submitted.slice(0, -6)))
-    : new Date();
-
 return (
   <Container>
     <Name
       href={`/${ownerId}/widget/Index?tab=project&accountId=${props.accountId}`}
     >
       <Widget
-        src={`${ownerId}/widget/Project.Icon`}
+        src={`${ownerId}/widget/${isVendor ? "Vendor" : "Project"}.Icon`}
         props={{ accountId: props.accountId, size: "2.5em" }}
       />
       <Widget
@@ -108,16 +99,11 @@ return (
         }}
       />
     </Name>
-    <Other>{date.toLocaleString()}</Other>
     <Other>
-      <Widget
-        src={`${ownerId}/widget/ActiveIndicator`}
-        props={{
-          active: state.project.aplication === "Accepted",
-          activeText: "Accepted",
-          inactiveText: text,
-        }}
-      />
+      Completion percentage{" "}
+      {Number(completion).toLocaleString("en-US", {
+        style: "percent",
+      })}
     </Other>
   </Container>
 );
