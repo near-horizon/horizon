@@ -1,7 +1,7 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::serde_json::{self, Value};
-use near_sdk::{assert_one_yocto, env, ext_contract, near_bindgen, require, AccountId, Timestamp};
+use near_sdk::{assert_one_yocto, env, near_bindgen, require, AccountId, Timestamp};
 use near_sdk_contract_tools::owner::Owner;
 use near_sdk_contract_tools::standard::nep297::Event;
 use std::collections::{HashMap, HashSet};
@@ -292,12 +292,6 @@ impl VersionedProject {
     }
 }
 
-#[ext_contract(token_ext)]
-trait Token {
-    #[payable]
-    fn fund_program_participant(&mut self, account_id: AccountId);
-}
-
 #[near_bindgen]
 impl Contract {
     /// Add new project and given user as founding contributor.
@@ -343,18 +337,6 @@ impl Contract {
                 *existing = VersionedProject::V2(old);
             });
         Events::VerifyProject { account_id }.emit();
-    }
-
-    pub fn project_allow_credits(&mut self, account_id: AccountId) {
-        self.assert_owner();
-        self.projects
-            .entry(account_id.clone())
-            .and_modify(|existing| {
-                let mut old: Project = existing.clone().into();
-                old.credits = true;
-                *existing = VersionedProject::V2(old);
-            });
-        Events::ProjectAllowCredits { account_id }.emit();
     }
 
     /// Add founders to project.
@@ -435,16 +417,13 @@ impl Contract {
             matches!(project.application, ApplicationStatus::Submitted(_)),
             "ERR_APPLICATION_NOT_SUBMITTED"
         );
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            project.application = ApplicationStatus::Accepted;
+            project.credits = true;
+            *old = VersionedProject::V2(project);
+        });
         Events::ApproveApplication { account_id }.emit();
-        // token_ext::ext(self.credits_account_id.clone())
-        //     .with_static_gas(XCC_GAS)
-        //     .with_attached_deposit(1)
-        //     .fund_program_participant(account_id.clone())
-        //     .then(
-        //         Self::ext(near_sdk::env::current_account_id())
-        //             .with_static_gas(XCC_GAS)
-        //             .approve_application_callback(account_id),
-        //     )
     }
 
     // #[private]
