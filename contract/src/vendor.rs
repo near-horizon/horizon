@@ -42,7 +42,7 @@ impl Vendor {
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedVendor {
     V0(VendorV0),
-    V1(Vendor),
+    V1(VendorV1),
     V2(Vendor),
 }
 
