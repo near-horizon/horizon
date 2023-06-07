@@ -128,7 +128,7 @@ pub async fn all_vendors(
         } else {
             builder.push(" AND ");
         }
-        builder.push(" vendors.name ILIKE ");
+        builder.push(" (vendors.name ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR vendors.id ILIKE ");
         builder.push_bind(search.clone());
@@ -138,6 +138,7 @@ pub async fn all_vendors(
         builder.push_bind(search.clone());
         builder.push(" OR vendors.services ILIKE ");
         builder.push_bind(search);
+        builder.push(") ");
     }
 
     builder.push(format!(" {order_by}"));

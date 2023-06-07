@@ -207,10 +207,10 @@ pub async fn all_projects(
         if has_where {
             builder.push(" AND ");
         } else {
-            builder.push("WHERE ");
+            builder.push(" WHERE ");
         }
         let search = format!("%{}%", search);
-        builder.push("projects.name ILIKE ");
+        builder.push(" (projects.name ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR projects.id ILIKE ");
         builder.push_bind(search.clone());
@@ -218,6 +218,7 @@ pub async fn all_projects(
         builder.push_bind(search.clone());
         builder.push(" OR projects.description ILIKE ");
         builder.push_bind(search);
+        builder.push(") ");
     }
 
     builder.push(format!(" {order_by}"));

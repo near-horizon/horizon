@@ -264,10 +264,10 @@ pub async fn all_requests(
         if has_where {
             builder.push(" AND ");
         } else {
-            builder.push("WHERE ");
+            builder.push(" WHERE ");
         }
         let search = format!("%{}%", search);
-        builder.push("requests.title ILIKE ");
+        builder.push(" (requests.title ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR requests.project_id ILIKE ");
         builder.push_bind(search.clone());
@@ -275,6 +275,7 @@ pub async fn all_requests(
         builder.push_bind(search.clone());
         builder.push(" OR requests.cid ILIKE ");
         builder.push_bind(search);
+        builder.push(") ");
     }
 
     builder.push(format!(" {order_by}"));

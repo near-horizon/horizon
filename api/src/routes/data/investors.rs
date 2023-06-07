@@ -114,7 +114,7 @@ pub async fn all_investors(
 
     if let Some(search) = params.search {
         let search = format!("%{}%", search);
-        builder.push(" WHERE investors.name ILIKE ");
+        builder.push(" WHERE (investors.name ILIKE ");
         builder.push_bind(search.clone());
         builder.push(" OR investors.id ILIKE ");
         builder.push_bind(search.clone());
@@ -122,6 +122,7 @@ pub async fn all_investors(
         builder.push_bind(search.clone());
         builder.push(" OR investors.description ILIKE ");
         builder.push_bind(search);
+        builder.push(") ");
     }
 
     builder.push(format!(" {order_by}"));
