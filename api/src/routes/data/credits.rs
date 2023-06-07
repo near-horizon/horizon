@@ -61,8 +61,33 @@ async fn get_vendors_balance(
     .map(|result| Json(result.balance))
 }
 
+#[debug_handler(state = AppState)]
+async fn get_credit_applications(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+    sqlx::query!(
+        r#"
+        SELECT projects.id
+        FROM projects
+        WHERE
+          (projects.application ILIKE '%Submitted%' AND projects.application NOT ILIKE '%NotSubmitted%')
+          OR projects.application ILIKE '%Rejected%'
+        "#,
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get credit applications: {}", e),
+        )
+    })
+    .map(|result| Json(result.into_iter().map(|r| r.id).collect()))
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/projects/:account_id/balance", get(get_projects_balance))
         .route("/vendors/:account_id/balance", get(get_vendors_balance))
+        .route("/applications", get(get_credit_applications))
 }
