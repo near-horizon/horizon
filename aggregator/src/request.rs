@@ -165,6 +165,68 @@ pub async fn get_all_requests(
     })
 }
 
+pub async fn sync_deleted(
+    pool: &PgPool,
+    requests: &HashSet<(String, String)>,
+    proposals: &HashSet<((String, String), String)>,
+) -> anyhow::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    let old_ids = sqlx::query!(
+        r#"
+        SELECT project_id, cid
+        FROM requests
+        "#,
+    )
+    .fetch_all(&mut tx)
+    .await?
+    .into_iter()
+    .map(|row| (row.project_id, row.cid))
+    .collect::<HashSet<_>>();
+
+    let for_deletion = old_ids.difference(requests).cloned().collect::<Vec<_>>();
+
+    for (project_id, cid) in for_deletion {
+        sqlx::query!(
+            r#"
+            DELETE FROM requests
+            WHERE project_id = $1 AND cid = $2
+            "#,
+            project_id,
+            cid
+        )
+        .execute(&mut tx)
+        .await?;
+    }
+
+    let old_ids = sqlx::query!(
+        r#"
+        SELECT project_id, cid, vendor_id
+        FROM proposals
+        "#,
+    )
+    .fetch_all(&mut tx)
+    .await?
+    .into_iter()
+    .map(|row| ((row.project_id, row.cid), row.vendor_id))
+    .collect::<HashSet<_>>();
+
+    let for_deletion = old_ids.difference(proposals).cloned().collect_vec();
+
+    for ((project_id, cid), vendor_id) in for_deletion {
+        sqlx::query!(
+            "DELETE FROM proposals WHERE project_id = $1 AND cid = $2 AND vendor_id = $3",
+            project_id,
+            cid,
+            vendor_id,
+        )
+        .execute(&mut tx)
+        .await?;
+    }
+
+    Ok(tx.commit().await?)
+}
+
 pub async fn insert_many(pool: &PgPool, requests: Vec<FullRequest>) -> anyhow::Result<()> {
     let mut tx = pool.begin().await?;
 

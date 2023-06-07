@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use futures::StreamExt;
 use horizon::claim::Claim;
+use itertools::Itertools;
 use near_account_id::AccountId;
 use near_jsonrpc_client::JsonRpcClient;
 use near_primitives::{types::FunctionArgs, views::QueryRequest};
@@ -70,6 +71,36 @@ pub async fn get_all_claims(
         map.insert(key, value);
         anyhow::Ok::<HashMap<(AccountId, AccountId), Claim>>(map)
     })
+}
+
+pub async fn sync_deleted(pool: &PgPool, claims: &HashSet<(String, String)>) -> anyhow::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    let old_ids = sqlx::query!(
+        r#"
+        SELECT project_id, account_id
+        FROM claims
+        "#,
+    )
+    .fetch_all(&mut tx)
+    .await?
+    .into_iter()
+    .map(|row| (row.project_id, row.account_id))
+    .collect::<HashSet<_>>();
+
+    let for_deletion = old_ids.difference(claims).cloned().collect_vec();
+
+    for (project_id, account_id) in for_deletion {
+        sqlx::query!(
+            "DELETE FROM claims WHERE project_id = $1 AND account_id = $2",
+            project_id,
+            account_id,
+        )
+        .execute(&mut tx)
+        .await?;
+    }
+
+    Ok(tx.commit().await?)
 }
 
 pub async fn insert_many(

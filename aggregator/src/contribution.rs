@@ -145,6 +145,53 @@ pub async fn get_all_contributions(
     Ok(contributions.into_iter().flatten().collect())
 }
 
+pub async fn sync_deleted(
+    pool: &PgPool,
+    contributions: &HashSet<((String, String), String)>,
+) -> anyhow::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    let old_ids = sqlx::query!(
+        r#"
+        SELECT project_id, cid, vendor_id FROM contributions
+        "#,
+    )
+    .fetch_all(&mut tx)
+    .await?
+    .into_iter()
+    .map(|c| ((c.project_id, c.cid), c.vendor_id))
+    .collect::<HashSet<_>>();
+
+    let for_deletion = old_ids.difference(contributions).collect_vec();
+
+    for ((project_id, cid), vendor_id) in for_deletion {
+        sqlx::query!(
+            r#"
+            DELETE FROM contributions WHERE project_id = $1 AND cid = $2 AND vendor_id = $3;
+            "#,
+            project_id,
+            cid,
+            vendor_id,
+        )
+        .execute(&mut tx)
+        .await?;
+        sqlx::query!(
+            r#"
+            DELETE FROM contribution_actions WHERE project_id = $1 AND cid = $2 AND vendor_id = $3;
+            "#,
+            project_id,
+            cid,
+            vendor_id,
+        )
+        .execute(&mut tx)
+        .await?;
+    }
+
+    tx.commit().await?;
+
+    Ok(())
+}
+
 pub async fn insert_many(pool: &PgPool, contributions: Vec<Contribution>) -> anyhow::Result<()> {
     let mut tx = pool.begin().await?;
 

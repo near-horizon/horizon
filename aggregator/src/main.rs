@@ -1,3 +1,4 @@
+use horizon::{contribution::Contribution, proposal::Proposal};
 use itertools::Itertools;
 use near_jsonrpc_client::{JsonRpcClient, NEAR_MAINNET_RPC_URL};
 
@@ -5,7 +6,7 @@ use aggregator::{
     claims, contribution,
     investor::{self, Investor},
     project::{self, Project},
-    request,
+    request::{self, FullRequest},
     vendor::{self, Vendor},
     Completion, FetchAll,
 };
@@ -68,12 +69,95 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let contributions = contribution::get_all_contributions(&client, &horizon_account).await?;
     eprintln!("Contributions: {:#?}", contributions.len());
     eprintln!("Inserting...");
-    contribution::insert_many(&pool, contributions).await?;
+    contribution::insert_many(&pool, contributions.clone()).await?;
 
     let claims = claims::get_all_claims(&client, &horizon_account).await?;
     eprintln!("Claims: {:#?}", claims.len());
     eprintln!("Inserting...");
-    claims::insert_many(&pool, claims.into_iter().collect_vec()).await?;
+    claims::insert_many(&pool, claims.clone().into_iter().collect_vec()).await?;
+    eprintln!("Syncing deleted claims...");
+    claims::sync_deleted(
+        &pool,
+        &claims
+            .keys()
+            .map(|(project_id, account_id)| (project_id.to_string(), account_id.to_string()))
+            .collect(),
+    )
+    .await?;
+
+    eprintln!("Syncing deleted contributions...");
+    contribution::sync_deleted(
+        &pool,
+        &contributions
+            .iter()
+            .map(
+                |Contribution {
+                     proposal_id: ((project_id, cid), vendor_id),
+                     ..
+                 }| {
+                    (
+                        (project_id.to_string(), cid.to_string()),
+                        vendor_id.to_string(),
+                    )
+                },
+            )
+            .collect(),
+    )
+    .await?;
+
+    eprintln!("Syncing deleted requests...");
+    request::sync_deleted(
+        &pool,
+        &requests
+            .keys()
+            .map(|(project_id, cid)| (project_id.to_string(), cid.to_string()))
+            .collect(),
+        &requests
+            .iter()
+            .flat_map(|(_, FullRequest { proposals, .. })| {
+                proposals.iter().map(
+                    |Proposal {
+                         request_id: (project_id, cid),
+                         vendor_id,
+                         ..
+                     }| {
+                        ((project_id.to_string(), cid.clone()), vendor_id.to_string())
+                    },
+                )
+            })
+            .collect(),
+    )
+    .await?;
+
+    eprintln!("Syncing deleted investors...");
+    investor::sync_deleted(
+        &pool,
+        &investors
+            .keys()
+            .map(|investor_id| investor_id.to_string())
+            .collect(),
+    )
+    .await?;
+
+    eprintln!("Syncing deleted vendors...");
+    vendor::sync_deleted(
+        &pool,
+        &vendors
+            .keys()
+            .map(|vendor_id| vendor_id.to_string())
+            .collect(),
+    )
+    .await?;
+
+    eprintln!("Syncing deleted projects...");
+    project::sync_deleted(
+        &pool,
+        &projects
+            .keys()
+            .map(|project_id| project_id.to_string())
+            .collect(),
+    )
+    .await?;
 
     eprintln!("Done");
 

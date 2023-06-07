@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use horizon::investor::Investor as HorizonInvestor;
+use itertools::Itertools;
 use near_account_id::AccountId;
 use near_jsonrpc_client::JsonRpcClient;
 use near_primitives::{types::FunctionArgs, views::QueryRequest};
@@ -61,8 +62,30 @@ impl Completion for Investor {
     }
 }
 
+pub async fn sync_deleted(pool: &PgPool, investors: &HashSet<String>) -> anyhow::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    let old_ids: HashSet<String> = sqlx::query!("SELECT id FROM investors")
+        .fetch_all(&mut tx)
+        .await?
+        .into_iter()
+        .map(|x| x.id)
+        .collect();
+
+    let for_deletion = old_ids.difference(investors).cloned().collect_vec();
+
+    sqlx::query!(
+        "DELETE FROM investors WHERE investors.id = ANY($1)",
+        &for_deletion
+    )
+    .execute(&mut tx)
+    .await?;
+
+    Ok(tx.commit().await?)
+}
+
 pub async fn insert_many(pool: &PgPool, investors: Vec<Investor>) -> anyhow::Result<()> {
-    let mut transaction = pool.begin().await?;
+    let mut tx = pool.begin().await?;
 
     for investor in investors {
         sqlx::query!(
@@ -115,11 +138,11 @@ pub async fn insert_many(pool: &PgPool, investors: Vec<Investor>) -> anyhow::Res
             investor.profile.specialization,
             investor.profile.location
         )
-        .execute(&mut transaction)
+        .execute(&mut tx)
         .await?;
     }
 
-    Ok(transaction.commit().await?)
+    Ok(tx.commit().await?)
 }
 
 #[async_trait::async_trait]

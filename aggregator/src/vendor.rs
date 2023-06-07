@@ -115,6 +115,28 @@ impl Completion for Vendor {
     }
 }
 
+pub async fn sync_deleted(pool: &PgPool, vendors: &HashSet<String>) -> anyhow::Result<()> {
+    let mut tx = pool.begin().await?;
+
+    let old_ids: HashSet<String> = sqlx::query!("SELECT id FROM vendors")
+        .fetch_all(&mut tx)
+        .await?
+        .into_iter()
+        .map(|x| x.id)
+        .collect();
+
+    let for_deletion = old_ids.difference(vendors).cloned().collect_vec();
+
+    sqlx::query!(
+        "DELETE FROM vendors WHERE vendors.id = ANY($1)",
+        &for_deletion
+    )
+    .execute(&mut tx)
+    .await?;
+
+    Ok(tx.commit().await?)
+}
+
 pub async fn insert_many(pool: &PgPool, vendors: Vec<Vendor>) -> anyhow::Result<()> {
     let mut tx = pool.begin().await?;
 
