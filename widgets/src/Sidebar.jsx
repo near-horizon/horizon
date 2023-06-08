@@ -3,6 +3,8 @@ const ownerId = "nearhorizon.near";
 State.init({
   isOwner: false,
   isOwnerFetched: false,
+  projects: [],
+  vendors: [],
 });
 
 if (context.accountId && !state.isOwnerFetched) {
@@ -13,6 +15,20 @@ if (context.accountId && !state.isOwnerFetched) {
     "final",
     false
   ).then((isOwner) => State.update({ isOwner, isOwnerFetched: true }));
+  Near.asyncView(
+    ownerId,
+    "get_admin_projects",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((projects) => State.update({ projects }));
+  Near.asyncView(
+    ownerId,
+    "get_admin_vendors",
+    { account_id: context.accountId },
+    "final",
+    false
+  ).then((vendors) => State.update({ vendors }));
 }
 
 const notifications = [
