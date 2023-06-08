@@ -24,7 +24,7 @@ const Container = styled("Tooltip.Trigger")`
   border: none;
   box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
     hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
-  z-index: 1000;
+  z-index: 10;
 `;
 
 const StyledTooltip = styled("Tooltip.Content")`
@@ -64,9 +64,9 @@ const StyledTooltip = styled("Tooltip.Content")`
 `;
 
 return (
-  <a href="mailto:horizon@near.foundation">
-    <Tooltip.Provider>
-      <Tooltip.Root>
+  <Tooltip.Provider>
+    <Tooltip.Root>
+      <a href="mailto:horizon@near.foundation">
         <Container>
           <b>Give feedback</b>
         </Container>
@@ -74,7 +74,7 @@ return (
           Click here to give us any feedback you want via email
           <Tooltip.Arrow className="arrow" />
         </StyledTooltip>
-      </Tooltip.Root>
-    </Tooltip.Provider>
-  </a>
+      </a>
+    </Tooltip.Root>
+  </Tooltip.Provider>
 );
