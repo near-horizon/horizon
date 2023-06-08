@@ -76,6 +76,11 @@ impl Contract {
     /// Add new request for given project.
     pub fn add_request(&mut self, request: Request) {
         self.assert_admin(&request.project_id, &env::predecessor_account_id());
+        require!(
+            request.source == PaymentSource::Other
+                || self.get_project(request.project_id.clone()).credits,
+            "ERR_CREDITS_NOT_APPROVED",
+        );
         let cid = crate::create_cid(&serde_json::to_string(&request).unwrap());
         let key = (request.project_id.clone(), cid);
         self.requests
