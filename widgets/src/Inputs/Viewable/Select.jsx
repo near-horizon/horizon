@@ -47,13 +47,9 @@ const SaveButton = styled.button`
 
 const edit = (update, v) => (
   <LabelArea>
-    <Typeahead
-      id
-      labelKey="name"
-      onChange={update}
-      options={options}
-      selected={v}
-      positionFixed
+    <Widget
+      src={`${ownerId}/widget/Inputs.Select`}
+      props={{ id, noLabel: true, value: v, options, onChange: update }}
     />
     <SaveButton onClick={() => onSave(v)}>Save</SaveButton>
   </LabelArea>

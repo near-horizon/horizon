@@ -173,7 +173,9 @@ return (
       props={{
         label: "Payment source",
         id: "source",
-        value: [{ name: proposal.payment_source }],
+        value: [
+          { value: proposal.payment_source, text: proposal.payment_source },
+        ],
         canEdit: isAdmin,
       }}
     />
@@ -182,7 +184,7 @@ return (
       props={{
         label: "Payment type",
         id: "payment_type",
-        value: [{ name: proposal.payment_type }],
+        value: [{ value: proposal.payment_type, text: proposal.payment_type }],
         canEdit: isAdmin,
       }}
     />
@@ -191,7 +193,9 @@ return (
       props={{
         label: "Request type",
         id: "request_type",
-        value: [{ name: proposal.proposal_type }],
+        value: [
+          { value: proposal.proposal_type, text: proposal.proposal_type },
+        ],
         canEdit: isAdmin,
       }}
     />

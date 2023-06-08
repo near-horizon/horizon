@@ -86,10 +86,10 @@ return (
         id: "type",
         value: state.profile.vendor_type,
         options: [
-          { name: "Individual contributor", id: "individual" },
-          { name: "Organization", id: "organization" },
+          { text: "Individual contributor", value: "individual" },
+          { text: "Organization", value: "organization" },
         ],
-        onSave: ([{ id: vendor_type }]) => onSave({ vendor_type }),
+        onSave: ({ value: vendor_type }) => onSave({ vendor_type }),
         canEdit: isAdmin,
       }}
     />

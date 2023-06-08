@@ -85,8 +85,8 @@ return (
         label: "Specialization",
         id: "specialization",
         value: state.profile.specialization,
-        options: [{ name: "Venture investments", id: "venture" }],
-        onSave: ([{ id: specialization }]) => onSave({ specialization }),
+        options: [{ value: "Venture investments", text: "venture" }],
+        onSave: ({ value: specialization }) => onSave({ specialization }),
         canEdit: isAdmin,
       }}
     />
