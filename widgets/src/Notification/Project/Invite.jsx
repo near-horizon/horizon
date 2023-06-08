@@ -115,56 +115,52 @@ return (
     </div>
 
     <div>
-    <Widget
-      src={`${ownerId}/widget/Buttons.Green`}
-      props={{
-        text: "Accept",
-        onClick: () => {
-          const transactions = [
-            {
-              contractName: ownerId,
-              methodName: "accept_contribution",
-              args: {
-                project_id: accountId,
-                cid,
-                vendor_id: vendorId,
-              }
-            },
-            {
-              contractName: "social.near",
-              methodName: "set",
-              args: {
-                data: {
-                  [context.accountId]: {
-                    index: {
-                      graph: JSON.stringify({
-                        key: "vendor/contract",
-                        value: { accountId: accountId },
-                      }),
-                      inbox: JSON.stringify({
-                        key: accountId,
-                        value: {
-                          type: "vendor/contract",
-                          contributionId: [
-                            accountId,
-                            cid,
-                          ],
-                          message: state.message,
-                          vendorId: vendorId,
-                          actionType: "accept"
-                        },
-                      }),
+      <Widget
+        src={`${ownerId}/widget/Buttons.Green`}
+        props={{
+          text: "Accept",
+          onClick: () => {
+            const transactions = [
+              {
+                contractName: ownerId,
+                methodName: "accept_contribution",
+                args: {
+                  project_id: accountId,
+                  cid,
+                  vendor_id: vendorId,
+                },
+              },
+              {
+                contractName: "social.near",
+                methodName: "set",
+                args: {
+                  data: {
+                    [context.accountId]: {
+                      index: {
+                        graph: JSON.stringify({
+                          key: "vendor/contract",
+                          value: { accountId: accountId },
+                        }),
+                        inbox: JSON.stringify({
+                          key: accountId,
+                          value: {
+                            type: "vendor/contract",
+                            contributionId: [accountId, cid],
+                            message: state.message,
+                            vendorId: vendorId,
+                            actionType: "accept",
+                          },
+                        }),
+                      },
                     },
                   },
-                }
-              }
-            }
-          ];
-          Near.call(transactions);
-      
-        }
-      }}
-    />
+                },
+              },
+            ];
+            Near.call(transactions);
+          },
+        }}
+      />
       <Button>Discuss</Button>
     </div>
   </>

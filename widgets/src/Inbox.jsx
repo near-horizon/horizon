@@ -64,7 +64,9 @@ if (!state.projectsIsFetched || !state.vendorsIsFetched) {
   return <>Loading...</>;
 }
 
-const notifications = [...new Set([...state.projects, ...state.vendors])]
+const notifications = [
+  ...new Set([...state.projects, ...state.vendors, context.accountId]),
+]
   .reduce((allNotifications, accountId) => {
     const notificationsForAccount = Social.index("inbox", accountId, {
       order: "desc",
@@ -79,18 +81,20 @@ const notifications = [...new Set([...state.projects, ...state.vendors])]
   }, [])
   .sort((a, b) => b.blockHeight - a.blockHeight);
 
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+`;
+
 return (
   <Wrapper>
     <Header>Inbox</Header>
-    <Widget
-      src={`${ownerId}/widget/List`}
-      props={{
-        filter: () => {},
-        items: notifications,
-        createItem: (item) => (
-          <Widget src={`${ownerId}/widget/Notification.Index`} props={item} />
-        ),
-      }}
-    />
+    <List>
+      {notifications.map((item) => (
+        <Widget src={`${ownerId}/widget/Notification.Index`} props={item} />
+      ))}
+    </List>
   </Wrapper>
 );

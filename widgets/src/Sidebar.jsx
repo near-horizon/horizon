@@ -15,7 +15,22 @@ if (context.accountId && !state.isOwnerFetched) {
   ).then((isOwner) => State.update({ isOwner, isOwnerFetched: true }));
 }
 
-const inboxCount = Social.index("inbox", context.accountId).length;
+const notifications = [
+  ...new Set([...state.projects, ...state.vendors, context.accountId]),
+]
+  .reduce((allNotifications, accountId) => {
+    const notificationsForAccount = Social.index("inbox", accountId, {
+      order: "desc",
+      subscribe: true,
+    });
+
+    if (!notificationsForAccount) {
+      return allNotifications;
+    }
+
+    return [...allNotifications, ...notificationsForAccount];
+  }, [])
+  .sort((a, b) => b.blockHeight - a.blockHeight);
 
 const mail = (
   <svg
@@ -289,12 +304,12 @@ return (
   <NavContainer>
     {navItem({ text: "Home", icon: discover, id: "home" })}
     {/* navItem({ text: "Pulse", icon: pulse, id: "pulse" }) */}
-    {/* navItem({
+    {navItem({
       text: "Inbox",
       icon: mail,
       id: "inbox",
-      count: inboxCount,
-    }) */}
+      count: notifications.length,
+    })}
     {navItem({
       text: "Manage",
       icon: manage,
