@@ -11,7 +11,6 @@ State.init({
 if (!state.completionIsFetched) {
   asyncFetch(`https://api-op3o.onrender.com/data/projects/completion`).then(
     ({ body }) => {
-      console.log(body);
       State.update({
         projectsAvg: body.avg,
         projects: body.list,
