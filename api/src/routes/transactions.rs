@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use axum::{
     debug_handler,
     extract::{Path, Query, State},
@@ -153,8 +155,173 @@ async fn get_created_entity_count(
     .map(|result| Json(result.unwrap_or(0)))
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+struct Stat {
+    total: i64,
+    today: i64,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+struct Stats {
+    projects: Stat,
+    vendors: Stat,
+    backers: Stat,
+    requests: Stat,
+}
+
+#[debug_handler(state = AppState)]
+async fn get_stats(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<Stats>, (StatusCode, String)> {
+    let date = Utc::now()
+        .with_hour(0)
+        .unwrap()
+        .with_minute(0)
+        .unwrap()
+        .with_second(0)
+        .unwrap()
+        .with_nanosecond(0)
+        .unwrap();
+    let from = date.timestamp_nanos();
+    let to = date
+        .checked_add_signed(chrono::Duration::days(1))
+        .unwrap()
+        .timestamp_nanos();
+    let mut today = sqlx::query!(
+        r#"
+        SELECT method_name, COUNT(*)
+        FROM transactions
+        WHERE
+          method_name = ANY($1)
+          AND timestamp BETWEEN $2 AND $3
+        GROUP BY method_name
+        "#,
+        &[
+            "add_project".to_string(),
+            "add_vendor".to_string(),
+            "register_vendor".to_string(),
+            "add_investors".to_string(),
+            "register_investor".to_string(),
+            "add_request".to_string(),
+        ],
+        from,
+        to,
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get transactions: {e}"),
+        )
+    })
+    .map(|result| {
+        result
+            .into_iter()
+            .map(|row| (row.method_name, row.count.unwrap_or(0)))
+            .collect::<HashMap<_, _>>()
+    })?;
+
+    let today_projects = today.remove("add_project").unwrap_or(0);
+    let today_vendors = today
+        .remove("add_vendor")
+        .unwrap_or(0)
+        .checked_add(today.remove("register_vendor").unwrap_or(0))
+        .unwrap_or(0);
+    let today_investors = today
+        .remove("add_investors")
+        .unwrap_or(0)
+        .checked_add(today.remove("register_investor").unwrap_or(0))
+        .unwrap_or(0);
+    let today_requests = today.remove("add_request").unwrap_or(0);
+
+    let total_projects = sqlx::query_scalar!(
+        r#"
+        SELECT COUNT(*)
+        FROM projects
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get projects: {e}"),
+        )
+    })?
+    .unwrap_or(0);
+
+    let total_vendors = sqlx::query_scalar!(
+        r#"
+        SELECT COUNT(*)
+        FROM vendors
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get vendors: {e}"),
+        )
+    })?
+    .unwrap_or(0);
+
+    let total_investors = sqlx::query_scalar!(
+        r#"
+        SELECT COUNT(*)
+        FROM investors
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get investors: {e}"),
+        )
+    })?
+    .unwrap_or(0);
+
+    let total_requests = sqlx::query_scalar!(
+        r#"
+        SELECT COUNT(*)
+        FROM requests
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get requests: {e}"),
+        )
+    })?
+    .unwrap_or(0);
+
+    Ok(Json(Stats {
+        projects: Stat {
+            total: total_projects,
+            today: today_projects,
+        },
+        vendors: Stat {
+            total: total_vendors,
+            today: today_vendors,
+        },
+        backers: Stat {
+            total: total_investors,
+            today: today_investors,
+        },
+        requests: Stat {
+            total: total_requests,
+            today: today_requests,
+        },
+    }))
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/all", get(get_transactions))
         .route("/count/:entity_type", get(get_created_entity_count))
+        .route("/stats", get(get_stats))
 }
