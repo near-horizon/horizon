@@ -175,6 +175,7 @@ const CancelButton = styled.a`
 `;
 
 State.init({
+  project: null,
   projectId: null,
   projectIdError: "",
   projects: [],
@@ -211,6 +212,7 @@ const validateForm = () => {
     state.paymentType &&
     state.paymentTypeError === "" &&
     state.paymentSource &&
+    (state.project.credits || state.paymentSource.value === "Other") &&
     state.paymentSourceError === "" &&
     state.budget &&
     state.budgetError === "" &&
@@ -327,7 +329,16 @@ return (
           label: "Request as *",
           value: state.projectId,
           options: state.projects,
-          onChange: (projectId) => State.update({ projectId }),
+          onChange: (projectId) => {
+            Near.asyncView(
+              ownerId,
+              "get_project",
+              { account_id: projectId.value },
+              "final",
+              false
+            ).then((project) => State.update({ project }));
+            State.update({ projectId });
+          },
         }}
       />
       <Widget
@@ -427,7 +438,9 @@ return (
           src={`${ownerId}/widget/Inputs.Select`}
           props={{
             label: "Payment source *",
-            options: state.paymentSources,
+            options: state.paymentSources.filter(
+              ({ value }) => state.project.credits || value === "Other"
+            ),
             value: state.paymentSource,
             onChange: (paymentSource) => State.update({ paymentSource }),
           }}
