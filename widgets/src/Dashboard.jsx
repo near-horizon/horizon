@@ -1,72 +1,5 @@
 const ownerId = "nearhorizon.near";
 
-const availableContent = ["projects", "vendors", "backers", "requests"];
-
-const getContent = (content) => {
-  if (!content || !availableContent.includes(content)) {
-    return "projects";
-  }
-
-  return content;
-};
-
-const contentSelector = (
-  <Widget
-    src={`${ownerId}/widget/TabSelector`}
-    props={{
-      tab: "home",
-      content: getContent(props.content),
-      search: props.search,
-      update: props.update,
-      buttons: [
-        {
-          id: "projects",
-          text: "Projects",
-        },
-        {
-          id: "vendors",
-          text: "Contributors",
-        },
-        {
-          id: "backers",
-          text: "Backers",
-        },
-        {
-          id: "requests",
-          text: "Requests",
-        },
-      ],
-    }}
-  />
-);
-
-const content = {
-  projects: (
-    <Widget
-      src={`${ownerId}/widget/Project.List`}
-      props={{ search: state.search, update: props.update }}
-    />
-  ),
-  vendors: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.List`}
-      props={{ search: state.search, update: props.update }}
-    />
-  ),
-  backers: (
-    <Widget
-      src={`${ownerId}/widget/Investor.List`}
-      props={{ search: state.search, update: props.update }}
-    />
-  ),
-  requests: (
-    <Widget
-      src={`${ownerId}/widget/Request.List`}
-      props={{ search: state.search, update: props.update }}
-    />
-  ),
-}[getContent(props.content)];
-
 const Heading = styled.div`
   display: flex;
   flex-direction: column;
@@ -103,22 +36,6 @@ const Container = styled.div`
     line-height: 1.5em;
     color: #475467;
   }
-`;
-
-const Filters = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.9em;
-`;
-
-const Filter = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1em;
 `;
 
 const Stats = styled.div`
@@ -178,7 +95,10 @@ const Stat = styled.div`
 `;
 
 State.init({
-  search: "",
+  projects: [],
+  requests: [],
+  vendors: [],
+  investors: [],
   projectsCount: 0,
   vendorsCount: 0,
   investorsCount: 0,
@@ -202,6 +122,22 @@ asyncFetch("https://api-op3o.onrender.com/transactions/stats").then(
       investorsTodayCount: response.body.backers.today,
       requestsTodayCount: response.body.requests.today,
     })
+);
+
+asyncFetch("https://api-op3o.onrender.com/data/projects?sort=timedesc").then(
+  (response) => response.ok && State.update({ projects: response.body })
+);
+
+asyncFetch("https://api-op3o.onrender.com/data/requests?sort=timedesc").then(
+  (response) => response.ok && State.update({ requests: response.body })
+);
+
+asyncFetch("https://api-op3o.onrender.com/data/vendors?sort=timedesc").then(
+  (response) => response.ok && State.update({ vendors: response.body })
+);
+
+asyncFetch("https://api-op3o.onrender.com/data/investors?sort=timedesc").then(
+  (response) => response.ok && State.update({ investors: response.body })
 );
 
 const Header = styled.div`
@@ -251,50 +187,72 @@ return (
       </Stats>
     </Header>
     <div>{contentSelector}</div>
-    <Filters>
-      <Widget
-        src={`${ownerId}/widget/SearchInput`}
-        props={{ search: state.search, update: (s) => State.update(s) }}
-      />
-      <Filter>
-        <Widget
-          src={`${ownerId}/widget/Filter`}
-          props={{
-            name: "Type",
-            options: [
-              { id: "verified", text: "Verified", href: "#" },
-              { id: "not-verified", text: "Not verified", href: "#" },
-            ],
-            selected: "verified",
-            update: (id) => console.log(id),
-          }}
-        />
-        <Widget
-          src={`${ownerId}/widget/Filter`}
-          props={{
-            name: "Status",
-            options: [
-              { id: "active", text: "Active", href: "#" },
-              { id: "not-active", text: "Not active", href: "#" },
-            ],
-            selected: "active",
-            update: (id) => alert(id),
-          }}
-        />
-        <Widget
-          src={`${ownerId}/widget/Filter`}
-          props={{
-            name: "Sort by",
-            options: [
-              { id: "name", text: "Name", href: "#" },
-              { id: "id", text: "Account ID", href: "#" },
-            ],
-            selected: "name",
-            update: (id) => alert(id),
-          }}
-        />
-      </Filter>
-    </Filters>
-    <div>{content}</div>
+    <Widget
+      src={`${ownerId}/widget/Home.ListSection`}
+      props={{
+        title: "Projects",
+        count: state.projectsCount,
+        link: `${ownerId}/widget/Index?tab=projects`,
+        linkText: "See all projects",
+        items: state.projects,
+        renderItem: (item) => (
+          <Widget
+            src={`${ownerId}/widget/Project.Card`}
+            props={{ accountId: item }}
+          />
+        ),
+      }}
+    />
+    <Widget
+      src={`${ownerId}/widget/Home.ListSection`}
+      props={{
+        title: "Requests",
+        count: state.requestsCount,
+        link: `${ownerId}/widget/Index?tab=requests`,
+        linkText: "See all requests",
+        items: state.requests,
+        renderItem: (item) => (
+          <Widget
+            src={`${ownerId}/widget/Request.Card`}
+            props={{
+              accountId: item[0],
+              cid: item[1],
+            }}
+          />
+        ),
+      }}
+    />
+    <Widget
+      src={`${ownerId}/widget/Home.ListSection`}
+      props={{
+        title: "Contributors",
+        count: state.vendorsCount,
+        link: `${ownerId}/widget/Index?tab=vendors`,
+        linkText: "See all contributors",
+        items: state.vendors,
+        renderItem: (item) => (
+          <Widget
+            src={`${ownerId}/widget/Vendor.Card`}
+            props={{ accountId: item }}
+          />
+        ),
+      }}
+    />
+    <Widget
+      src={`${ownerId}/widget/Home.ListSection`}
+      props={{
+        title: "Backers",
+        count: state.investorsCount,
+        link: `${ownerId}/widget/Index?tab=investors`,
+        linkText: "See all backers",
+        items: state.investors,
+        renderItem: (item) => (
+          <Widget
+            src={`${ownerId}/widget/Investor.Card`}
+            props={{ accountId: item }}
+          />
+        ),
+      }}
+    />
   </Container>
 );
