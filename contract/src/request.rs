@@ -103,7 +103,7 @@ impl Contract {
 
     /// Remove request with given CID.
     pub fn remove_request(&mut self, cid: String, account_id: AccountId) {
-        self.assert_admin(&account_id, &env::predecessor_account_id());
+        self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         let key = (account_id.clone(), cid.clone());
         self.requests.remove(&key);
         Events::RemoveRequest { account_id, cid }.emit();
