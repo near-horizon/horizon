@@ -287,7 +287,7 @@ const admin = (
 
 return (
   <NavContainer>
-    {navItem({ text: "Discover", icon: discover, id: "home" })}
+    {navItem({ text: "Home", icon: discover, id: "home" })}
     {/* navItem({ text: "Pulse", icon: pulse, id: "pulse" }) */}
     {/* navItem({
       text: "Inbox",
