@@ -2,6 +2,7 @@ const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
 const cid = props.cid;
 const full = props.full ?? false;
+const large = props.large ?? false;
 
 State.init({
   request: null,
@@ -152,7 +153,11 @@ const body = (
         }}
       />
     </Details>
-    <Title>{state.request.title}</Title>
+    <a
+      href={`/${ownerId}/widget/Index?tab=request&accountId=${accountId}&cid=${cid}`}
+    >
+      <Title>{state.request.title}</Title>
+    </a>
     <Widget
       src={`${ownerId}/widget/ActiveIndicator`}
       props={{
@@ -161,19 +166,22 @@ const body = (
         inactiveText: "Closed",
       }}
     />
-    <Widget
-      src={`${ownerId}/widget/DescriptionArea`}
-      props={{ description: state.request.description }}
-    />
-    {/*<Widget
-      src={`${ownerId}/widget/Tags`}
-      props={{
-        tags: state.request.tags.reduce(
-          (ob, tag) => ({ ...ob, [tag]: "" }),
-          {}
-        ),
-      }}
-    />*/}
+    {large ? (
+      <Widget
+        src={`${ownerId}/widget/DescriptionArea`}
+        props={{ description: state.request.description }}
+      />
+    ) : (
+      <Widget
+        src={`${ownerId}/widget/Tags`}
+        props={{
+          tags: state.request.tags.reduce(
+            (ob, tag) => ({ ...ob, [tag]: "" }),
+            {}
+          ),
+        }}
+      />
+    )}
     <Details>
       {deadline}
       {budget}
@@ -235,4 +243,10 @@ const footer = (
   </Footer>
 );
 
-return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer, full }} />;
+if (large) {
+  return (
+    <Widget src={`${ownerId}/widget/Card`} props={{ body, footer, full }} />
+  );
+}
+
+return <Widget src={`${ownerId}/widget/Card`} props={{ body }} />;

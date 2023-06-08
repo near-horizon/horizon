@@ -1,5 +1,6 @@
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
+const large = props.large ?? false;
 
 State.init({
   investor: null,
@@ -43,18 +44,22 @@ const Container = styled.div`
 const body = (
   <>
     <Container>
-      <Widget
-        src={`${ownerId}/widget/Vendor.Icon`}
-        props={{ accountId, size: "4em" }}
-      />
-      <Widget
-        src={`${ownerId}/widget/NameAndAccount`}
-        props={{
-          accountId,
-          name: state.profile.name,
-          nameSize: "1.125em",
-        }}
-      />
+      <a href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}>
+        <Widget
+          src={`${ownerId}/widget/Vendor.Icon`}
+          props={{ accountId, size: "4em" }}
+        />
+      </a>
+      <a href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}>
+        <Widget
+          src={`${ownerId}/widget/NameAndAccount`}
+          props={{
+            accountId,
+            name: state.profile.name,
+            nameSize: "1.125em",
+          }}
+        />
+      </a>
       {state.investor.verified ? (
         <Widget
           src={`${ownerId}/widget/BadgeList`}
@@ -69,6 +74,10 @@ const body = (
     <Widget
       src={`${ownerId}/widget/DescriptionArea`}
       props={{ description: state.profile.description }}
+    />
+    <Widget
+      src={`${ownerId}/widget/Tags`}
+      props={{ tags: state.profile.verticals }}
     />
   </>
 );
@@ -159,4 +168,8 @@ const footer = (
   </Footer>
 );
 
-return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer }} />;
+if (large) {
+  return <Widget src={`${ownerId}/widget/Card`} props={{ body, footer }} />;
+}
+
+return <Widget src={`${ownerId}/widget/Card`} props={{ body }} />;

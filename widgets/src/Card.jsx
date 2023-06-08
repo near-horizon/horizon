@@ -1,6 +1,6 @@
 const header = props.header ?? <></>;
 const body = props.body ?? <></>;
-const footer = props.footer ?? <></>;
+const footer = props.footer;
 
 const CardContainer = styled.div`
   display: flex;
@@ -59,6 +59,6 @@ return (
   <CardContainer>
     <CardHeader show={!!props.header}>{header}</CardHeader>
     <CardBody>{body}</CardBody>
-    <CardFooter>{footer}</CardFooter>
+    {footer ? <CardFooter>{footer}</CardFooter> : <></>}
   </CardContainer>
 );
