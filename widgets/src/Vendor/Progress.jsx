@@ -60,6 +60,7 @@ State.init({
   earnedIsFetched: false,
   active: false,
   activeIsFetched: false,
+  completion: 0,
 });
 
 if (!state.showCreditsIsFetched) {
@@ -94,6 +95,15 @@ if (!state.activeIsFetched) {
     })
   );
 }
+
+asyncFetch("https://api-op3o.onrender.com/data/vendors/completion").then(
+  ({ body: { list } }) =>
+    State.update({
+      completion: list
+        .find(({ id }) => id === props.accountId)
+        .completion.toLocaleString("en-US", { style: "percent" }),
+    })
+);
 
 if (!state.activeIsFetched) {
   return <>Loading...</>;
@@ -135,7 +145,7 @@ return (
     </Row>
     <Row>
       <Label>Profile:</Label>
-      <Value>60%</Value>
+      <Value>{state.completion}</Value>
     </Row>
   </Container>
 );
