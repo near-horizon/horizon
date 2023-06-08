@@ -195,11 +195,12 @@ impl Contract {
             .get(&investor_id)
             .map(|investor| {
                 let investor: Investor = investor.into();
-                if let Some(set) = investor.permissions.get(&account_id) {
-                    set.contains(&Permission::Admin)
-                } else {
-                    false
-                }
+                investor_id == account_id
+                    || if let Some(set) = investor.permissions.get(&account_id) {
+                        set.contains(&Permission::Admin)
+                    } else {
+                        false
+                    }
             })
             .unwrap_or(false)
     }

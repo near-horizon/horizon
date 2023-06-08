@@ -232,7 +232,7 @@ impl Contract {
             return false;
         };
         let vendor: Vendor = versioned_vendor.into();
-        vendor.is_admin(account_id)
+        vendor_id == account_id || vendor.is_admin(account_id)
     }
 
     /// Assertions

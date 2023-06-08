@@ -515,7 +515,7 @@ impl Contract {
             return false;
         };
         let project: Project = versioned_project.into();
-        project.is_admin(account_id)
+        project_id == account_id || project.is_admin(account_id)
     }
 
     pub fn count_v1_projects(&self) -> usize {
