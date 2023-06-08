@@ -89,6 +89,7 @@ const List = styled.div`
   justify-content: space-between;
   padding: 0px;
   flex-wrap: wrap;
+  width: 100%;
 
   & > div {
     margin-bottom: 24px;
