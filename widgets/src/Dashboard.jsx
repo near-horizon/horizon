@@ -124,104 +124,132 @@ const Filter = styled.div`
 const Stats = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  margin: 1em 0;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 1em 1.5em;
+  gap: 1.75em;
+  background: #fafafa;
+  border-radius: 16px;
+`;
 
-  div {
-    width: 18%;
-  }
+const Stat = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 1px;
+  gap: 0.25em;
 
-  @media (max-width: 768px) {
-    div {
-      width: 100%;
+  & > div.number {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5em;
+
+    & > div {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 24px;
+      text-align: right;
+      color: #11181c;
+    }
+
+    & > span {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      color: #04a46e;
     }
   }
 
-  @media (max-width: 1024px) {
-    div {
-      width: 49%;
-    }
+  & > div.label {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.75em;
+    line-height: 1em;
+    color: #006adc;
   }
 `;
 
 State.init({
-  stats: null,
-  statsIsFetched: false,
   search: "",
-  totalRaised: 578920000,
-  totalRaisedIsFetched: false,
+  projectsCount: 0,
+  vendorsCount: 0,
+  investorsCount: 0,
+  requestsCount: 0,
+  projectsTodayCount: 0,
+  vendorsTodayCount: 0,
+  investorsTodayCount: 0,
+  requestsTodayCount: 0,
 });
 
-if (!state.statsIsFetched) {
-  asyncFetch(
-    "https://api.flipsidecrypto.com/api/v2/queries/36637c73-6301-418b-ae83-7af6e8f34c0f/data/latest"
-  ).then((response) =>
-    State.update({ stats: response.body[0], statsIsFetched: true })
-  );
-}
+asyncFetch("https://api-op3o.onrender.com/transactions/stats").then(
+  (response) =>
+    response.ok &&
+    State.update({
+      projectsCount: response.body.projects.total,
+      vendorsCount: response.body.vendors.total,
+      investorsCount: response.body.backers.total,
+      requestsCount: response.body.requests.total,
+      projectsTodayCount: response.body.projects.today,
+      vendorsTodayCount: response.body.vendors.today,
+      investorsTodayCount: response.body.backers.today,
+      requestsTodayCount: response.body.requests.today,
+    })
+);
 
-if (!state.totalRaisedIsFetched) {
-  asyncFetch("https://api-op3o.onrender.com/atlas/total-raised").then(
-    (response) =>
-      response.ok &&
-      State.update({ totalRaised: response.body, totalRaisedIsFetched: true })
-  );
-}
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
 
 return (
   <Container>
-    <Heading>
-      <h1>Discover NEAR Horizon</h1>
-      <h2>Explore projects, vendors, investors and contribution requests</h2>
-    </Heading>
-    <div>
-      <h2>Ecosystem stats</h2>
+    <Header>
+      <Heading>
+        <h1>Explore NEAR Horizon</h1>
+        <h2>Building, connecting and skyrocketing great projects</h2>
+      </Heading>
       <Stats>
-        <Widget
-          src={`${ownerId}/widget/Stats.Card`}
-          props={{
-            value: "750",
-            label: "Projects",
-          }}
-        />
-        <Widget
-          src={`${ownerId}/widget/Stats.Card`}
-          props={{
-            value: state.statsIsFetched
-              ? Number(state.stats.MAU).toLocaleString("en-US", {
-                  notation: "compact",
-                }) + "+"
-              : "Loading...",
-            label: "Monthly active accounts",
-          }}
-        />
-        <Widget
-          src={`${ownerId}/widget/Stats.Card`}
-          props={{
-            value: state.statsIsFetched
-              ? Number(state.stats.TOTAL_ACCOUNTS).toLocaleString("en-US", {
-                  notation: "compact",
-                }) + "+"
-              : "Loading...",
-            label: "Total accounts",
-          }}
-        />
-        <Widget
-          src={`${ownerId}/widget/Stats.Card`}
-          props={{
-            value:
-              Number(state.totalRaised).toLocaleString("en-US", {
-                notation: "compact",
-              }) + "+",
-            label: "Raised",
-          }}
-        />
-        <Widget src={`${ownerId}/widget/Stats.Link`} />
+        <Stat>
+          <div className="number">
+            <div>{state.projectsCount}</div>
+            <span>+{state.projectsTodayCount}</span>
+          </div>
+          <div className="label">Projects</div>
+        </Stat>
+        <Stat>
+          <div className="number">
+            <div>{state.requestsCount}</div>
+            <span>+{state.requestsTodayCount}</span>
+          </div>
+          <div className="label">Requests</div>
+        </Stat>
+        <Stat>
+          <div className="number">
+            <div>{state.vendorsCount}</div>
+            <span>+{state.vendorsTodayCount}</span>
+          </div>
+          <div className="label">Conrtibutors</div>
+        </Stat>
+        <Stat>
+          <div className="number">
+            <div>{state.investorsCount}</div>
+            <span>+{state.investorsTodayCount}</span>
+          </div>
+          <div className="label">Backers</div>
+        </Stat>
       </Stats>
-    </div>
+    </Header>
     <div>{contentSelector}</div>
     <Filters>
       <Widget
