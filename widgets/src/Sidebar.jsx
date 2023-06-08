@@ -246,7 +246,6 @@ const NavItem = styled.a`
 `;
 
 const CountIndicator = styled.div`
-  display: ${({ show }) => (show ? "inline-block" : "none")};
   border-radius: 100%;
   background-color: #f04438;
   min-width: 1.5em;
@@ -255,6 +254,9 @@ const CountIndicator = styled.div`
   text-align: center;
   position: absolute;
   inset: auto 0.5em auto auto;
+  align-items: center;
+  justify-content: center;
+  display: ${({ show }) => (show ? "flex" : "none")};
 `;
 
 const navItem = ({ text, icon, id, count }) => (
