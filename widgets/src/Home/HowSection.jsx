@@ -1,4 +1,5 @@
-const key = `${ownerId}-how-section-dismissed`;
+const ownerId = "nearhorizon.near";
+const key = `${context.accountId}-how-section-dismissed`;
 const dismissed = Storage.get(key) === "true";
 
 if (dismissed) {
