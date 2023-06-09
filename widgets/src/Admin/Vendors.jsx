@@ -22,7 +22,10 @@ return (
       items: state.items,
       full: true,
       createItem: (accountId) => (
-        <Widget src={`${ownerId}/widget/Vendor.Card`} props={{ accountId }} />
+        <Widget
+          src={`${ownerId}/widget/Vendor.Card`}
+          props={{ accountId, large: true }}
+        />
       ),
     }}
   />
