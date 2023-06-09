@@ -74,6 +74,7 @@ const filters = props.filters ?? {
         { text: "Series A", value: "series-a" },
         { text: "Series B", value: "series-b" },
         { text: "Series C", value: "series-c" },
+        { text: "Series D", value: "series-d" },
       ],
     },
   ],
