@@ -7,7 +7,7 @@ use axum::{
     Json, Router,
 };
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use sqlx::Row;
 
 use crate::{routes::data::set_deserialize, AppState};
@@ -137,7 +137,7 @@ impl Sort {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[serde(rename_all(deserialize = "lowercase"))]
 pub enum RequestType {
     OneTime,
@@ -146,18 +146,72 @@ pub enum RequestType {
     FullTime,
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
+pub fn type_deserialize<'de, D>(deserializer: D) -> Result<Option<HashSet<RequestType>>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    Ok(Some(
+        s.split(',')
+            .filter_map(|s| match s {
+                "onetime" => Some(RequestType::OneTime),
+                "short" => Some(RequestType::Short),
+                "long" => Some(RequestType::Long),
+                "fulltime" => Some(RequestType::FullTime),
+                _ => None,
+            })
+            .collect(),
+    ))
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[serde(rename_all(deserialize = "lowercase"))]
 pub enum PaymentType {
     FlatRate,
     TimeBased,
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone, Copy)]
+pub fn payment_deserialize<'de, D>(
+    deserializer: D,
+) -> Result<Option<HashSet<PaymentType>>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    Ok(Some(
+        s.split(',')
+            .filter_map(|s| match s {
+                "flatrate" => Some(PaymentType::FlatRate),
+                "timebased" => Some(PaymentType::TimeBased),
+                _ => None,
+            })
+            .collect(),
+    ))
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[serde(rename_all(deserialize = "lowercase"))]
 pub enum PaymentSource {
     Credits,
     Other,
+}
+
+pub fn source_deserialize<'de, D>(
+    deserializer: D,
+) -> Result<Option<HashSet<PaymentSource>>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    Ok(Some(
+        s.split(',')
+            .filter_map(|s| match s {
+                "credits" => Some(PaymentSource::Credits),
+                "other" => Some(PaymentSource::Other),
+                _ => None,
+            })
+            .collect(),
+    ))
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, Default)]
@@ -166,12 +220,14 @@ pub struct Params {
     pub sort: Sort,
     #[serde(default, deserialize_with = "set_deserialize")]
     pub tags: Option<HashSet<String>>,
-    #[serde(rename = "type")]
-    pub request_type: Option<RequestType>,
-    pub payment: Option<PaymentType>,
-    pub source: Option<PaymentSource>,
-    #[serde(default, deserialize_with = "size_deserialize")]
-    pub budget: Option<(u32, u32)>,
+    #[serde(rename = "type", default, deserialize_with = "type_deserialize")]
+    pub request_type: Option<HashSet<RequestType>>,
+    #[serde(default, deserialize_with = "payment_deserialize")]
+    pub payment: Option<HashSet<PaymentType>>,
+    #[serde(default, deserialize_with = "source_deserialize")]
+    pub source: Option<HashSet<PaymentSource>>,
+    #[serde(default, deserialize_with = "super::projects::size_deserialize")]
+    pub budget: Option<HashSet<(u32, u32)>>,
     pub by: Option<u64>,
     pub from: Option<u32>,
     pub limit: Option<u32>,
@@ -211,8 +267,14 @@ pub async fn all_requests(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("requests.request_type = ");
-        builder.push_bind(serde_json::to_string(&request_type).unwrap());
+        builder.push("requests.request_type = ANY (");
+        builder.push_bind(
+            request_type
+                .into_iter()
+                .map(|r| serde_json::to_string(&r).unwrap())
+                .collect::<Vec<_>>(),
+        );
+        builder.push(" ) ");
     }
 
     if let Some(payment) = params.payment {
@@ -222,8 +284,14 @@ pub async fn all_requests(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("requests.payment_type = ");
-        builder.push_bind(serde_json::to_string(&payment).unwrap());
+        builder.push("requests.payment_type = ANY (");
+        builder.push_bind(
+            payment
+                .into_iter()
+                .map(|p| serde_json::to_string(&p).unwrap())
+                .collect::<Vec<_>>(),
+        );
+        builder.push(" ) ");
     }
 
     if let Some(source) = params.source {
@@ -233,21 +301,34 @@ pub async fn all_requests(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("requests.source = ");
-        builder.push_bind(serde_json::to_string(&source).unwrap());
+        builder.push("requests.source = ANY (");
+        builder.push_bind(
+            source
+                .into_iter()
+                .map(|s| serde_json::to_string(&s).unwrap())
+                .collect::<Vec<_>>(),
+        );
+        builder.push(" ) ");
     }
 
-    if let Some((from, to)) = params.budget {
+    if let Some(budget) = params.budget {
         if has_where {
             builder.push(" AND ");
         } else {
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("requests.budget BETWEEN ");
-        builder.push_bind(from as i64);
-        builder.push(" AND ");
-        builder.push_bind(to as i64);
+        builder.push(" ( ");
+        for (i, (from, to)) in budget.into_iter().enumerate() {
+            if i != 0 {
+                builder.push(" OR ");
+            }
+            builder.push(" requests.budget BETWEEN ");
+            builder.push_bind(from as i64);
+            builder.push(" AND ");
+            builder.push_bind(to as i64);
+        }
+        builder.push(" ) ");
     }
 
     if let Some(by) = params.by {
