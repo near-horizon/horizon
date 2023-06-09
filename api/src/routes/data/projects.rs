@@ -11,11 +11,11 @@ use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
 use crate::{
-    routes::data::{Completion, CompletionPair, set_deserialize},
+    routes::data::{set_deserialize, Completion, CompletionPair},
     AppState,
 };
 
-pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<(u32, u32)>, D::Error>
+pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<HashSet<(u32, u32)>>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
@@ -23,26 +23,32 @@ where
     if s.is_empty() {
         return Ok(None);
     }
-    let parts: Vec<_> = s.split('-').collect();
-    if parts.is_empty() {
-        return Ok(None);
-    }
-    let Some(from) = parts.first() else {
-        return Ok(None);
-    };
-    let Some(to) = parts.get(1) else {
-        return Ok(None);
-    };
-    let Ok(from) = from.parse::<u32>() else {
-        return Ok(None);
-    };
-    let Ok(to) = to.parse::<u32>() else {
-        return Ok(None);
-    };
-    if from > to {
-        return Ok(None);
-    }
-    Ok(Some((from, to)))
+    Ok(Some(
+        s.split(",")
+            .filter_map(|range| {
+                let parts: Vec<_> = range.split('-').collect();
+                if parts.is_empty() && parts.len() != 2 {
+                    return None;
+                }
+                let Some(from) = parts.first() else {
+                return None;
+            };
+                let Some(to) = parts.last() else {
+                return None;
+            };
+                let Ok(from) = from.parse::<u32>() else {
+                return None;
+            };
+                let Ok(to) = to.parse::<u32>() else {
+                return None;
+            };
+                if from > to {
+                    return None;
+                }
+                Some((from, to))
+            })
+            .collect(),
+    ))
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, Copy, Default)]
@@ -122,12 +128,16 @@ pub struct Params {
     pub sort: Sort,
     #[serde(default, deserialize_with = "set_deserialize")]
     pub vertical: Option<HashSet<String>>,
-    pub integration: Option<String>,
-    pub dev: Option<String>,
-    pub stage: Option<String>,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub integration: Option<HashSet<String>>,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub dev: Option<HashSet<String>>,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub stage: Option<HashSet<String>>,
     #[serde(default, deserialize_with = "size_deserialize")]
-    pub size: Option<(u32, u32)>,
-    // pub oss: Option<bool>,
+    pub size: Option<HashSet<(u32, u32)>>,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub distribution: Option<HashSet<String>>,
     pub from: Option<u32>,
     pub limit: Option<u32>,
     #[serde(rename = "q")]
@@ -166,8 +176,9 @@ pub async fn all_projects(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("projects.integration = ");
-        builder.push_bind(integration);
+        builder.push("projects.integration = ANY (");
+        builder.push_bind(integration.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
     }
 
     if let Some(stage) = params.stage {
@@ -177,32 +188,44 @@ pub async fn all_projects(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("projects.dev = ");
-        builder.push_bind(stage);
+        builder.push("projects.dev = ANY (");
+        builder.push_bind(stage.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
     }
 
-    if let Some((from, to)) = params.size {
+    if let Some(sizes) = params.size {
         if has_where {
             builder.push(" AND ");
         } else {
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("(SELECT COUNT(*) FROM jsonb_object_keys(projects.team)) + array_length(projects.founders, 1) BETWEEN ");
-        builder.push_bind(from as i32);
-        builder.push(" AND ");
-        builder.push_bind(to as i32);
+        builder.push(" ( ");
+        let statement = "(SELECT COUNT(*) FROM jsonb_object_keys(projects.team)) + array_length(projects.founders, 1) BETWEEN ";
+
+        for (i, (from, to)) in sizes.into_iter().enumerate() {
+            if i > 0 {
+                builder.push(" OR ");
+            }
+            builder.push(statement);
+            builder.push_bind(from as i32);
+            builder.push(" AND ");
+            builder.push_bind(to as i32);
+        }
+        builder.push(" ) ");
     }
 
-    // if let Some(oss) = params.oss {
-    //     if has_where {
-    //         builder.push(" AND ");
-    //     } else {
-    //         builder.push("WHERE ");
-    //     }
-    //     builder.push("projects.oss = ");
-    //     builder.push_bind(oss);
-    // }
+    if let Some(distribution) = params.distribution {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push("projects.distribution = ANY (");
+        builder.push_bind(distribution.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
+    }
 
     if let Some(search) = params.search {
         if has_where {

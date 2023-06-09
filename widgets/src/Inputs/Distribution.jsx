@@ -1,27 +1,27 @@
 const ownerId = "nearhorizon.near";
 
 const options = [
-  { text: "Yes", value: "yes" },
+  { text: "Open source", value: "open-source" },
   { text: "Partial", value: "partial" },
-  { text: "No", value: "no" },
+  { text: "Proprietery", value: "proprietery" },
 ];
 
 return (
   <Widget
     src={`${ownerId}/widget/Inputs.Select`}
     props={{
-      label: "Is your project open source?",
+      label: "What is your projects distribution model?",
       noLabel: props.noLabel,
-      placeholder: "Yes",
+      placeholder: "Open source",
       options,
-      value: props.oss,
-      onChange: (oss) => props.update(oss),
+      value: props.distribution,
+      onChange: (distribution) => props.update(distribution),
       validate: () => {
-        if (!props.oss) {
+        if (!props.distribution) {
           props.setError("Please select a valid option");
         }
 
-        if (!options.find(({ value }) => props.oss.value === value)) {
+        if (!options.find(({ value }) => props.distribution.value === value)) {
           props.setError("Please select a valid option");
         }
       },

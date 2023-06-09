@@ -145,6 +145,16 @@ return (
       }}
     />
     <Widget
+      src={`${ownerId}/widget/Inputs.Viewable.Distribution`}
+      props={{
+        label: "Distribution",
+        value: state.profile.distribution,
+        onSave: ({ value: distribution }) =>
+          onSave({ profile: { distribution } }),
+        canEdit: isAdmin,
+      }}
+    />
+    <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Number`}
       props={{
         label: "User base (MAA)",
@@ -173,46 +183,6 @@ return (
         onSave: ([{ name: stage }]) => onSave({ stage }),
         canEdit: isAdmin,
       }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Number`}
-      props={{
-        label: "Funding goal",
-        id: "goal",
-        value: 1000000,
-        onSave: (goal) => onSave({ goal }),
-        canEdit: isAdmin,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Number`}
-      props={{
-        label: "Raised",
-        id: "raised",
-        value: 600000,
-        onSave: (raised) => onSave({ raised }),
-        canEdit: isAdmin,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.AccountId`}
-      props={{
-        label: "CEO",
-        id: "ceo",
-        value: state.profile.ceo,
-        onSave: (ceo) => onSave({ profile: { ceo } }),
-        canEdit: isAdmin,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.AccountId`}
-      props={{
-        label: "CTO",
-        id: "cto",
-        value: state.profile.cto,
-        onSave: (cto) => onSave({ profile: { cto } }),
-        canEdit: isAdmin,
-      }}
     />*/}
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Number`}
@@ -224,30 +194,6 @@ return (
         canEdit: isAdmin,
       }}
     />
-    {/*<Widget
-      src={`${ownerId}/widget/Inputs.Viewable.Tags`}
-      props={{
-        label: "Tags",
-        id: "tags",
-        value: Object.keys(state.profile.tags ?? {}).map((name) => ({ name })),
-        options: [
-          { name: "defi" },
-          { name: "exchange" },
-          { name: "staking" },
-          { name: "farming" },
-        ],
-        onSave: (tags) =>
-          onSave({
-            profile: {
-              tags: tags.reduce(
-                (acc, { name }) => ({ ...acc, [name]: "" }),
-                {}
-              ),
-            },
-          }),
-        canEdit: isAdmin,
-      }}
-    />*/}
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Text`}
       props={{
