@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
-use crate::{route::data::set_deserialize, AppState};
+use crate::{routes::data::set_deserialize, AppState};
 
 pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<(u32, u32)>, D::Error>
 where
