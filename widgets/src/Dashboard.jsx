@@ -192,7 +192,7 @@ return (
       props={{
         title: "Projects",
         count: state.projectsCount,
-        link: `${ownerId}/widget/Index?tab=projects`,
+        link: `/${ownerId}/widget/Index?tab=projects`,
         linkText: "See all projects",
         items: state.projects,
         renderItem: (item) => (
@@ -208,7 +208,7 @@ return (
       props={{
         title: "Requests",
         count: state.requestsCount,
-        link: `${ownerId}/widget/Index?tab=requests`,
+        link: `/${ownerId}/widget/Index?tab=requests`,
         linkText: "See all requests",
         items: state.requests,
         renderItem: (item) => (
@@ -227,7 +227,7 @@ return (
       props={{
         title: "Contributors",
         count: state.vendorsCount,
-        link: `${ownerId}/widget/Index?tab=vendors`,
+        link: `/${ownerId}/widget/Index?tab=vendors`,
         linkText: "See all contributors",
         items: state.vendors,
         renderItem: (item) => (
@@ -243,7 +243,7 @@ return (
       props={{
         title: "Backers",
         count: state.investorsCount,
-        link: `${ownerId}/widget/Index?tab=investors`,
+        link: `/${ownerId}/widget/Index?tab=investors`,
         linkText: "See all backers",
         items: state.investors,
         renderItem: (item) => (
