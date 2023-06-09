@@ -758,7 +758,7 @@ return (
             ));
           })}
         </Row>
-        <Row className="bottom">
+        {/*<Row className="bottom">
           <span>Quick filters:</span>
           {quickFilters.map(({ text, value, key }) => (
             <button
@@ -775,7 +775,7 @@ return (
               {text}
             </button>
           ))}
-        </Row>
+        </Row>*/}
       </>
     )}
   </>
