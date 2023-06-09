@@ -26,7 +26,7 @@ pub struct Social {
     #[serde(default)]
     pub linktree: HashMap<String, String>,
     #[serde(default)]
-    pub vertical: HashMap<String, String>,
+    pub verticals: HashMap<String, String>,
     #[serde(default)]
     pub category: String,
     #[serde(default)]
@@ -67,7 +67,7 @@ impl Completion for Project {
             self.profile.website.is_empty(),
             self.profile.tagline.is_empty(),
             self.profile.linktree.is_empty(),
-            self.profile.vertical.is_empty(),
+            self.profile.verticals.is_empty(),
             self.profile.category.is_empty(),
             self.profile.stage.is_empty(),
             self.profile.userbase.is_empty(),
@@ -195,7 +195,7 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             project.profile.website,
             project.profile.tagline,
             serde_json::to_value(project.profile.linktree)?,
-            serde_json::to_value(project.profile.vertical)?,
+            serde_json::to_value(project.profile.verticals)?,
             project.profile.stage,
             project.profile.userbase.parse::<i32>().unwrap_or(0),
             project.horizon.credits,
