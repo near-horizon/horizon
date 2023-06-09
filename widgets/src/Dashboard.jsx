@@ -186,7 +186,7 @@ return (
         </Stat>
       </Stats>
     </Header>
-    <div>{contentSelector}</div>
+    <Widget src={`${ownerId}/widget/Home.HowSection`} />
     <Widget
       src={`${ownerId}/widget/Home.ListSection`}
       props={{
