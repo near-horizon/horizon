@@ -141,7 +141,7 @@ const body = (
     <Details>
       <Widget
         src={`${ownerId}/widget/Project.Icon`}
-        props={{ accountId: props.accountId, size: "2em" }}
+        props={{ accountId: props.accountId, size: "30px" }}
       />
       <Widget
         src={`${ownerId}/widget/NameAndAccount`}

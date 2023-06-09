@@ -200,7 +200,7 @@ const body = (
       <a href={`/${ownerId}/widget/Index?tab=vendor&accountId=${accountId}`}>
         <Widget
           src={`${ownerId}/widget/Vendor.Icon`}
-          props={{ accountId: props.accountId, size: "4em" }}
+          props={{ accountId: props.accountId, size: "64px" }}
         />
       </a>
       <Details>
