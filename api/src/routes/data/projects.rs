@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
 use crate::{
-    routes::data::{Completion, CompletionPair},
+    routes::data::{Completion, CompletionPair, set_deserialize},
     AppState,
 };
 
@@ -120,6 +120,7 @@ impl Sort {
 pub struct Params {
     #[serde(default)]
     pub sort: Sort,
+    #[serde(default, deserialize_with = "set_deserialize")]
     pub vertical: Option<HashSet<String>>,
     pub integration: Option<String>,
     pub dev: Option<String>,

@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
-use crate::AppState;
+use crate::{route::data::set_deserialize, AppState};
 
 pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<(u32, u32)>, D::Error>
 where
@@ -164,6 +164,7 @@ pub enum PaymentSource {
 pub struct Params {
     #[serde(default)]
     pub sort: Sort,
+    #[serde(default, deserialize_with = "set_deserialize")]
     pub tags: Option<HashSet<String>>,
     #[serde(rename = "type")]
     pub request_type: Option<RequestType>,

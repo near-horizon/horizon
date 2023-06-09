@@ -10,6 +10,18 @@ pub mod projects;
 pub mod requests;
 pub mod vendors;
 
+pub fn set_deserialize<'de, D>(deserializer: D) -> Result<Option<HashSet<String>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    if s.is_empty() {
+        return Ok(None);
+    }
+    let set = s.split(',').map(|s| s.to_string()).collect();
+    Ok(Some(set))
+}
+
 #[derive(Deserialize, Serialize, Debug, Clone, Default)]
 pub struct CompletionPair {
     id: String,
