@@ -164,26 +164,24 @@ return (
         canEdit: isAdmin,
       }}
     />
-    {/*<Widget
+    <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Select`}
       props={{
         label: "Stage",
         id: "stage",
-        value: [{ name: "Pre-Seed" }],
+        value: state.profile.stage,
         options: [
-          { name: "Pre-Seed" },
-          { name: "Seed" },
-          { name: "Series A" },
-          { name: "Series B" },
-          { name: "Series C" },
-          { name: "Series D" },
-          { name: "Late Stage" },
-          { name: "IPO" },
+          { text: "Pre-seed", value: "pre-seed" },
+          { text: "Seed", value: "seed" },
+          { text: "Series A", value: "series-a" },
+          { text: "Series B", value: "series-b" },
+          { text: "Series C", value: "series-c" },
+          { text: "Series D", value: "series-d" },
         ],
-        onSave: ([{ name: stage }]) => onSave({ stage }),
+        onSave: ({ value: stage }) => onSave({ profile: { stage } }),
         canEdit: isAdmin,
       }}
-    />*/}
+    />
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.Number`}
       props={{

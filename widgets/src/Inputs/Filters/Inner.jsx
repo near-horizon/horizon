@@ -70,7 +70,8 @@ const filters = props.filters ?? {
       text: "Funding stage",
       value: "stage",
       options: [
-        { text: "Pre seed", value: "pre-seed" },
+        { text: "Pre-seed", value: "pre-seed" },
+        { text: "Seed", value: "seed" },
         { text: "Series A", value: "series-a" },
         { text: "Series B", value: "series-b" },
         { text: "Series C", value: "series-c" },
