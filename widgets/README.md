@@ -1,1 +1,1 @@
-## Web3 Combinator UI
+## Horizon UI
