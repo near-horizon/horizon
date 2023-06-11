@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
 use crate::{
-    routes::data::{Completion, CompletionPair},
+    routes::data::{set_deserialize, Completion, CompletionPair},
     AppState,
 };
 
@@ -90,6 +90,8 @@ impl Sort {
 pub struct Params {
     #[serde(default)]
     pub sort: Sort,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub vertical: Option<HashSet<String>>,
     pub from: Option<u32>,
     pub limit: Option<u32>,
     #[serde(rename = "q")]
@@ -112,6 +114,8 @@ pub async fn all_investors(
 
     builder.push(join);
 
+    let mut has_where = false;
+
     if let Some(search) = params.search {
         let search = format!("%{search}%");
         builder.push(" WHERE (investors.name ILIKE ");
@@ -123,6 +127,18 @@ pub async fn all_investors(
         builder.push(" OR investors.description ILIKE ");
         builder.push_bind(search);
         builder.push(") ");
+        has_where = true;
+    }
+
+    if let Some(verticals) = params.vertical {
+        if !has_where {
+            builder.push(" WHERE ");
+        } else {
+            builder.push(" AND ");
+        }
+        let verticals = verticals.into_iter().collect::<Vec<_>>();
+        builder.push(" investors.vertical ?| ");
+        builder.push_bind(verticals);
     }
 
     builder.push(format!(" {order_by}"));

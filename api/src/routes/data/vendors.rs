@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
 use crate::{
-    routes::data::{Completion, CompletionPair},
+    routes::data::{projects::size_deserialize, set_deserialize, Completion, CompletionPair},
     AppState,
 };
 
@@ -86,12 +86,31 @@ impl Sort {
     }
 }
 
+pub fn bool_set_deserializer<'de, D>(deserializer: D) -> Result<Option<HashSet<bool>>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let v = String::deserialize(deserializer)?;
+    Ok(Some(v.split(",").map(|s| s == "true").collect()))
+}
+
 #[derive(Deserialize, Serialize, Debug, Clone, Default)]
 pub struct Params {
     #[serde(default)]
     pub sort: Sort,
     pub from: Option<u32>,
-    pub verified: Option<bool>,
+    #[serde(default, deserialize_with = "bool_set_deserializer")]
+    pub verified: Option<HashSet<bool>>,
+    #[serde(default, deserialize_with = "bool_set_deserializer")]
+    pub active: Option<HashSet<bool>>,
+    #[serde(default, alias = "type", deserialize_with = "set_deserialize")]
+    pub org_type: Option<HashSet<String>>,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub payment_type: Option<HashSet<String>>,
+    #[serde(default, deserialize_with = "set_deserialize")]
+    pub work: Option<HashSet<String>>,
+    #[serde(default, deserialize_with = "size_deserialize")]
+    pub rate: Option<HashSet<(u32, u32)>>,
     pub limit: Option<u32>,
     #[serde(rename = "q")]
     pub search: Option<String>,
@@ -116,9 +135,78 @@ pub async fn all_vendors(
     let mut has_where = false;
 
     if let Some(verified) = params.verified {
-        builder.push(" WHERE vendors.verified = ");
-        builder.push_bind(verified);
+        builder.push(" WHERE vendors.verified = ANY (");
+        builder.push_bind(verified.into_iter().collect::<Vec<bool>>());
+        builder.push(") ");
         has_where = true;
+    }
+
+    if let Some(active) = params.active {
+        if !has_where {
+            builder.push(" WHERE ");
+            has_where = true;
+        } else {
+            builder.push(" AND ");
+        }
+        builder.push(" vendors.active = ANY (");
+        builder.push_bind(active.into_iter().collect::<Vec<bool>>());
+        builder.push(") ");
+    }
+
+    if let Some(org_type) = params.org_type {
+        if !has_where {
+            builder.push(" WHERE ");
+            has_where = true;
+        } else {
+            builder.push(" AND ");
+        }
+        builder.push(" vendors.vendor_type = ANY (");
+        builder.push_bind(org_type.into_iter().collect::<Vec<String>>());
+        builder.push(") ");
+    }
+
+    if let Some(payment_type) = params.payment_type {
+        if !has_where {
+            builder.push(" WHERE ");
+            has_where = true;
+        } else {
+            builder.push(" AND ");
+        }
+        builder.push(" vendors.payments = ANY (");
+        builder.push_bind(payment_type.into_iter().collect::<Vec<String>>());
+        builder.push(") ");
+    }
+
+    if let Some(work) = params.work {
+        if !has_where {
+            builder.push(" WHERE ");
+            has_where = true;
+        } else {
+            builder.push(" AND ");
+        }
+        builder.push(" vendors.work = ANY (");
+        builder.push_bind(work.into_iter().collect::<Vec<String>>());
+        builder.push(") ");
+    }
+
+    if let Some(rate) = params.rate {
+        if !has_where {
+            builder.push(" WHERE ");
+            has_where = true;
+        } else {
+            builder.push(" AND ");
+        }
+        builder.push(" ( ");
+        for (i, (min, max)) in rate.into_iter().enumerate() {
+            if i > 0 {
+                builder.push(" OR ");
+            }
+            builder.push(" vendors.rate BETWEEN ");
+            builder.push_bind(min as i32);
+            builder.push(" AND ");
+            builder.push_bind(max as i32);
+        }
+        builder.push(" ) ");
     }
 
     if let Some(search) = params.search {

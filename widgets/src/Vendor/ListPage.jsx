@@ -4,10 +4,39 @@ const getFilters = () => {
   if (urlProps.sort) {
     Storage.set("vendors-sort", urlProps.sort);
   }
+
+  return ["verified", "active", "type", "payment_type", "rate", "work"].reduce(
+    (acc, key) =>
+      urlProps[key]
+        ? Object.assign(acc, {
+            [key]: new Set(urlProps[key].split(",")),
+          })
+        : acc,
+    {}
+  );
+};
+
+const selected = () => {
+  const selectedKeys = Object.keys(state.filters);
+  return (
+    selectedKeys.length > 0 &&
+    selectedKeys.some((key) => state.filters[key].size > 0)
+  );
 };
 
 const url = () => {
   const urlString = "";
+
+  if (selected()) {
+    const selectedKeys = Object.keys(state.filters);
+
+    urlString += selectedKeys
+      .map((key) => {
+        const values = Array.from(state.filters[key]);
+        return `${key}=${values.join(",")}`;
+      })
+      .join("&");
+  }
 
   if (state.search) {
     if (urlString.length > 0) {
@@ -23,9 +52,8 @@ const url = () => {
   return urlString;
 };
 
-getFilters();
-
 State.init({
+  filters: getFilters(),
   search: urlProps.q,
   sort: urlProps.sort,
   vendors: null,
@@ -64,9 +92,65 @@ return (
     <Widget
       src={`${ownerId}/widget/Inputs.Filters`}
       props={{
-        noFilters: true,
+        urlFilters: state.filters,
         search: state.search,
         entity: "vendors",
+        filters: {
+          first: {
+            text: "Verification",
+            value: "verified",
+            options: [
+              { text: "Verified", value: "true" },
+              { text: "Unverified", value: "false" },
+            ],
+          },
+          second: [
+            {
+              text: "Status",
+              value: "active",
+              options: [
+                { text: "Active", value: "true" },
+                { text: "Inactive", value: "false" },
+              ],
+            },
+            {
+              text: "Type",
+              value: "type",
+              options: [
+                { text: "Individual", value: "individual" },
+                { text: "Organization", value: "organization" },
+              ],
+            },
+            {
+              text: "Payment type",
+              value: "payment_type",
+              options: [
+                { text: "Fiat", value: "fiat" },
+                { text: "Crypto", value: "crypto" },
+                { text: "Credits", value: "credits" },
+              ],
+            },
+            {
+              text: "Rate",
+              value: "rate",
+              options: [
+                { text: "1-10", value: "1-10" },
+                { text: "10-100", value: "10-100" },
+                { text: "100-1000", value: "100-1000" },
+              ],
+            },
+            {
+              text: "Work type",
+              value: "work",
+              options: [
+                { text: "One time", value: "onetime" },
+                { text: "Short", value: "short" },
+                { text: "Long", value: "long" },
+                { text: "Full time", value: "fulltime" },
+              ],
+            },
+          ],
+        },
       }}
     />
     <Widget
