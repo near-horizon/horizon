@@ -1,4 +1,4 @@
-# NEAR Contribute
+# Horizon
 
 This smart contract serves as an extension to SocialDB to maintain the entity <> contributor relations.
 One can relate this to the LinkedIn graph of employment in Web2.
