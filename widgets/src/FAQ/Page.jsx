@@ -163,7 +163,7 @@ return (
       Horizon
       <br/>
       <img
-        src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_app_landing.png"
+        src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_landing.jpg"
         alt="horizon app landing page"
         width="50%"
       />
@@ -223,11 +223,24 @@ return (
       You can search all current projects on the NEAR Horizon Application page
     </p>
     <img
-      src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_project_search.jpg"
+      src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_all-projects.jpg"
       alt="Project search"
       width="50%"
     />
-    <br/>
+   
+      <p>In addition to the search bar, you can apply various filters to your search</p>
+      <img
+      src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_projects_filters.jpg"
+      alt="Project search"
+      width="50%"
+      />
+      <p>There is also a sort feature for displaying results</p>
+      <img
+      src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_projects_sort.jpg"
+      alt="Project search"
+      width="50%"
+      />
+     <br/>
     </Section>
     <Section>
       <h4>Are there analytics?</h4>
@@ -240,7 +253,7 @@ return (
       to collect on-chain data.
     </p>
     <img
-      src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_stats.jpg"
+      src="https://s3.us-east-2.amazonaws.com/nearhorizon.assets/nh_stats_new.jpg"
       alt="atlas stats"
       width="50%"
     />
