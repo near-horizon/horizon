@@ -172,7 +172,7 @@ return (
           <div className="number">
             <div>{state.vendorsCount}</div>
           </div>
-          <div className="label">Conrtibutors</div>
+          <div className="label">Contributors</div>
         </Stat>
         <Stat>
           <div className="number">
