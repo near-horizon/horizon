@@ -174,6 +174,7 @@ const tabContent = {
       props={{ accountId: state.accountId }}
     />
   ),
+  faq: <Widget src={`${ownerId}/widget/FAQ.Page`} />,
   help: (
     <Widget
       src={`${ownerId}/widget/Help.Page`}
