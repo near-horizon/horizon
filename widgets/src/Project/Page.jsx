@@ -238,7 +238,7 @@ return (
                       Near.call(ownerId, "apply_for_program", {
                         account_id: accountId,
                       }),
-                    text: <>{circledPlus}Apply to accelerator</>,
+                    text: <>{circledPlus}Apply for credits</>,
                   }}
                 />
               ) : (
@@ -248,6 +248,24 @@ return (
                 href={`/${ownerId}/widget/Index?tab=createrequest&accountId=${accountId}`}
               >
                 {plus}Create request
+              </GreyButton>
+              <GreyButton href={`/${ownerId}/widget/Index?tab=partners`}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 11.2502L6.75 9.00019M9 11.2502C10.0476 10.8517 11.0527 10.3492 12 9.75019M9 11.2502V15.0002C9 15.0002 11.2725 14.5877 12 13.5002C12.81 12.2852 12 9.75019 12 9.75019M6.75 9.00019C7.14911 7.96476 7.65165 6.97223 8.25 6.03769C9.12389 4.64043 10.3407 3.48997 11.7848 2.69575C13.2288 1.90154 14.852 1.48996 16.5 1.50019C16.5 3.54019 15.915 7.12519 12 9.75019M6.75 9.00019H3C3 9.00019 3.4125 6.72769 4.5 6.00019C5.715 5.19019 8.25 6.00019 8.25 6.00019M3.375 12.3752C2.25 13.3202 1.875 16.1252 1.875 16.1252C1.875 16.1252 4.68 15.7502 5.625 14.6252C6.1575 13.9952 6.15 13.0277 5.5575 12.4427C5.26598 12.1644 4.88197 12.0037 4.47917 11.9912C4.07637 11.9787 3.68316 12.1155 3.375 12.3752Z"
+                    stroke="#006ADC"
+                    stroke-width="1.66667"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                Apply to accelerator
               </GreyButton>
             </>
           ) : (

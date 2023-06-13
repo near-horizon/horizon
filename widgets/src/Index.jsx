@@ -212,6 +212,10 @@ const tabContent = {
       props={{ update, content: state.content, urlProps: props }}
     />
   ),
+  partners: <Widget src={`${ownerId}/widget/Application.Page`} />,
+  partner: (
+    <Widget src={`${ownerId}/widget/Application.DetailPage`} props={props} />
+  ),
 }[state.tab];
 
 const ContentContainer = styled.div`
