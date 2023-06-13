@@ -165,6 +165,7 @@ const items = [
     },
     linktree: {
       website: "outlierventures.io",
+      twitter: "OVioHQ",
     },
   },
   {
