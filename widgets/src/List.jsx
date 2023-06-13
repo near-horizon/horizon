@@ -58,7 +58,7 @@ return (
   <Container>
     <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
       <ListContainer full={props.full}>
-        {state.shown.filter(props.filter).map((args, index) => (
+        {state.shown.filter(props.filter).map((args) => (
           <div key={JSON.stringify(args)}>{createItem(args)}</div>
         ))}
       </ListContainer>

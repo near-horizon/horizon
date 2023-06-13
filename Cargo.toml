@@ -1,6 +1,6 @@
 [workspace]
 members = ["contract", "seed", "token", "awesome-near-fetcher", "aggregator"]
-exclude = ["api", "indexer", "project-data-cleaner"]
+exclude = ["api", "indexer", "project-data-cleaner", "airtable-sync"]
 
 [profile.release]
 codegen-units = 1
