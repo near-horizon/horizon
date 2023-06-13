@@ -75,6 +75,7 @@ const Items = styled.div`
   flex: none;
   order: 4;
   align-self: stretch;
+  flex-wrap: wrap;
   flex-grow: 0;
 `;
 
