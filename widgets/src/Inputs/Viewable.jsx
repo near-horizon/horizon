@@ -5,7 +5,7 @@ const view = props.view;
 const edit = props.edit ?? (() => <></>);
 const big = props.big ?? false;
 const noLabel = props.noLabel ?? false;
-const canEdit = props.canEdit ?? true;
+const canEdit = props.canEdit ?? false;
 const flexDirection = props.direction ?? "row";
 const editButtonText = props.editButtonText ?? "Edit";
 
