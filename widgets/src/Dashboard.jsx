@@ -159,28 +159,24 @@ return (
         <Stat>
           <div className="number">
             <div>{state.projectsCount}</div>
-            <span>+{state.projectsTodayCount}</span>
           </div>
           <div className="label">Projects</div>
         </Stat>
         <Stat>
           <div className="number">
             <div>{state.requestsCount}</div>
-            <span>+{state.requestsTodayCount}</span>
           </div>
           <div className="label">Requests</div>
         </Stat>
         <Stat>
           <div className="number">
             <div>{state.vendorsCount}</div>
-            <span>+{state.vendorsTodayCount}</span>
           </div>
           <div className="label">Conrtibutors</div>
         </Stat>
         <Stat>
           <div className="number">
             <div>{state.investorsCount}</div>
-            <span>+{state.investorsTodayCount}</span>
           </div>
           <div className="label">Backers</div>
         </Stat>
