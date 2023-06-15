@@ -95,6 +95,9 @@ return (
         urlFilters: state.filters,
         search: state.search,
         entity: "requests",
+        change: ({ filters, search }) => {
+          State.update({ filters, search, vendorsIsFetched: false });
+        },
         filters: {
           first: {
             text: "Tags",

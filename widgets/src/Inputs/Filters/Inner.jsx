@@ -563,6 +563,11 @@ return (
           placeholder="Search"
           type="search"
           value={state.search}
+          onKeyUp={({ key }) => {
+            if (key === "Enter") {
+              props.change({ filters: state.value, search: state.search });
+            }
+          }}
           onChange={({ target: { value } }) => State.update({ search: value })}
         />
       </Search>

@@ -31,6 +31,7 @@ return (
           noFilters: props.noFilters,
           filters: props.filters,
           quickFilters: props.quickFilters,
+          change: props.change,
         }}
       />
     </Root>
