@@ -104,7 +104,7 @@ return (
         search: state.search,
         entity: "projects",
         change: ({ filters, search }) => {
-          State.update({ filters, search, vendorsIsFetched: false });
+          State.update({ filters, search, projectsIsFetched: false });
         },
       }}
     />

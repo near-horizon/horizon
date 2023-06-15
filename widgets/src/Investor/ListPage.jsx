@@ -97,7 +97,7 @@ return (
         search: state.search,
         entity: "investors",
         change: ({ filters, search }) => {
-          State.update({ filters, search, vendorsIsFetched: false });
+          State.update({ filters, search, investorsIsFetched: false });
         },
         filters: {
           first: {
