@@ -10,7 +10,7 @@ if (!state.itemsIsFetched) {
   Near.asyncView(
     ownerId,
     "get_project_completed_contributions",
-    { account_id: context.accountId },
+    { account_id: props.accountId },
     "final",
     false
   ).then((items) => State.update({ items, itemsIsFetched: true }));
