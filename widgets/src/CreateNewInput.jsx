@@ -202,7 +202,7 @@ return (
         </li>
         {createNewButton({
           id: "createvendor",
-          text: "Vendor",
+          text: "Contributor",
           icon: (
             <svg
               width="19"
