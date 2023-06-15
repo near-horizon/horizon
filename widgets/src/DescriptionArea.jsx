@@ -45,6 +45,7 @@ const TextArea = styled.div`
   height: ${({ wrap }) => (wrap ? "unset" : "1.5em")};
 
   p {
+    max-width: 20ch;
     font-weight: 500;
   }
 `;
