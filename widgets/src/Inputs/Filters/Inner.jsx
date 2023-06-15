@@ -111,6 +111,12 @@ const Row = styled.div`
   width: 100%;
   gap: 30px;
 
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
   & > a {
     box-sizing: border-box;
     display: flex;
@@ -351,8 +357,12 @@ const CollapsibleContent = styled("Collapsible.Content")`
       gap: 6px;
 
       &.large {
-        flex-wrap: nowrap !important;
+        flex-wrap: nowrap;
         justify-content: space-between;
+
+        @media screen and (max-width: 1044px) {
+          flex-wrap: wrap;
+        }
       }
 
       & > div {

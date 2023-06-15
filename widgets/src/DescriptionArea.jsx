@@ -55,6 +55,10 @@ const Description = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 `;
 
 return (

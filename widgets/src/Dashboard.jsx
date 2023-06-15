@@ -39,21 +39,26 @@ const Container = styled.div`
 `;
 
 const Stats = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   padding: 1em 1.5em;
   gap: 1.75em;
   background: #fafafa;
   border-radius: 16px;
+  width: 100%;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const Stat = styled.a`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   padding: 0 1px;
   gap: 0.25em;
 
@@ -152,6 +157,15 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    flex-direction: column;
+  }
 `;
 
 return (
@@ -162,25 +176,25 @@ return (
         <h2>Building, connecting and skyrocketing great projects</h2>
       </Heading>
       <Stats>
-        <Stat href={`${ownerId}/widget/Index?tab=projects`}>
+        <Stat href={`/${ownerId}/widget/Index?tab=projects`}>
           <div className="number">
             <div>{state.projectsCount}</div>
           </div>
           <div className="label">Projects</div>
         </Stat>
-        <Stat href={`${ownerId}/widget/Index?tab=requests`}>
+        <Stat href={`/${ownerId}/widget/Index?tab=requests`}>
           <div className="number">
             <div>{state.requestsCount}</div>
           </div>
           <div className="label">Requests</div>
         </Stat>
-        <Stat href={`${ownerId}/widget/Index?tab=vendors`}>
+        <Stat href={`/${ownerId}/widget/Index?tab=vendors`}>
           <div className="number">
             <div>{state.vendorsCount}</div>
           </div>
           <div className="label">Contributors</div>
         </Stat>
-        <Stat href={`${ownerId}/widget/Index?tab=investors`}>
+        <Stat href={`/${ownerId}/widget/Index?tab=investors`}>
           <div className="number">
             <div>{state.investorsCount}</div>
           </div>

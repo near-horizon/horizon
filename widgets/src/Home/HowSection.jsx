@@ -17,6 +17,12 @@ const Container = styled.div`
   isolation: isolate;
   background: #d9f4ff;
   border-radius: 16px;
+
+  @media screen and (max-width: 964px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Column = styled.div`
@@ -30,11 +36,11 @@ const Column = styled.div`
   width: 100%;
 
   @media screen and (min-width: 768px) {
-    width: 49%;
+    width: 60%;
   }
 
   @media screen and (min-width: 1024px) {
-    width: 32%;
+    width: 33.3%;
   }
 
   & > div > span {

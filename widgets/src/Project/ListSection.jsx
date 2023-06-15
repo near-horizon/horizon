@@ -136,6 +136,10 @@ const Sort = styled.div`
 
   &:last-child {
     width: 30%;
+
+    @media screen and (max-width: 768px) {
+      width: 50%;
+    }
   }
 `;
 

@@ -39,27 +39,40 @@ const Container = styled.div`
   gap: 1em;
   width: 100%;
   margin-bottom: 0.25em;
+
+  & > div {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  @media screen and (max-width: 900px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const body = (
   <>
     <Container>
-      <a href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}>
-        <Widget
-          src={`${ownerId}/widget/Vendor.Icon`}
-          props={{ accountId, size: "64px" }}
-        />
-      </a>
-      <a href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}>
-        <Widget
-          src={`${ownerId}/widget/NameAndAccount`}
-          props={{
-            accountId,
-            name: state.profile.name,
-            nameSize: "1.125em",
-          }}
-        />
-      </a>
+      <div>
+        <a href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}>
+          <Widget
+            src={`${ownerId}/widget/Vendor.Icon`}
+            props={{ accountId, size: "64px" }}
+          />
+        </a>
+        <a href={`/${ownerId}/widget/Index?tab=backer&accountId=${accountId}`}>
+          <Widget
+            src={`${ownerId}/widget/NameAndAccount`}
+            props={{
+              accountId,
+              name: state.profile.name,
+              nameSize: "1.125em",
+            }}
+          />
+        </a>
+      </div>
       {state.investor.verified ? (
         <Widget
           src={`${ownerId}/widget/BadgeList`}

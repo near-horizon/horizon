@@ -18,6 +18,12 @@ const Item = styled.a`
   align-items: center;
   justify-content: flex-start;
   gap: 0.125em;
+
+  @media screen and (max-width: 900px) {
+    & > div:last-child {
+      display: none;
+    }
+  }
 `;
 
 State.init({
