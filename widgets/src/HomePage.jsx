@@ -328,6 +328,7 @@ if (!state.totalRaisedIsFetched) {
 
 return (
   <Container>
+    <Widget src={`${ownerId}/widget/Banner.AwesomeNEAR`} />
     <Section style={{ marginTop: "2em 0 0 0" }}>
       <Row style={{ padding: "0 0 4em 0" }}>
         <img src={mapImage(mainImage)} style={{ transform: "scale(.9)" }} />
