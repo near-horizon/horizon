@@ -122,7 +122,7 @@ return (
     <Widget
       src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
       props={{
-        label: "What's your 5 year vision? 1B users project evolution?",
+        label: "What's your 5 year vision?",
         id: "vision",
         value: state.project.vision,
         onSave: (vision) => onSave({ vision }),
