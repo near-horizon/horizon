@@ -49,13 +49,19 @@ const Stats = styled.div`
   border-radius: 16px;
 `;
 
-const Stat = styled.div`
+const Stat = styled.a`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   padding: 0 1px;
   gap: 0.25em;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
 
   & > div.number {
     display: flex;
@@ -156,25 +162,25 @@ return (
         <h2>Building, connecting and skyrocketing great projects</h2>
       </Heading>
       <Stats>
-        <Stat>
+        <Stat href={`${ownerId}/widget/Index?tab=projects`}>
           <div className="number">
             <div>{state.projectsCount}</div>
           </div>
           <div className="label">Projects</div>
         </Stat>
-        <Stat>
+        <Stat href={`${ownerId}/widget/Index?tab=requests`}>
           <div className="number">
             <div>{state.requestsCount}</div>
           </div>
           <div className="label">Requests</div>
         </Stat>
-        <Stat>
+        <Stat href={`${ownerId}/widget/Index?tab=vendors`}>
           <div className="number">
             <div>{state.vendorsCount}</div>
           </div>
           <div className="label">Contributors</div>
         </Stat>
-        <Stat>
+        <Stat href={`${ownerId}/widget/Index?tab=investors`}>
           <div className="number">
             <div>{state.investorsCount}</div>
           </div>
