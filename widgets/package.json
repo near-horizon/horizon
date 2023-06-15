@@ -5,7 +5,7 @@
     "format": "prettier **/*.{js,jsx,ts,tsx} --write --ignore-unknown",
     "download": "bos download nearhorizon.near network-config mainnet",
     "deploy": "bos components deploy nearhorizon.near sign-as nearhorizon.near network-config mainnet sign-with-access-key-file ~/.near-credentials/mainnet/nearhorizon.near.json send",
-    "dev": "npm-watch"
+    "dev": "bos-loader nearhorizon.near --path ./src"
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
