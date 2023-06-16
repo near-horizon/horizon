@@ -115,7 +115,10 @@ return (
       <Row>
         <Label>Earned:</Label>
         <Value>
-          {state.earned} NHZN{" "}
+          {Number(state.earned).toLocaleString("en-US", {
+            notation: "compact",
+          })}{" "}
+          NHZN{" "}
           <Widget
             src={`${ownerId}/widget/Tooltip`}
             props={{ content: "Test use case" }}

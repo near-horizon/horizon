@@ -58,6 +58,7 @@ State.init({
   profile: null,
   profileIsFetched: false,
   completion: 0,
+  credits: 0,
 });
 
 if (!state.projectIsFetched) {
@@ -89,6 +90,12 @@ if (!state.projectIsFetched || !state.profileIsFetched) {
   return <>Loading...</>;
 }
 
+if (state.project.credits) {
+  asyncFetch(
+    `https://api-op3o.onrender.com/data/credits/projects/${props.accountId}/balance`
+  ).then(({ body: credits }) => State.update({ credits }));
+}
+
 asyncFetch("https://api-op3o.onrender.com/data/projects/completion").then(
   ({ body: { list } }) =>
     State.update({
@@ -103,7 +110,16 @@ return (
     <Row>
       <Label>Credits:</Label>
       <Value>
-        0 NHZN{" "}
+        {state.project.credits ? (
+          <>
+            {Number(state.credits).toLocaleString("en-US", {
+              notation: "compact",
+            })}{" "}
+            NHZN
+          </>
+        ) : (
+          <>Not available</>
+        )}{" "}
         <Widget
           src={`${ownerId}/widget/Tooltip`}
           props={{
