@@ -28,7 +28,7 @@ pub struct Fields {
     pub founders: String,
     #[serde(rename = "Horizon Founder Email")]
     pub email: String,
-    #[serde(rename = "Horizon Account ID")]
+    #[serde(rename = "NEAR")]
     pub id: String,
     #[serde(rename = "Horizon Verticals")]
     pub verticals: Vec<String>,
@@ -65,14 +65,18 @@ pub async fn upsert(
             .json(&serde_json::json!({
                 "records": records_batch,
                 "performUpsert": {
-                    "fieldsToMergeOn": ["Horizon Account ID"],
+                    "fieldsToMergeOn": ["NEAR"],
                 }
             }))
             .send()
             .await?
             .json::<serde_json::Value>()
             .await?;
-        println!("{:#?}", response);
+        if let Some(obj) = response.as_object() {
+            if obj.contains_key("error") {
+                eprintln!("{:#?}", response);
+            }
+        }
     }
     Ok(())
 }
