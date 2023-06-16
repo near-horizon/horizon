@@ -8,6 +8,8 @@ const Container = styled.div`
   align-items: flex-start;
   gap: 64px;
   padding: 48px;
+  width: 100%;
+  max-width: 1300px;
 
   @media screen and (max-width: 768px) {
     flex-direction: column-reverse;
