@@ -30,8 +30,8 @@ const TextContainer = styled.div`
     font-family: "Inter";
     font-style: normal;
     font-weight: 700;
-    font-size: 19px;
-    line-height: 23px;
+    font-size: 2em;
+    line-height: 1.25em;
     color: #ffffff;
   }
 
@@ -39,7 +39,7 @@ const TextContainer = styled.div`
     font-family: "Inter";
     font-style: normal;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 1.25em;
     line-height: 140%;
     color: #ffffff;
 
