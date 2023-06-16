@@ -344,12 +344,12 @@ return (
         }}
       />
       <Widget
-        src={`${ownerId}/widget/Inputs.OSS`}
+        src={`${ownerId}/widget/Inputs.Distribution`}
         props={{
-          category: state.oss,
-          update: (oss) => State.update({ oss }),
-          setError: (ossError) => State.update({ ossError }),
-          error: state.ossError,
+          distribution: state.distribution,
+          update: (distribution) => State.update({ distribution }),
+          setError: (distributionError) => State.update({ distributionError }),
+          error: state.distributionError,
         }}
       />
       {/*<Widget
