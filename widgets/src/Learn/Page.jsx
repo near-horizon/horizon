@@ -1,6 +1,19 @@
 const ownerId = "nearhorizon.near";
 
 const props = {
+  encodeEducate: [
+    {
+      height: "425px",
+      title: "Intro to NEAR and Horizon",
+      link: "https://shortlink.near.foundation/encode-educate-ep1",
+      description:
+        "NEAR Horzion x Encode Club Educate Series kickoff with an intro to NEAR and Horizon.",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_nh-near-intro.jpeg",
+      video: "https://youtu.be/A94qh0SAsGQ",
+      tags: ["accelerator partners", "essentials"],
+      height: "425px",
+    },
+  ],
   bdBasics: [
     {
       height: "425px",
@@ -360,6 +373,13 @@ return (
         you where you need it most
       </h2>
     </Heading>
+    <Section>
+    <h3>NEAR Horizon x Encode Club Educate Series</h3>
+    <Widget
+      src={`humanman.near/widget/Learn.List.Partner`}
+      props={{ cardData: props.encodeEducate }}
+    />
+    </Section>
     <Section>
       <h3>Business Fundamentals</h3>
       <Widget
