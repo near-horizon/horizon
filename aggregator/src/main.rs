@@ -39,7 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let filled_out = Project::count_with_min_completion(3, projects.values().cloned());
     let filled = Project::avarage_completion(projects.values().cloned());
     eprintln!("{:#?}/{:#?}", filled_out, projects.len());
-    eprintln!("Avarage completion: {:#?}", filled);
+    eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
     project::insert_many(&pool, projects.values().cloned().collect_vec()).await?;
 
@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let filled_out = Vendor::count_with_min_completion(3, vendors.values().cloned());
     let filled = Vendor::avarage_completion(vendors.values().cloned());
     eprintln!("{:#?}/{:#?}", filled_out, vendors.len());
-    eprintln!("Avarage completion: {:#?}", filled);
+    eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
     vendor::insert_many(&pool, vendors.values().cloned().collect_vec()).await?;
 
@@ -57,7 +57,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let filled_out = Investor::count_with_min_completion(3, investors.values().cloned());
     let filled = Investor::avarage_completion(investors.values().cloned());
     eprintln!("{:#?}/{:#?}", filled_out, investors.len());
-    eprintln!("Avarage completion: {:#?}", filled);
+    eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
     investor::insert_many(&pool, investors.values().cloned().collect_vec()).await?;
 
