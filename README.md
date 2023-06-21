@@ -101,3 +101,52 @@ rustup target add wasm32-unknown-unknown
     following the instructions in the tool
     [repository](https://github.com/near/bos-loader/releases) (if you want
     to preview the changes locally before deploying the components)
+
+### Guidelines
+
+When working with the Rust source code, each file should be formatted using
+the default `rustfmt` by running
+
+```shell
+cargo fmt
+```
+
+You should also run `clippy` and fix any warnings that might show up, a good
+start is to run:
+
+```shell
+cargo clippy --fix
+```
+
+to clean up any auto-fixable warnings and errors and move on from there by
+manually addressing any warnings/errors.
+
+When working with the source code for components, you should run the following
+commands to get everything set up:
+
+```shell
+npm i
+```
+
+to install all the dependencies,
+
+```shell
+npm run prepare
+```
+
+in case the prepare script doesn't run after the install script (this will
+install `bos-loader` and `bos-cli` using `cargo` and set up `husky` for
+running the pre-commit hooks).
+
+Make sure all files are properly formatted by running
+
+```shell
+npm run format
+```
+
+but if you have installed the `husky` hooks, this should be done for you on
+each commit.
+
+**_Tip_**: _When working with the component files, open up the
+[types.d.ts](./widgets/types.d.ts) file first as this will load in the type
+definitions of the environment you are working with (BOS APIs)._
