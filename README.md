@@ -4,6 +4,9 @@ This monorepo contains all the services and code that make up the Horizon produc
 
 ## Directory structure
 
+Each of the directories in this repository will have it's own README file, so for
+more detailed explanations of the directory go to it's README.
+
 - **[aggregator](./aggregator)** - This directory contains the source code which
   aggregates and ingests data from chain into our database
 - **[airtable-sync](./airtable-sync)** - This directory contains the source code
