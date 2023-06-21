@@ -29,7 +29,7 @@ This monorepo contains all the services and code that make up the Horizon produc
   contract with initial data (**deprecated**)
 - **[token](./token)** - This directory contains the source code for the Horizon
   token that should function as the credit system in the future (**NOTE** not yet
-  implemented - credit system is still of-chain)
+  implemented - credit system is still off-chain)
 - **[widgets](./widgets)** - This directory contains the source code for the
   frontend of the product which consists of [BOS components](https://docs.near.org/bos)
 - **root directory (/)** - This directory contains everything listed above
