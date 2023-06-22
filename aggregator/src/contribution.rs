@@ -167,7 +167,7 @@ pub async fn sync_deleted(
     for ((project_id, cid), vendor_id) in for_deletion {
         sqlx::query!(
             r#"
-            DELETE FROM contributions WHERE project_id = $1 AND cid = $2 AND vendor_id = $3;
+            DELETE FROM contribution_actions WHERE project_id = $1 AND cid = $2 AND vendor_id = $3;
             "#,
             project_id,
             cid,
@@ -177,7 +177,7 @@ pub async fn sync_deleted(
         .await?;
         sqlx::query!(
             r#"
-            DELETE FROM contribution_actions WHERE project_id = $1 AND cid = $2 AND vendor_id = $3;
+            DELETE FROM contributions WHERE project_id = $1 AND cid = $2 AND vendor_id = $3;
             "#,
             project_id,
             cid,
