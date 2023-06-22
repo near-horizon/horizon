@@ -46,7 +46,7 @@ if (!state.contributionIsFetched) {
   );
 }
 
-if (!state.isProjectAdminIsFetched) {
+if (!state.isProjectAdminIsFetched && context.accountId) {
   Near.asyncView(
     ownerId,
     "check_is_project_admin",
@@ -58,7 +58,7 @@ if (!state.isProjectAdminIsFetched) {
   );
 }
 
-if (!state.isVendorAdminIsFetched) {
+if (!state.isVendorAdminIsFetched && context.accountId) {
   Near.asyncView(
     ownerId,
     "check_is_vendor_admin",
@@ -73,8 +73,8 @@ if (!state.isVendorAdminIsFetched) {
 if (
   !state.contributionIsFetched ||
   !state.proposalIsFetched ||
-  !state.isProjectAdminIsFetched ||
-  !state.isVendorAdminIsFetched
+  (!state.isProjectAdminIsFetched && context.accountId) ||
+  (!state.isVendorAdminIsFetched && context.accountId)
 ) {
   return <>Loading...</>;
 }
