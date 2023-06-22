@@ -64,6 +64,7 @@ pub async fn upsert(
             .patch(url)
             .json(&serde_json::json!({
                 "records": records_batch,
+                "typecast": true,
                 "performUpsert": {
                     "fieldsToMergeOn": ["NEAR"],
                 }
