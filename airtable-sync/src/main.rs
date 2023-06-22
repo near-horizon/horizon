@@ -22,7 +22,7 @@ fn default_headers() -> reqwest::header::HeaderMap {
 
 #[derive(Serialize, Debug)]
 pub struct Fields {
-    #[serde(rename = "Horizon Name")]
+    #[serde(rename = "Project name", skip_serializing_if = "String::is_empty")]
     pub name: String,
     #[serde(rename = "Horizon Founder Accounts")]
     pub founders: String,
