@@ -14,7 +14,7 @@ return (
       noLabel: props.noLabel,
       placeholder: "Open source",
       options,
-      value: props.distribution,
+      value: options.find(({ value }) => value === props.distribution),
       onChange: (distribution) => props.update(distribution),
       validate: () => {
         if (!props.distribution) {

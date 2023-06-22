@@ -296,7 +296,7 @@ return (
       <Widget
         src={`${ownerId}/widget/Inputs.Phase`}
         props={{
-          category: state.dev,
+          dev: state.dev,
           update: (dev) => State.update({ dev }),
           setError: (devError) => State.update({ devError }),
           error: state.devError,
