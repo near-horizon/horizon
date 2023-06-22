@@ -174,6 +174,31 @@ pub async fn sync_deleted(
 
     let old_ids = sqlx::query!(
         r#"
+        SELECT project_id, cid, vendor_id
+        FROM proposals
+        "#,
+    )
+    .fetch_all(&mut tx)
+    .await?
+    .into_iter()
+    .map(|row| ((row.project_id, row.cid), row.vendor_id))
+    .collect::<HashSet<_>>();
+
+    let for_deletion = old_ids.difference(proposals).cloned().collect_vec();
+
+    for ((project_id, cid), vendor_id) in for_deletion {
+        sqlx::query!(
+            "DELETE FROM proposals WHERE project_id = $1 AND cid = $2 AND vendor_id = $3",
+            project_id,
+            cid,
+            vendor_id,
+        )
+        .execute(&mut tx)
+        .await?;
+    }
+
+    let old_ids = sqlx::query!(
+        r#"
         SELECT project_id, cid
         FROM requests
         "#,
@@ -194,31 +219,6 @@ pub async fn sync_deleted(
             "#,
             project_id,
             cid
-        )
-        .execute(&mut tx)
-        .await?;
-    }
-
-    let old_ids = sqlx::query!(
-        r#"
-        SELECT project_id, cid, vendor_id
-        FROM proposals
-        "#,
-    )
-    .fetch_all(&mut tx)
-    .await?
-    .into_iter()
-    .map(|row| ((row.project_id, row.cid), row.vendor_id))
-    .collect::<HashSet<_>>();
-
-    let for_deletion = old_ids.difference(proposals).cloned().collect_vec();
-
-    for ((project_id, cid), vendor_id) in for_deletion {
-        sqlx::query!(
-            "DELETE FROM proposals WHERE project_id = $1 AND cid = $2 AND vendor_id = $3",
-            project_id,
-            cid,
-            vendor_id,
         )
         .execute(&mut tx)
         .await?;
