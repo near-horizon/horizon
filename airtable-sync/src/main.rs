@@ -36,6 +36,8 @@ pub struct Fields {
     pub stage: String,
     #[serde(rename = "Horizon Location")]
     pub location: String,
+    #[serde(rename = "Source")]
+    pub source: Vec<String>,
 }
 
 #[derive(Serialize, Debug)]
@@ -123,6 +125,7 @@ async fn main() -> anyhow::Result<()> {
                     .collect::<Vec<String>>(),
                 stage: project.stage,
                 location: project.geo,
+                source: vec!["Horizon".to_string()],
             };
             UpsertStruct::new(fields)
         })
