@@ -100,7 +100,7 @@ const MainSubSection = styled.div`
   }
 `;
 
-const Link = styled.a`
+const Anchor = styled.a`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -361,7 +361,7 @@ return (
             projects alongside a thriving community, while tapping into a robust
             backer network and diverse supporting resources.
           </p>
-          <Link href="/nearhorizon.near/widget/Index">Try It Now</Link>
+          <Anchor href="/nearhorizon.near/widget/Index">Try It Now</Anchor>
         </MainSubSection>
       </Row>
       <Stats>
@@ -433,8 +433,8 @@ return (
             </li>
             <li>{listSymbol} Refined GTM strategies and business models</li>
             <li>
-              {listSymbol} Detailed profiles with everyting you need to evaluate
-              teams and projects
+              {listSymbol} Detailed profiles with everything you need to
+              evaluate teams and projects
             </li>
           </ul>
         </List>
@@ -796,13 +796,13 @@ return (
         />
       </svg>
       <h2>Accelerate your Web3 Startup!</h2>
-      <Link
+      <Anchor
         href="/nearhorizon.near/widget/Index"
         className="white"
         style={{ marginTop: "1em" }}
       >
         Try it Now
-      </Link>
+      </Anchor>
     </Footer>
   </Container>
 );

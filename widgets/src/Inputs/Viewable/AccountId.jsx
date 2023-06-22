@@ -109,7 +109,7 @@ const Error = styled.small`
   color: red;
 `;
 
-const Link = styled.a`
+const Anchor = styled.a`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -145,7 +145,7 @@ return (
         </>
       ),
       view: value ? (
-        <Link href={`/near/widget/ProfilePage?accountId=${value}`}>
+        <Anchor href={`/near/widget/ProfilePage?accountId=${value}`}>
           <Widget
             src={`${ownerId}/widget/Vendor.Icon`}
             props={{ accountId: value, size: "2em" }}
@@ -158,7 +158,7 @@ return (
               nameSize: "1.125em",
             }}
           />
-        </Link>
+        </Anchor>
       ) : null,
       canEdit,
     }}

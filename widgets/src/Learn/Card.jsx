@@ -73,7 +73,7 @@ const LinkSection = styled.div`
   flex-grow: 0;
 `;
 
-const Link = styled.a`
+const Anchor = styled.a`
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -126,7 +126,7 @@ return (
       )}
     </DetailsSection>
     <LinkSection>
-      <Link href={link}>Learn more {linkIcon}</Link>
+      <Anchor href={link}>Learn more {linkIcon}</Anchor>
     </LinkSection>
   </Card>
 );

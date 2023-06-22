@@ -9,7 +9,7 @@ const Container = styled.div`
   border-radius: 16px;
 `;
 
-const Link = styled.a`
+const Anchor = styled.a`
   font-style: normal;
   font-weight: 600;
   font-size: 0.95em;
@@ -53,6 +53,6 @@ const arrow = (
 
 return (
   <Container>
-    <Link href="https://nearatlas.com/#/">Explore stats {arrow}</Link>
+    <Anchor href="https://nearatlas.com/#/">Explore stats {arrow}</Anchor>
   </Container>
 );
