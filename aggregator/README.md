@@ -87,18 +87,74 @@ and then [fetching their details](https://github.com/near-horizon/horizon/blob/5
 
 #### Project, vendor, investor insertion
 
+All entities are inserted using the same flow, a transaction is initiated and each
+entry is flattened and inserted in the appropriate table in the database and at the
+end the transaction is commited. This is done for two reasons:
+
+- Only sending one transaction to the database makes this more performant
+- In case any insert fails, no entries get inserted preserving the database state
+
+Here are the imlpementations for each respectively:
+
+- [project.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/project.rs#L107)
+- [vendor.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/vendor.rs#L140)
+- [investor.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/investor.rs#L87)
+
 #### Requests insertion
+
+Similar to entities, requests are inserted by initiating a transaction and inserting
+each entity separately with the addition of creating a array of insertions for all
+proposals associated with the request.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/request.rs#L230).
 
 #### Contributions insertion
 
+Contributions are inserted using the same flow as requests, the difference being
+that the array of insertions created for each contribution is for each contribution
+action rather than proposals.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/contribution.rs#L195).
+
 #### Claims insertion
+
+Claims are the simplest to insert as well, they do not need any flattening and
+are inserted in a single transaction too.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/claims.rs#L106).
 
 ### Deletion
 
 #### Project, vendor, investor deletion
 
+Entities are deleted by checking the difference between the existing IDs in the
+database and the list of all IDs currently in the Horizon smart contract.
+
+Here are the implementations for each respectively:
+
+- [project.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/project.rs#L85)
+- [vendor.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/vendor.rs#L118)
+- [investor.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/investor.rs#L65)
+
 #### Requests deletion
+
+Requests are deleted by first deleting all proposals which are not currently
+listed in the Horizon smart contract, and then all the requests which are not
+listed in the Horizon smart contract.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/request.rs#L168).
 
 #### Contributions deletion
 
+Contributions are deleted by deleting all contribution actions for each contribution
+not in the Horizon smart contract, and then deleting the contribution entry.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/contribution.rs#L148).
+
 #### Claims deletion
+
+Claims are deleted the same way entities are, since they don't have any foreign
+constraints depending on them, by simply deleting all the claims which are no longer
+listed in the Horizon smart contract.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/claims.rs#L76).
