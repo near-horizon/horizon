@@ -167,7 +167,7 @@ return (
         <Content>
           <Select.Viewport asChild={true}>
             <Viewport>
-              {props.options.map(({ text, value }) => (
+              {options.map(({ text, value }) => (
                 <Select.Item value={value} asChild={true}>
                   <Item>
                     <Select.ItemText>{text}</Select.ItemText>

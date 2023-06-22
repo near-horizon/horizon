@@ -63,7 +63,7 @@ return (
       label,
       value,
       edit,
-      view: value[0].name,
+      view: value.text,
       canEdit,
     }}
   />
