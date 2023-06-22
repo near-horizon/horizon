@@ -230,7 +230,8 @@ return (
           {state.isAdmin ? (
             <>
               {state.project.application === "NotSubmitted" ||
-              "Rejected" in state.project.application ? (
+              (typeof state.project.application === "object" &&
+                "Rejected" in state.project.application) ? (
                 <Widget
                   src={`${ownerId}/widget/Buttons.Green`}
                   props={{

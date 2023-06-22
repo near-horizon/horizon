@@ -84,7 +84,7 @@ if (
   });
 }
 
-if (typeof status !== "string" && "Rejected" in status) {
+if (typeof status === "object" && "Rejected" in status) {
   activity.push({
     id: "rejected",
     text: (
