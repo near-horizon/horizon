@@ -383,10 +383,10 @@ return (
               return;
             }
 
-            if (state.description.length > 500) {
+            if (state.description.length > 5000) {
               State.update({
                 descriptionError:
-                  "Description must be less than 500 characters",
+                  "Description must be less than 5000 characters",
               });
               return;
             }
