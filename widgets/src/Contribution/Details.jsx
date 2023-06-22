@@ -142,7 +142,7 @@ return (
       </div>
     </Project>
     <Project>
-      <label>Project</label>
+      <label>Contributor</label>
       <div>
         <Widget
           src={`${ownerId}/widget/Vendor.Icon`}
