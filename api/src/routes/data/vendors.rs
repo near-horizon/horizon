@@ -91,7 +91,7 @@ where
     D: serde::Deserializer<'de>,
 {
     let v = String::deserialize(deserializer)?;
-    Ok(Some(v.split(",").map(|s| s == "true").collect()))
+    Ok(Some(v.split(',').map(|s| s == "true").collect()))
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone, Default)]

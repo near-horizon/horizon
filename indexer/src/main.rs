@@ -83,7 +83,7 @@ pub async fn listen_blocks(
             .collect_vec();
 
         for tx in txs {
-            tx.insert(&pool)
+            tx.insert(pool)
                 .await
                 .expect("Failed to insert transaction");
         }

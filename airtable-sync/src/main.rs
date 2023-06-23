@@ -1,9 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 fn ensure_env(name: &str) -> String {
-    std::env::var(name)
-        .expect(&format!("{} must be set", name))
-        .to_string()
+    std::env::var(name).unwrap_or_else(|_| panic!("{name} must be set"))
 }
 
 fn default_headers() -> reqwest::header::HeaderMap {

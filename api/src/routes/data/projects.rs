@@ -24,7 +24,7 @@ where
         return Ok(None);
     }
     Ok(Some(
-        s.split(",")
+        s.split(',')
             .filter_map(|range| {
                 let parts: Vec<_> = range.split('-').collect();
                 if parts.is_empty() && parts.len() != 2 {

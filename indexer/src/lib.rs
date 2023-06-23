@@ -24,17 +24,16 @@ pub fn collect_transactions(
                 .transactions
                 .iter()
                 .filter_map(|transaction| {
-                    is_tx_receiver_watched(&transaction, watching_list).then(|| {
+                    is_tx_receiver_watched(transaction, watching_list).then(|| {
                         (
-                            transaction
+                            *transaction
                                 .outcome
                                 .execution_outcome
                                 .outcome
                                 .receipt_ids
                                 .first()
-                                .expect("`receipt_ids` must contain one Receipt Id")
-                                .clone(),
-                            transaction.transaction.hash.clone(),
+                                .expect("`receipt_ids` must contain one Receipt Id"),
+                            transaction.transaction.hash,
                         )
                     })
                 })
