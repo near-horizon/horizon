@@ -83,5 +83,5 @@ pub struct AppState {
 }
 
 pub fn ensure_var(name: &str) -> String {
-    std::env::var(name).unwrap_or_else(|_| panic!("{name} must be set"))
+    std::env::var(name).expect(&format!("{name} must be set"))
 }
