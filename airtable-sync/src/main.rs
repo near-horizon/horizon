@@ -50,12 +50,20 @@ pub struct VendorFields {
     pub email: String,
     #[serde(rename(serialize = "Horizon Founder Accounts"))]
     pub founders: String,
-    #[serde(rename(serialize = "Vendor Type"))]
+    #[serde(rename(serialize = "Vendor type"))]
     pub vendor_type: String,
     #[serde(rename(serialize = "Payment"))]
     pub payments: Vec<String>,
     #[serde(rename(serialize = "Source"))]
     pub source: Vec<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct UpsertFields<T>
+where
+    T: Serialize + std::fmt::Debug,
+{
+    pub fields: T,
 }
 
 pub async fn upsert<T>(client: &reqwest::Client, url: &str, records: &[T]) -> anyhow::Result<()>
@@ -66,7 +74,7 @@ where
         let response = client
             .patch(url)
             .json(&serde_json::json!({
-                "records": records_batch,
+                "records": records_batch.iter().map(|fields| UpsertFields { fields }).collect::<Vec<_>>(),
                 "typecast": true,
                 "performUpsert": {
                     "fieldsToMergeOn": ["NEAR"],
@@ -158,7 +166,17 @@ async fn main() -> anyhow::Result<()> {
                 .collect::<Vec<_>>()
                 .join(","),
             vendor_type: vendor.vendor_type,
-            payments: vendor.payments,
+            payments: vendor
+                .payments
+                .into_iter()
+                .map(|p| {
+                    p.strip_prefix('\"')
+                        .unwrap()
+                        .strip_suffix('\"')
+                        .unwrap()
+                        .to_string()
+                })
+                .collect::<Vec<_>>(),
             source: vec!["Horizon".to_string()],
         })
         .collect::<Vec<_>>();
