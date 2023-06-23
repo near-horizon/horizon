@@ -4,7 +4,7 @@ const description = props.description ?? "Description";
 const img = props.img ?? "";
 const height = props.height ?? "375px";
 const video =
-  props.video ?? "https://youtu.be/QZLUQSOv7VY?origin=https://near.org/";
+  props.video ?? "https://shortlink.near.foundation/horizon-first-looks?origin=https://near.org";
 
 const Card = styled.div`
   box-sizing: border-box;
