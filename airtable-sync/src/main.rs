@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 fn ensure_env(name: &str) -> String {
     std::env::var(name)
@@ -20,8 +20,8 @@ fn default_headers() -> reqwest::header::HeaderMap {
     headers
 }
 
-#[derive(Serialize, Debug)]
-pub struct Fields {
+#[derive(Deserialize, Serialize, Debug)]
+pub struct ProjectFields {
     #[serde(rename = "Project name", skip_serializing_if = "String::is_empty")]
     pub name: String,
     #[serde(rename = "Horizon Founder Accounts")]
@@ -40,27 +40,28 @@ pub struct Fields {
     pub source: Vec<String>,
 }
 
-#[derive(Serialize, Debug)]
-pub struct UpsertStruct {
-    #[serde(skip_serializing_if = "String::is_empty")]
+#[derive(Deserialize, Serialize, Debug)]
+pub struct VendorFields {
+    #[serde(rename(serialize = "NEAR"))]
     pub id: String,
-    pub fields: Fields,
+    #[serde(rename(serialize = "Partner Name"))]
+    pub name: String,
+    #[serde(rename(serialize = "Email"), skip_serializing_if = "String::is_empty")]
+    pub email: String,
+    #[serde(rename(serialize = "Horizon Founder Accounts"))]
+    pub founders: String,
+    #[serde(rename(serialize = "Vendor Type"))]
+    pub vendor_type: String,
+    #[serde(rename(serialize = "Payment"))]
+    pub payments: Vec<String>,
+    #[serde(rename(serialize = "Source"))]
+    pub source: Vec<String>,
 }
 
-impl UpsertStruct {
-    pub fn new(fields: Fields) -> Self {
-        Self {
-            id: String::new(),
-            fields,
-        }
-    }
-}
-
-pub async fn upsert(
-    client: &reqwest::Client,
-    url: &str,
-    records: &[UpsertStruct],
-) -> anyhow::Result<()> {
+pub async fn upsert<T>(client: &reqwest::Client, url: &str, records: &[T]) -> anyhow::Result<()>
+where
+    T: Serialize + std::fmt::Debug,
+{
     for records_batch in records.chunks(10) {
         let response = client
             .patch(url)
@@ -88,6 +89,7 @@ pub async fn upsert(
 async fn main() -> anyhow::Result<()> {
     let base_id = ensure_env("AIRTABLE_BASE_ID");
     let table_name = ensure_env("AIRTABLE_TABLE_NAME");
+    let vendor_table_name = ensure_env("AIRTABLE_VENDOR_TABLE_NAME");
     let database_url = ensure_env("DATABASE_URL");
 
     let headers = default_headers();
@@ -110,24 +112,54 @@ async fn main() -> anyhow::Result<()> {
 
     let records = projects
         .into_iter()
-        .map(|project| {
-            let fields = Fields {
-                name: project.name,
-                founders: project.founders.join(","),
-                email: "".to_string(),
-                id: project.id,
-                verticals: project
-                    .vertical
-                    .as_object()
-                    .unwrap()
-                    .keys()
-                    .cloned()
-                    .collect::<Vec<String>>(),
-                stage: project.stage,
-                location: project.geo,
-                source: vec!["Horizon".to_string()],
-            };
-            UpsertStruct::new(fields)
+        .map(|project| ProjectFields {
+            name: project.name,
+            founders: project.founders.join(","),
+            email: "".to_string(),
+            id: project.id,
+            verticals: project
+                .vertical
+                .as_object()
+                .unwrap()
+                .keys()
+                .cloned()
+                .collect::<Vec<String>>(),
+            stage: project.stage,
+            location: project.geo,
+            source: vec!["Horizon".to_string()],
+        })
+        .collect::<Vec<_>>();
+
+    upsert(&client, &url, &records).await?;
+
+    let url = format!("https://api.airtable.com/v0/{base_id}/{vendor_table_name}");
+
+    let vendors = sqlx::query!(
+        r#"
+        SELECT *
+        FROM vendors
+        "#,
+    )
+    .fetch_all(&pool)
+    .await?;
+
+    let records = vendors
+        .into_iter()
+        .map(|vendor| VendorFields {
+            id: vendor.id,
+            name: vendor.name,
+            email: "".to_string(),
+            founders: vendor
+                .permissions
+                .as_object()
+                .unwrap()
+                .keys()
+                .cloned()
+                .collect::<Vec<_>>()
+                .join(","),
+            vendor_type: vendor.vendor_type,
+            payments: vendor.payments,
+            source: vec!["Horizon".to_string()],
         })
         .collect::<Vec<_>>();
 
