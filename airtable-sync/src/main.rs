@@ -26,7 +26,7 @@ pub struct Fields {
     pub name: String,
     #[serde(rename = "Horizon Founder Accounts")]
     pub founders: String,
-    #[serde(rename = "Horizon Founder Email")]
+    #[serde(rename = "Email", skip_serializing_if = "String::is_empty")]
     pub email: String,
     #[serde(rename = "NEAR")]
     pub id: String,
