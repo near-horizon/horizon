@@ -39,6 +39,8 @@ pub struct Social {
     pub dev: String,
     #[serde(default)]
     pub product_type: HashMap<String, String>,
+    #[serde(default)]
+    pub team: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -143,12 +145,13 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
                     credits,
                     distribution,
                     dev,
-                    product_type
+                    product_type,
+                    company_size
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
                     $11, $12, $13, $14, $15, $16, $17, $18,
                     $19, $20, $21, $22, $23, $24, $25, $26,
-                    $27, $28, $29, $30
+                    $27, $28, $29, $30, $31
                 ) ON CONFLICT (id) DO
                 UPDATE SET
                     founders = EXCLUDED.founders,
@@ -179,7 +182,8 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
                     credits = EXCLUDED.credits,
                     distribution = EXCLUDED.distribution,
                     dev = EXCLUDED.dev,
-                    product_type = EXCLUDED.product_type;
+                    product_type = EXCLUDED.product_type,
+                    company_size = EXCLUDED.company_size;
                 ",
             project.id,
             &project
@@ -216,6 +220,7 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             project.profile.distribution,
             project.profile.dev,
             &project.profile.product_type.keys().cloned().collect_vec(),
+            project.profile.team.parse::<i32>().unwrap_or(0),
         )
         .execute(&mut tx)
         .await
