@@ -1,4 +1,4 @@
-const ownerId = "nearhorizon.near";
+const ownerId = "contribut3.near";
 const accountId = props.accountId;
 const cid = props.cid;
 const full = props.full ?? false;
@@ -113,7 +113,10 @@ const budget = (
         stroke-linejoin="round"
       />
     </svg>
-    <b>{currency}</b> {state.request.budget}
+    <b>{currency}</b>{" "}
+    {Number(state.request.budget).toLocaleString("en-US", {
+      notation: "compact",
+    })}
   </Item>
 );
 
