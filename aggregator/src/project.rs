@@ -38,7 +38,7 @@ pub struct Social {
     #[serde(default)]
     pub dev: String,
     #[serde(default)]
-    pub product_type: String,
+    pub product_type: HashMap<String, String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -215,7 +215,7 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             project.horizon.credits,
             project.profile.distribution,
             project.profile.dev,
-            project.profile.product_type,
+            project.profile.product_type.keys().cloned().collect_vec(),
         )
         .execute(&mut tx)
         .await
