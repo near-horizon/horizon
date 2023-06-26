@@ -17,7 +17,7 @@ ADD COLUMN completion double precision NOT NULL GENERATED ALWAYS AS (
     CASE WHEN length(dev) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(distribution) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(stage) > 0 THEN 1 ELSE 0 END +
-    CASE WHEN length(company_size) > 0 THEN 1 ELSE 0 END +
+    CASE WHEN company_size > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(location) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(problem) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(success_position) > 0 THEN 1 ELSE 0 END +
