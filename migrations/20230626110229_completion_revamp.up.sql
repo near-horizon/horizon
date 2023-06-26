@@ -22,7 +22,7 @@ ADD COLUMN completion double precision NOT NULL GENERATED ALWAYS AS (
     CASE WHEN length(problem) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(success_position) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(why) > 0 THEN 1 ELSE 0 END +
-    CASE WHEN length(vision) > 0 THEN 1 ELSE 0 END +
+    CASE WHEN length(vision) > 0 THEN 1 ELSE 0 END
   ) / 18.0
 ) STORED;
 
