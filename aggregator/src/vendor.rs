@@ -35,6 +35,7 @@ pub enum Work {
     OneTime,
     Short,
     Long,
+    #[serde(alias = "full")]
     FullTime,
 }
 
