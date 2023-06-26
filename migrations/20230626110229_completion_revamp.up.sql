@@ -10,7 +10,7 @@ ADD COLUMN completion double precision NOT NULL GENERATED ALWAYS AS (
     CASE WHEN length(image::text) > 2 THEN 1 ELSE 0 END +
     CASE WHEN length(tagline) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(website) > 0 THEN 1 ELSE 0 END +
-    CASE WHEN length(lintree::text) > 2 THEN 1 ELSE 0 END +
+    CASE WHEN length(linktree::text) > 2 THEN 1 ELSE 0 END +
     CASE WHEN length(vertical::text) > 2 THEN 1 ELSE 0 END +
     CASE WHEN array_length(product_type, 1) > 0 THEN 1 ELSE 0 END +
     CASE WHEN length(integration) > 0 THEN 1 ELSE 0 END +
