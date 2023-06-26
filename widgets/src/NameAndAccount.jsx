@@ -16,7 +16,9 @@ const Name = styled.span`
   font-style: normal;
   font-weight: 700;
   font-size: ${nameSize};
+  overflow: hidden;
   max-width: 25ch;
+  text-overflow: ellipsis;
   color: #101828;
 `;
 
