@@ -276,6 +276,10 @@ const NavContainer = styled.div`
   flex-direction: column;
   margin-right: 2.5em;
   gap: 0.8em;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Border = styled.hr`
@@ -318,7 +322,101 @@ const admin = (
   </svg>
 );
 
-return (
+const rotateLeft = styled.keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-90deg);
+  }
+`;
+
+const rotateRight = styled.keyframes`
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+`;
+
+const Trigger = styled("Collapsible.Trigger")`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  padding: 0.5em;
+  border: none;
+  background-color: #f9fafb;
+  transition: transform 0.25s ease-in-out;
+  width: 40px;
+  height: 40px;
+
+  &[data-state="open"] {
+    transform: rotate(-90deg);
+  }
+
+  &[data-state="closed"] {
+    transform: rotate(0deg);
+  }
+`;
+
+const slideRight = styled.keyframes`
+  from {
+    width: 0;
+    height: 0;
+  }
+  to {
+    width: var(--radix-collapsible-content-width);
+    height: var(--radix-collapsible-content-height);
+  }
+`;
+
+const slideLeft = styled.keyframes`
+  from {
+    width: var(--radix-collapsible-content-width);
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    width: 0;
+    height: 0;
+  }
+`;
+
+const Content = styled("Collapsible.Content")`
+  width: 100%;
+  overflow: hidden;
+
+  &[data-state="open"] {
+    animation: ${slideRight} 0.25s ease-out;
+  }
+
+  &[data-state="closed"] {
+    animation: ${slideLeft} 0.25s ease-out;
+  }
+`;
+
+const Root = styled("Collapsible.Root")`
+  dislay: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  transition: all 0.25s ease-in-out;
+  gap: 1.5em;
+  width: 100%;
+  margin-bottom: 1.5em;
+
+  &[data-state="open"] {
+    display: flex;
+  }
+
+  &[data-state="closed"] {
+    display: flex;
+  }
+`;
+
+const content = (
   <NavContainer>
     {navItem({ text: "Home", icon: discover, id: "home" })}
     {/* navItem({ text: "Pulse", icon: pulse, id: "pulse" }) */}
@@ -404,3 +502,30 @@ return (
     </NavItem>
   </NavContainer>
 );
+
+if (props.collapsible) {
+  return (
+    <Root open={state.open} onOpenChange={(open) => State.update({ open })}>
+      <Trigger>
+        <svg
+          width="20"
+          height="14"
+          viewBox="0 0 20 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M1 7H19M1 1H19M1 13H19"
+            stroke="black"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </Trigger>
+      <Content>{content}</Content>
+    </Root>
+  );
+}
+
+return content;
