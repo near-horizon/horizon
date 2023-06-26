@@ -215,7 +215,7 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             project.horizon.credits,
             project.profile.distribution,
             project.profile.dev,
-            project.profile.product_type.keys().cloned().collect_vec(),
+            &project.profile.product_type.keys().cloned().collect_vec(),
         )
         .execute(&mut tx)
         .await
