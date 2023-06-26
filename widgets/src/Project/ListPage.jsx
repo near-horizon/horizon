@@ -114,6 +114,9 @@ return (
         entity: "projects",
         count: state.projects.length,
         items: state.projects,
+        onSort: (sort) => {
+          State.update({ sort, projectsIsFetched: false });
+        },
         renderItem: (accountId) => (
           <Widget
             src={`${ownerId}/widget/Project.Card`}

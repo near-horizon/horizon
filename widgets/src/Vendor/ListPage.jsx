@@ -162,6 +162,9 @@ return (
         entity: "vendors",
         count: state.vendors.length,
         items: state.vendors,
+        onSort: (sort) => {
+          State.update({ sort, vendorsIsFetched: false });
+        },
         renderItem: (accountId) => (
           <Widget
             src={`${ownerId}/widget/Vendor.Card`}

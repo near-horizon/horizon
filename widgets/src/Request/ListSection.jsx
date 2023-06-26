@@ -167,6 +167,7 @@ return (
             onChange: ({ value }) => {
               Storage.set(`${entity}-sort`, value);
               State.update({ sort: value });
+              props.onSort(value);
             },
             options: [
               { text: "Oldest first", value: "timeasc" },

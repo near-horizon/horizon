@@ -130,6 +130,9 @@ return (
         entity: "investors",
         count: state.investors.length,
         items: state.investors,
+        onSort: (sort) => {
+          State.update({ sort, investorsIsFetched: false });
+        },
         renderItem: (accountId) => (
           <Widget
             src={`${ownerId}/widget/Investor.Card`}

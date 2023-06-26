@@ -157,6 +157,9 @@ return (
         entity: "requests",
         count: state.requests.length,
         items: state.requests,
+        onSort: (sort) => {
+          State.update({ sort, requestsIsFetched: false });
+        },
         renderItem: ([accountId, cid]) => (
           <Widget
             src={`${ownerId}/widget/Request.Card`}
