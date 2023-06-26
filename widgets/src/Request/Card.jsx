@@ -113,7 +113,7 @@ const budget = (
         stroke-linejoin="round"
       />
     </svg>
-    {currency} {state.request.budget}
+    <b>{currency}</b> {state.request.budget}
   </Item>
 );
 
