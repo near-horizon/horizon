@@ -188,8 +188,20 @@ pub async fn all_projects(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("projects.dev = ANY (");
+        builder.push("projects.stage = ANY (");
         builder.push_bind(stage.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
+    }
+
+    if let Some(dev) = params.dev {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push("projects.dev = ANY (");
+        builder.push_bind(dev.into_iter().collect::<Vec<_>>());
         builder.push(") ");
     }
 

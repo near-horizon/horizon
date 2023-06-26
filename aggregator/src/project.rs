@@ -35,6 +35,10 @@ pub struct Social {
     pub userbase: String,
     #[serde(default)]
     pub distribution: String,
+    #[serde(default)]
+    pub dev: String,
+    #[serde(default)]
+    pub product_type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
@@ -137,12 +141,14 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
                     stage,
                     userbase,
                     credits,
-                    distribution
+                    distribution,
+                    dev,
+                    product_type
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
                     $11, $12, $13, $14, $15, $16, $17, $18,
                     $19, $20, $21, $22, $23, $24, $25, $26,
-                    $27, $28
+                    $27, $28, $29, $30
                 ) ON CONFLICT (id) DO
                 UPDATE SET
                     founders = EXCLUDED.founders,
@@ -171,7 +177,9 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
                     stage = EXCLUDED.stage,
                     userbase = EXCLUDED.userbase,
                     credits = EXCLUDED.credits,
-                    distribution = EXCLUDED.distribution;
+                    distribution = EXCLUDED.distribution,
+                    dev = EXCLUDED.dev,
+                    product_type = EXCLUDED.product_type;
                 ",
             project.id,
             &project
@@ -206,6 +214,8 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             project.profile.userbase.parse::<i32>().unwrap_or(0),
             project.horizon.credits,
             project.profile.distribution,
+            project.profile.dev,
+            project.profile.product_type,
         )
         .execute(&mut tx)
         .await
