@@ -94,6 +94,8 @@ const deadline = (
   </Item>
 );
 
+const currency = state.request.source === "Credits" ? "NH" : "$";
+
 const budget = (
   <Item>
     <svg
@@ -111,7 +113,7 @@ const budget = (
         stroke-linejoin="round"
       />
     </svg>
-    NH {state.request.budget}
+    {currency} {state.request.budget}
   </Item>
 );
 
