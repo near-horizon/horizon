@@ -114,6 +114,11 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
     let mut tx = pool.begin().await?;
 
     for project in projects {
+        let vertical = if project.profile.verticals.is_empty() {
+            HashMap::from_iter([(project.profile.category, "".to_string())])
+        } else {
+            project.profile.verticals
+        };
         sqlx::query!(
             "INSERT INTO projects (
                     id,
@@ -213,7 +218,7 @@ pub async fn insert_many(pool: &PgPool, projects: Vec<Project>) -> anyhow::Resul
             project.profile.website,
             project.profile.tagline,
             serde_json::to_value(project.profile.linktree)?,
-            serde_json::to_value(project.profile.verticals)?,
+            serde_json::to_value(vertical)?,
             project.profile.stage,
             project.profile.userbase.parse::<i32>().unwrap_or(0),
             project.horizon.credits,
