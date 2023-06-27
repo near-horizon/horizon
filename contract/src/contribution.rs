@@ -368,14 +368,15 @@ impl Contract {
         self.contributions
             .keys()
             .filter_map(|(project_id, vendor_id)| {
-                self.check_is_project_admin(project_id, &account_id)
-                    .then_some(
-                        self.contributions
-                            .get(&(project_id.clone(), vendor_id.clone()))
-                            .unwrap()
-                            .keys()
-                            .map(|cid| ((project_id.clone(), cid.clone()), vendor_id.clone())),
-                    )
+                (self.check_is_project_admin(project_id, &account_id)
+                    || self.check_is_vendor_admin(vendor_id, &account_id))
+                .then_some(
+                    self.contributions
+                        .get(&(project_id.clone(), vendor_id.clone()))
+                        .unwrap()
+                        .keys()
+                        .map(|cid| ((project_id.clone(), cid.clone()), vendor_id.clone())),
+                )
             })
             .flatten()
             .collect()
