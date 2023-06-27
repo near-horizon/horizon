@@ -51,6 +51,10 @@ const tabContent = {
       props={{ content: state.content, search: state.search, update }}
     />
   ),
+  ["my-projects"]: <Widget src={`${ownerId}/widget/Manage.Projects`} />,
+  ["my-requests"]: <Widget src={`${ownerId}/widget/Manage.Requests`} />,
+  ["my-contracts"]: <Widget src={`${ownerId}/widget/Manage.Contracts`} />,
+  ["my-applications"]: <Widget src={`${ownerId}/widget/Manage.Applications`} />,
   project: (
     <Widget
       src={`${ownerId}/widget/Project.Page`}
@@ -200,7 +204,19 @@ const tabContent = {
       props={{ update, content: state.content, urlProps: props }}
     />
   ),
+  backers: (
+    <Widget
+      src={`${ownerId}/widget/Investor.ListPage`}
+      props={{ update, content: state.content, urlProps: props }}
+    />
+  ),
   vendors: (
+    <Widget
+      src={`${ownerId}/widget/Vendor.ListPage`}
+      props={{ update, content: state.content, urlProps: props }}
+    />
+  ),
+  contributors: (
     <Widget
       src={`${ownerId}/widget/Vendor.ListPage`}
       props={{ update, content: state.content, urlProps: props }}
