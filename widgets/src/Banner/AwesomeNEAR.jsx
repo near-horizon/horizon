@@ -1,69 +1,25 @@
 const Container = styled.div`
-  position: relative;
-  background: #66a0ff;
-  border-radius: 8px;
   display: flex;
-  flex-direction: row;
+  padding: 0.9375rem 1.625rem;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 64px;
-  padding: 48px;
-  width: 100%;
-  max-width: 1300px;
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column-reverse;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 16px;
-  }
+  gap: 3rem;
+  flex: 1 0 0;
+  border-radius: 0.5rem;
+  background: #66a0ff;
+  margin-top: -2rem;
 `;
 
 const TextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 16px;
-
-  & > h4 {
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 2em;
-    line-height: 1.25em;
-    color: #ffffff;
-  }
-
-  & > p {
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.25em;
-    line-height: 140%;
-    color: #ffffff;
-
-    & > br {
-      margin-bottom: 16px;
-    }
-  }
+  color: #fff;
+  font-size: 0.9375rem;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.00938rem;
 
   & > a {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 9px 28px;
-    gap: 8px;
-    border: 2px solid #ffffff;
-    border-radius: 50px;
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 19px;
-    text-align: center;
     color: #ffffff;
 
     &:hover,
@@ -71,6 +27,10 @@ const TextContainer = styled.div`
     &:active {
       color: #ffffff;
       text-decoration: none;
+    }
+
+    & > span {
+      text-decoration: underline;
     }
   }
 `;
@@ -88,15 +48,8 @@ const GraphicContainer = styled.div`
 `;
 
 const DismissButton = styled.button`
-  position: absolute;
-  top: 16px;
-  right: 16px;
   background: transparent;
   border: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
 `;
 
 const AwesomeNEARToHorizon = (
@@ -210,6 +163,12 @@ if (show !== undefined && !show) {
 
 return (
   <Container>
+    <TextContainer>
+      NEAR Horizon is the new home for the NEAR Ecosystem projects.{" "}
+      <a href="#">
+        <span>Learn more</span> –&gt;
+      </a>
+    </TextContainer>
     <DismissButton
       onClick={() => {
         Storage.set("showAwesomeNearBanner", false);
@@ -231,26 +190,26 @@ return (
         />
       </svg>
     </DismissButton>
-    <TextContainer>
-      <h4>NEAR Horizon is the new home for the NEAR Ecosystem projects</h4>
-      <p>
-        AwesomeNEAR is winding down, and NEAR Horizon will be your new stop for
-        discovering all the amazing projects building in the NEAR ecosystem.
-        <br />
-        Not only will your project be easy to find, you will be able to build
-        your team, connect with other founders, contributors and backers— all
-        through the Horizon app. Join the movement today!
-      </p>
-      <a href="/nearhorizon.near/widget/Index?tab=createproject">
-        Join Horizon now
-      </a>
-    </TextContainer>
-    <GraphicContainer>
-      {AwesomeNEARToHorizon}
-      <img
-        src="https://ipfs.near.social/ipfs/bafkreifzgbilmlylsu3ou3h36uqbbwdbsw34vye6vna5idxwv7xfpaiuk4"
-        alt="Project Logos"
-      />
-    </GraphicContainer>
+    {/* <TextContainer> */}
+    {/*   <h4>NEAR Horizon is the new home for the NEAR Ecosystem projects</h4> */}
+    {/*   <p> */}
+    {/*     AwesomeNEAR is winding down, and NEAR Horizon will be your new stop for */}
+    {/*     discovering all the amazing projects building in the NEAR ecosystem. */}
+    {/*     <br /> */}
+    {/*     Not only will your project be easy to find, you will be able to build */}
+    {/*     your team, connect with other founders, contributors and backers— all */}
+    {/*     through the Horizon app. Join the movement today! */}
+    {/*   </p> */}
+    {/*   <a href="/nearhorizon.near/widget/Index?tab=createproject"> */}
+    {/*     Join Horizon now */}
+    {/*   </a> */}
+    {/* </TextContainer> */}
+    {/* <GraphicContainer> */}
+    {/*   {AwesomeNEARToHorizon} */}
+    {/*   <img */}
+    {/*     src="https://ipfs.near.social/ipfs/bafkreifzgbilmlylsu3ou3h36uqbbwdbsw34vye6vna5idxwv7xfpaiuk4" */}
+    {/*     alt="Project Logos" */}
+    {/*   /> */}
+    {/* </GraphicContainer> */}
   </Container>
 );
