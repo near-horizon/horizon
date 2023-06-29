@@ -682,7 +682,7 @@ return (
               <Button>Close</Button>
             </div>
             <div>
-              <a onClick={() => clear()}>Clear</a>
+              <button onClick={() => clear()}>Clear</button>
               <a
                 href={`/${ownerId}/widget/Index?tab=${
                   props.entity ?? "projects"
