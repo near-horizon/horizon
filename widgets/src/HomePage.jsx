@@ -1,27 +1,16 @@
 const ownerId = "nearhorizon.near";
-const mapImage = (src) => `https://ipfs.near.social/ipfs/${src}`;
 
 const Container = styled.div`
   max-width: 90rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 6rem;
+  margin-bottom: 6rem;
 
   & > div {
     width: 100%;
   }
-`;
-
-const Footer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 4rem 6.875rem 3.0625rem 6.875rem;
-  justify-content: center;
-  gap: 1.5rem;
-  background: var(--background-beige, #f2f1ea);
 `;
 
 return (
@@ -39,6 +28,6 @@ return (
       <Widget src={`${ownerId}/widget/Landing.Backers`} />
       <Widget src={`${ownerId}/widget/Landing.Partners`} />
     </Container>
-    <Footer></Footer>
+    <Widget src={`${ownerId}/widget/Landing.Footer`} />
   </>
 );

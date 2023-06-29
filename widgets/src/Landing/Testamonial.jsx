@@ -19,6 +19,10 @@ const Column = styled.div`
   gap: 1.8125rem;
   width: 75%;
 
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+
   & > p {
     color: #fff;
     font-size: 1.5rem;
@@ -53,6 +57,10 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const mapImage = (src) => `https://ipfs.near.social/ipfs/${src}`;

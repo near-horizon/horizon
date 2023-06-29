@@ -1,14 +1,14 @@
 const images = {
-  desktop: "bafkreigrs36in3bq4mf6mv2cezjqdq5nobevgqitsj3tsexnf22phv2tmu",
-  mobile: "bafkreiet6lvffvydiltk3zxez235fryrsk32yhrlpsf3rpai22dg57nieq",
+  desktop: "bafkreibfgez7zpynpgo5fvjkxgstun6of5ob5noxxhugraxtda3kssosla",
+  mobile: "bafkreiexkerx7t3k6oc5262yc64gd5qtatxhlmuakwt3unhfkpyyhe7k3i",
 };
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   justify-content: space-between;
   padding: 0;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.375rem;
   width: 100%;
 
@@ -24,6 +24,7 @@ const Container = styled.div`
 
   @media screen and (max-width: 768px) {
     flex-direction: column;
+    align-items: center;
 
     & > div {
       width: 100%;
@@ -32,24 +33,16 @@ const Container = styled.div`
   }
 `;
 
-const arrow = (
-  <svg
-    width="37"
-    height="12"
-    viewBox="0 0 37 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M37 6L27 0.226497V11.7735L37 6ZM0 7H28V5H0V7Z" fill="#32D583" />
-  </svg>
-);
-
 const Title = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 1.5rem;
+
+  @media screen and (max-width: 768px) {
+    align-items: center;
+  }
 
   & > span {
     display: flex;
@@ -64,6 +57,7 @@ const Title = styled.div`
     font-weight: 600;
     letter-spacing: 0.01rem;
   }
+
   & > h2 {
     color: #000;
     font-size: 2rem;
@@ -71,25 +65,11 @@ const Title = styled.div`
     font-weight: 700;
     line-height: 2.5rem;
     letter-spacing: 0.02rem;
+
+    @media screen and (max-width: 768px) {
+      text-align: center;
+    }
   }
-`;
-
-const Join = styled.span`
-  color: var(--background-dark, #3a3f42);
-  font-size: 2rem;
-  font-family: FK Grotesk;
-  font-weight: 700;
-  line-height: 2.5rem;
-  letter-spacing: 0.02rem;
-`;
-
-const Build = styled.span`
-  color: #32d583;
-  font-size: 2rem;
-  font-family: FK Grotesk;
-  font-weight: 700;
-  line-height: 2.5rem;
-  letter-spacing: 0.02rem;
 `;
 
 const Accordion = styled("Accordion.Root")`
@@ -195,22 +175,6 @@ const Content = styled("Accordion.Content")`
   }
 `;
 
-const soon = (
-  <svg
-    width="46"
-    height="17"
-    viewBox="0 0 46 17"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect width="46" height="17" rx="6" fill="#62EBE4" />
-    <path
-      d="M14.1535 6.45455C14.1023 6.02273 13.8949 5.6875 13.5313 5.44886C13.1677 5.21023 12.7216 5.09091 12.1932 5.09091C11.8069 5.09091 11.4688 5.15341 11.179 5.27841C10.8921 5.40341 10.6677 5.57528 10.5057 5.79403C10.3466 6.01278 10.2671 6.26136 10.2671 6.53977C10.2671 6.77273 10.3225 6.97301 10.4333 7.14062C10.5469 7.3054 10.6918 7.44318 10.8679 7.55398C11.0441 7.66193 11.2287 7.75142 11.4219 7.82244C11.6151 7.89062 11.7927 7.94602 11.9546 7.98864L12.841 8.22727C13.0682 8.28693 13.3211 8.36932 13.5995 8.47443C13.8807 8.57955 14.1492 8.72301 14.4049 8.90483C14.6634 9.08381 14.8765 9.31392 15.0441 9.59517C15.2117 9.87642 15.2955 10.2216 15.2955 10.6307C15.2955 11.1023 15.1719 11.5284 14.9248 11.9091C14.6804 12.2898 14.3225 12.5923 13.8509 12.8168C13.3821 13.0412 12.8125 13.1534 12.1421 13.1534C11.5171 13.1534 10.9759 13.0526 10.5185 12.8509C10.064 12.6491 9.70601 12.3679 9.44464 12.0071C9.18612 11.6463 9.03982 11.2273 9.00572 10.75H10.0966C10.125 11.0795 10.2358 11.3523 10.429 11.5682C10.625 11.7812 10.8722 11.9403 11.1705 12.0455C11.4716 12.1477 11.7955 12.1989 12.1421 12.1989C12.5455 12.1989 12.9077 12.1335 13.2287 12.0028C13.5498 11.8693 13.804 11.6847 13.9915 11.4489C14.179 11.2102 14.2728 10.9318 14.2728 10.6136C14.2728 10.3239 14.1918 10.0881 14.0299 9.90625C13.8679 9.72443 13.6549 9.5767 13.3907 9.46307C13.1265 9.34943 12.841 9.25 12.5341 9.16477L11.4603 8.85795C10.7785 8.66193 10.2387 8.3821 9.84095 8.01847C9.44322 7.65483 9.24436 7.17898 9.24436 6.59091C9.24436 6.10227 9.37646 5.67614 9.64067 5.3125C9.90771 4.94602 10.2657 4.66193 10.7145 4.46023C11.1662 4.25568 11.6705 4.15341 12.2273 4.15341C12.7898 4.15341 13.2898 4.25426 13.7273 4.45597C14.1648 4.65483 14.5114 4.92756 14.7671 5.27415C15.0256 5.62074 15.162 6.0142 15.1762 6.45455H14.1535ZM19.6758 13.1364C19.0849 13.1364 18.5664 12.9957 18.1204 12.7145C17.6772 12.4332 17.3306 12.0398 17.0806 11.5341C16.8335 11.0284 16.7099 10.4375 16.7099 9.76136C16.7099 9.07955 16.8335 8.48437 17.0806 7.97585C17.3306 7.46733 17.6772 7.07244 18.1204 6.79119C18.5664 6.50994 19.0849 6.36932 19.6758 6.36932C20.2667 6.36932 20.7837 6.50994 21.2269 6.79119C21.673 7.07244 22.0195 7.46733 22.2667 7.97585C22.5167 8.48437 22.6417 9.07955 22.6417 9.76136C22.6417 10.4375 22.5167 11.0284 22.2667 11.5341C22.0195 12.0398 21.673 12.4332 21.2269 12.7145C20.7837 12.9957 20.2667 13.1364 19.6758 13.1364ZM19.6758 12.233C20.1247 12.233 20.494 12.1179 20.7837 11.8878C21.0735 11.6577 21.288 11.3551 21.4272 10.9801C21.5664 10.6051 21.636 10.1989 21.636 9.76136C21.636 9.32386 21.5664 8.91619 21.4272 8.53835C21.288 8.16051 21.0735 7.85511 20.7837 7.62216C20.494 7.3892 20.1247 7.27273 19.6758 7.27273C19.2269 7.27273 18.8576 7.3892 18.5678 7.62216C18.2781 7.85511 18.0636 8.16051 17.9244 8.53835C17.7852 8.91619 17.7156 9.32386 17.7156 9.76136C17.7156 10.1989 17.7852 10.6051 17.9244 10.9801C18.0636 11.3551 18.2781 11.6577 18.5678 11.8878C18.8576 12.1179 19.2269 12.233 19.6758 12.233ZM26.956 13.1364C26.365 13.1364 25.8466 12.9957 25.4006 12.7145C24.9574 12.4332 24.6108 12.0398 24.3608 11.5341C24.1136 11.0284 23.99 10.4375 23.99 9.76136C23.99 9.07955 24.1136 8.48437 24.3608 7.97585C24.6108 7.46733 24.9574 7.07244 25.4006 6.79119C25.8466 6.50994 26.365 6.36932 26.956 6.36932C27.5469 6.36932 28.0639 6.50994 28.5071 6.79119C28.9531 7.07244 29.2997 7.46733 29.5469 7.97585C29.7969 8.48437 29.9219 9.07955 29.9219 9.76136C29.9219 10.4375 29.7969 11.0284 29.5469 11.5341C29.2997 12.0398 28.9531 12.4332 28.5071 12.7145C28.0639 12.9957 27.5469 13.1364 26.956 13.1364ZM26.956 12.233C27.4048 12.233 27.7741 12.1179 28.0639 11.8878C28.3537 11.6577 28.5682 11.3551 28.7074 10.9801C28.8466 10.6051 28.9162 10.1989 28.9162 9.76136C28.9162 9.32386 28.8466 8.91619 28.7074 8.53835C28.5682 8.16051 28.3537 7.85511 28.0639 7.62216C27.7741 7.3892 27.4048 7.27273 26.956 7.27273C26.5071 7.27273 26.1378 7.3892 25.848 7.62216C25.5582 7.85511 25.3437 8.16051 25.2045 8.53835C25.0653 8.91619 24.9957 9.32386 24.9957 9.76136C24.9957 10.1989 25.0653 10.6051 25.2045 10.9801C25.3437 11.3551 25.5582 11.6577 25.848 11.8878C26.1378 12.1179 26.5071 12.233 26.956 12.233ZM32.5827 9.0625V13H31.577V6.45455H32.5486V7.47727H32.6338C32.7872 7.14489 33.0202 6.87784 33.3327 6.67614C33.6452 6.47159 34.0486 6.36932 34.5429 6.36932C34.9861 6.36932 35.3739 6.46023 35.7063 6.64205C36.0387 6.82102 36.2972 7.09375 36.4818 7.46023C36.6665 7.82386 36.7588 8.28409 36.7588 8.84091V13H35.7532V8.90909C35.7532 8.39489 35.6196 7.99432 35.3526 7.70739C35.0855 7.41761 34.7191 7.27273 34.2532 7.27273C33.9321 7.27273 33.6452 7.34233 33.3924 7.48153C33.1424 7.62074 32.9449 7.82386 32.8 8.09091C32.6551 8.35795 32.5827 8.68182 32.5827 9.0625Z"
-      fill="black"
-    />
-  </svg>
-);
-
 const ImgContainer = styled.div`
   display: flex;
   align-items: center;
@@ -257,8 +221,8 @@ const RegisterButton = styled.a`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 50px;
-  background: var(--primary-primary-default, #00ec97);
+  border-radius: 1000px;
+  border: 2px solid #000;
   color: var(--text-text-dark, #11181c);
   text-align: center;
   font-size: 1.125rem;
@@ -266,10 +230,13 @@ const RegisterButton = styled.a`
   font-weight: 600;
   align-self: flex-start;
 
+  @media screen and (max-width: 768px) {
+    align-self: center;
+  }
+
   &:hover,
   &:focus,
   &:active {
-    background: var(--primary-primary-hover, #00ec97);
     color: var(--text-text-dark, #11181c);
     text-decoration: none;
   }
@@ -287,11 +254,38 @@ return (
   <Container>
     <div>
       <Title>
-        <span>Horizon for Contributors</span>
-        <h2>Grow your reach and reputation with Horizon</h2>
+        <span>Horizon for Partners</span>
+        <h2>Leverage your outreach with Horizon</h2>
       </Title>
-      <Accordion defaultValue="access">
-        <Item value="access">
+      <Accordion defaultValue="acceleration">
+        <Item value="acceleration">
+          <Header>
+            <Trigger>
+              <svg
+                width="31"
+                height="32"
+                viewBox="0 0 31 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6.45837 16.0007C6.45837 11.0071 10.5065 6.95898 15.5 6.95898M21.3124 10.1882L15.4999 16.0007M28.4167 16.0007C28.4167 23.1343 22.6337 28.9173 15.5 28.9173C8.36636 28.9173 2.58337 23.1343 2.58337 16.0007C2.58337 8.86697 8.36636 3.08398 15.5 3.08398C22.6337 3.08398 28.4167 8.86697 28.4167 16.0007ZM16.7917 16.0007C16.7917 16.714 16.2134 17.2923 15.5 17.2923C14.7867 17.2923 14.2084 16.714 14.2084 16.0007C14.2084 15.2873 14.7867 14.709 15.5 14.709C16.2134 14.709 16.7917 15.2873 16.7917 16.0007Z"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <h3>Accelerator programs</h3>
+            </Trigger>
+          </Header>
+          <Content>
+            Streamline sourcing potential investments through our database of
+            diverse, pre-screened pool of innovative Web3 founders.
+          </Content>
+        </Item>
+
+        <Item value="ecosystem">
           <Header>
             <Trigger>
               <svg
@@ -302,20 +296,20 @@ return (
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M23.3679 29.047L17.4993 14.3751L19.6851 29.4053C19.7349 29.7464 20.0276 30 20.3723 30H22.7234C23.2148 30 23.5502 29.5036 23.3679 29.0477V29.047ZM15.3128 29.4046L17.4986 14.3744L11.63 29.0463C11.4476 29.5022 11.7831 29.9986 12.2745 29.9986H14.6255C14.9702 29.9986 15.2629 29.7457 15.3128 29.4039V29.4046ZM27.3598 5H7.63874C6.18156 5 5 6.18159 5 7.63881V27.3605C5 27.624 5.03917 27.879 5.11182 28.119C5.27349 28.6539 5.97145 28.7856 6.32044 28.3498L17.5 14.3751L28.6796 28.3498C29.0285 28.7856 29.7265 28.6539 29.8882 28.119C29.9608 27.879 30 27.6247 30 27.3605V7.63881C30 6.18159 28.8184 5 27.3613 5H27.3598Z"
+                  d="M27.2297 5C26.2668 5 25.3727 5.48004 24.8683 6.26919L19.4336 14.0275C19.2566 14.2832 19.3285 14.6279 19.5944 14.7982C19.8099 14.9363 20.0951 14.9192 20.2914 14.7568L25.6409 10.2954C25.7298 10.2185 25.8668 10.2263 25.9468 10.3118C25.9831 10.351 26.0023 10.4016 26.0023 10.4535V24.4218C26.0023 24.5372 25.9053 24.6298 25.7853 24.6298C25.7209 24.6298 25.6601 24.6027 25.6194 24.555L9.44873 5.94299C8.92282 5.34472 8.14951 5 7.33472 5H6.76955C5.23996 5 4 6.19227 4 7.66303V27.3363C4 28.807 5.23996 29.9993 6.76955 29.9993C7.73249 29.9993 8.62653 29.5192 9.13096 28.7301L14.5656 20.9718C14.7427 20.7161 14.6708 20.3714 14.4049 20.2011C14.1893 20.063 13.9042 20.0801 13.7079 20.2424L8.35839 24.7039C8.26951 24.7808 8.13247 24.7729 8.05248 24.6875C8.01618 24.6483 7.99692 24.5977 7.99766 24.5457V10.5746C7.99766 10.4592 8.0947 10.3667 8.21469 10.3667C8.2784 10.3667 8.33988 10.3937 8.38062 10.4414L24.549 29.057C25.0757 29.6546 25.849 29.9993 26.6631 30H27.2282C28.7578 30.0007 29.9985 28.8092 30 27.3384V7.66303C29.9993 6.19227 28.7593 5 27.2297 5Z"
                   fill="currentColor"
                 />
               </svg>
-              <h3>Access to the Horizon ecosystem</h3>
+              <h3>Ecosystem partners</h3>
             </Trigger>
           </Header>
           <Content>
-            Engage directly with 150+ startups at various stages, from
-            early-stage to growth-stage businesses.
+            Engage with Web3 communities, DAOs, and incubators to provide
+            workshops and resources to current and aspiring founders.
           </Content>
         </Item>
 
-        <Item value="scaled">
+        <Item value="education">
           <Header>
             <Trigger>
               <svg
@@ -326,55 +320,27 @@ return (
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M18.0833 13.4167L27.125 4.375M27.125 4.375H19.375M27.125 4.375V12.125M12.9167 18.5833L3.875 27.625M3.875 27.625H11.625M3.875 27.625L3.875 19.875"
+                  d="M21.9584 19.2298V15.3476C21.9584 15.1157 21.9584 14.9998 21.9231 14.8975C21.8919 14.807 21.8409 14.7246 21.7739 14.6562C21.6982 14.5788 21.5945 14.527 21.3872 14.4233L15.5 11.4798M5.16671 12.7714V21.5633C5.16671 22.0437 5.16671 22.2839 5.24165 22.4942C5.3079 22.6801 5.41587 22.8484 5.55728 22.9861C5.71724 23.1418 5.9356 23.2419 6.37229 23.442L14.639 27.2309C14.9557 27.3761 15.1141 27.4487 15.2791 27.4773C15.4253 27.5027 15.5748 27.5027 15.721 27.4773C15.886 27.4487 16.0444 27.3761 16.3611 27.2309L24.6278 23.442C25.0645 23.2419 25.2828 23.1418 25.4428 22.9861C25.5842 22.8484 25.6922 22.6801 25.7584 22.4942C25.8334 22.2839 25.8334 22.0437 25.8334 21.5633V12.7714M2.58337 11.4798L15.0379 5.25249C15.2074 5.16776 15.2921 5.1254 15.3809 5.10873C15.4597 5.09396 15.5404 5.09396 15.6191 5.10873C15.708 5.1254 15.7927 5.16776 15.9622 5.25249L28.4167 11.4798L15.9622 17.707C15.7927 17.7918 15.708 17.8341 15.6191 17.8508C15.5404 17.8656 15.4597 17.8656 15.3809 17.8508C15.2921 17.8341 15.2074 17.7918 15.0379 17.707L2.58337 11.4798Z"
                   stroke="currentColor"
                   stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
               </svg>
-              <h3>Scaled reach and business development</h3>
+              <h3>Education partners</h3>
             </Trigger>
           </Header>
           <Content>
-            Grow your client base and increase your brand visibility within the
-            Web3 start-up community - kickstarted by our innovative credit
-            system.
-          </Content>
-        </Item>
-
-        <Item value="advantage">
-          <Header>
-            <Trigger>
-              <svg
-                width="31"
-                height="32"
-                viewBox="0 0 31 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M20.6667 10.834V6.95898L24.5417 3.08398L25.8333 5.66732L28.4167 6.95898L24.5417 10.834H20.6667ZM20.6667 10.834L15.5 16.0006M28.4167 16.0007C28.4167 23.1343 22.6337 28.9173 15.5 28.9173C8.36636 28.9173 2.58337 23.1343 2.58337 16.0007C2.58337 8.86697 8.36636 3.08398 15.5 3.08398M21.9584 16.0007C21.9584 19.5675 19.0669 22.459 15.5 22.459C11.9332 22.459 9.04171 19.5675 9.04171 16.0007C9.04171 12.4338 11.9332 9.54232 15.5 9.54232"
-                  stroke="black"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <h3>Strategic and long-term advantage</h3>
-            </Trigger>
-          </Header>
-          <Content>
-            Build long-term relationships with start-ups that can convert into
-            high-value clients as they grow and scale.
+            Design hackathons, fellowships, educational content for students,
+            early career engineers and current founders.
           </Content>
         </Item>
       </Accordion>
-      {registerButton({ text: "Create profile" })}
+      {registerButton({ text: "Join as a partner" })}
     </div>
     <ImgContainer>
-      <img src={mapImage(images.desktop)} alt="contributors" />
-      <img src={mapImage(images.mobile)} alt="contributors" />
+      <img src={mapImage(images.desktop)} alt="partners" />
+      <img src={mapImage(images.mobile)} alt="partners" />
     </ImgContainer>
   </Container>
 );
