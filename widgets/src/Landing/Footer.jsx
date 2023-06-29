@@ -188,16 +188,18 @@ return (
           <h4>Explore</h4>
           <ul>
             <li>
-              <a>Projects</a>
+              <a href={`/${ownerId}/widgets/Index?tab=projects`}>Projects</a>
             </li>
             <li>
-              <a>Contribution requests</a>
+              <a href={`/${ownerId}/widgets/Index?tab=requests`}>
+                Contribution requests
+              </a>
             </li>
             <li>
-              <a>Contributors</a>
+              <a href={`/${ownerId}/widgets/Index?tab=vendors`}>Contributors</a>
             </li>
             <li>
-              <a>Backers</a>
+              <a href={`/${ownerId}/widgets/Index?tab=investors`}>Backers</a>
             </li>
           </ul>
         </Column>
@@ -222,22 +224,26 @@ return (
               <a>Ask community</a>
             </li>
             <li>
-              <a>Learning resources</a>
+              <a href={`/${ownerId}/widget/Index?tab=learn`}>
+                Learning resources
+              </a>
             </li>
             <li>
-              <a>FAQ</a>
+              <a href={`/${ownerId}/widget/Index?tab=faq`}>FAQ</a>
             </li>
           </ul>
         </Column>
         <div>
-          <RegisterButton href={`${ownerId}/widget/Index?tab=createproject`}>
+          <RegisterButton href={`/${ownerId}/widget/Index?tab=createproject`}>
             Create profile
           </RegisterButton>
         </div>
       </Links>
       <Bottom>
         <span>© 2023</span>
-        <a>Terms &amp; conditions</a>
+        <a href={`/${ownerId}/widget/Index?tab=legal`}>
+          Terms &amp; conditions
+        </a>
         <span>
           Built on
           <svg
