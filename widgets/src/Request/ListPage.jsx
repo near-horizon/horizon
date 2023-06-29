@@ -16,157 +16,66 @@ const getFilters = () => {
   );
 };
 
-const selected = () => {
-  const selectedKeys = Object.keys(state.filters);
-  return (
-    selectedKeys.length > 0 &&
-    selectedKeys.some((key) => state.filters[key].size > 0)
-  );
-};
-
-const url = () => {
-  const urlString = "";
-
-  if (selected()) {
-    const selectedKeys = Object.keys(state.filters);
-
-    urlString += selectedKeys
-      .map((key) => {
-        const values = Array.from(state.filters[key]);
-        return `${key}=${values.join(",")}`;
-      })
-      .join("&");
-  }
-
-  if (state.search) {
-    if (urlString.length > 0) {
-      urlString += "&";
-    }
-    urlString += `q=${state.search}`;
-  }
-
-  if (state.sort) {
-    urlString += `&sort=${state.sort}`;
-  }
-
-  return urlString;
-};
-
-State.init({
-  filters: getFilters(),
-  search: urlProps.q,
-  sort: urlProps.sort,
-  requests: null,
-  requestsIsFetched: false,
-});
-
-if (!state.requestsIsFetched) {
-  asyncFetch(`https://api-op3o.onrender.com/data/requests?${url()}`).then(
-    ({ body: requests }) => State.update({ requests, requestsIsFetched: true })
-  );
-
-  return <>Loading...</>;
-}
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  width: 100%;
-  gap: 2em;
-
-  & > h1 {
-    font-family: "FK Grotesk";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 40px;
-    color: #101828;
-  }
-`;
-
 return (
-  <Container>
-    <h1>Contribution requests</h1>
-    <Widget
-      src={`${ownerId}/widget/Inputs.Filters`}
-      props={{
-        urlFilters: state.filters,
-        search: state.search,
-        entity: "requests",
-        change: ({ filters, search }) => {
-          State.update({ filters, search, requestsIsFetched: false });
+  <Widget
+    src={`${ownerId}/widget/Layout.ListPage`}
+    props={{
+      descriptor: "requests",
+      title: "Contribution requests",
+      entity: "requests",
+      urlProps: props.urlProps,
+      filters: ["tags", "type", "payment", "source", "budget", "stage"],
+      filterOptions: {
+        first: {
+          text: "Tags",
+          value: "tags",
+          options: [],
         },
-        filters: {
-          first: {
-            text: "Tags",
-            value: "tags",
-            options: [],
+        second: [
+          {
+            text: "Request type",
+            value: "type",
+            options: [
+              { text: "One time", value: "onetime" },
+              { text: "Short", value: "short" },
+              { text: "Long", value: "long" },
+              { text: "Full time", value: "fulltime" },
+            ],
           },
-          second: [
-            {
-              text: "Request type",
-              value: "type",
-              options: [
-                { text: "One time", value: "onetime" },
-                { text: "Short", value: "short" },
-                { text: "Long", value: "long" },
-                { text: "Full time", value: "fulltime" },
-              ],
-            },
-            {
-              text: "Payment type",
-              value: "payment",
-              options: [
-                { text: "Flat rate", value: "flatrate" },
-                { text: "Time based", value: "timebased" },
-              ],
-            },
-            {
-              text: "Payment source",
-              value: "source",
-              options: [
-                { text: "Credits", value: "credits" },
-                { text: "Other", value: "other" },
-              ],
-            },
-            {
-              text: "Budget",
-              value: "budget",
-              options: [
-                { text: "0 - 100", value: "0-100" },
-                { text: "100 - 1000", value: "100-1000" },
-                { text: "1000 - 10000", value: "1000-10000" },
-                { text: "10000 - 100000", value: "10000-100000" },
-              ],
-            },
-          ],
-        },
-        quickFilters: [
-          { text: "Credits", value: "credits", key: "source" },
-          { text: "One time", value: "onetime", key: "type" },
-          { text: "Flat rate", value: "flatrate", key: "payment" },
-          { text: "Full time", value: "fulltime", key: "type" },
+          {
+            text: "Payment type",
+            value: "payment",
+            options: [
+              { text: "Flat rate", value: "flatrate" },
+              { text: "Time based", value: "timebased" },
+            ],
+          },
+          {
+            text: "Payment source",
+            value: "source",
+            options: [
+              { text: "Credits", value: "credits" },
+              { text: "Other", value: "other" },
+            ],
+          },
+          {
+            text: "Budget",
+            value: "budget",
+            options: [
+              { text: "0 - 100", value: "0-100" },
+              { text: "100 - 1000", value: "100-1000" },
+              { text: "1000 - 10000", value: "1000-10000" },
+              { text: "10000 - 100000", value: "10000-100000" },
+            ],
+          },
         ],
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Request.ListSection`}
-      props={{
-        entity: "requests",
-        count: state.requests.length,
-        items: state.requests,
-        onSort: (sort) => {
-          State.update({ sort, requestsIsFetched: false });
-        },
-        renderItem: ([accountId, cid]) => (
-          <Widget
-            src={`${ownerId}/widget/Request.Card`}
-            props={{ accountId, cid, large: true }}
-          />
-        ),
-      }}
-    />
-  </Container>
+      },
+      renderItem: ([accountId, cid]) => (
+        <Widget
+          src={`${ownerId}/widget/Request.Card`}
+          props={{ accountId, cid, large: true }}
+        />
+      ),
+    }}
+  />
 );
