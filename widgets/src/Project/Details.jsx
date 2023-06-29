@@ -68,6 +68,15 @@ const onSave = (data) => {
   });
 };
 
+const stageMap = {
+  "pre-seed": "Pre-seed",
+  seed: "Seed",
+  "series-a": "Series A",
+  "series-b": "Series B",
+  "series-c": "Series C",
+  "series-d": "Series D",
+};
+
 return (
   <Container>
     <Heading>Details</Heading>
@@ -139,7 +148,7 @@ return (
       src={`${ownerId}/widget/Inputs.Viewable.Phase`}
       props={{
         label: "Development phase",
-        value: state.profile.stage,
+        value: state.profile.dev,
         onSave: ({ value: stage }) => onSave({ profile: { stage } }),
         canEdit: isAdmin,
       }}
@@ -169,7 +178,10 @@ return (
       props={{
         label: "Stage",
         id: "stage",
-        value: state.profile.stage,
+        value: {
+          value: state.profile.stage,
+          text: stageMap[state.profile.stage],
+        },
         options: [
           { text: "Pre-seed", value: "pre-seed" },
           { text: "Seed", value: "seed" },
@@ -187,7 +199,7 @@ return (
       props={{
         label: "Company size",
         id: "size",
-        value: state.team,
+        value: state.profile.team,
         onSave: (team) => onSave({ profile: { team: `${team}` } }),
         canEdit: isAdmin,
       }}
