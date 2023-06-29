@@ -124,6 +124,10 @@ const Card = styled.div`
   gap: 1.5rem;
   flex: 1 0 0;
 
+  @media screen and (max-width: 768px) {
+    text-align: center;
+  }
+
   & > div {
     display: flex;
     padding: 0.625rem;
@@ -131,6 +135,10 @@ const Card = styled.div`
     align-items: flex-start;
     gap: 1rem;
     align-self: stretch;
+
+    @media screen and (max-width: 768px) {
+      align-items: center;
+    }
 
     & > h3 {
       display: flex;
@@ -142,6 +150,11 @@ const Card = styled.div`
       font-family: Inter;
       font-weight: 700;
       letter-spacing: 0.01188rem;
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+      }
 
       & > span {
         display: flex;
