@@ -21,20 +21,20 @@ const getFilters = () => {
   );
 };
 
-const selected = (selected) => {
-  const selectedKeys = Object.keys(state.filters ?? selected);
+const selected = (options) => {
+  const selectedKeys = Object.keys(options);
   return (
-    selectedKeys.length > 0 &&
-    selectedKeys.some((key) => state.filters[key].size > 0)
+    selectedKeys.length > 0 && selectedKeys.some((key) => options[key].size > 0)
   );
 };
 
 const url = ({ filters, sort }) => {
   const urlString = "";
 
-  const options = state.filters ?? filters;
+  const options =
+    Object.keys(filters ?? {}).length > 0 ? filters : state.filters;
 
-  if (selected(selectedFilters)) {
+  if (selected(options)) {
     const selectedKeys = Object.keys(options);
 
     urlString += selectedKeys
