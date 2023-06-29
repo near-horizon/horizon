@@ -32,6 +32,7 @@ return (
           filters: props.filters,
           quickFilters: props.quickFilters,
           change: props.change,
+          url: props.url,
         }}
       />
     </Root>
