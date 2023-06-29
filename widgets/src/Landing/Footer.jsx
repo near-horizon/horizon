@@ -98,11 +98,12 @@ const Column = styled.div`
     }
 
     & a {
+      color: var(--ui-elements-dark, #11181c);
+
       &:hover,
       &:focus,
       &:active {
         color: var(--ui-elements-dark, #11181c);
-        text-decoration: none;
       }
     }
   }

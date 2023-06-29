@@ -16,6 +16,8 @@ const Container = styled.div`
 return (
   <>
     <Container>
+      <Widget src={`${ownerId}/widget/Banner.AwesomeNEAR`} />
+      <Widget src={`${ownerId}/widget/Landing.Nav`} />
       <Widget src={`${ownerId}/widget/Landing.Hero`} />
       <Widget src={`${ownerId}/widget/Landing.Support`} />
       <Widget src={`${ownerId}/widget/Landing.About`} />
