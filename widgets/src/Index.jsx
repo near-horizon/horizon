@@ -19,12 +19,20 @@ if (context.accountId && !state.tncIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
-    { keys: [`${context.accountId}/profile/horizon_tnc`] },
+    {
+      keys: [
+        `${context.accountId}/profile/horizon_tnc`,
+        `${context.accountId}/index/tosAccept`,
+      ],
+    },
     "final",
     false
   ).then((data) =>
     State.update({
-      tnc: data[context.accountId]?.profile?.horizon_tnc === "true",
+      tnc: data[context.accountId]?.profile?.horizon_tnc === "tru",
+      tosAccept:
+        data[context.accountId]?.index?.tosAccept &&
+        data[context.accountId]?.index?.tosAccept.length > 0,
       tncIsFetched: true,
     })
   );
@@ -292,7 +300,7 @@ return (
     <Widget
       src={`${ownerId}/widget/TNCModal`}
       props={{
-        open: !state.tnc,
+        open: !state.tnc && state.tosAccept,
         accept: () =>
           Social.set(
             { profile: { horizon_tnc: true } },
