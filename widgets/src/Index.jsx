@@ -29,7 +29,7 @@ if (context.accountId && !state.tncIsFetched) {
     false
   ).then((data) =>
     State.update({
-      tnc: data[context.accountId]?.profile?.horizon_tnc === "tru",
+      tnc: data[context.accountId]?.profile?.horizon_tnc === "true",
       tosAccept:
         data[context.accountId]?.index?.tosAccept &&
         data[context.accountId]?.index?.tosAccept.length > 0,
