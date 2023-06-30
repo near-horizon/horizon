@@ -349,6 +349,7 @@ return (
                 />
               </svg>
               <h3>Access to private pool of backers</h3>
+              {soon}
             </Trigger>
           </Header>
           <Content>
