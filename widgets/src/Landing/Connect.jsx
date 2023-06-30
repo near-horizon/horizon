@@ -353,7 +353,7 @@ return (
             </Trigger>
           </Header>
           <Content>
-            Get involved with our tapship program, product demo nights,
+            Get involved with our mentorship program, product demo nights,
             hackathons and community AMA’s.
           </Content>
         </Item>
