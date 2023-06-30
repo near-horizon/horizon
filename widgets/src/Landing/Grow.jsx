@@ -295,6 +295,7 @@ return (
                 />
               </svg>
               <h3>Get financial support with Horizon Credits</h3>
+              {soon}
             </Trigger>
           </Header>
           <Content>
