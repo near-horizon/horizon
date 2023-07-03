@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use auth::{decrypt_string, encrypt_string};
 use near_account_id::AccountId;
 use reqwest::Client;
@@ -80,6 +82,55 @@ pub struct AppState {
     pub atlas_auth: String,
     pub key: sodiumoxide::crypto::secretbox::Key,
     pub pool: sqlx::PgPool,
+}
+
+impl AppState {
+    pub async fn new() -> Self {
+        #[cfg(not(debug_assertions))]
+        let contract_id =
+            AccountId::from_str(&ensure_var("CONTRACT_ID")).expect("Invalid contract id");
+
+        #[cfg(debug_assertions)]
+        let contract_id = AccountId::from_str("nearhorizon.near").expect("Invalid contract id");
+
+        #[cfg(not(debug_assertions))]
+        let key = {
+            let key = hex::decode(ensure_var("ENCRYPTION_KEY")).expect("Invalid key");
+            sodiumoxide::crypto::secretbox::Key::from_slice(&key).expect("Invalid key")
+        };
+
+        #[cfg(debug_assertions)]
+        let key = sodiumoxide::crypto::secretbox::gen_key();
+
+        #[cfg(not(debug_assertions))]
+        let atlas_route = ensure_var("TOTAL_FUNDRAISE_ROUTE");
+
+        #[cfg(debug_assertions)]
+        let atlas_route = "".to_string();
+
+        #[cfg(not(debug_assertions))]
+        let atlas_auth = ensure_var("TOTAL_FUNDRAISE_AUTH");
+
+        #[cfg(debug_assertions)]
+        let atlas_auth = "".to_string();
+
+        let db_url = ensure_var("DATABASE_URL");
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(5)
+            .connect(&db_url)
+            .await
+            .expect("Failed to connect to database");
+
+        Self {
+            client: Client::new(),
+            contract_id,
+            key,
+            atlas_route,
+            atlas_auth,
+            pool,
+        }
+    }
 }
 
 pub fn ensure_var(name: &str) -> String {
