@@ -44,16 +44,16 @@ async fn get_all(
     sqlx::query!(
         r#"
         SELECT
-            project_id,
-            vendor_id,
-            cid
+          project_id,
+          vendor_id,
+          cid
         FROM
-            contributions
+          contributions
         WHERE
-            CASE WHEN length($1) > 0
-                THEN status ? $1
-                ELSE true
-            END
+          CASE
+            WHEN length($1) > 0 THEN status ? $1
+            ELSE true
+          END
         "#,
         status,
     )

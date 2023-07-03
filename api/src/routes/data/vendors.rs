@@ -33,10 +33,17 @@ impl Sort {
             Sort::TimeAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->>'account_id') transactions.args->>'account_id' as account_id, transactions.timestamp
-                    FROM transactions
-                    WHERE transactions.method_name = 'register_vendor' OR transactions.method_name = 'add_vendor'
-                    ORDER BY transactions.args->>'account_id' ASC, transactions.timestamp ASC
+                  SELECT
+                    DISTINCT ON (transactions.args ->> 'account_id') transactions.args ->> 'account_id' as account_id,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'register_vendor'
+                    OR transactions.method_name = 'add_vendor'
+                  ORDER BY
+                    transactions.args ->> 'account_id' ASC,
+                    transactions.timestamp ASC
                 ) as txs ON vendors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp ASC",
@@ -44,10 +51,17 @@ impl Sort {
             Sort::TimeDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->>'account_id') transactions.args->>'account_id' as account_id, transactions.timestamp
-                    FROM transactions
-                    WHERE transactions.method_name = 'register_vendor' OR transactions.method_name = 'add_vendor'
-                    ORDER BY transactions.args->>'account_id' ASC, transactions.timestamp DESC
+                  SELECT
+                    DISTINCT ON (transactions.args ->> 'account_id') transactions.args ->> 'account_id' as account_id,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'register_vendor'
+                    OR transactions.method_name = 'add_vendor'
+                  ORDER BY
+                    transactions.args ->> 'account_id' ASC,
+                    transactions.timestamp DESC
                 ) as txs ON vendors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp DESC",
@@ -57,13 +71,42 @@ impl Sort {
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id'))
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id') as account_id, transactions.method_name, transactions.timestamp
-                    FROM transactions
-                    WHERE
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id') IS NOT NULL
-	                    AND transactions.method_name IN ('add_vendor', 'edit_vendor', 'register_vendor', 'add_proposal', 'accept_contribution')
-                    ORDER BY COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id') ASC, transactions.timestamp ASC
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args ->> 'account_id',
+                        transactions.args ->> 'vendor_id',
+                        transactions.args -> 'proposal' ->> 'vendor_id'
+                      )
+                    ) COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'vendor_id',
+                      transactions.args -> 'proposal' ->> 'vendor_id'
+                    ) as account_id,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'vendor_id',
+                      transactions.args -> 'proposal' ->> 'vendor_id'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN (
+                      'add_vendor',
+                      'edit_vendor',
+                      'register_vendor',
+                      'add_proposal',
+                      'accept_contribution'
+                    )
+                  ORDER BY
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'vendor_id',
+                      transactions.args -> 'proposal' ->> 'vendor_id'
+                    ) ASC,
+                    transactions.timestamp ASC
                 ) as txs ON vendors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp ASC",
@@ -71,13 +114,42 @@ impl Sort {
             Sort::RecentDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id'))
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id') as account_id, transactions.method_name, transactions.timestamp
-                    FROM transactions
-                    WHERE
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id') IS NOT NULL
-	                    AND transactions.method_name IN ('add_vendor', 'edit_vendor', 'register_vendor', 'add_proposal', 'accept_contribution')
-                    ORDER BY COALESCE(transactions.args->>'account_id', transactions.args->>'vendor_id', transactions.args->'proposal'->>'vendor_id') ASC, transactions.timestamp DESC
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args ->> 'account_id',
+                        transactions.args ->> 'vendor_id',
+                        transactions.args -> 'proposal' ->> 'vendor_id'
+                      )
+                    ) COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'vendor_id',
+                      transactions.args -> 'proposal' ->> 'vendor_id'
+                    ) as account_id,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'vendor_id',
+                      transactions.args -> 'proposal' ->> 'vendor_id'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN (
+                      'add_vendor',
+                      'edit_vendor',
+                      'register_vendor',
+                      'add_proposal',
+                      'accept_contribution'
+                    )
+                  ORDER BY
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'vendor_id',
+                      transactions.args -> 'proposal' ->> 'vendor_id'
+                    ) ASC,
+                    transactions.timestamp DESC
                 ) as txs ON vendors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp DESC",
@@ -123,8 +195,10 @@ pub async fn all_vendors(
 ) -> Result<Json<Vec<String>>, (StatusCode, String)> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
-        SELECT vendors.id
-        FROM vendors
+        SELECT
+          vendors.id
+        FROM
+          vendors
         "#,
     );
 
@@ -270,9 +344,13 @@ async fn get_completion(
     let list = sqlx::query_as!(
         CompletionPair,
         r#"
-        SELECT vendors.id, vendors.completion
-        FROM vendors
-        ORDER BY vendors.completion DESC
+        SELECT
+          vendors.id,
+          vendors.completion
+        FROM
+          vendors
+        ORDER BY
+          vendors.completion DESC
         "#
     )
     .fetch_all(&pool)
