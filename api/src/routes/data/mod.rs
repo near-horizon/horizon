@@ -6,9 +6,12 @@ use serde::{Deserialize, Serialize};
 use crate::AppState;
 
 pub mod claims;
+pub mod contributions;
 pub mod credits;
 pub mod investors;
+pub mod metrics;
 pub mod projects;
+pub mod proposals;
 pub mod requests;
 pub mod vendors;
 
@@ -39,9 +42,12 @@ pub struct Completion {
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .nest("/claims", claims::create_router())
+        .nest("/contributions", contributions::create_router())
         .nest("/credits", credits::create_router())
         .nest("/investors", investors::create_router())
+        .nest("/metrics", metrics::create_router())
         .nest("/projects", projects::create_router())
+        .nest("/proposals", proposals::create_router())
         .nest("/requests", requests::create_router())
         .nest("/vendors", vendors::create_router())
 }
