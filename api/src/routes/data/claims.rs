@@ -59,21 +59,63 @@ impl Sort {
         match self {
             Sort::TimeAsc => (
                 "",
-                "ORDER BY COALESCE(claims.claim->'Sent'->>'timestamp', claims.claim->>'Accepted', claims.claim->>'Rejected')::bigint ASC",
+                r#"
+                ORDER BY
+                  COALESCE(
+                    claims.claim -> 'Sent' ->> 'timestamp',
+                    claims.claim ->> 'Accepted',
+                    claims.claim ->> 'Rejected'
+                  ) :: bigint ASC
+                "#,
             ),
             Sort::TimeDesc => (
                 "",
-                "ORDER BY COALESCE(claims.claim->'Sent'->>'timestamp', claims.claim->>'Accepted', claims.claim->>'Rejected')::bigint DESC",
+                r#"
+                ORDER BY
+                  COALESCE(
+                    claims.claim -> 'Sent' ->> 'timestamp',
+                    claims.claim ->> 'Accepted',
+                    claims.claim ->> 'Rejected'
+                  ) :: bigint DESC
+                "#,
             ),
-            Sort::NameAsc => ("", "ORDER BY claims.project_id ASC, claims.account_id ASC"),
-            Sort::NameDesc => ("", "ORDER BY claims.project_id DESC, claims.account_id DESC"),
+            Sort::NameAsc => (
+                "",
+                r#"
+                ORDER BY
+                  claims.project_id ASC,
+                  claims.account_id ASC
+                "#,
+            ),
+            Sort::NameDesc => (
+                "",
+                r#"
+                ORDER BY
+                  claims.project_id DESC,
+                  claims.account_id DESC
+                "#,
+            ),
             Sort::RecentAsc => (
                 "",
-                "ORDER BY COALESCE(claims.claim->'Sent'->>'timestamp', claims.claim->>'Accepted', claims.claim->>'Rejected')::bigint ASC",
+                r#"
+                ORDER BY
+                  COALESCE(
+                    claims.claim -> 'Sent' ->> 'timestamp',
+                    claims.claim ->> 'Accepted',
+                    claims.claim ->> 'Rejected'
+                  ) :: bigint ASC
+                "#,
             ),
             Sort::RecentDesc => (
                 "",
-                "ORDER BY COALESCE(claims.claim->'Sent'->>'timestamp', claims.claim->>'Accepted', claims.claim->>'Rejected')::bigint DESC",
+                r#"
+                ORDER BY
+                  COALESCE(
+                    claims.claim -> 'Sent' ->> 'timestamp',
+                    claims.claim ->> 'Accepted',
+                    claims.claim ->> 'Rejected'
+                  ) :: bigint DESC
+                "#,
             ),
         }
     }
@@ -107,8 +149,11 @@ pub async fn all_claims(
 ) -> Result<Json<Vec<(String, String)>>, (StatusCode, String)> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
-        SELECT claims.project_id, claims.account_id
-        FROM claims
+        SELECT
+          claims.project_id,
+          claims.account_id
+        FROM
+          claims
         "#,
     );
 
@@ -136,7 +181,15 @@ pub async fn all_claims(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push("COALESCE(claims.claim->'Sent'->>'timestamp', claims.claim->>'Accepted', claims.claim->>'Rejected')::int BETWEEN ");
+        builder.push(
+            r#"
+            COALESCE(
+              claims.claim -> 'Sent' ->> 'timestamp',
+              claims.claim ->> 'Accepted',
+              claims.claim ->> 'Rejected'
+            ) :: int BETWEEN
+            "#,
+        );
         builder.push_bind(from as i32);
         builder.push(" AND ");
         builder.push_bind(to as i32);
