@@ -4,6 +4,7 @@ use axum::{
     routing::get,
     Json, Router,
 };
+use num_traits::ToPrimitive;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
@@ -29,15 +30,20 @@ async fn completion(
         CompletionDetails,
         r#"
         SELECT
-            (
-                SELECT COUNT(*) as completed
-                FROM projects
-                WHERE completion >= $1
-            ) as completed,
-            (
-                SELECT AVG(completion) as avarage
-                FROM projects
-            ) as avarage
+          (
+            SELECT
+              COUNT(*) AS completed
+            FROM
+              projects
+            WHERE
+              completion >= $1
+          ) AS completed,
+          (
+            SELECT
+              AVG(completion) AS avarage
+            FROM
+              projects
+          ) AS avarage
         "#,
         above.unwrap_or(0.0) / 100.0,
     )
@@ -69,11 +75,36 @@ async fn get_counts(
         Counts,
         r#"
         SELECT
-            (SELECT COUNT(*) FROM projects) as projects,
-            (SELECT COUNT(*) FROM vendors) as vendors,
-            (SELECT COUNT(*) FROM requests) as requests,
-            (SELECT COUNT(*) FROM proposals) as proposals,
-            (SELECT COUNT(*) FROM contributions) as contributions
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              projects
+          ) AS projects,
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              vendors
+          ) AS vendors,
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              requests
+          ) AS requests,
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              proposals
+          ) AS proposals,
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              contributions
+          ) AS contributions
         "#,
     )
     .fetch_one(&pool)
@@ -88,15 +119,13 @@ async fn get_counts(
 }
 
 #[debug_handler(state = AppState)]
-async fn get_avarage_fullfilment(
+async fn get_avarage_fulfillment(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<i64>, (StatusCode, String)> {
     sqlx::query!(
         r#"
         SELECT
-          (contract.timestamp - creation.timestamp) as time,
-          contract.timestamp as contract_timestamp,
-          creation.timestamp as creation_timestamp
+          AVG(contract.timestamp - creation.timestamp) AS time
         FROM
           (
             SELECT
@@ -108,12 +137,16 @@ async fn get_avarage_fullfilment(
               LEFT JOIN transactions ON transactions.args -> 'request' ->> 'project_id' = project_id
               AND SUBSTRING(
                 transactions.log
-                from
+                FROM
                   12
               ) :: json -> 'data' ->> 'cid' = cid
             WHERE
               method_name = 'add_request'
-          ) as creation
+            ORDER BY
+              project_id ASC,
+              cid ASC,
+              timestamp ASC
+          ) AS creation
           INNER JOIN (
             SELECT
               DISTINCT ON (project_id, vendor_id, cid) project_id,
@@ -127,7 +160,7 @@ async fn get_avarage_fullfilment(
               AND transactions.args ->> 'cid' = cid
             WHERE
               method_name = 'add_contribution'
-          ) as contract ON creation.project_id = contract.project_id
+          ) AS contract ON creation.project_id = contract.project_id
           AND creation.cid = contract.cid
         "#,
     )
@@ -136,21 +169,167 @@ async fn get_avarage_fullfilment(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Could not fetch avarage fullfilment: {e}"),
+            format!("Could not fetch avarage fulfillment: {e}"),
         )
     })
     .map(|row| {
-        let duration = chrono::Duration::nanoseconds(row.time.unwrap_or(0) * 100);
-        dbg!(duration);
-        let nanos = row.contract_timestamp % 1_000_000_000;
-        let secs = row.contract_timestamp / 1_000_000_000;
-        let contract = chrono::NaiveDateTime::from_timestamp_opt(secs, nanos as u32).unwrap();
-        dbg!(contract.format("%Y-%m-%d %H:%M:%S").to_string());
-        let nanos = row.creation_timestamp % 1_000_000_000;
-        let secs = row.creation_timestamp / 1_000_000_000;
-        let creation = chrono::NaiveDateTime::from_timestamp_opt(secs, nanos as u32).unwrap();
-        dbg!(creation.format("%Y-%m-%d %H:%M:%S").to_string());
+        let time = row.time.expect("No fulfillment data").to_i64().unwrap_or(0);
+        let duration = chrono::Duration::nanoseconds(time);
         Json(duration.num_days())
+    })
+}
+
+#[debug_handler(state = AppState)]
+async fn get_avarage_transactions_per_project(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<f64>, (StatusCode, String)> {
+    sqlx::query!(
+        r#"
+        SELECT
+          AVG(count) AS count
+        FROM
+          (
+            SELECT
+              COUNT(*) AS count,
+              COALESCE(args ->> 'project_id', args ->> 'account_id') AS project_id
+            FROM
+              transactions
+            WHERE
+              method_name IN (
+                'add_project',
+                'edit_project',
+                'remove_project',
+                'add_founders',
+                'remove_founders',
+                'add_team',
+                'remove_team',
+                'add_request',
+                'edit_request',
+                'remove_request',
+                'reject_proposal',
+                'add_contribution',
+                'remove_contribution',
+                'add_contribution_action',
+                'complete_contribution',
+                'add_vendor_feedback',
+                'accept_claim',
+                'reject_claim'
+              )
+            GROUP BY
+              COALESCE(args ->> 'project_id', args ->> 'account_id')
+          ) AS counts
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Could not fetch avarage transactions per project: {e}"),
+        )
+    })
+    .map(|row| {
+        let count = row
+            .count
+            .expect("No transaction data")
+            .to_f64()
+            .unwrap_or(0f64);
+        Json(count)
+    })
+}
+
+#[debug_handler(state = AppState)]
+async fn get_avarage_project_requests(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<f64>, (StatusCode, String)> {
+    sqlx::query!(
+        r#"
+        SELECT
+          AVG(count) AS count
+        FROM
+          projects
+          LEFT JOIN (
+            SELECT
+              COUNT(*) AS count,
+              project_id
+            FROM
+              requests
+            GROUP BY
+              project_id
+          ) AS counts ON projects.id = counts.project_id
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Could not fetch avarage project requests: {e}"),
+        )
+    })
+    .map(|row| {
+        let count = row.count.expect("No request data").to_f64().unwrap_or(0f64);
+        Json(count)
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct ProjectMau {
+    avarage_without_max: f64,
+    avarage: f64,
+}
+
+#[debug_handler(state = AppState)]
+async fn get_avarage_project_mau(
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<ProjectMau>, (StatusCode, String)> {
+    sqlx::query!(
+        r#"
+        SELECT
+          (
+            SELECT
+              AVG(userbase) AS count
+            FROM
+              projects
+            WHERE
+              userbase < (
+                SELECT
+                  MAX(userbase)
+                FROM
+                  projects
+              )
+          ) AS avarage_without_max,
+          (
+            SELECT
+              AVG(userbase) AS count
+            FROM
+              projects
+          ) AS avarage
+        "#,
+    )
+    .fetch_one(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Could not fetch avarage project mau: {e}"),
+        )
+    })
+    .map(|row| {
+        let avarage_without_max = row
+            .avarage_without_max
+            .expect("No project data")
+            .to_f64()
+            .unwrap_or(0f64);
+        let avarage = row
+            .avarage
+            .expect("No project data")
+            .to_f64()
+            .unwrap_or(0f64);
+        Json(ProjectMau {
+            avarage_without_max,
+            avarage,
+        })
     })
 }
 
@@ -158,5 +337,14 @@ pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(completion))
         .route("/counts", get(get_counts))
-        .route("/avarage_fullfilment", get(get_avarage_fullfilment))
+        .route("/avarage/fulfillment", get(get_avarage_fulfillment))
+        .route(
+            "/avarage/project/transactions",
+            get(get_avarage_transactions_per_project),
+        )
+        .route(
+            "/avarage/project/requests",
+            get(get_avarage_project_requests),
+        )
+        .route("/avarage/project/mau", get(get_avarage_project_mau))
 }
