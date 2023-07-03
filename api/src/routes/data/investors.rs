@@ -33,10 +33,16 @@ impl Sort {
             Sort::TimeAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->>'account_id') transactions.args->>'account_id' as account_id, transactions.timestamp
-                    FROM transactions
-                    WHERE transactions.method_name = 'register_investor'
-                    ORDER BY transactions.args->>'account_id' ASC, transactions.timestamp ASC
+                  SELECT
+                    DISTINCT ON (transactions.args ->> 'account_id') transactions.args ->> 'account_id' as account_id,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'register_investor'
+                  ORDER BY
+                    transactions.args ->> 'account_id' ASC,
+                    transactions.timestamp ASC
                 ) as txs ON investors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp ASC",
@@ -44,10 +50,16 @@ impl Sort {
             Sort::TimeDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->>'account_id') transactions.args->>'account_id' as account_id, transactions.timestamp
-                    FROM transactions
-                    WHERE transactions.method_name = 'register_investor'
-                    ORDER BY transactions.args->>'account_id' ASC, transactions.timestamp DESC
+                  SELECT
+                    DISTINCT ON (transactions.args ->> 'account_id') transactions.args ->> 'account_id' as account_id,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'register_investor'
+                  ORDER BY
+                    transactions.args ->> 'account_id' ASC,
+                    transactions.timestamp DESC
                 ) as txs ON investors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp DESC",
@@ -57,13 +69,32 @@ impl Sort {
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id'))
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id') as account_id, transactions.method_name, transactions.timestamp
-                    FROM transactions
-                    WHERE
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id') IS NOT NULL
-	                    AND transactions.method_name IN ('register_investor', 'edit_investor')
-                    ORDER BY COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id') ASC, transactions.timestamp ASC
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args ->> 'account_id',
+                        transactions.args ->> 'investor_id'
+                      )
+                    ) COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'investor_id'
+                    ) as account_id,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'investor_id'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN ('register_investor', 'edit_investor')
+                  ORDER BY
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'investor_id'
+                    ) ASC,
+                    transactions.timestamp ASC
                 ) as txs ON investors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp ASC",
@@ -71,13 +102,32 @@ impl Sort {
             Sort::RecentDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id'))
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id') as account_id, transactions.method_name, transactions.timestamp
-                    FROM transactions
-                    WHERE
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id') IS NOT NULL
-	                    AND transactions.method_name IN ('register_investor', 'edit_investor')
-                    ORDER BY COALESCE(transactions.args->>'account_id', transactions.args->>'investor_id') ASC, transactions.timestamp DESC
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args ->> 'account_id',
+                        transactions.args ->> 'investor_id'
+                      )
+                    ) COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'investor_id'
+                    ) as account_id,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'investor_id'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN ('register_investor', 'edit_investor')
+                  ORDER BY
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'investor_id'
+                    ) ASC,
+                    transactions.timestamp DESC
                 ) as txs ON investors.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp DESC",
@@ -105,8 +155,10 @@ pub async fn all_investors(
 ) -> Result<Json<Vec<String>>, (StatusCode, String)> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
-        SELECT investors.id
-        FROM investors
+        SELECT
+          investors.id
+        FROM
+          investors
         "#,
     );
 
@@ -182,9 +234,13 @@ async fn get_completion(
     let list = sqlx::query_as!(
         CompletionPair,
         r#"
-        SELECT investors.id, investors.completion
-        FROM investors
-        ORDER BY investors.completion DESC
+        SELECT
+          investors.id,
+          investors.completion
+        FROM
+          investors
+        ORDER BY
+          investors.completion DESC
         "#
     )
     .fetch_all(&pool)
