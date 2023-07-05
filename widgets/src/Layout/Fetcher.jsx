@@ -1,5 +1,6 @@
 const url = props.url;
 const render = props.render;
+const fallback = props.fallback;
 
 State.init({
   data: null,
@@ -39,23 +40,25 @@ const Loader = styled.svg`
   }
 `;
 
+const spinner = (
+  <Loader viewBox="0 0 50 50">
+    <circle
+      className="path"
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
+      strokeWidth="4"
+    />
+  </Loader>
+);
+
 if (!state.isFetched) {
   asyncFetch(url).then(({ body }) => {
     State.update({ data: body, isFetched: true });
   });
 
-  return (
-    <Loader viewBox="0 0 50 50">
-      <circle
-        className="path"
-        cx="25"
-        cy="25"
-        r="20"
-        fill="none"
-        strokeWidth="4"
-      />
-    </Loader>
-  );
+  return fallback ? fallback(spinner) : spinner;
 }
 
 return render(state.data);
