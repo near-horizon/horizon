@@ -79,7 +79,7 @@ impl Sort {
                     transactions
                   WHERE
                     transactions.method_name = 'add_request'
-                    AND transactions.log ^ @ 'EVENT_JSON:'
+                    AND transactions.log ^@ 'EVENT_JSON:'
                   ORDER BY
                     transactions.args -> 'request' ->> 'project_id' ASC,
                     SUBSTRING(
@@ -115,7 +115,7 @@ impl Sort {
                     transactions
                   WHERE
                     transactions.method_name = 'add_request'
-                    AND transactions.log ^ @ 'EVENT_JSON:'
+                    AND transactions.log ^@ 'EVENT_JSON:'
                   ORDER BY
                     transactions.args -> 'request' ->> 'project_id' ASC,
                     SUBSTRING(
