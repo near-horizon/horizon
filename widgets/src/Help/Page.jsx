@@ -82,7 +82,9 @@ return (
         description: (
           <>
             Reach out to us at{" "}
-            <a href="mailto:horizon@near.foundation">horizon@near.foundation</a>
+            <a href="mailto:support.horizon@near.foundation">
+              support.horizon@near.foundation
+            </a>
             !
           </>
         ),

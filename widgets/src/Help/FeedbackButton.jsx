@@ -66,7 +66,7 @@ const StyledTooltip = styled("Tooltip.Content")`
 return (
   <Tooltip.Provider>
     <Tooltip.Root>
-      <a href="mailto:horizon@near.foundation">
+      <a href="mailto:support.horizon@near.foundation">
         <Container>
           <b>Give feedback</b>
         </Container>
