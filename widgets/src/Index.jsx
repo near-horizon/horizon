@@ -66,6 +66,10 @@ const tabContentWidget = {
   requests: "Request.ListPage",
   partners: "Application.Page",
   partner: "Application.DetailPage",
+  "my-projects": "Manage.Projects",
+  "my-requests": "Manage.Requests",
+  "my-contracts": "Manage.Contracts",
+  "my-applications": "Manage.Applications",
 }[state.tab];
 
 const tabContent = (
