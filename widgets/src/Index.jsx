@@ -13,18 +13,27 @@ State.init({
   vendorId: props.vendorId,
   tnc: true,
   tncIsFetched: false,
+  transactionHashes: props.transactionHashes,
 });
 
 if (context.accountId && !state.tncIsFetched) {
   Near.asyncView(
     "social.near",
     "get",
-    { keys: [`${context.accountId}/profile/horizon_tnc`] },
+    {
+      keys: [
+        `${context.accountId}/profile/horizon_tnc`,
+        `${context.accountId}/index/tosAccept`,
+      ],
+    },
     "final",
     false
   ).then((data) =>
     State.update({
       tnc: data[context.accountId]?.profile?.horizon_tnc === "true",
+      tosAccept:
+        data[context.accountId]?.index?.tosAccept &&
+        data[context.accountId]?.index?.tosAccept.length > 0,
       tncIsFetched: true,
     })
   );
@@ -32,207 +41,57 @@ if (context.accountId && !state.tncIsFetched) {
 
 const update = (state) => State.update(state);
 
-const tabContent = {
-  home: (
-    <Widget
-      src={`${ownerId}/widget/Dashboard`}
-      props={{ content: state.content, update }}
-    />
-  ),
-  inbox: (
-    <Widget
-      src={`${ownerId}/widget/Inbox`}
-      props={{ content: state.content, search: state.search, update }}
-    />
-  ),
-  manage: (
-    <Widget
-      src={`${ownerId}/widget/Manage`}
-      props={{ content: state.content, search: state.search, update }}
-    />
-  ),
-  ["my-projects"]: <Widget src={`${ownerId}/widget/Manage.Projects`} />,
-  ["my-requests"]: <Widget src={`${ownerId}/widget/Manage.Requests`} />,
-  ["my-contracts"]: <Widget src={`${ownerId}/widget/Manage.Contracts`} />,
-  ["my-applications"]: <Widget src={`${ownerId}/widget/Manage.Applications`} />,
-  project: (
-    <Widget
-      src={`${ownerId}/widget/Project.Page`}
-      props={{
-        accountId: state.accountId,
-        search: state.search,
-        content: state.content,
-        update,
-      }}
-    />
-  ),
-  request: (
-    <Widget
-      src={`${ownerId}/widget/Request.Page`}
-      props={{
-        accountId: state.accountId,
-        search: state.search,
-        content: state.content,
-        update,
-        cid: state.cid,
-      }}
-    />
-  ),
-  vendor: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.Page`}
-      props={{
-        accountId: state.accountId,
-        search: state.search,
-        content: state.content,
-        update,
-      }}
-    />
-  ),
-  backer: (
-    <Widget
-      src={`${ownerId}/widget/Investor.Page`}
-      props={{
-        accountId: state.accountId,
-        search: state.search,
-        content: state.content,
-        update,
-      }}
-    />
-  ),
-  contribution: (
-    <Widget
-      src={`${ownerId}/widget/Contribution.Page`}
-      props={{
-        accountId: state.accountId,
-        search: state.search,
-        content: state.content,
-        projectId: state.projectId,
-        vendorId: state.vendorId,
-        cid: state.cid,
-        update,
-      }}
-    />
-  ),
-  createproject: (
-    <Widget
-      src={`${ownerId}/widget/Project.Form`}
-      props={{
-        search: state.search,
-        content: state.content,
-        accountId: props.accountId,
-        kind: state.kind,
-        cid: state.cid,
-        update,
-      }}
-    />
-  ),
-  createrequest: (
-    <Widget
-      src={`${ownerId}/widget/Request.Form`}
-      props={{
-        search: state.search,
-        content: state.content,
-        accountId: props.accountId,
-        kind: state.kind,
-        cid: state.cid,
-        update,
-      }}
-    />
-  ),
-  createvendor: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.Form`}
-      props={{
-        search: state.search,
-        content: state.content,
-        accountId: props.accountId,
-        kind: state.kind,
-        cid: state.cid,
-        update,
-      }}
-    />
-  ),
-  createbacker: (
-    <Widget
-      src={`${ownerId}/widget/Investor.Form`}
-      props={{
-        search: state.search,
-        content: state.content,
-        accountId: props.accountId,
-        kind: state.kind,
-        cid: state.cid,
-        update,
-      }}
-    />
-  ),
-  permissions: (
-    <Widget
-      src={`${ownerId}/widget/Inputs.SetUpPermissions`}
-      props={{ accountId: state.accountId, accountIds: props.accountIds }}
-    />
-  ),
-  learn: (
-    <Widget
-      src={`${ownerId}/widget/Learn.Page`}
-      props={{ accountId: state.accountId }}
-    />
-  ),
-  faq: <Widget src={`${ownerId}/widget/FAQ.Page`} />,
-  help: (
-    <Widget
-      src={`${ownerId}/widget/Help.Page`}
-      props={{ accountId: state.accountId }}
-    />
-  ),
-  legal: <Widget src={`${ownerId}/widget/TNCPage`} />,
-  admin: (
-    <Widget
-      src={`${ownerId}/widget/Admin.Page`}
-      props={{ update, content: state.content }}
-    />
-  ),
-  projects: (
-    <Widget
-      src={`${ownerId}/widget/Project.ListPage`}
-      props={{ update, content: state.content, urlProps: props }}
-    />
-  ),
-  investors: (
-    <Widget
-      src={`${ownerId}/widget/Investor.ListPage`}
-      props={{ update, content: state.content, urlProps: props }}
-    />
-  ),
-  backers: (
-    <Widget
-      src={`${ownerId}/widget/Investor.ListPage`}
-      props={{ update, content: state.content, urlProps: props }}
-    />
-  ),
-  vendors: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.ListPage`}
-      props={{ update, content: state.content, urlProps: props }}
-    />
-  ),
-  contributors: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.ListPage`}
-      props={{ update, content: state.content, urlProps: props }}
-    />
-  ),
-  requests: (
-    <Widget
-      src={`${ownerId}/widget/Request.ListPage`}
-      props={{ update, content: state.content, urlProps: props }}
-    />
-  ),
-  partners: <Widget src={`${ownerId}/widget/Application.Page`} />,
-  partner: (
-    <Widget src={`${ownerId}/widget/Application.DetailPage`} props={props} />
-  ),
+const tabContentWidget = {
+  home: "Dashboard",
+  inbox: "Inbox",
+  manage: "Manage",
+  project: "Project.Page",
+  request: "Request.Page",
+  vendor: "Vendor.Page",
+  backer: "Investor.Page",
+  contribution: "Contribution.Page",
+  createproject: "Project.Form",
+  createrequest: "Request.Form",
+  createvendor: "Vendor.Form",
+  createbacker: "Investor.Form",
+  permissions: "Inputs.SetUpPermissions",
+  learn: "Learn.Page",
+  faq: "FAQ.Page",
+  help: "Help.Page",
+  legal: "TNCPage",
+  admin: "Admin.Page",
+  projects: "Project.ListPage",
+  investors: "Investor.ListPage",
+  vendors: "Vendor.ListPage",
+  requests: "Request.ListPage",
+  partners: "Application.Page",
+  partner: "Application.DetailPage",
+  "my-projects": "Manage.Projects",
+  "my-requests": "Manage.Requests",
+  "my-contracts": "Manage.Contracts",
+  "my-applications": "Manage.Applications",
 }[state.tab];
+
+const tabContent = (
+  <Widget
+    src={`${ownerId}/widget/${tabContentWidget}`}
+    props={{
+      update,
+      search: state.search,
+      content: state.content,
+      tab: state.tab,
+      accountId: state.accountId,
+      entityId: state.entityId,
+      contributorId: state.contributorId,
+      projectId: state.projectId,
+      vendorId: state.vendorId,
+      kind: state.kind,
+      cid: state.cid,
+      transactionHashes: state.transactionHashes,
+      urlProps: props,
+    }}
+  />
+);
 
 const ContentContainer = styled.div`
   width: 100%;
@@ -308,7 +167,7 @@ return (
     <Widget
       src={`${ownerId}/widget/TNCModal`}
       props={{
-        open: !state.tnc,
+        open: !state.tnc && state.tosAccept,
         accept: () =>
           Social.set(
             { profile: { horizon_tnc: true } },

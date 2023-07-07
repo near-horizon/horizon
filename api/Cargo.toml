@@ -13,15 +13,12 @@ chrono = "0.4.26"
 ed25519-dalek = "1.0.1"
 hex = "0.4.3"
 near-account-id = "0.16.1"
+num-traits = "0.2.15"
 reqwest = { version = "0.11.16", features = ["json", "tokio-rustls"] }
 serde = { version = "1.0.160", features = ["derive"] }
 serde_json = "1.0.96"
 sodiumoxide = "0.2.7"
-sqlx = { version = "0.6.3", features = [
-  "runtime-tokio-native-tls",
-  "postgres",
-  "json",
-] }
+sqlx = { version = "0.6.3", features = ["runtime-tokio-native-tls", "postgres", "json", "bigdecimal"] }
 tokio = { version = "1.27.0", features = ["full"] }
 tower = "0.4.13"
 tower-http = { version = "0.4.0", features = ["full"] }

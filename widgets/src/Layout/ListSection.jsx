@@ -2,13 +2,10 @@ const ownerId = "nearhorizon.near";
 const title = props.title ?? "List";
 const count = props.count ?? 0;
 const items = props.items ?? [];
-const renderItem = props.renderItem ?? ((item) => <div>{item}</div>);
 const entity = props.entity ?? "projects";
+const descriptor = props.descriptor ?? "projects";
+const renderItem = props.renderItem ?? ((item) => <div>{item}</div>);
 const sort = props.sort ?? Storage.get(`${entity}-sort`) ?? "timedesc";
-
-State.init({
-  sort,
-});
 
 const Container = styled.div`
   display: flex;
@@ -137,6 +134,10 @@ const Sort = styled.div`
 
   &:last-child {
     width: 30%;
+
+    @media screen and (max-width: 768px) {
+      width: 50%;
+    }
   }
 `;
 
@@ -154,7 +155,7 @@ return (
     <Heading>
       <div>
         <span>
-          <b>{count}</b> backers
+          <b>{count}</b> {descriptor}
         </span>
       </div>
       <Sort>
@@ -163,7 +164,7 @@ return (
           src={`${ownerId}/widget/Inputs.Select`}
           props={{
             noLabel: true,
-            value: { text: optionsMap[state.sort], value: state.sort },
+            value: { text: optionsMap[sort], value: sort },
             onChange: ({ value }) => {
               Storage.set(`${entity}-sort`, value);
               State.update({ sort: value });

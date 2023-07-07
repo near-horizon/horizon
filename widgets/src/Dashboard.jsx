@@ -124,14 +124,10 @@ asyncFetch("https://api-op3o.onrender.com/transactions/stats").then(
   (response) =>
     response.ok &&
     State.update({
-      projectsCount: response.body.projects.total,
-      vendorsCount: response.body.vendors.total,
-      investorsCount: response.body.backers.total,
-      requestsCount: response.body.requests.total,
-      projectsTodayCount: response.body.projects.today,
-      vendorsTodayCount: response.body.vendors.today,
-      investorsTodayCount: response.body.backers.today,
-      requestsTodayCount: response.body.requests.today,
+      projectsCount: response.body.projects,
+      vendorsCount: response.body.vendors,
+      investorsCount: response.body.backers,
+      requestsCount: response.body.requests,
     })
 );
 

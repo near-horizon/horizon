@@ -72,7 +72,7 @@ if (!state.nameIsFetched) {
   return <>Loading...</>;
 }
 
-const Project = styled.div`
+const Project = styled.a`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -95,12 +95,21 @@ const Project = styled.div`
     line-height: 1em;
     color: #11181c;
   }
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    color: unset;
+  }
 `;
 
 return (
   <Container>
     <Heading>Request Details</Heading>
-    <Project>
+    <Project
+      href={`/${ownerId}/widget/Index?tab=project&accountId=${request.project_id}`}
+    >
       <label>Project</label>
       <div>
         <Widget

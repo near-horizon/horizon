@@ -69,10 +69,16 @@ impl Sort {
             Sort::TimeAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->>'account_id') transactions.args->>'account_id' as account_id, transactions.timestamp
-                    FROM transactions
-                    WHERE transactions.method_name = 'add_project'
-                    ORDER BY transactions.args->>'account_id' ASC, transactions.timestamp ASC
+                  SELECT
+                    DISTINCT ON (transactions.args ->> 'account_id') transactions.args ->> 'account_id' as account_id,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'add_project'
+                  ORDER BY
+                    transactions.args ->> 'account_id' ASC,
+                    transactions.timestamp ASC
                 ) as txs ON projects.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp ASC",
@@ -80,10 +86,16 @@ impl Sort {
             Sort::TimeDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->>'account_id') transactions.args->>'account_id' as account_id, transactions.timestamp
-                    FROM transactions
-                    WHERE transactions.method_name = 'add_project'
-                    ORDER BY transactions.args->>'account_id' ASC, transactions.timestamp DESC
+                  SELECT
+                    DISTINCT ON (transactions.args ->> 'account_id') transactions.args ->> 'account_id' as account_id,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'add_project'
+                  ORDER BY
+                    transactions.args ->> 'account_id' ASC,
+                    transactions.timestamp DESC
                 ) as txs ON projects.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp DESC",
@@ -93,13 +105,32 @@ impl Sort {
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->>'account_id', transactions.args->>'project_id'))
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'project_id') as account_id, transactions.method_name, transactions.timestamp
-                    FROM transactions
-                    WHERE
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'project_id') IS NOT NULL
-	                    AND transactions.method_name IN ('add_project', 'edit_project')
-                    ORDER BY COALESCE(transactions.args->>'account_id', transactions.args->>'project_id') ASC, transactions.timestamp ASC
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args ->> 'account_id',
+                        transactions.args ->> 'project_id'
+                      )
+                    ) COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'project_id'
+                    ) as account_id,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'project_id'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN ('add_project', 'edit_project')
+                  ORDER BY
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'project_id'
+                    ) ASC,
+                    transactions.timestamp ASC
                 ) as txs ON projects.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp ASC",
@@ -107,13 +138,32 @@ impl Sort {
             Sort::RecentDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->>'account_id', transactions.args->>'project_id'))
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'project_id') as account_id, transactions.method_name, transactions.timestamp
-                    FROM transactions
-                    WHERE
-	                    COALESCE(transactions.args->>'account_id', transactions.args->>'project_id') IS NOT NULL
-	                    AND transactions.method_name IN ('add_project', 'edit_project')
-                    ORDER BY COALESCE(transactions.args->>'account_id', transactions.args->>'project_id') ASC, transactions.timestamp DESC
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args ->> 'account_id',
+                        transactions.args ->> 'project_id'
+                      )
+                    ) COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'project_id'
+                    ) as account_id,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'project_id'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN ('add_project', 'edit_project')
+                  ORDER BY
+                    COALESCE(
+                      transactions.args ->> 'account_id',
+                      transactions.args ->> 'project_id'
+                    ) ASC,
+                    transactions.timestamp DESC
                 ) as txs ON projects.id = txs.account_id
                 "#,
                 "ORDER BY txs.timestamp DESC",
@@ -151,8 +201,10 @@ pub async fn all_projects(
 ) -> Result<Json<Vec<String>>, (StatusCode, String)> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
-        SELECT projects.id
-        FROM projects
+        SELECT
+          projects.id
+        FROM
+          projects
         "#,
     );
 
@@ -213,7 +265,14 @@ pub async fn all_projects(
             has_where = true;
         }
         builder.push(" ( ");
-        let statement = "(SELECT COUNT(*) FROM jsonb_object_keys(projects.team)) + array_length(projects.founders, 1) BETWEEN ";
+        let statement = r#"
+        (
+          SELECT
+            COUNT(*)
+          FROM
+            jsonb_object_keys(projects.team)
+        ) + array_length(projects.founders, 1) BETWEEN
+        "#;
 
         for (i, (from, to)) in sizes.into_iter().enumerate() {
             if i > 0 {
@@ -298,9 +357,13 @@ async fn get_completion(
     let list = sqlx::query_as!(
         CompletionPair,
         r#"
-        SELECT projects.id, projects.completion
-        FROM projects
-        ORDER BY projects.completion DESC
+        SELECT
+          projects.id,
+          projects.completion
+        FROM
+          projects
+        ORDER BY
+          projects.completion DESC
         "#
     )
     .fetch_all(&pool)

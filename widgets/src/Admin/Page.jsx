@@ -1,6 +1,6 @@
 const ownerId = "nearhorizon.near";
 
-const availableContent = ["claims", "applications", "vendors", "completion"];
+const availableContent = ["claims", "applications", "vendors", "metrics"];
 
 const getContent = (content) => {
   if (!content || !availableContent.includes(content)) {
@@ -91,7 +91,7 @@ const MainContent = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 80%;
+  width: 100%;
   padding-top: 0.25em;
 `;
 
@@ -175,7 +175,7 @@ const content = {
       props={{ accountId: props.accountId, isAdmin: state.isAdmin }}
     />
   ),
-  completion: (
+  metrics: (
     <Widget
       src={`${ownerId}/widget/Admin.Completion`}
       props={{ accountId: props.accountId }}
@@ -215,15 +215,14 @@ return (
                 text: "Vendors",
               },
               {
-                id: "completion",
-                text: "Completion",
+                id: "metrics",
+                text: "Metrics",
               },
             ],
           }}
         />
         {content}
       </MainContent>
-      <Sidebar>Maybe some sidebar content later</Sidebar>
     </ContentContainer>
   </Container>
 );

@@ -60,32 +60,72 @@ impl Sort {
             Sort::TimeAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->'request'->>'project_id', SUBSTRING(transactions.log from 12)::json->'data'->>'cid')
-                        transactions.args->'request'->>'project_id' as project_id,
-                        SUBSTRING(transactions.log from 12)::json->'data'->>'cid' as cid,
-                        transactions.timestamp
-                    FROM transactions
-                    WHERE
-                        transactions.method_name = 'add_request'
-                        AND transactions.log ^@ 'EVENT_JSON:'
-                    ORDER BY transactions.args->'request'->>'project_id' ASC, SUBSTRING(transactions.log from 12)::json->'data'->>'cid' ASC, transactions.timestamp ASC
-                ) as txs ON requests.project_id = txs.project_id AND requests.cid = txs.cid
+                  SELECT
+                    DISTINCT ON (
+                      transactions.args -> 'request' ->> 'project_id',
+                      SUBSTRING(
+                        transactions.log
+                        from
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) transactions.args -> 'request' ->> 'project_id' as project_id,
+                    SUBSTRING(
+                      transactions.log
+                      from
+                        12
+                    ) :: json -> 'data' ->> 'cid' as cid,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'add_request'
+                    AND transactions.log ^@ 'EVENT_JSON:'
+                  ORDER BY
+                    transactions.args -> 'request' ->> 'project_id' ASC,
+                    SUBSTRING(
+                      transactions.log
+                      from
+                        12
+                    ) :: json -> 'data' ->> 'cid' ASC,
+                    transactions.timestamp ASC
+                ) as txs ON requests.project_id = txs.project_id
+                AND requests.cid = txs.cid
                 "#,
                 "ORDER BY txs.timestamp ASC",
             ),
             Sort::TimeDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (transactions.args->'request'->>'project_id', SUBSTRING(transactions.log from 12)::json->'data'->>'cid')
-                        transactions.args->'request'->>'project_id' as project_id,
-                        SUBSTRING(transactions.log from 12)::json->'data'->>'cid' as cid,
-                        transactions.timestamp
-                    FROM transactions
-                    WHERE
-                        transactions.method_name = 'add_request'
-                        AND transactions.log ^@ 'EVENT_JSON:'
-                    ORDER BY transactions.args->'request'->>'project_id' ASC, SUBSTRING(transactions.log from 12)::json->'data'->>'cid' ASC, transactions.timestamp DESC
-                ) as txs ON requests.project_id = txs.project_id AND requests.cid = txs.cid
+                  SELECT
+                    DISTINCT ON (
+                      transactions.args -> 'request' ->> 'project_id',
+                      SUBSTRING(
+                        transactions.log
+                        from
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) transactions.args -> 'request' ->> 'project_id' as project_id,
+                    SUBSTRING(
+                      transactions.log
+                      from
+                        12
+                    ) :: json -> 'data' ->> 'cid' as cid,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    transactions.method_name = 'add_request'
+                    AND transactions.log ^@ 'EVENT_JSON:'
+                  ORDER BY
+                    transactions.args -> 'request' ->> 'project_id' ASC,
+                    SUBSTRING(
+                      transactions.log
+                      from
+                        12
+                    ) :: json -> 'data' ->> 'cid' ASC,
+                    transactions.timestamp DESC
+                ) as txs ON requests.project_id = txs.project_id
+                AND requests.cid = txs.cid
                 "#,
                 "ORDER BY txs.timestamp DESC",
             ),
@@ -94,42 +134,132 @@ impl Sort {
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id'), COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid'))
-	                    COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id') as project_id,
-	                    COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid') as cid,
-	                    transactions.method_name,
-	                    transactions.timestamp
-                    FROM transactions
-                    WHERE
-                        COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id') IS NOT NULL
-                        AND COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid') IS NOT NULL
-	                    AND transactions.method_name IN ('add_request', 'edit_request')
-                    ORDER BY
-                        COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id') ASC,
-                        COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid') ASC,
-                        transactions.timestamp ASC
-                ) as txs ON requests.project_id = txs.project_id AND requests.cid = txs.cid
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args -> 'request' ->> 'project_id',
+                        transactions.args ->> 'account_id'
+                      ),
+                      COALESCE(
+                        transactions.args ->> 'cid',
+                        SUBSTRING(
+                          transactions.log
+                          FROM
+                            12
+                        ) :: json -> 'data' ->> 'cid'
+                      )
+                    ) COALESCE(
+                      transactions.args -> 'request' ->> 'project_id',
+                      transactions.args ->> 'account_id'
+                    ) as project_id,
+                    COALESCE(
+                      transactions.args ->> 'cid',
+                      SUBSTRING(
+                        transactions.log
+                        FROM
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) as cid,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args -> 'request' ->> 'project_id',
+                      transactions.args ->> 'account_id'
+                    ) IS NOT NULL
+                    AND COALESCE(
+                      transactions.args ->> 'cid',
+                      SUBSTRING(
+                        transactions.log
+                        FROM
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN ('add_request', 'edit_request')
+                  ORDER BY
+                    COALESCE(
+                      transactions.args -> 'request' ->> 'project_id',
+                      transactions.args ->> 'account_id'
+                    ) ASC,
+                    COALESCE(
+                      transactions.args ->> 'cid',
+                      SUBSTRING(
+                        transactions.log
+                        FROM
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) ASC,
+                    transactions.timestamp ASC
+                ) as txs ON requests.project_id = txs.project_id
+                AND requests.cid = txs.cid
                 "#,
                 "ORDER BY txs.timestamp ASC",
             ),
             Sort::RecentDesc => (
                 r#"
                 LEFT JOIN (
-                    SELECT DISTINCT ON (COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id'), COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid'))
-	                    COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id') as project_id,
-	                    COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid') as cid,
-	                    transactions.method_name,
-	                    transactions.timestamp
-                    FROM transactions
-                    WHERE
-                        COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id') IS NOT NULL
-                        AND COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid') IS NOT NULL
-	                    AND transactions.method_name IN ('add_request', 'edit_request')
-                    ORDER BY
-                        COALESCE(transactions.args->'request'->>'project_id', transactions.args->>'account_id') ASC,
-                        COALESCE(transactions.args->>'cid', SUBSTRING(transactions.log FROM 12)::json->'data'->>'cid') ASC,
-                        transactions.timestamp DESC
-                ) as txs ON requests.project_id = txs.project_id AND requests.cid = txs.cid
+                  SELECT
+                    DISTINCT ON (
+                      COALESCE(
+                        transactions.args -> 'request' ->> 'project_id',
+                        transactions.args ->> 'account_id'
+                      ),
+                      COALESCE(
+                        transactions.args ->> 'cid',
+                        SUBSTRING(
+                          transactions.log
+                          FROM
+                            12
+                        ) :: json -> 'data' ->> 'cid'
+                      )
+                    ) COALESCE(
+                      transactions.args -> 'request' ->> 'project_id',
+                      transactions.args ->> 'account_id'
+                    ) as project_id,
+                    COALESCE(
+                      transactions.args ->> 'cid',
+                      SUBSTRING(
+                        transactions.log
+                        FROM
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) as cid,
+                    transactions.method_name,
+                    transactions.timestamp
+                  FROM
+                    transactions
+                  WHERE
+                    COALESCE(
+                      transactions.args -> 'request' ->> 'project_id',
+                      transactions.args ->> 'account_id'
+                    ) IS NOT NULL
+                    AND COALESCE(
+                      transactions.args ->> 'cid',
+                      SUBSTRING(
+                        transactions.log
+                        FROM
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) IS NOT NULL
+                    AND transactions.method_name IN ('add_request', 'edit_request')
+                  ORDER BY
+                    COALESCE(
+                      transactions.args -> 'request' ->> 'project_id',
+                      transactions.args ->> 'account_id'
+                    ) ASC,
+                    COALESCE(
+                      transactions.args ->> 'cid',
+                      SUBSTRING(
+                        transactions.log
+                        FROM
+                          12
+                      ) :: json -> 'data' ->> 'cid'
+                    ) ASC,
+                    transactions.timestamp DESC
+                ) as txs ON requests.project_id = txs.project_id
+                AND requests.cid = txs.cid
                 "#,
                 "ORDER BY txs.timestamp DESC",
             ),
@@ -242,8 +372,11 @@ pub async fn all_requests(
 ) -> Result<Json<Vec<(String, String)>>, (StatusCode, String)> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
-        SELECT requests.project_id, requests.cid
-        FROM requests
+        SELECT
+          requests.project_id,
+          requests.cid
+        FROM
+          requests
         "#,
     );
 
