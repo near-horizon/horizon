@@ -112,7 +112,7 @@ return (
       }}
     />
     <Widget
-      src={`${ownerId}/widget/Project.ListSection`}
+      src={`${ownerId}/widget/Layout.ListSection`}
       props={{
         entity,
         count: state.items.length,
