@@ -9,8 +9,74 @@ const props = {
       description:
         "NEAR Horzion x Encode Club Educate Series kickoff with an intro to NEAR and Horizon.",
       img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_nh-near-intro.jpeg",
-      video: "https://youtu.be/A94qh0SAsGQ",
-      tags: ["accelerator partners", "essentials"],
+      video: "https://shortlink.near.foundation/encode-educate-ep1",
+      tags: ["accelerator partners", "essentials", "education"],
+      height: "425px",
+    },
+    {
+      height: "425px",
+      title: "Build Components on the BOS",
+      link: "https://shortlink.near.foundation/encode-educate-ep2",
+      description:
+        "Guillermo Gallardo from Pagoda demonstrates how to quickly build components on the BOS.",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_build_on_bos.png",
+      video: "https://shortlink.near.foundation/encode-educate-ep2",
+      tags: ["accelerator partners", "essentials", "bos", "education"],
+      height: "425px",
+    },
+    {
+      height: "425px",
+      title: "Discover Calimero",
+      link: "https://shortlink.near.foundation/encode-educate-ep3",
+      description:
+        "Fran Domović from Calimero talks about the Calimero console and private sharding.",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_calimero.jpg",
+      video: "https://shortlink.near.foundation/encode-educate-ep3",
+      tags: ["accelerator partners", "essentials", "bos", "education"],
+      height: "425px",
+    },
+    {
+      height: "425px",
+      title: "Aurora Cloud",
+      link: "https://shortlink.near.foundation/encode-educate-ep4",
+      description:
+        "Slava Karkunov from Aurora talks about ERC-6551 and gasless transactions.",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_aurora.png",
+      video: "https://shortlink.near.foundation/encode-educate-ep4",
+      tags: ["accelerator partners", "essentials", "bos", "education"],
+      height: "425px",
+    },
+    {
+      height: "425px",
+      title: "Octopus 2.0",
+      link: "https://shortlink.near.foundation/encode-educate-ep5",
+      description:
+        "Octopus 2.0 = NEAR IBC + $NEAR Restaking' workshop.",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_octopus.png",
+      video: "https://shortlink.near.foundation/encode-educate-ep5",
+      tags: ["accelerator partners", "essentials", "bos", "education"],
+      height: "425px",
+    },
+    {
+      height: "425px",
+      title: "How to Decentralize any Frontend with BOS",
+      link: "https://shortlink.near.foundation/encode-educate-ep6",
+      description:
+        "MJ of Proximity Labs hosts an insightful workshop on BOS frontends",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_decentral_bos.png",
+      video: "https://shortlink.near.foundation/encode-educate-ep6",
+      tags: ["accelerator partners", "essentials", "bos", "education"],
+      height: "425px",
+    },
+    {
+      height: "425px",
+      title: "Deploying NFT Marketplaces",
+      link: "https://shortlink.near.foundation/encode-educate-ep7",
+      description:
+        "Luis Freitas of Mintbase teaches us how to deploy NFT marketplaces on NEAR.",
+      img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_mintbase.png",
+      video: "https://shortlink.near.foundation/encode-educate-ep7",
+      tags: ["accelerator partners", "essentials", "bos", "education"],
       height: "425px",
     },
   ],
@@ -364,6 +430,35 @@ const Section = styled.div`
   }
 `;
 
+const PartnerSection = styled.div`
+  background: linear-gradient(90deg, rgba(37,40,38,1) 0%, rgba(37,40,38,1) 12%, rgba(101,225,146,1) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  gap: 1.5em;
+
+  h3 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1.5em;
+    line-height: 36px;
+    color: #fff;
+  }
+
+  a:hover {
+    background: #0060C9;
+    color: #fff;
+    transition: all 0.5s;
+  }
+
+  a:hover svg * {
+    stroke: #fff;
+    transition: all 0.5s;
+  }
+`;
+
+
 return (
   <Container>
     <Heading>
@@ -373,13 +468,13 @@ return (
         you where you need it most
       </h2>
     </Heading>
-    <Section>
+    <PartnerSection>
     <h3>NEAR Horizon x Encode Club Educate Series</h3>
     <Widget
       src={`humanman.near/widget/Learn.List.Partner`}
       props={{ cardData: props.encodeEducate }}
     />
-    </Section>
+    </PartnerSection>
     <Section>
       <h3>Business Fundamentals</h3>
       <Widget
