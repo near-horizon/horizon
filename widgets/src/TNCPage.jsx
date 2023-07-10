@@ -1,8 +1,13 @@
+const Container = styled.div`
+  padding: 1.5em;
+`;
+
 return (
-  <div class="c12 c20 doc-content">
+  <Container ass="c12 c20 doc-content">
     <p class="c13 title" id="h.alotq4h5zy55">
       <h1 class="c23">NEAR Horizon Platform Terms and Conditions</h1>
     </p>
+    <hr />
     <p class="c3">
       <span class="c0"></span>
     </p>
@@ -71,10 +76,12 @@ return (
         Third Party Terms.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.64ug08z1mht6">
       <span class="c8">The Platform</span>
       <span class="c8">&nbsp;</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         The Platform provides a set of tools that enables users to locally
@@ -146,9 +153,11 @@ return (
         others or is otherwise prohibited by these Terms.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.1yrpghl5es1y">
       <span class="c8 c9">NEAR Horizon Credits</span>
     </h2>
+    <hr />
     <p class="c19">
       <span>Teams</span>
       <span>&nbsp;may be allocated NEAR Ho</span>
@@ -236,9 +245,11 @@ return (
         PHRASE, YOU MAY LOSE ACCESS TO YOUR ASSETS.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.nckj6ltde5qf">
       <span class="c8">Risks</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         You agree and understand that under no circumstances will the operation
@@ -277,9 +288,11 @@ return (
         services contained in any such third-party Services.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.fc9uxv4hcnu">
       <span class="c7">Access to the Platform and Security</span>
     </h2>
+    <hr />
     <p class="c19">
       <span class="c0">
         Access to the Platform is provided &ldquo;as is&rdquo; and on an
@@ -420,9 +433,11 @@ return (
         comply with those terms.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.mk2dm11vvm73">
       <span class="c8">Prohibited activities </span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         Your use of the Platform must be ethical, and conform to high moral
@@ -526,9 +541,11 @@ return (
         </span>
       </li>
     </ul>
+    <br />
     <h2 class="c4" id="h.ss2qwo4k2ujk">
       <span class="c7">User Contributions</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         For the purpose of this Section, the term &lsquo;User&rsquo; refers to
@@ -591,9 +608,11 @@ return (
         the Platform.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.xz7u103eoukd">
       <span class="c7">Monitoring and Enforcement; Termination</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         We have the right (in each case to the extent we are able to do so) to:
@@ -662,9 +681,11 @@ return (
         of the activities described in this section.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.db591n91slry">
       <span class="c7">Content Standards</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         These content standards apply to any and all User Contributions made by
@@ -738,9 +759,11 @@ return (
         </span>
       </li>
     </ul>
+    <br />
     <h2 class="c4" id="h.52hewp8esejz">
       <span class="c7">Copyright Infringement</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         If you believe that any User Contributions violate your copyright,
@@ -837,9 +860,11 @@ return (
         review or considered infringing.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.6al95dbohft2">
       <span class="c7">Reliance on Information Posted</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         We do not warrant the accuracy, completeness, or usefulness of any
@@ -862,9 +887,11 @@ return (
         (and/or the Services).
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.aw98upnw1rdr">
       <span class="c7">Third Party Terms</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         Additional terms and conditions may apply to certain Services, and it is
@@ -872,9 +899,11 @@ return (
         Third Party Terms.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.73cxlai8uy5n">
       <span class="c7">Geographic Restrictions</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         We make no claims that the Platform (and/or any Services) is or will be
@@ -883,9 +912,11 @@ return (
         countries.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.ip3t9ld9h359">
       <span class="c7">Disclaimer of Warranties</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         You understand that we cannot and do not guarantee or warrant that
@@ -935,9 +966,11 @@ return (
         LIMITED UNDER APPLICABLE LAW.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.obihexxx4ar7">
       <span class="c7">Limitation on Liability</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         TO THE FULLEST EXTENT PERMITTED BY LAW, IN NO EVENT WILL WE, OUR
@@ -964,9 +997,11 @@ return (
         LIMITED UNDER APPLICABLE LAW.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.h48mwvbqo0bn">
       <span class="c7">Indemnification</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         You agree to defend, indemnify, and hold harmless us, our affiliates,
@@ -981,9 +1016,11 @@ return (
         from the Platform (and/or Services).
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.hx1r74d4jb3g">
       <span class="c7">Intellectual Property Rights</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         The Platform and their entire contents, features, and functionality
@@ -1013,9 +1050,11 @@ return (
         other laws.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.u0y9jsf24vwn">
       <span class="c7">Trademarks</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         Company&rsquo;s name, the terms NEAR, NEAR Horizon, and all related
@@ -1026,9 +1065,11 @@ return (
         Services) are the trademarks of their respective owners.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.jzadb9wyfqk3">
       <span class="c7">Changes to these Terms </span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         We may revise and update these Terms from time to time in our sole
@@ -1046,9 +1087,11 @@ return (
         Terms means that you accept and agree to the changes.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.6xq3eqkp1rij">
       <span class="c7">Governing Law and Jurisdiction</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         All matters relating to the Platform and these Terms, and any dispute or
@@ -1074,9 +1117,11 @@ return (
         you by such courts and to venue in such courts.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.gbgwiumxbxbz">
       <span class="c7">Limitation on Time to File Claims</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         ANY CAUSE OF ACTION OR CLAIM YOU MAY HAVE ARISING OUT OF OR RELATING TO
@@ -1085,9 +1130,11 @@ return (
         PERMANENTLY BARRED.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.9hk8crv2cuh2">
       <span class="c7">Waiver and Severability</span>
     </h2>
+    <hr />
     <p class="c1">
       <span class="c0">
         No waiver by us of any term or condition set out in these Terms shall be
@@ -1106,9 +1153,11 @@ return (
         full force and effect.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.fejr57riwaa6">
       <span class="c7">Entire Agreement</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         The Terms (including any terms expressly referred to herein, to the
@@ -1130,15 +1179,19 @@ return (
         written and oral, regarding the Platform.
       </span>
     </p>
+    <br />
     <h2 class="c4" id="h.72nkn8gzuygn">
       <span class="c7">Your Comments and Concerns</span>
     </h2>
+    <hr />
     <p class="c1">
       <span>
         All feedback, comments, questions, and other communications relating to
         these Terms should be directed to:{" "}
       </span>
-      <span class="c22">horizon@near.foundation</span>
+      <span class="c22">
+        <a href="mailto:horizon@near.foundation">horizon@near.foundation</a>
+      </span>
     </p>
     <p class="c3">
       <span class="c0"></span>
@@ -1148,5 +1201,6 @@ return (
         <span class="c18"></span>
       </p>
     </div>
-  </div>
+    <br />
+  </Container>
 );
