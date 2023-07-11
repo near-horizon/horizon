@@ -3,7 +3,7 @@ const Container = styled.div`
 `;
 
 return (
-  <Container ass="c12 c20 doc-content">
+  <Container class="c12 c20 doc-content">
     <p class="c13 title" id="h.alotq4h5zy55">
       <h1 class="c23">NEAR Horizon Platform Terms and Conditions</h1>
     </p>
