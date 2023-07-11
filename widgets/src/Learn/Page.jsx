@@ -432,11 +432,17 @@ const Section = styled.div`
 
 const PartnerSection = styled.div`
   background: linear-gradient(90deg, rgba(37,40,38,1) 0%, rgba(37,40,38,1) 12%, rgba(101,225,146,1) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 1rem;
-  gap: 1.5em;
+  min-width: 380px;
+
+  div.cardsList {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0 auto;
+  }
 
   h3 {
     font-style: normal;
@@ -444,6 +450,8 @@ const PartnerSection = styled.div`
     font-size: 1.5em;
     line-height: 36px;
     color: #fff;
+    width: 100%;
+    text-align: center;
   }
 
   a:hover {
@@ -469,11 +477,13 @@ return (
       </h2>
     </Heading>
     <PartnerSection>
-    <h3>NEAR Horizon x Encode Club Educate Series</h3>
-    <Widget
-      src={`humanman.near/widget/Learn.List.Partner`}
-      props={{ cardData: props.encodeEducate }}
-    />
+      <h3>NEAR Horizon x Encode Club Educate Series</h3>
+      <div className="cardsList">
+        <Widget
+          src={`${ownerId}/widget/List.Partner`}
+          props={{ cardData: props.encodeEducate }}
+        />
+      </div>
     </PartnerSection>
     <Section>
       <h3>Business Fundamentals</h3>
