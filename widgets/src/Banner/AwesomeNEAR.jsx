@@ -7,7 +7,7 @@ const Container = styled.div`
   flex: 1 0 0;
   border-radius: 0.5rem;
   background: #66a0ff;
-  margin-top: -2rem;
+  margin-top: -1.5rem;
 `;
 
 const TextContainer = styled.div`
