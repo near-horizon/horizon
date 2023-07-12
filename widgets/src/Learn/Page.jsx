@@ -480,7 +480,7 @@ return (
       <h3>NEAR Horizon x Encode Club Educate Series</h3>
       <div className="cardsList">
         <Widget
-          src={`${ownerId}/widget/List.Partner`}
+          src={`${ownerId}/widget/Partner.List`}
           props={{ cardData: props.encodeEducate }}
         />
       </div>
