@@ -69,14 +69,14 @@ return (
   <Container>
     <Column>
       <p>
-        Joining Horizon's accelerator was a game-changer for our NFT startup.
-        The mentors provided invaluable guidance, the community offered
-        meaningful collaborations, and access to funding opportunities propelled
-        our growth. Highly recommended for Web3 founders looking to thrive
+        NEAR Horizon has strengthened awareness for the droplinked protocol
+        while accelerating partnerships with both builders and backers. The team
+        and I are excited to support the next phase of the ecosystems growth
+        with the community.
       </p>
       <span>
-        John Doe
-        <small>Founder & CEO, CryptoTech Solutions</small>
+        Ali S.
+        <small>Founder, Droplinked</small>
       </span>
     </Column>
     <ImageContainer>
@@ -84,7 +84,7 @@ return (
         src={mapImage(
           "bafkreib32ap4w2oqpw3qcf2eviyelrqkxxyfzfa4ylunfyvadfkrgwdajm"
         )}
-        alt="John Doe"
+        alt="Ali S."
       />
     </ImageContainer>
   </Container>
