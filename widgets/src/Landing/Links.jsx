@@ -107,7 +107,7 @@ const RegisterButton = styled.a`
 `;
 
 const registerButton = ({ text, href }) => (
-  <RegisterButton href={href ?? `${ownerId}/widget/Index?tab=createproject`}>
+  <RegisterButton href={href ?? `${ownerId}/widget/Onboarding.Page`}>
     {text}
   </RegisterButton>
 );
