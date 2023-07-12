@@ -11,6 +11,25 @@
     "5.1": {
       "metricCredits": "Horizon Credits (NHZN) help track service usage and inform payments distributed to Horizon service partners.",
       "metricProfile": "Completion status of your profile. Once fully complete, your project will be more discoverable by others in the community"
+    },
+    "dashboard": {
+      "profileProgress": "Finish the tasks below to reach 100% profile completion to help boost your discoverability",
+      "creditBalance": "Credits can be used to pay for services from Horizon-approved Service Providers",
+      "inbox": "Find and organize all of your direct messages",
+      "yourRequests": "Manage all of your project's contribution requests",
+      "yourQuestions": "View and manage all of the questions you've posted to the community",
+      "yourContracts": "View and manage all of your contracts",
+      "yourTeam": "Add your team's profiles here",
+      "sidebar": {
+        "marketingTechInfo": {
+          "MAU": "Current Monthly Active Users (MAU) of your application",
+          "TAM": "Current potential revenue opportunity available for your product or service"
+        }
+      },
+      "header": {
+        "credits" : "Horizon credits are accepted forms of payments by Horizon-approved Service Providers"
+      }
+
     }
   },
   "request": {
@@ -18,7 +37,18 @@
       "detailsBudget": "Your projected budget in USD and the estimated equivalent in Horizon credits (NHZN). Note: Horizon credits can only be transferred to approved Horizon service partners.",
       "detailsPaymentSource": "Describes whether payment to contributors will occur either directly from you (peer-to-peer) or through Horizon's NHZN credit system (credits)"
     },
-    "10.5.1": "Once the scope of work has been fulfilled (and payment has been processed for P2P contracts), both parties (project owner and contributor) need to approve ending the contract or it will remain active."
+    "10.5.1": "Once the scope of work has been fulfilled (and payment has been processed for P2P contracts), both parties (project owner and contributor) need to approve ending the contract or it will remain active.",
+    "form" : {
+      "budget": "This is your projected budget for this requested contribution"
+    },
+    "details": {
+      "paymentMethod": "Payment methods can be either peer-to-peer or through Horizon credits (NHZN).",
+      "budget": "This is your projected budget for this requested contribution"
+    }
+  },
+  "contribution": {
+      "proposalList": "Use Contribution Requests to hire talent for all your project needs",
+      "hireContributor": "Review responses to your Contribution Requests, and create a contract with the contributor of your choice"
   },
   "manage": {
     "13.6": "Once you submit your proposal, it will remain as 'Pending' until the project owner accepts or rejects it."
