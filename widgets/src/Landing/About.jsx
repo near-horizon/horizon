@@ -1,3 +1,5 @@
+const ownerId = "nearhorizon.near";
+
 const about = {
   founders: (
     <svg
