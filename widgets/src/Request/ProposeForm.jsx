@@ -137,6 +137,10 @@ if (!state.vendorsIsFetched) {
         requestTypes: requestTypes.map((value) => ({ value, text: value })),
       })
   );
+  if (!context.accountId) {
+    State.update({ vendorsIsFetched: true, vendors: [] });
+    return <>Loading...</>;
+  }
   Near.asyncView(
     ownerId,
     "get_admin_vendors",
