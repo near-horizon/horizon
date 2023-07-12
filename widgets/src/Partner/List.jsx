@@ -26,7 +26,7 @@ return (
   <List>
     {cardData.map((cardProps) => (
       <Widget
-        src={`${ownerId}/widget/Card.Partner`}
+        src={`${ownerId}/widget/Partner.Card`}
         props={cardProps}
       />
     ))}
