@@ -159,7 +159,7 @@ const Support = styled.div`
   & > ul {
     display: flex;
     padding: 0.5rem 5.875rem 0rem 5.875rem;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     width: 100%;
     gap: 3.1875rem;
