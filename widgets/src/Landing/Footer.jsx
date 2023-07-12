@@ -235,7 +235,7 @@ return (
           </ul>
         </Column>
         <div>
-          <RegisterButton href={`/${ownerId}/widget/Index?tab=createproject`}>
+          <RegisterButton href={`/${ownerId}/widget/Onboarding.Page`}>
             Create profile
           </RegisterButton>
         </div>
