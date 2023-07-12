@@ -64,8 +64,8 @@ impl Sort {
                 "#,
                 "ORDER BY txs.timestamp DESC",
             ),
-            Sort::NameAsc => ("", "ORDER BY investors.name ASC"),
-            Sort::NameDesc => ("", "ORDER BY investors.name DESC"),
+            Sort::NameAsc => ("", "ORDER BY NULLIF(investors.name, '') ASC NULLS LAST"),
+            Sort::NameDesc => ("", "ORDER BY NULLIF(investors.name, '') DESC NULLS LAST"),
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (

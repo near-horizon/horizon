@@ -100,8 +100,8 @@ impl Sort {
                 "#,
                 "ORDER BY txs.timestamp DESC",
             ),
-            Sort::NameAsc => ("", "ORDER BY projects.name ASC"),
-            Sort::NameDesc => ("", "ORDER BY projects.name DESC"),
+            Sort::NameAsc => ("", "ORDER BY NULLIF(projects.name, '') ASC NULLS LAST"),
+            Sort::NameDesc => ("", "ORDER BY NULLIF(projects.name, '') DESC NULLS LAST"),
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (

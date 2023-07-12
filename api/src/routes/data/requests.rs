@@ -129,8 +129,8 @@ impl Sort {
                 "#,
                 "ORDER BY txs.timestamp DESC",
             ),
-            Sort::NameAsc => ("", "ORDER BY requests.title ASC"),
-            Sort::NameDesc => ("", "ORDER BY requests.title DESC"),
+            Sort::NameAsc => ("", "ORDER BY NULLIF(requests.title, '') ASC NULLS LAST"),
+            Sort::NameDesc => ("", "ORDER BY NULLIF(requests.title, '') DESC NULLS LAST"),
             Sort::RecentAsc => (
                 r#"
                 LEFT JOIN (
