@@ -37,7 +37,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     eprintln!("Projects:");
     let projects = Project::fetch_all(&client, &horizon_account, &social_account).await?;
     let filled_out = Project::count_with_min_completion(3, projects.values().cloned());
-    let filled = Project::avarage_completion(projects.values().cloned());
+    let filled = Project::average_completion(projects.values().cloned());
     eprintln!("{:#?}/{:#?}", filled_out, projects.len());
     eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
@@ -46,7 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     eprintln!("Vendors:");
     let vendors = Vendor::fetch_all(&client, &horizon_account, &social_account).await?;
     let filled_out = Vendor::count_with_min_completion(3, vendors.values().cloned());
-    let filled = Vendor::avarage_completion(vendors.values().cloned());
+    let filled = Vendor::average_completion(vendors.values().cloned());
     eprintln!("{:#?}/{:#?}", filled_out, vendors.len());
     eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
@@ -55,7 +55,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     eprintln!("Investors:");
     let investors = Investor::fetch_all(&client, &horizon_account, &social_account).await?;
     let filled_out = Investor::count_with_min_completion(3, investors.values().cloned());
-    let filled = Investor::avarage_completion(investors.values().cloned());
+    let filled = Investor::average_completion(investors.values().cloned());
     eprintln!("{:#?}/{:#?}", filled_out, investors.len());
     eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");

@@ -65,7 +65,7 @@ where
 {
     fn completion(&self) -> (u8, u8);
 
-    fn avarage_completion<I>(entries: I) -> f64
+    fn average_completion<I>(entries: I) -> f64
     where
         I: Iterator<Item = Self>,
     {

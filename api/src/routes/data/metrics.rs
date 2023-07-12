@@ -12,7 +12,7 @@ use crate::AppState;
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
 struct CompletionDetails {
-    avarage: Option<f64>,
+    average: Option<f64>,
     completed: Option<i64>,
 }
 
@@ -40,10 +40,10 @@ async fn completion(
           ) AS completed,
           (
             SELECT
-              AVG(completion) AS avarage
+              AVG(completion) AS average
             FROM
               projects
-          ) AS avarage
+          ) AS average
         "#,
         above.unwrap_or(0.0) / 100.0,
     )
@@ -119,7 +119,7 @@ async fn get_counts(
 }
 
 #[debug_handler(state = AppState)]
-async fn get_avarage_fulfillment(
+async fn get_average_fulfillment(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<i64>, (StatusCode, String)> {
     sqlx::query!(
@@ -169,7 +169,7 @@ async fn get_avarage_fulfillment(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Could not fetch avarage fulfillment: {e}"),
+            format!("Could not fetch average fulfillment: {e}"),
         )
     })
     .map(|row| {
@@ -180,7 +180,7 @@ async fn get_avarage_fulfillment(
 }
 
 #[debug_handler(state = AppState)]
-async fn get_avarage_transactions_per_project(
+async fn get_average_transactions_per_project(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<f64>, (StatusCode, String)> {
     sqlx::query!(
@@ -225,7 +225,7 @@ async fn get_avarage_transactions_per_project(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Could not fetch avarage transactions per project: {e}"),
+            format!("Could not fetch average transactions per project: {e}"),
         )
     })
     .map(|row| {
@@ -239,7 +239,7 @@ async fn get_avarage_transactions_per_project(
 }
 
 #[debug_handler(state = AppState)]
-async fn get_avarage_project_requests(
+async fn get_average_project_requests(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<f64>, (StatusCode, String)> {
     sqlx::query!(
@@ -264,7 +264,7 @@ async fn get_avarage_project_requests(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Could not fetch avarage project requests: {e}"),
+            format!("Could not fetch average project requests: {e}"),
         )
     })
     .map(|row| {
@@ -275,12 +275,12 @@ async fn get_avarage_project_requests(
 
 #[derive(Debug, Serialize, Deserialize)]
 struct ProjectMau {
-    avarage_without_max: f64,
-    avarage: f64,
+    average_without_max: f64,
+    average: f64,
 }
 
 #[debug_handler(state = AppState)]
-async fn get_avarage_project_mau(
+async fn get_average_project_mau(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<ProjectMau>, (StatusCode, String)> {
     sqlx::query!(
@@ -298,13 +298,13 @@ async fn get_avarage_project_mau(
                 FROM
                   projects
               )
-          ) AS avarage_without_max,
+          ) AS average_without_max,
           (
             SELECT
               AVG(userbase) AS count
             FROM
               projects
-          ) AS avarage
+          ) AS average
         "#,
     )
     .fetch_one(&pool)
@@ -312,23 +312,23 @@ async fn get_avarage_project_mau(
     .map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Could not fetch avarage project mau: {e}"),
+            format!("Could not fetch average project mau: {e}"),
         )
     })
     .map(|row| {
-        let avarage_without_max = row
-            .avarage_without_max
+        let average_without_max = row
+            .average_without_max
             .expect("No project data")
             .to_f64()
             .unwrap_or(0f64);
-        let avarage = row
-            .avarage
+        let average = row
+            .average
             .expect("No project data")
             .to_f64()
             .unwrap_or(0f64);
         Json(ProjectMau {
-            avarage_without_max,
-            avarage,
+            average_without_max,
+            average,
         })
     })
 }
@@ -337,14 +337,14 @@ pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(completion))
         .route("/counts", get(get_counts))
-        .route("/avarage/fulfillment", get(get_avarage_fulfillment))
+        .route("/average/fulfillment", get(get_average_fulfillment))
         .route(
-            "/avarage/project/transactions",
-            get(get_avarage_transactions_per_project),
+            "/average/project/transactions",
+            get(get_average_transactions_per_project),
         )
         .route(
-            "/avarage/project/requests",
-            get(get_avarage_project_requests),
+            "/average/project/requests",
+            get(get_average_project_requests),
         )
-        .route("/avarage/project/mau", get(get_avarage_project_mau))
+        .route("/average/project/mau", get(get_average_project_mau))
 }

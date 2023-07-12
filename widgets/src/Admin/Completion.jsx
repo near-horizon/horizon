@@ -60,8 +60,8 @@ const data = [
   // },
   {
     url: "metrics?above=100",
-    render: ({ avarage, completed }) => {
-      const avg = Number(avarage).toLocaleString("en-US", {
+    render: ({ average, completed }) => {
+      const avg = Number(average).toLocaleString("en-US", {
         style: "percent",
         minimumFractionDigits: 2,
       });
@@ -155,7 +155,7 @@ const data = [
     },
   },
   {
-    url: "metrics/avarage/fulfillment",
+    url: "metrics/average/fulfillment",
     render: (data) => (
       <Row>
         <div>Avarage days to fulfillment</div>
@@ -170,7 +170,7 @@ const data = [
     ),
   },
   {
-    url: "metrics/avarage/project/transactions",
+    url: "metrics/average/project/transactions",
     render: (data) => (
       <Row>
         <div>Avarage number of transactions per project</div>
@@ -189,7 +189,7 @@ const data = [
     ),
   },
   {
-    url: "metrics/avarage/project/requests",
+    url: "metrics/average/project/requests",
     render: (data) => (
       <Row>
         <div>Avarage number of requests per project</div>
@@ -208,12 +208,12 @@ const data = [
     ),
   },
   {
-    url: "metrics/avarage/project/mau",
+    url: "metrics/average/project/mau",
     render: (data) => (
       <Row>
         <div>Avarage MAU per project</div>
         <div>
-          {Number(data.avarage_without_max).toLocaleString("en-US", {
+          {Number(data.average_without_max).toLocaleString("en-US", {
             maximumFractionDigits: 2,
           })}
         </div>

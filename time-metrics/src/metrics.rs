@@ -7,17 +7,17 @@ pub struct Metrics {
     pub date: String,
     completed: i64,
     completed_90: i64,
-    avarage: f64,
+    average: f64,
     projects: i64,
     vendors: i64,
     backers: i64,
     requests: i64,
     proposals: i64,
     contributions: i64,
-    avarage_transactions_per_project: f64,
-    avarage_requests_per_project: f64,
-    avarage_mau_without_max: f64,
-    avarage_mau: f64,
+    average_transactions_per_project: f64,
+    average_requests_per_project: f64,
+    average_mau_without_max: f64,
+    average_mau: f64,
 }
 
 #[allow(clippy::too_many_lines)]
@@ -43,10 +43,10 @@ pub async fn get(pool: &PgPool) -> Result<Metrics, Box<dyn std::error::Error>> {
           ) AS completed_90,
           (
             SELECT
-              AVG(completion) AS avarage
+              AVG(completion) AS average
             FROM
               projects
-          ) AS avarage,
+          ) AS average,
           (
             SELECT
               COUNT(*)
@@ -117,7 +117,7 @@ pub async fn get(pool: &PgPool) -> Result<Metrics, Box<dyn std::error::Error>> {
                 GROUP BY
                   COALESCE(args ->> 'project_id', args ->> 'account_id')
               ) AS counts
-          ) AS avarage_transactions_per_project,
+          ) AS average_transactions_per_project,
           (
             SELECT
               AVG(count) AS count
@@ -132,7 +132,7 @@ pub async fn get(pool: &PgPool) -> Result<Metrics, Box<dyn std::error::Error>> {
                 GROUP BY
                   project_id
               ) AS counts ON projects.id = counts.project_id
-          ) AS avarage_requests_per_project,
+          ) AS average_requests_per_project,
           (
             SELECT
               AVG(userbase) AS count
@@ -145,13 +145,13 @@ pub async fn get(pool: &PgPool) -> Result<Metrics, Box<dyn std::error::Error>> {
                 FROM
                   projects
               )
-          ) AS avarage_mau_without_max,
+          ) AS average_mau_without_max,
           (
             SELECT
               AVG(userbase) AS count
             FROM
               projects
-          ) AS avarage_mau
+          ) AS average_mau
         "#,
     )
     .fetch_one(pool)
@@ -161,30 +161,30 @@ pub async fn get(pool: &PgPool) -> Result<Metrics, Box<dyn std::error::Error>> {
         date: String::new(),
         completed: metrics.completed.unwrap_or(0),
         completed_90: metrics.completed_90.unwrap_or(0),
-        avarage: metrics.avarage.unwrap_or(0.0),
+        average: metrics.average.unwrap_or(0.0),
         projects: metrics.projects.unwrap_or(0),
         vendors: metrics.vendors.unwrap_or(0),
         backers: metrics.backers.unwrap_or(0),
         requests: metrics.requests.unwrap_or(0),
         proposals: metrics.proposals.unwrap_or(0),
         contributions: metrics.contributions.unwrap_or(0),
-        avarage_transactions_per_project: metrics
-            .avarage_transactions_per_project
+        average_transactions_per_project: metrics
+            .average_transactions_per_project
             .unwrap_or(BigDecimal::from_u8(0).unwrap())
             .to_f64()
             .unwrap_or(0.0),
-        avarage_requests_per_project: metrics
-            .avarage_requests_per_project
+        average_requests_per_project: metrics
+            .average_requests_per_project
             .unwrap_or(BigDecimal::from_u8(0).unwrap())
             .to_f64()
             .unwrap_or(0.0),
-        avarage_mau_without_max: metrics
-            .avarage_mau_without_max
+        average_mau_without_max: metrics
+            .average_mau_without_max
             .unwrap_or(BigDecimal::from_u8(0).unwrap())
             .to_f64()
             .unwrap_or(0.0),
-        avarage_mau: metrics
-            .avarage_mau
+        average_mau: metrics
+            .average_mau
             .unwrap_or(BigDecimal::from_u8(0).unwrap())
             .to_f64()
             .unwrap_or(0.0),
