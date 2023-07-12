@@ -15,6 +15,9 @@ State.init({
   isOwnerFetched: false,
 });
 
+// TODO: THIS IS A HACK AND SHOULD BE REMOVED ASAP - NEED TO ADD PERMISSION SYSTEM
+const allowedUsers = ["lccc.near", "jarrodbarnes.near"];
+
 if (context.accountId && !state.isOwnerFetched) {
   Near.asyncView(
     ownerId,
@@ -22,7 +25,12 @@ if (context.accountId && !state.isOwnerFetched) {
     { account_id: context.accountId },
     "final",
     false
-  ).then((isOwner) => State.update({ isOwner, isOwnerFetched: true }));
+  ).then((isOwner) =>
+    State.update({
+      isOwner: isOwner || allowedUsers.includes(context.accountId),
+      isOwnerFetched: true,
+    })
+  );
 }
 
 if (!state.isOwner) {
