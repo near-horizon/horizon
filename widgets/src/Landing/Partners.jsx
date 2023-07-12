@@ -1,3 +1,5 @@
+const ownerId = "nearhorizon.near";
+
 const images = {
   desktop: "bafkreibfgez7zpynpgo5fvjkxgstun6of5ob5noxxhugraxtda3kssosla",
   mobile: "bafkreiexkerx7t3k6oc5262yc64gd5qtatxhlmuakwt3unhfkpyyhe7k3i",

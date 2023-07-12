@@ -1,3 +1,5 @@
+const ownerId = "nearhorizon.near";
+
 const links = {
   product: {
     desktop: "bafkreihdjvyefnqkqrlcolfw5pbigtn5jxjnp3vrffyyh76hhwffjdjndq",
