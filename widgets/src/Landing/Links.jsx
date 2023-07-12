@@ -509,6 +509,13 @@ const banners = {
 };
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+
   & > h2 {
     color: var(--ui-elements-dark, #11181c);
     text-align: center;
@@ -566,7 +573,6 @@ const Container = styled.div`
 
 const Row = styled.div`
   display: flex;
-  padding: 0rem 0rem 1.5rem 0rem;
   align-items: center;
   gap: 1.375rem;
 
@@ -589,6 +595,10 @@ const Row = styled.div`
     & > div {
       width: 50%;
     }
+  }
+
+  p {
+    margin-bottom: 0 !important;
   }
 `;
 
