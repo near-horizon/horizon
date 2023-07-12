@@ -21,10 +21,10 @@ return (
       <Widget src={`${ownerId}/widget/Landing.Hero`} />
       <Widget src={`${ownerId}/widget/Landing.Support`} />
       <Widget src={`${ownerId}/widget/Landing.About`} />
+      <Widget src={`${ownerId}/widget/Landing.Links`} />
       <Widget src={`${ownerId}/widget/Landing.Build`} />
       <Widget src={`${ownerId}/widget/Landing.Connect`} />
       <Widget src={`${ownerId}/widget/Landing.Grow`} />
-      <Widget src={`${ownerId}/widget/Landing.Links`} />
       <Widget src={`${ownerId}/widget/Landing.Testamonial`} />
       <Widget src={`${ownerId}/widget/Landing.Contributors`} />
       <Widget src={`${ownerId}/widget/Landing.Backers`} />
