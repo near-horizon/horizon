@@ -208,22 +208,20 @@ return (
           <h4>Connect</h4>
           <ul>
             <li>
-              <a>Office hours</a>
+              <a href="https://lu.ma/u/usr-5oZHY9dEDbDcaHY" target="_blank">
+                Events calendar
+              </a>
             </li>
             <li>
-              <a>Product demo day</a>
-            </li>
-            <li>
-              <a>Join as a partner</a>
+              <a href="mailto:horizon@near.foundation">
+                Reach out to us directly
+              </a>
             </li>
           </ul>
         </Column>
         <Column>
           <h4>Get help</h4>
           <ul>
-            <li>
-              <a>Ask community</a>
-            </li>
             <li>
               <a href={`/${ownerId}/widget/Index?tab=learn`}>
                 Learning resources
