@@ -441,7 +441,7 @@ return (
                       (acc, name) => Object.assign(acc, { [name]: "" }),
                       {}
                     ),
-                    stage: state.dev.value,
+                    dev: state.dev.value,
                     ...(state.team ? { team: `${state.team}` } : {}),
                     ...(state.tagline ? { tagline: state.tagline } : {}),
                     ...(state.description
