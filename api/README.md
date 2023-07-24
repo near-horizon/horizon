@@ -33,26 +33,38 @@ and [SQLx](https://docs.rs/sqlx) as the database query engine.
     searching, filtering and credit handling for all the entities in Horizon
     - [mod.rs](./src/routes/data/mod.rs) - This file contains some minor helpers
       and exports the routers for each entity including the credits system
+    - [claims.rs](./src/routes/data/claims.rs) - Only contains a single endpoint
+      for listing out claims, can be filtered based on status, time and a query
+      string, has pagination and sorting
+    - [contributions.rs](./src/routes/data/contributions.rs) - This file contains
+      routes for retrieving contributions and filtering/sorting them
     - [credits.rs](./src/routes/data/credits.rs) - Currently, this router only
       contains data fetching routes and no data mutation routes as this is still
       being worked on. The routes it does contain are simple credit balance checks,
       listing out any credit applications and listing out credit transfers per
       given project/vendor
-    - [claims.rs](./src/routes/data/claims.rs) - Only contains a single endpoint
-      for listing out claims, can be filtered based on status, time and a query
-      string, has pagination and sorting
     - [investors.rs](./src/routes/data/investors.rs) - Contains two routes, one
       for listing out investors with filters, queries with pagination and sorting
       and one for listing investor profile completion
     - [projects.rs](./src/routes/data/projects.rs) - Contains two routes, one
       for listing out projects with filters, queries with pagination and sorting
       and one for listing project profile completion
+    - [proposals.rs](./src/routes/data/proposals.rs) - Contains a single endpoint
+      for listing out proposals, can be filtered based on proposal properties, a
+      query string and had pagination and sorting
     - [requests.rs](./src/routes/data/requests.rs) - Only contains a single endpoint
       for listing out requests, can be filtered based on request properties, a query
       string and has pagination and sorting
     - [vendors.rs](./src/routes/data/vendors.rs) - Contains two routes, one
       for listing out vendors with filters, queries with pagination and sorting
       and one for listing vendor profile completion
+    - [metrics.rs](./src/routes/data/metrics.rs) - Contains six routes:
+      - "/" - completion for projects
+      - "/counts" - counts of all entities
+      - "/avarage/fulfillment" - avarage days needed to get a request fulfilled
+      - "/avarage/project/transactions" - avarage transactions performed per project
+      - "/avarage/project/requests" - avarage requests created per project
+      - "/avarage/project/mau" - avarage MAU (monthly active users) per project
 
 [^1]:
     The user could be able to authenticate with a third party server by logging

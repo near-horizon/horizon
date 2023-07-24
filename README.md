@@ -33,6 +33,8 @@ more detailed explanations of the directory go to it's README.
 - **[token](./token)** - This directory contains the source code for the Horizon
   token that should function as the credit system in the future (**NOTE** not yet
   implemented - credit system is still off-chain)
+- **[time-metrics](./time-metrics)** - This directory contains the source code
+  for capturing metrics we track for a given time period on each day
 - **[widgets](./widgets)** - This directory contains the source code for the
   frontend of the product which consists of [BOS components](https://docs.near.org/bos)
 - **root directory (/)** - This directory contains everything listed above
