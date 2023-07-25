@@ -132,7 +132,7 @@ const Column = styled.div`
   & > p {
     color: var(--ui-elements-white, #fff);
     font-size: 1rem;
-    font-family: Mona-Sans;
+    font-family: "Mona Sans";
     line-height: 130%;
     letter-spacing: 0.01rem;
   }
@@ -142,7 +142,7 @@ const Column = styled.div`
     width: 100%;
     color: var(--primary-primary-default, #00ec97) !important;
     font-size: 0.875rem;
-    font-family: Mona-Sans;
+    font-family: "Mona Sans";
     line-height: 140%;
     letter-spacing: 0.00875rem;
   }

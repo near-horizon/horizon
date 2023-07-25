@@ -85,7 +85,7 @@ const Column = styled.div`
     gap: 0.625rem;
     color: var(--ui-elements-dark, #11181c);
     font-size: 0.875rem;
-    font-family: Mona-Sans;
+    font-family: "Mona Sans";
     line-height: 140%;
     letter-spacing: 0.00875rem;
     list-style: none;
@@ -151,7 +151,7 @@ const Bottom = styled.div`
   & > a {
     color: rgba(17, 24, 28, 0.65);
     font-size: 0.875rem;
-    font-family: Mona-Sans;
+    font-family: "Mona Sans";
     line-height: 140%;
     letter-spacing: 0.00875rem;
   }

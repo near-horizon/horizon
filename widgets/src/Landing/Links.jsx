@@ -730,7 +730,7 @@ const Card = styled.div`
         color: var(--ui-elements-dark, #11181c);
         font-weight: 400;
         font-size: 0.75rem;
-        font-family: Mona-Sans;
+        font-family: "Mona Sans";
         line-height: 1.1rem;
         letter-spacing: 0.0075rem;
       }
@@ -739,7 +739,7 @@ const Card = styled.div`
     & > p {
       color: #000;
       font-size: 1rem;
-      font-family: Mona-Sans;
+      font-family: "Mona Sans";
       line-height: 130%;
       letter-spacing: 0.01rem;
     }
