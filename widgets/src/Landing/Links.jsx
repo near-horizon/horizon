@@ -577,23 +577,24 @@ const Row = styled.div`
   gap: 1.375rem;
 
   & > div {
-    width: 33%;
+    width: 31%;
   }
 
   @media screen and (max-width: 768px) {
-    flex-direction: column;
+    flex-direction: column !important;
 
     & > div {
       width: 100%;
     }
   }
 
-  @media screen and (min-width: 769px) and (max-width: 1200px) {
-    flex-direction: row;
-    justify-content: center;
+  @media screen and (min-width: 769px) and (max-width: 1268px) {
+    flex-direction: row !important;
+    justify-content: center !important;
+    flex-wrap: wrap;
 
     & > div {
-      width: 50%;
+      width: 48%;
     }
   }
 
@@ -686,7 +687,6 @@ const Card = styled.div`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  flex: 1 0 0;
 
   @media screen and (max-width: 768px) {
     text-align: center;
