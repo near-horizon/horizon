@@ -141,7 +141,7 @@ const Path = styled.div`
 
         & > ul {
           color: var(--ui-elements-black, #000);
-          font-family: Mona-Sans;
+          font-family: "Mona Sans";
           font-size: 0.875rem;
           font-style: normal;
           font-weight: 500;
@@ -217,7 +217,7 @@ const Footer = styled.div`
   & > p {
     color: #101828;
     text-align: center;
-    font-family: Mona-Sans;
+    font-family: "Mona Sans";
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 400;

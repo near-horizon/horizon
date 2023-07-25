@@ -171,7 +171,7 @@ const Content = styled("Accordion.Content")`
   align-self: stretch;
   color: var(--black, #000);
   font-size: 0.875rem;
-  font-family: Mona-Sans;
+  font-family: "Mona Sans";
   line-height: 140%;
   letter-spacing: 0.00875rem;
 

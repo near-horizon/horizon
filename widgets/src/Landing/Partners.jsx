@@ -55,7 +55,7 @@ const Title = styled.div`
     background: var(--ui-elements-dark, #11181c);
     color: var(--ui-elements-white, #fff);
     font-size: 1rem;
-    font-family: Mona-Sans;
+    font-family: "Mona Sans";
     font-weight: 600;
     letter-spacing: 0.01rem;
   }
