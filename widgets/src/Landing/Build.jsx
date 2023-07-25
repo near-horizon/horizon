@@ -327,9 +327,8 @@ return (
             </Trigger>
           </Header>
           <Content>
-            Easily source reputable contributors for any and every business need
-            you have, including back office finance management, recruitment,
-            development, legal, and marketing.
+            Users are standing by to test your application and provide valuable
+            feedback before your launch.
           </Content>
         </Item>
 
@@ -363,9 +362,10 @@ return (
             </Trigger>
           </Header>
           <Content>
-            Easily source reputable contributors for any and every business need
-            you have, including back office finance management, recruitment,
-            development, legal, and marketing.
+            Connect with industry veterans for advice on your GTM plan,
+            leadership skills, pitch deck, and more. Or apply to become a
+            mentor, and help Web3 founders put their best foot forward as they
+            prepare for launch.
           </Content>
         </Item>
       </Accordion>
