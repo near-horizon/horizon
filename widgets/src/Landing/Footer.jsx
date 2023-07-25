@@ -189,18 +189,18 @@ return (
           <h4>Explore</h4>
           <ul>
             <li>
-              <a href={`/${ownerId}/widgets/Index?tab=projects`}>Projects</a>
+              <a href={`/${ownerId}/widget/Index?tab=projects`}>Projects</a>
             </li>
             <li>
-              <a href={`/${ownerId}/widgets/Index?tab=requests`}>
+              <a href={`/${ownerId}/widget/Index?tab=requests`}>
                 Contribution requests
               </a>
             </li>
             <li>
-              <a href={`/${ownerId}/widgets/Index?tab=vendors`}>Contributors</a>
+              <a href={`/${ownerId}/widget/Index?tab=vendors`}>Contributors</a>
             </li>
             <li>
-              <a href={`/${ownerId}/widgets/Index?tab=investors`}>Backers</a>
+              <a href={`/${ownerId}/widget/Index?tab=investors`}>Backers</a>
             </li>
           </ul>
         </Column>
