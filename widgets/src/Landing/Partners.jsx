@@ -13,6 +13,7 @@ const Container = styled.div`
   align-items: flex-start;
   gap: 1.375rem;
   width: 100%;
+  margin: 1rem 0;
 
   & > div {
     width: 50%;
