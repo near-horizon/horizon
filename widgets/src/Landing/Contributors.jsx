@@ -281,8 +281,8 @@ return (
             </Trigger>
           </Header>
           <Content>
-            Engage directly with 150+ startups at various stages, from
-            early-stage to growth-stage businesses.
+            Discover and connect directly with 200+ promising startups and
+            founders ranging from early-stage to growth-stage.
           </Content>
         </Item>
 
@@ -308,9 +308,9 @@ return (
             </Trigger>
           </Header>
           <Content>
-            Grow your client base and increase your brand visibility within the
-            Web3 start-up community - kickstarted by our innovative credit
-            system.
+            Match with vetted and verified projects you want to support. Easily
+            find white papers, team bios, stats, and more all on the project's
+            profile page.
           </Content>
         </Item>
 
@@ -336,8 +336,9 @@ return (
             </Trigger>
           </Header>
           <Content>
-            Build long-term relationships with start-ups that can convert into
-            high-value clients as they grow and scale.
+            Easily filter projects based on your specific criteria. Attend
+            Horizon Networking and Pitch events to discover multiple, promising
+            projects at the same time.
           </Content>
         </Item>
       </Accordion>
