@@ -229,22 +229,6 @@ return (
         <CTARow>
           {state.isAdmin ? (
             <>
-              {state.project.application === "NotSubmitted" ||
-              (typeof state.project.application === "object" &&
-                "Rejected" in state.project.application) ? (
-                <Widget
-                  src={`${ownerId}/widget/Buttons.Green`}
-                  props={{
-                    onClick: () =>
-                      Near.call(ownerId, "apply_for_program", {
-                        account_id: accountId,
-                      }),
-                    text: <>{circledPlus}Apply for credits</>,
-                  }}
-                />
-              ) : (
-                <></>
-              )}
               <GreyButton
                 href={`/${ownerId}/widget/Index?tab=createrequest&accountId=${accountId}`}
               >
