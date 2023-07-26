@@ -79,6 +79,11 @@ if (
   return <>Loading...</>;
 }
 
+const cStatus = state.contribution.status;
+const isAcceptable = typeof cStatus === "object" && "Created" in cStatus;
+const isDeliverable = typeof cStatus === "string" || "Accepted" in cStatus;
+const isCompletable = isDeliverable;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -310,9 +315,7 @@ const contractAction = (actionType) => {
 };
 
 const vendorCreatedView =
-  state.isVendorAdmin &&
-  typeof state.contribution.status !== "string" &&
-  "Created" in state.contribution.status ? (
+  state.isVendorAdmin && isAcceptable ? (
     <>
       <Widget
         src={`${ownerId}/widget/Buttons.Green`}
@@ -370,9 +373,9 @@ const vendorCreatedView =
   ) : (
     <></>
   );
+
 const vendorAcceptedView =
-  (state.isVendorAdmin && typeof state.contribution.status === "string") ||
-  "Accepted" in state.contribution.status ? (
+  state.isVendorAdmin && isDeliverable ? (
     <Widget
       src={`${ownerId}/widget/Buttons.Grey`}
       props={{
@@ -404,9 +407,7 @@ const vendorAcceptedView =
   );
 
 const projectDeliveredView =
-  state.isProjectAdmin &&
-  typeof state.contribution.status !== "string" &&
-  "Delivered" in state.contribution.status ? (
+  state.isProjectAdmin && isCompletable ? (
     <Widget
       src={`${ownerId}/widget/Buttons.Grey`}
       props={{
@@ -475,21 +476,18 @@ const projectDeliveredView =
     <></>
   );
 
-const addActionView =
-  (typeof state.contribution.status !== "string" &&
-    "Accepted" in state.contribution.status) ||
-  state.contribution.status === "Ongoing" ? (
-    <Widget
-      src={`${ownerId}/widget/Contribution.ActionSideWindow`}
-      props={{
-        projectId,
-        vendorId,
-        cid,
-      }}
-    />
-  ) : (
-    <></>
-  );
+const addActionView = isDeliverable ? (
+  <Widget
+    src={`${ownerId}/widget/Contribution.ActionSideWindow`}
+    props={{
+      projectId,
+      vendorId,
+      cid,
+    }}
+  />
+) : (
+  <></>
+);
 
 return (
   <Container>

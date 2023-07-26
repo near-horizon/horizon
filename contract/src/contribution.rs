@@ -122,6 +122,10 @@ impl Contract {
                 // Get the specific contribution entry and change its status to accepted.
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
+                    require!(
+                        matches!(contribution.status, ContributionStatus::Created(_)),
+                        "ERR_CONTRIBUTION_ALREADY_RESPONDED_TO"
+                    );
                     contribution.status =
                         ContributionStatus::Accepted(near_sdk::env::block_timestamp());
                     *old = VersionedContribution::V0(contribution);
@@ -151,6 +155,10 @@ impl Contract {
                 // Get the specific contribution entry and change its status to rejected.
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
+                    require!(
+                        matches!(contribution.status, ContributionStatus::Created(_)),
+                        "ERR_CONTRIBUTION_ALREADY_RESPONDED_TO"
+                    );
                     contribution.status =
                         ContributionStatus::Rejected(near_sdk::env::block_timestamp());
                     *old = VersionedContribution::V0(contribution);
@@ -248,7 +256,8 @@ impl Contract {
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
                     require!(
-                        contribution.status == ContributionStatus::Ongoing,
+                        contribution.status == ContributionStatus::Ongoing
+                            || matches!(contribution.status, ContributionStatus::Accepted(_)),
                         "ERR_CONTRIBUTION_NOT_ONGOING"
                     );
                     contribution.status =
@@ -279,7 +288,9 @@ impl Contract {
                 history.entry(cid.clone()).and_modify(|old| {
                     let mut contribution: Contribution = old.clone().into();
                     require!(
-                        matches!(contribution.status, ContributionStatus::Delivered(_)),
+                        contribution.status == ContributionStatus::Ongoing
+                            || matches!(contribution.status, ContributionStatus::Accepted(_))
+                            || matches!(contribution.status, ContributionStatus::Delivered(_)),
                         "ERR_CONTRIBUTION_NOT_DELIVERED"
                     );
                     contribution.status =
