@@ -1,19 +1,9 @@
 const ownerId = "nearhorizon.near";
 
 State.init({
-  search: props.search ?? "",
-  content: props.content,
-  tab: props.tab ?? "home",
-  accountId: props.accountId,
-  entityId: props.entityId,
-  contributorId: props.contributorId,
-  kind: props.kind,
-  cid: props.cid,
-  projectId: props.projectId,
-  vendorId: props.vendorId,
   tnc: true,
   tncIsFetched: false,
-  transactionHashes: props.transactionHashes,
+  tosAccept: true,
 });
 
 if (context.accountId && !state.tncIsFetched) {
@@ -38,8 +28,6 @@ if (context.accountId && !state.tncIsFetched) {
     })
   );
 }
-
-const update = (state) => State.update(state);
 
 const tabContentWidget = {
   home: "Dashboard",
@@ -72,35 +60,31 @@ const tabContentWidget = {
   "my-requests": "Manage.Requests",
   "my-contracts": "Manage.Contracts",
   "my-applications": "Manage.Applications",
-}[state.tab];
+}[props.tab];
 
 const tabContent = (
   <Widget
     src={`${ownerId}/widget/${tabContentWidget}`}
     props={{
-      update,
-      search: state.search,
-      content: state.content,
-      tab: state.tab,
-      accountId: state.accountId,
-      entityId: state.entityId,
-      contributorId: state.contributorId,
-      projectId: state.projectId,
-      vendorId: state.vendorId,
-      kind: state.kind,
-      cid: state.cid,
-      transactionHashes: state.transactionHashes,
+      ...props,
       urlProps: props,
     }}
   />
 );
 
-const ContentContainer = styled.div`
+const Page = styled.div`
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #eaeaea;
+`;
+
+const Content = styled.div`
   width: 100%;
   background: #ffffff;
-  border: 1px solid #eceef0;
-  border-radius: 24px 24px 0px 0px;
   padding: 3em;
+  border-radius: 0rem 0rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--ui-elements-light, #eceef0);
+  background: var(--base-white, #fff);
 
   &.form {
     border: none;
@@ -109,44 +93,9 @@ const ContentContainer = styled.div`
 
   * {
     margin: 0;
+    padding: 0;
   }
 `;
-
-const Sidebar = styled.div`
-  display: ${({ show }) => (show ? "flex" : "none")};
-  flex-direction: row;
-  position: sticky;
-  top: 0;
-
-  @media screen and (max-width: 768px) {
-    & > div {
-      &:last-child {
-        display: none;
-      }
-    }
-  }
-
-  @media screen and (min-width: 768px) {
-    & > div {
-      &:first-child {
-        display: none;
-      }
-    }
-  }
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  width: 100%;
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const Container = styled.div``;
 
 const showSidebar = ![
   "createproject",
@@ -155,17 +104,17 @@ const showSidebar = ![
   "createbacker",
   "permissions",
   "legal",
-].includes(state.tab);
+].includes(props.tab);
 const isForm = [
   "createproject",
   "createrequest",
   "createvendor",
   "createbacker",
-].includes(state.tab);
+].includes(props.tab);
 
 return (
-  <Container>
-    <Widget src={`${ownerId}/widget/Help.FeedbackButton`} props={{ update }} />
+  <>
+    <Widget src={`${ownerId}/widget/Help.FeedbackButton`} />
     <Widget
       src={`${ownerId}/widget/TNCModal`}
       props={{
@@ -181,21 +130,13 @@ return (
           ),
       }}
     />
-    <Widget src={`${ownerId}/widget/NavbarControl`} props={{ update }} />
-    <Content>
-      <Sidebar show={showSidebar}>
-        <Widget
-          src={`${ownerId}/widget/Sidebar`}
-          props={{ tab: state.tab, update, collapsible: true }}
-        />
-        <Widget
-          src={`${ownerId}/widget/Sidebar`}
-          props={{ tab: state.tab, update, collapsible: false }}
-        />
-      </Sidebar>
-      <ContentContainer className={isForm ? "form" : ""}>
-        {tabContent}
-      </ContentContainer>
-    </Content>
-  </Container>
+    <Widget src={`${ownerId}/widget/Header`} />
+    <Page>
+      <Widget
+        src={`${ownerId}/widget/NavbarControl`}
+        props={{ tab: props.tab }}
+      />
+      <Content className={isForm ? "form" : ""}>{tabContent}</Content>
+    </Page>
+  </>
 );
