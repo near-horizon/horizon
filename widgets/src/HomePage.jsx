@@ -1,13 +1,13 @@
 const ownerId = "nearhorizon.near";
 
 const Container = styled.div`
-  max-width: 90rem;
+  max-width: 94rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 6rem;
   margin-bottom: 6rem;
-  padding-top: 2rem;
+  padding: 2rem 2rem 0 2rem;
 
   & > div {
     width: 100%;
