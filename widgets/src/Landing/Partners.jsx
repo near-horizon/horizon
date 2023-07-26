@@ -258,7 +258,7 @@ return (
     <div>
       <Title>
         <span>Horizon for Partners</span>
-        <h2>Leverage your outreach with Horizon</h2>
+        <h2>Broaden your reach with Horizon</h2>
       </Title>
       <Accordion defaultValue="acceleration">
         <Item value="acceleration">
