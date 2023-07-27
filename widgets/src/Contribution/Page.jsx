@@ -117,6 +117,10 @@ const ContentContainer = styled.div`
   justify-content: flex-start;
   gap: 1em;
   width: 100%;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 const MainContent = styled.div`
@@ -127,6 +131,10 @@ const MainContent = styled.div`
   gap: 1em;
   width: 80%;
   padding-top: 0.25em;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Sidebar = styled.div`
@@ -136,6 +144,10 @@ const Sidebar = styled.div`
   justify-content: flex-start;
   gap: 1em;
   width: 20%;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const circledPlus = (
