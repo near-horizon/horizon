@@ -1,4 +1,5 @@
 const trigger = props.trigger;
+const triggerButton = props.triggerButton;
 const title = props.title;
 const description = props.description;
 const children = props.children;
@@ -70,7 +71,7 @@ const Content = styled.div`
   max-width: 800px;
 `;
 
-const Button = styled.button`
+const Button = styled("Dialog.Trigger")`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -87,7 +88,6 @@ const Button = styled.button`
   line-height: 1em;
   text-align: center;
   white-space: nowrap;
-  width: 100%;
 `;
 
 const Description = styled.div`
@@ -96,9 +96,7 @@ const Description = styled.div`
 
 return (
   <Dialog.Root>
-    <Dialog.Trigger asChild>
-      <Button>{trigger}</Button>
-    </Dialog.Trigger>
+    {triggerButton ? triggerButton : <Button>{trigger}</Button>}
 
     <Dialog.Overlay asChild>
       <Overlay />
