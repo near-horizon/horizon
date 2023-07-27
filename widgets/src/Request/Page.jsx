@@ -160,6 +160,7 @@ const CTARow = styled.div`
   justify-content: flex-start;
   gap: 0.75em;
   margin-top: 1em;
+  flex-wrap: wrap;
 `;
 
 const Heading = styled.div`
