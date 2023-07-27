@@ -266,6 +266,9 @@ return (
         Take the next steps towards a successful launch with a vibrant community
         of contributors, backers, and founders just like you!
       </p>
+      <Link href={`/${ownerId}/widget/Index`}>
+        Click here if you want to explore Horizon
+      </Link>
     </Header>
     <Path>
       <h2>Choose your path:</h2>
