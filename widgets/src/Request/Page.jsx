@@ -70,7 +70,7 @@ const HeaderDetails = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 80%;
+  width: 100%;
 `;
 
 const ContentContainer = styled.div`
@@ -88,17 +88,8 @@ const MainContent = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 80%;
+  width: 100%;
   padding-top: 0.25em;
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 1em;
-  width: 20%;
 `;
 
 const circledPlus = (
@@ -181,37 +172,47 @@ const Heading = styled.div`
   width: 100%;
 `;
 
-const content = {
-  overview: (
-    <Widget
-      src={`${ownerId}/widget/Request.About`}
-      props={{
-        accountId,
-        cid,
-        isAdmin: state.isAdmin,
-      }}
-    />
-  ),
-  invitations: (
-    <Widget
-      src={`${ownerId}/widget/Request.Invitations`}
-      props={{
-        accountId,
-        cid,
-        isAdmin: state.isAdmin,
-      }}
-    />
-  ),
-  proposals: (
-    <Widget
-      src={`${ownerId}/widget/Request.ProposalList`}
-      props={{
-        accountId,
-        cid,
-      }}
-    />
-  ),
+const contentMap = {
+  overview: "About",
+  invitations: "Invitations",
+  proposals: "ProposalList",
 }[getContent(props.content)];
+
+const content = (
+  <Widget
+    src={`${ownerId}/widget/Request.${contentMap}`}
+    props={{
+      accountId,
+      cid,
+      isAdmin: state.isAdmin,
+    }}
+  />
+);
+
+const Separator = styled("Separator.Root")`
+  height: 1px;
+  width: 100%;
+  background: #eceef0;
+`;
+
+const Button = styled.button`
+  display: flex;
+  height: 2.5rem;
+  padding: 0.5rem 1rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 3.125rem;
+  border: 1px solid var(--ui-elements-light, #eceef0);
+  background: var(--background-light, #fafafa);
+  color: var(--error-error-default, #f44738);
+  text-align: center;
+  font-family: "Mona Sans";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 142%; /* 1.2425rem */
+`;
 
 return (
   <Container>
@@ -223,7 +224,25 @@ return (
         />
         <CTARow>
           {state.isAdmin ? (
-            <></>
+            <>
+              <Widget
+                src={`${ownerId}/widget/Request.EditSideWindow`}
+                props={{ accountId, cid }}
+              />
+              <Button
+                onClick={() => {
+                  Near.call(ownerId, "edit_request", {
+                    cid: props.cid,
+                    request: {
+                      ...state.request,
+                      open: false,
+                    },
+                  });
+                }}
+              >
+                Close request
+              </Button>
+            </>
           ) : (
             <Widget
               src={`${ownerId}/widget/Request.ProposeSideWindow`}
@@ -235,10 +254,29 @@ return (
             props={{
               onClick: () => {
                 clipboard.writeText(
-                  `https://alpha.near.org/${ownerId}/widget/Index?tab=request&accountId=${accountId}&cid=${cid}`
+                  `https://near.org/${ownerId}/widget/Index?tab=request&accountId=${accountId}&cid=${cid}`
                 );
               },
-              text: <>Share</>,
+              text: (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                  >
+                    <path
+                      d="M15.5935 9.45565C15.7766 9.29872 15.8682 9.22025 15.9017 9.12687C15.9311 9.04492 15.9311 8.95527 15.9017 8.87332C15.8682 8.77995 15.7766 8.70148 15.5935 8.54454L9.24047 3.09908C8.9253 2.82893 8.76772 2.69385 8.6343 2.69055C8.51835 2.68767 8.40759 2.73861 8.33432 2.82852C8.25 2.93197 8.25 3.13952 8.25 3.55463V6.77607C6.64899 7.05616 5.1837 7.86741 4.09478 9.0855C2.90762 10.4135 2.25093 12.1321 2.25 13.9133V14.3723C3.03701 13.4242 4.01963 12.6575 5.13057 12.1245C6.11002 11.6547 7.16881 11.3763 8.25 11.303V14.4456C8.25 14.8607 8.25 15.0682 8.33432 15.1717C8.40759 15.2616 8.51835 15.3125 8.6343 15.3096C8.76772 15.3063 8.9253 15.1713 9.24047 14.9011L15.5935 9.45565Z"
+                      stroke="currentColor"
+                      stroke-width="1.66667"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  Share
+                </>
+              ),
             }}
           />
         </CTARow>
@@ -273,16 +311,10 @@ return (
             }}
           />
         ) : (
-          <></>
+          <Separator />
         )}
         {content}
       </MainContent>
-      <Sidebar>
-        <Widget
-          src={`${ownerId}/widget/Request.Sidebar`}
-          props={{ accountId, cid, isAdmin: state.isAdmin }}
-        />
-      </Sidebar>
     </ContentContainer>
   </Container>
 );

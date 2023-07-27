@@ -7,7 +7,7 @@ const cid = props.cid;
 const projectId = props.projectId;
 const vendorId = props.vendorId;
 
-const TabItem = styled.a`
+const TabItem = styled.div`
   position: relative;
   display: flex;
   flex-direction: row;
@@ -35,6 +35,16 @@ const TabItem = styled.a`
   span {
     margin-left: 0.25em;
     margin-right: ${({ hasCount }) => (hasCount ? "1.75em" : "0")};
+  }
+
+  & > a {
+    text-decoration: none;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
   }
 `;
 
@@ -67,13 +77,6 @@ return (
       <TabItem
         selected={props.content === id}
         hasCount={!!count && count > 0}
-        href={`/${ownerId}/widget/Index?tab=${tab}&content=${id}${
-          props.search ? "&search=" + props.search : ""
-        }${accountId ? "&accountId=" + accountId : ""}${
-          cid ? "&cid=" + cid : ""
-        }${projectId ? "&projectId=" + projectId : ""}${
-          vendorId ? "&vendorId=" + vendorId : ""
-        }`}
         onClick={() =>
           props.update({
             tab,
@@ -87,10 +90,20 @@ return (
         }
         key={id}
       >
-        <span>{text}</span>
-        <CountIndicator show={!!count && count > 0} grey={grey}>
-          {count}
-        </CountIndicator>
+        <Link
+          href={`/${ownerId}/widget/Index?tab=${tab}&content=${id}${
+            props.search ? "&search=" + props.search : ""
+          }${accountId ? "&accountId=" + accountId : ""}${
+            cid ? "&cid=" + cid : ""
+          }${projectId ? "&projectId=" + projectId : ""}${
+            vendorId ? "&vendorId=" + vendorId : ""
+          }`}
+        >
+          <span>{text}</span>
+          <CountIndicator show={!!count && count > 0} grey={grey}>
+            {count}
+          </CountIndicator>
+        </Link>
       </TabItem>
     ))}
   </Container>
