@@ -218,39 +218,6 @@ const ImgContainer = styled.div`
   }
 `;
 
-const RegisterButton = styled.a`
-  display: flex;
-  padding: 0.75rem 1.875rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 1000px;
-  border: 2px solid #000;
-  color: var(--text-text-dark, #11181c);
-  text-align: center;
-  font-size: 1.125rem;
-  font-family: Inter;
-  font-weight: 600;
-  align-self: flex-start;
-
-  @media screen and (max-width: 768px) {
-    align-self: center;
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    color: var(--text-text-dark, #11181c);
-    text-decoration: none;
-  }
-`;
-
-const registerButton = ({ text, href }) => (
-  <RegisterButton href={href ?? `/${ownerId}/widget/Onboarding.Page`}>
-    {text}
-  </RegisterButton>
-);
-
 const mapImage = (src) => `https://ipfs.near.social/ipfs/${src}`;
 
 return (
@@ -339,7 +306,7 @@ return (
           </Content>
         </Item>
       </Accordion>
-      {registerButton({ text: "Join as a partner" })}
+      <Widget src={`${ownerId}/widget/Buttons.CreateProfile`} />
     </div>
     <ImgContainer>
       <img src={mapImage(images.desktop)} alt="partners" />

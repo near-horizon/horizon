@@ -109,29 +109,6 @@ const Column = styled.div`
   }
 `;
 
-const RegisterButton = styled.a`
-  display: flex;
-  padding: 0.75rem 1.875rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 50px;
-  background: var(--primary-primary-default, #00ec97);
-  color: var(--text-text-dark, #11181c);
-  text-align: center;
-  font-size: 1.125rem;
-  font-family: Inter;
-  font-weight: 600;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: var(--primary-primary-hover, #00ec97);
-    color: var(--text-text-dark, #11181c);
-    text-decoration: none;
-  }
-`;
-
 const Bottom = styled.div`
   display: flex;
   flex-direction: row;
@@ -233,9 +210,7 @@ return (
           </ul>
         </Column>
         <div>
-          <RegisterButton href={`/${ownerId}/widget/Onboarding.Page`}>
-            Create profile
-          </RegisterButton>
+          <Widget src={`${ownerId}/widget/Buttons.CreateProfile`} />
         </div>
       </Links>
       <Bottom>
