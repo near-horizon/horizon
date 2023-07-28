@@ -13,74 +13,92 @@ if (!state.itemsIsFetched) {
     Near.asyncView(
       ownerId,
       "get_admin_contributions",
-      { account_id: context.accountId },
+      { account_id: "veriken.near" },
       "final",
       false
-    ).then((items) => State.update({ items, itemsIsFetched: true }));
+    ).then((items) => {
+      asyncFetch("https://api-op3o.onrender.com/transactions/all").then(
+        ({ body: txs }) => {
+          const timestamps = new Map();
+          txs.forEach((tx) => {
+            if (tx.method_name !== "add_contribution") {
+              return;
+            }
+
+            const id = [tx.args.project_id, tx.args.cid, tx.args.vendor_id];
+
+            if (
+              items.find(
+                ([pId, c, vId]) => pId === id[0] && c === id[1] && vId === id[2]
+              )
+            ) {
+              timestamps.set(`${id}`, tx.timestamp);
+            }
+          });
+
+          items.sort((a, b) => timestamps.get(`${b}`) - timestamps.get(`${a}`));
+
+          State.update({ items, itemsIsFetched: true });
+        }
+      );
+    });
 
     return <>Loading...</>;
   }
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.625rem;
+  align-self: stretch;
+`;
+
 const Header = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-  padding: 0.75em 0.95em;
-  gap: 0.75em;
-  width: 100%;
-  background: #f9fafb;
-  border-bottom: 1px solid #eaecf0;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 0.75em;
-  line-height: 1em;
-  color: #475467;
-`;
+  align-items: center;
+  align-self: stretch;
 
-const Owner = styled.div`
-  width: 20%;
-`;
-
-const Title = styled.div`
-  width: 40%;
-`;
-
-const Other = styled.div`
-  text-align: center;
-  width: 10%;
-`;
-
-const Container = styled.div`
-  .cont {
-    width: 100% !important;
+  & > h1 {
+    color: #000;
+    font-family: "FK Grotesk";
+    font-size: 1.5625rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 2.25rem; /* 144% */
   }
 `;
 
 return (
-  <Container>
-    <Header>
-      <Owner>Contractor</Owner>
-      <Owner>Owner</Owner>
-      <Title>Contract</Title>
-      <Other>Created</Other>
-      <Other>Status</Other>
-    </Header>
-    <Widget
-      src={`${ownerId}/widget/List`}
-      props={{
-        full: true,
-        filter: ([[projectId], vendorId]) =>
-          projectId.includes(search) || vendorId.includes(search),
-        items: state.items,
-        createItem: ([[projectId, cid], vendorId]) => (
+  <Widget
+    src={`${ownerId}/widget/Project.Layout`}
+    props={{
+      accountId: context.accountId,
+      children: (
+        <Container>
+          <Header>
+            <h1>Your contracts</h1>
+          </Header>
           <Widget
-            src={`${ownerId}/widget/Contribution.AdminCard`}
-            props={{ projectId, cid, vendorId }}
+            src={`${ownerId}/widget/List`}
+            props={{
+              full: true,
+              separator: true,
+              filter: ([[projectId], vendorId]) =>
+                projectId.includes(search) || vendorId.includes(search),
+              items: state.items,
+              createItem: ([[projectId, cid], vendorId]) => (
+                <Widget
+                  src={`${ownerId}/widget/Contribution.AdminCard`}
+                  props={{ projectId, cid, vendorId }}
+                />
+              ),
+            }}
           />
-        ),
-      }}
-    />
-  </Container>
+        </Container>
+      ),
+    }}
+  />
 );
