@@ -4,11 +4,11 @@ cd "$(dirname "$0")"
 cd ..
 
 ACCOUNT=$1
-WIDGET_NAME=$2
+API=$2
+OLD_ACCOUNT=$3
+OLD_API=$4
+WIDGET_NAME=$5
 WIDGET_DIR=$(dirname "$WIDGET_NAME")
-API=$3
-OLD_ACCOUNT=$4
-OLD_API=$5
 
 if [ "$WIDGET_DIR" == "." ]; then
 	WIDGET_DIR=""
