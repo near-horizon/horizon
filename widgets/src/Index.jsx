@@ -60,6 +60,7 @@ const tabContentWidget = {
   "my-requests": "Manage.Requests",
   "my-contracts": "Manage.Contracts",
   "my-applications": "Manage.Applications",
+  events: "Events.Page",
 }[props.tab];
 
 const tabContent = (
