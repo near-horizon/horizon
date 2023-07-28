@@ -50,8 +50,7 @@ const props = {
       height: "425px",
       title: "Octopus 2.0",
       link: "https://shortlink.near.foundation/encode-educate-ep5",
-      description:
-        "Octopus 2.0 = NEAR IBC + $NEAR Restaking' workshop.",
+      description: "Octopus 2.0 = NEAR IBC + $NEAR Restaking' workshop.",
       img: "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/encode_educate_octopus.png",
       video: "https://shortlink.near.foundation/encode-educate-ep5",
       tags: ["accelerator partners", "essentials", "bos", "education"],
@@ -431,7 +430,12 @@ const Section = styled.div`
 `;
 
 const PartnerSection = styled.div`
-  background: linear-gradient(90deg, rgba(37,40,38,1) 0%, rgba(37,40,38,1) 12%, rgba(101,225,146,1) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 40, 38, 1) 0%,
+    rgba(37, 40, 38, 1) 12%,
+    rgba(101, 225, 146, 1) 100%
+  );
   padding: 1rem;
   min-width: 380px;
 
@@ -455,7 +459,7 @@ const PartnerSection = styled.div`
   }
 
   a:hover {
-    background: #0060C9;
+    background: #0060c9;
     color: #fff;
     transition: all 0.5s;
   }
@@ -466,11 +470,10 @@ const PartnerSection = styled.div`
   }
 `;
 
-
 return (
   <Container>
     <Heading>
-      <h1>Resources for Founders</h1>
+      <h1>Learning resources</h1>
       <h2>
         Welcome! Below you will find a curated list of resources to best help
         you where you need it most
