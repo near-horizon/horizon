@@ -54,14 +54,30 @@ const Container = styled.div`
   }
 `;
 
+const Separator = styled("Separator.Root")`
+  height: 1px;
+  width: 100%;
+  background: #eceef0;
+  margin: 0.63rem 0;
+`;
+
+let rendered = state.shown
+  .filter(props.filter)
+  .map((args) => <div key={JSON.stringify(args)}>{createItem(args)}</div>);
+
+if (props.separator) {
+  rendered = rendered.reduce((acc, curr) => {
+    if (acc.length === 0) {
+      return [curr];
+    }
+    return [...acc, <Separator />, curr];
+  }, []);
+}
+
 return (
   <Container>
     <InfiniteScroll loadMore={loadMore} hasMore={state.hasMore}>
-      <ListContainer full={props.full}>
-        {state.shown.filter(props.filter).map((args) => (
-          <div key={JSON.stringify(args)}>{createItem(args)}</div>
-        ))}
-      </ListContainer>
+      <ListContainer full={props.full}>{rendered}</ListContainer>
     </InfiniteScroll>
   </Container>
 );
