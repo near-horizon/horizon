@@ -13,7 +13,7 @@ if (!state.itemsIsFetched) {
     Near.asyncView(
       ownerId,
       "get_admin_contributions",
-      { account_id: "veriken.near" },
+      { account_id: context.accountId },
       "final",
       false
     ).then((items) => {
