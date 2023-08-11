@@ -91,11 +91,19 @@ const List = styled.div`
   flex-wrap: wrap;
   width: 100%;
 
+  @media screen and (max-width: 768px) {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    max-width: 100dvw;
+    width: 100dvw;
+    gap: 16px;
+  }
+
   & > div {
     margin-bottom: 24px;
 
     @media screen and (max-width: 768px) {
-      width: 100%;
+      width: 70dvw;
     }
 
     @media screen and (min-width: 768px) and (max-width: 1424px) {
