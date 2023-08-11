@@ -115,7 +115,7 @@ return (
         <h2>{title}</h2>
         <span>{count}</span>
       </div>
-      <a href={link}>{linkText}</a>
+      <Link href={link}>{linkText}</Link>
     </Heading>
     <List>{items.map((item) => renderItem(item))}</List>
   </Container>

@@ -31,7 +31,6 @@ if (!state.teamIsFetched) {
 if (!state.foundersIsFetched || !state.teamIsFetched) {
   return <>Loading...</>;
 }
-
 if (!state.namesIsFetched) {
   Near.asyncView(
     "social.near",

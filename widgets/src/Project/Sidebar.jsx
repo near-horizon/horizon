@@ -1,54 +1,75 @@
 const ownerId = "nearhorizon.near";
 const accountId = props.accountId;
-const gas = "300000000000000";
-
-const companySizeTiers = [
-  "1-10 employees",
-  "11-50 employees",
-  "51-250 employees",
-  "251-1000 employees",
-  "1001+ employees",
-];
 
 State.init({
-  project: null,
-  projectIsFetched: false,
+  projects: null,
+  projectsIsFetched: false,
 });
 
-if (!state.projectIsFetched) {
-  Near.asyncView(
-    ownerId,
-    "get_project",
-    { account_id: accountId },
-    "final",
-    false
-  ).then((project) => State.update({ project, projectIsFetched: true }));
+if (!state.projectsIsFetched) {
+  asyncFetch(
+    `https://api-op3o.onrender.com/data/projects/${accountId}/similar`
+  ).then(({ body: projects }) =>
+    State.update({ projects: projects.slice(0, 5), projectsIsFetched: true })
+  );
 
-  return "Loading...";
+  return <>Loading...</>;
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  & > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    overflow: hidden;
+
+    @media screen and (max-width: 1100px) {
+      flex-direction: row;
+      overflow-x: scroll;
+      max-width: 85dvw;
+      align-items: stretch;
+
+      & > div {
+        width: 70dvw;
+        flex-shrink: 0;
+        align-self: stretch;
+      }
+    }
+  }
+
+  & > h2 {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 1.1875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.01188rem;
+  }
+`;
+
 return (
-  <Widget
-    src={`${ownerId}/widget/Project.Details`}
-    props={{
-      accountId,
-      isAdmin: props.isAdmin,
-      project: state.project,
-      onSave: (project) => {
-        State.update({
-          project: {
-            ...state.project,
-            ...project,
-          },
-        });
-        Near.call(
-          ownerId,
-          "edit_project",
-          { account_id: accountId, project: state.project },
-          gas,
-          "0"
-        );
-      },
-    }}
-  />
+  <Container>
+    <h2>Similar projects</h2>
+    <div>
+      {state.projects.map((accountId) => (
+        <div>
+          <Widget
+            src={`${ownerId}/widget/Project.Card`}
+            props={{ accountId }}
+          />
+        </div>
+      ))}
+    </div>
+  </Container>
 );

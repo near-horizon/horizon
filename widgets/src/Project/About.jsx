@@ -11,14 +11,25 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const Heading = styled.div`
-  padding-bottom: 0.5em;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 1.125em;
-  line-height: 1.5em;
-  color: #000;
+const Separator = styled("Separator.Root")`
   width: 100%;
+  height: 1px;
+  background-color: #eaeaea;
+`;
+
+const Details = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  gap: 1rem;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 `;
 
 State.init({
@@ -26,6 +37,10 @@ State.init({
   projectIsFetched: false,
   profile: "",
   profileIsFetched: false,
+  requests: null,
+  requestsIsFetched: false,
+  contracts: null,
+  contractsIsFetched: false,
 });
 
 if (!state.projectIsFetched) {
@@ -53,6 +68,26 @@ if (!state.profileIsFetched) {
   );
 }
 
+if (!state.requestsIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project_requests",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((requests) => State.update({ requests, requestsIsFetched: true }));
+}
+
+if (!state.contractsIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project_contributions",
+    { account_id: accountId },
+    "final",
+    false
+  ).then((contracts) => State.update({ contracts, contractsIsFetched: true }));
+}
+
 if (!state.projectIsFetched || !state.profileIsFetched) {
   return <>Loading...</>;
 }
@@ -76,68 +111,174 @@ const onSocialSave = (data) => {
   });
 };
 
+const Heading = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px;
+  gap: 16px;
+  width: 100%;
+
+  & div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+
+    & > h2 {
+      font-family: "FK Grotesk";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 25px;
+      line-height: 36px;
+      color: #11181c;
+    }
+
+    & > span {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 19px;
+      line-height: 23px;
+      color: #7e868c;
+    }
+  }
+
+  & > a {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 14px;
+    gap: 8px;
+    background: #fafafa;
+    border: 1px solid #eceef0;
+    border-radius: 50px;
+
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    color: #101828;
+
+    &:hover,
+    &:focus {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 15px;
+      text-align: center;
+      color: #101828;
+    }
+  }
+`;
+
 return (
   <Container>
-    <Heading>About project</Heading>
+    <Heading>
+      <div>
+        <h2>About</h2>
+      </div>
+      <Link
+        href={`/${ownerId}/widget/Index?tab=project&accountId=${accountId}&content=details`}
+      >
+        View all details
+      </Link>
+    </Heading>
+    <Markdown text={state.profile.description} />
+    <Details>
+      <Widget
+        src={`${ownerId}/widget/Inputs.Viewable.Number`}
+        props={{
+          label: "Company size",
+          id: "size",
+          value: state.profile.team,
+          onSave: (team) => onSave({ profile: { team: `${team}` } }),
+          canEdit: isAdmin,
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Inputs.Viewable.Links`}
+        props={{
+          label: "Links",
+          id: "links",
+          value: state.profile.linktree ?? {},
+          onSave: (linktree) => onSave({ profile: { linktree } }),
+          canEdit: isAdmin,
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Inputs.Viewable.Text`}
+        props={{
+          label: "Location",
+          id: "location",
+          value: state.project.geo,
+          onSave: (geo) => horizonOnSave({ geo }),
+          canEdit: isAdmin,
+        }}
+      />
+      <Widget
+        src={`${ownerId}/widget/Inputs.Viewable.Text`}
+        props={{
+          label: "Website",
+          id: "website",
+          value: state.profile.linktree?.website ?? state.profile.website ?? "",
+          link: `https://${state.profile.linktree.website}`,
+          onSave: (website) => onSave({ profile: { linktree: { website } } }),
+          canEdit: isAdmin,
+        }}
+      />
+    </Details>
+
+    <Separator />
+
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
+      src={`${ownerId}/widget/Home.ListSection`}
       props={{
-        label: "Description",
-        id: "description",
-        value: state.profile.description,
-        onSave: (description) => onSocialSave({ profile: { description } }),
-        canEdit: props.isAdmin,
+        title: "Requests",
+        count: state.requests.length,
+        link: `/${ownerId}/widget/Index?tab=project&accountId=${accountId}&content=requests`,
+        linkText: "See all requests",
+        items: state.requests,
+        renderItem: (item) => (
+          <Widget
+            src={`${ownerId}/widget/Request.Card`}
+            props={{
+              accountId: item[0],
+              cid: item[1],
+            }}
+          />
+        ),
       }}
     />
+
+    <Separator />
+
     <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
+      src={`${ownerId}/widget/Home.ListSection`}
       props={{
-        label: "What problem(s) are you solving?",
-        id: "problem",
-        value: state.project.problem,
-        onSave: (problem) => onSave({ problem }),
-        canEdit: props.isAdmin,
+        title: "Work history",
+        count: state.contracts.length,
+        link: `/${ownerId}/widget/Index?tab=project&accountId=${accountId}&content=history`,
+        linkText: "See full history",
+        items: state.contracts,
+        renderItem: (item) => (
+          <Widget
+            src={`${ownerId}/widget/Contribution.Card`}
+            props={{
+              accountId: item[0][0],
+              cid: item[0][1],
+              vendorId: item[1],
+            }}
+          />
+        ),
       }}
     />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
-      props={{
-        label: "What makes your team uniquely positioned for success?",
-        id: "success_position",
-        value: state.project.success_position,
-        onSave: (success_position) => onSave({ success_position }),
-        canEdit: props.isAdmin,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
-      props={{
-        label: "Why are you building on NEAR?",
-        id: "why",
-        value: state.project.why,
-        onSave: (why) => onSave({ why }),
-        canEdit: props.isAdmin,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
-      props={{
-        label: "What's your 5 year vision?",
-        id: "vision",
-        value: state.project.vision,
-        onSave: (vision) => onSave({ vision }),
-        canEdit: props.isAdmin,
-      }}
-    />
-    {/*<Widget
-      src={`${ownerId}/widget/Inputs.Viewable.TextArea`}
-      props={{
-        label: "Are you going to launch your token?",
-        id: "token",
-        value:
-          "Ethereum bought lots of cold wallet although VeChain waited some dead cat bounce during many ICO. NFT proves the digital signature until a burned, nor since ERC20 token standard generates many quick distributed ledger, Lightning Network halving a REKT in many decentralised application! Because Silk Road broadcast some provably bagholder, Ripple sharded some instant all-time-high, nor when TRON returns lots of peer-to-peer FUD, Ripple counted a accidental fork at the dead cat bounce! When blockchain could be a provably fair consensus process of some fork, Cardano required few burned bollinger band in many zero confirmation transaction",
-        onSave: (token) => onSave({ token }),
-      }}
-    />*/}
   </Container>
 );
