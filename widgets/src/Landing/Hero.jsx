@@ -86,30 +86,7 @@ const Img = styled.img`
 const ImageContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-`;
-
-const RegisterButton = styled.a`
-  display: flex;
-  padding: 0.75rem 1.875rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 50px;
-  background: var(--primary-primary-default, #00ec97);
-  color: var(--text-text-dark, #11181c);
-  text-align: center;
-  font-size: 1.125rem;
-  font-family: Inter;
-  font-weight: 600;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: var(--primary-primary-hover, #00ec97);
-    color: var(--text-text-dark, #11181c);
-    text-decoration: none;
-  }
+  justify-content: flex-end;
 `;
 
 const Hero = styled.div`
@@ -151,11 +128,6 @@ const Hero = styled.div`
   }
 `;
 
-const registerButton = ({ text, href }) => (
-  <RegisterButton href={href ?? `/${ownerId}/widget/Onboarding.Page`}>
-    {text}
-  </RegisterButton>
-);
 const heroImage = "bafkreibcddxzaxmjl2ulqkgl52zec6crzhrde2mz5qwobdjyo7m73fhcju";
 
 const mapImage = (src) => `https://ipfs.near.social/ipfs/${src}`;
@@ -178,7 +150,7 @@ return (
           <b>Backers</b> can find discover promising projects to support
         </li>
       </ul>
-      {registerButton({ text: "Create profile" })}
+      <Widget src={`${ownerId}/widget/Buttons.CreateProfile`} />
     </Hero>
     <ImageContainer>
       <Img src={mapImage(heroImage)} />

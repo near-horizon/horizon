@@ -8,8 +8,6 @@ State.init({
   accountsWithPermissionsIsFetched: false,
 });
 
-console.log(state.value, props.accountIds);
-
 if (!context.accountId) {
   return <>Please sign in to continue</>;
 }

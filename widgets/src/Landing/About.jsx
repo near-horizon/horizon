@@ -77,35 +77,6 @@ const Container = styled.div`
   }
 `;
 
-const RegisterButton = styled.a`
-  display: flex;
-  padding: 0.75rem 1.875rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 50px;
-  background: var(--primary-primary-default, #00ec97);
-  color: var(--text-text-dark, #11181c);
-  text-align: center;
-  font-size: 1.125rem;
-  font-family: Inter;
-  font-weight: 600;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: var(--primary-primary-hover, #00ec97);
-    color: var(--text-text-dark, #11181c);
-    text-decoration: none;
-  }
-`;
-
-const registerButton = ({ text, href }) => (
-  <RegisterButton href={href ?? `/${ownerId}/widget/Onboarding.Page`}>
-    {text}
-  </RegisterButton>
-);
-
 const Column = styled.div`
   display: flex;
   flex-direction: column;
@@ -177,6 +148,8 @@ return (
         </p>
       </Column>
     </div>
-    <div>{registerButton({ text: "Create profile" })}</div>
+    <div>
+      <Widget src={`${ownerId}/widget/Buttons.CreateProfile`} />
+    </div>
   </Container>
 );

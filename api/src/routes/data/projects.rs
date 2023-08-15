@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use axum::{
     debug_handler,
-    extract::{Query, State},
+    extract::{Path, Query, State},
     routing::get,
     Json, Router,
 };
@@ -351,6 +351,83 @@ pub async fn all_projects(
 }
 
 #[debug_handler(state = AppState)]
+pub async fn get_similar_projects(
+    Path(account_id): Path<String>,
+    State(AppState { pool, .. }): State<AppState>,
+) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+    let project = sqlx::query!(
+        r#"
+        SELECT
+          projects.id
+        FROM
+          (
+            SELECT
+              *
+            FROM
+              projects
+            WHERE
+              id = $1
+          ) AS target,
+          (
+            SELECT
+              *
+            FROM
+              projects
+            WHERE
+              id != $1
+          ) AS projects
+        WHERE
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              jsonb_object_keys(projects.vertical) AS v
+            WHERE
+              target.vertical ? v
+          ) > 0
+          OR (
+            SELECT
+              COUNT(*)
+            FROM
+              unnest(projects.product_type) AS v
+            WHERE
+              v = ANY (target.product_type)
+          ) > 0
+          OR projects.stage ILIKE target.stage
+          OR projects.dev ILIKE target.dev
+          OR projects.distribution ILIKE target.distribution
+        ORDER BY
+          (
+            SELECT
+              COUNT(*)
+            FROM
+              unnest(projects.product_type) AS v
+            WHERE
+              v = ANY (target.product_type)
+          ) + (
+            SELECT
+              COUNT(*)
+            FROM
+              jsonb_object_keys(projects.vertical) AS v
+            WHERE
+              target.vertical ? v
+          ) DESC
+        "#,
+        account_id
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get project: {e}"),
+        )
+    })?;
+
+    Ok(Json(project.into_iter().map(|p| p.id).collect()))
+}
+
+#[debug_handler(state = AppState)]
 async fn get_completion(
     State(AppState { pool, .. }): State<AppState>,
 ) -> Result<Json<Completion>, (StatusCode, String)> {
@@ -384,4 +461,5 @@ pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(all_projects))
         .route("/completion", get(get_completion))
+        .route("/:account_id/similar", get(get_similar_projects))
 }

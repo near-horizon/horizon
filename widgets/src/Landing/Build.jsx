@@ -4,8 +4,8 @@ const build = {
     mobile: "bafkreid3i5zlxu2eiqca7qghpgpoj2zbmp2kwv7qtkzdj2utyqhunk56y4",
   },
   validate: {
-    desktop: "bafkreierfioucir5qf43cw56iujghcdvzidezk7z5gny6sw33xhd5ekviy",
-    mobile: "bafkreicgiwyplfjka7ldc2k6sg5it3qj75i4dd4xrdbwqlbhuq4eb3zx6i",
+    desktop: "bafkreiaj66jfkq67dtohhhyugu6fzvwes5iojhnn6552qtsyiyg33lv35e",
+    mobile: "bafkreigc2hjgoma3gewa55buw4t3ueoshwap25iu2t6hcyapjwvpqo2qfi",
   },
   mentor: {
     desktop: "bafkreicichhd7bqfhvwphgb3oeo6rv2eritrqhdinaabam2c6xo7epju5e",
