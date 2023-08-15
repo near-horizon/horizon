@@ -61,11 +61,19 @@ const tabContentWidget = {
   "my-contracts": "Manage.Contracts",
   "my-applications": "Manage.Applications",
   events: "Events.Page",
-}[props.tab];
+};
+
+const getTabWidget = (tab) => {
+  if (tab in tabContentWidget) {
+    return tabContentWidget[tab];
+  }
+
+  return "Dashboard";
+};
 
 const tabContent = (
   <Widget
-    src={`${ownerId}/widget/${tabContentWidget}`}
+    src={`${ownerId}/widget/${getTabWidget(props.tab)}`}
     props={{
       ...props,
       urlProps: props,
