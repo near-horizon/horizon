@@ -551,6 +551,30 @@ const profileIcon = (
   />
 );
 
+if (state.isAdmin) {
+  profileItems.push({
+    text: "Admin",
+    link: "admin",
+    icon: (
+      <svg
+        width="18"
+        height="22"
+        viewBox="0 0 18 22"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M8.30201 20.6149C8.5234 20.7441 8.6341 20.8087 8.79032 20.8422C8.91156 20.8682 9.08844 20.8682 9.20968 20.8422C9.3659 20.8087 9.4766 20.7441 9.69799 20.6149C11.646 19.4785 17 15.9085 17 11.0001V7.20007C17 6.12617 17 5.58923 16.8345 5.20807C16.6662 4.82067 16.4986 4.61458 16.1536 4.37097C15.8141 4.13129 15.1486 3.99289 13.8177 3.71609C12.3508 3.41101 11.2243 2.8601 10.1944 2.06339C9.70051 1.68133 9.45357 1.49031 9.26034 1.43821C9.05644 1.38323 8.94356 1.38323 8.73966 1.43821C8.54643 1.49031 8.29949 1.68134 7.80562 2.06339C6.77572 2.8601 5.6492 3.41101 4.1823 3.71609C2.85137 3.99289 2.18591 4.13129 1.84645 4.37097C1.50142 4.61458 1.33379 4.82067 1.16554 5.20807C1 5.58923 1 6.12617 1 7.20007V11.0001C1 15.9085 6.35396 19.4785 8.30201 20.6149Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    ),
+  });
+}
+
 const desktopNav = [...navItems, ...profileItems].map(createNavItem);
 const mobileNav = navItems
   .map(createMobileNavItem)
@@ -580,6 +604,8 @@ const profileNav = profileItems
 State.init({
   isProfile: false,
   isProfileIsFetched: false,
+  isAdmin: false,
+  isAdminIsFetched: false,
 });
 
 if (!state.isProfileIsFetched) {
@@ -605,6 +631,20 @@ if (!state.isProfileIsFetched) {
         });
       }
     });
+    Near.asyncView(
+      ownerId,
+      "check_is_owner",
+      { account_id: context.accountId },
+      "final",
+      false
+    ).then((isAdmin) =>
+      State.update({
+        isAdmin:
+          isAdmin ||
+          ["lccc.near", "jarrodbarnes.near"].includes(context.accountId),
+        isAdminIsFetched: true,
+      })
+    );
   } else {
     State.update({ isProfile: false, isProfileIsFetched: true });
   }
