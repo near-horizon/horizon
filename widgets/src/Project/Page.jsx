@@ -90,7 +90,7 @@ const ContentContainer = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 70%;
+  width: 100%;
 
   @media screen and (max-width: 1100px) {
     width: 100%;
@@ -282,14 +282,14 @@ return (
       />
       {content}
     </ContentContainer>
-    <Sidebar>
-      <Widget
-        src={`${ownerId}/widget/Project.Sidebar`}
-        props={{
-          accountId,
-          isAdmin: state.isAdmin,
-        }}
-      />
-    </Sidebar>
+    {/* <Sidebar> */}
+    {/*   <Widget */}
+    {/*     src={`${ownerId}/widget/Project.Sidebar`} */}
+    {/*     props={{ */}
+    {/*       accountId, */}
+    {/*       isAdmin: state.isAdmin, */}
+    {/*     }} */}
+    {/*   /> */}
+    {/* </Sidebar> */}
   </Container>
 );
