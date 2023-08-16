@@ -78,8 +78,7 @@ const DoubleItem = styled.div`
 `;
 
 const Img = styled.img`
-  width: 28.125rem;
-  height: 25.375rem;
+  width: 100%;
   object-fit: cover;
 `;
 
@@ -87,6 +86,11 @@ const ImageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  overflow: hidden;
+
+  @media screen and (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const Hero = styled.div`
