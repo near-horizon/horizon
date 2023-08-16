@@ -411,7 +411,13 @@ pub async fn get_similar_projects(
               jsonb_object_keys(projects.vertical) AS v
             WHERE
               target.vertical ? v
-          ) DESC
+          ) + (
+            projects.stage ILIKE target.stage
+          ) :: int + (
+            projects.dev ILIKE target.dev
+          ) :: int + (
+            projects.distribution ILIKE target.distribution
+          ) :: int DESC
         "#,
         account_id
     )
