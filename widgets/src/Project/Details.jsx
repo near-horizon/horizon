@@ -42,6 +42,7 @@ State.init({
   profileIsFetched: false,
   project: null,
   projectIsFetched: false,
+  metric: { value: "MAA", text: "Monthly Active Accounts" },
 });
 
 if (!state.profileIsFetched) {
@@ -124,6 +125,10 @@ const Details = styled.div`
   @media screen and (min-width: 768px) and (max-width: 1024px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  &.full {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 `;
 
 const Separator = styled("Separator.Root")`
@@ -204,16 +209,26 @@ return (
     <Separator />
 
     <Heading>Project stats</Heading>
-    <Details>
+    <Details className="full">
       <Widget
-        src={`${ownerId}/widget/Inputs.Viewable.Number`}
+        src={`${ownerId}/widget/Inputs.Select`}
         props={{
-          label: "User base (MAA)",
-          id: "userbase",
-          value: state.profile.userbase,
-          onSave: (userbase) =>
-            onSave({ profile: { userbase: `${userbase}` } }),
-          canEdit: isAdmin,
+          label: "Metric",
+          options: [
+            { value: "DAA", text: "Daily Active Accounts" },
+            { value: "MAA", text: "Monthly Active Accounts" },
+            { value: "MAT", text: "Monthly Average Transactions" },
+            { value: "DAT", text: "Daily Average Transactions" },
+          ],
+          value: state.metric,
+          onChange: (metric) => State.update({ metric }),
+        }}
+      />
+      <Widget
+        src="y3k.near/widget/widgets.external.horizon_project_stats"
+        props={{
+          project_name: accountId,
+          selectedMetric: state.metric,
         }}
       />
     </Details>
