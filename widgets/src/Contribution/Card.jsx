@@ -71,9 +71,18 @@ const Title = styled.h3`
   color: #101828;
 `;
 
-const startDate = new Date(Number(state.contribution.actions[0].start_date));
-const completedDate = new Date(Number(state.contribution.status.Completed));
-const completedDateString = `Completed ${completedDate.toLocaleDateString()}`;
+const startDate = new Date(
+  state.contribution.actions.length > 0
+    ? Number(state.contribution.actions[0].start_date.substring(0, 13))
+    : Number(state.contribution.status.Created.substring(0, 13))
+);
+const isCompleted = "Completed" in state.contribution.status;
+const completedDate = new Date(
+  isCompleted ? Number(state.contribution.status.Completed.substring(0, 13)) : 1
+);
+const completedDateString = `Completed ${
+  isCompleted ? completedDate.toLocaleDateString() : "Not yet"
+}`;
 const price = state.contribution.price;
 const type = state.request.request_type;
 const feedback = isVendorView
@@ -102,6 +111,7 @@ const Column = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 1em;
+  width: 100%;
 `;
 
 const body = (
@@ -118,8 +128,7 @@ const body = (
         <Widget
           src={`${ownerId}/widget/NameAndAccount`}
           props={{
-            accountId: props.accountId,
-            name: state.profile.name,
+            accountId: isVendorView ? projectId : vendorId,
             nameSize: "1.125em",
           }}
         />
@@ -187,4 +196,4 @@ const body = (
   </Column>
 );
 
-return <Widget src={`${ownerId}/widget/Card`} props={{ body }} />;
+return <Widget src={`${ownerId}/widget/Card`} props={{ body, full: true }} />;

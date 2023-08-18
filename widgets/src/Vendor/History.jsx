@@ -10,14 +10,17 @@ if (!state.itemsIsFetched) {
   Near.asyncView(
     ownerId,
     "get_vendor_completed_contributions",
-    { account_id: context.accountId },
+    { account_id: props.accountId },
     "final",
     false
   ).then((items) => State.update({ items, itemsIsFetched: true }));
 
   return <>Loading...</>;
 }
+
 const Container = styled.div`
+  width: 100%;
+
   .cont {
     width: 100% !important;
   }
@@ -25,20 +28,24 @@ const Container = styled.div`
 
 return (
   <Container>
-    <Widget
-      src={`${ownerId}/widget/List`}
-      props={{
-        full: true,
-        filter: ([[projectId]]) => projectId.includes(search),
-        search,
-        items: state.items,
-        createItem: ([[project_id, cid], vendor_id]) => (
-          <Widget
-            src={`${ownerId}/widget/Contribution.Card`}
-            props={{ project_id, cid, vendor_id, isVendorView: true }}
-          />
-        ),
-      }}
-    />
+    {state.items.length === 0 ? (
+      <>No history</>
+    ) : (
+      <Widget
+        src={`${ownerId}/widget/List`}
+        props={{
+          full: true,
+          filter: ([[projectId]]) => projectId.includes(search),
+          search,
+          items: state.items,
+          createItem: ([[projectId, cid], vendorId]) => (
+            <Widget
+              src={`${ownerId}/widget/Contribution.Card`}
+              props={{ projectId, cid, vendorId, isVendorView: true }}
+            />
+          ),
+        }}
+      />
+    )}
   </Container>
 );
