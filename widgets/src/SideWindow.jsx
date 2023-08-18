@@ -67,7 +67,7 @@ const Content = styled.div`
   overflow-y: auto;
   background: #fff;
   z-index: 10;
-  min-width: ${minWidth};
+  min-width: min(${minWidth}, 100dvw);
   max-width: 800px;
 `;
 
