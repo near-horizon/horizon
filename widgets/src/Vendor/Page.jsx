@@ -30,6 +30,10 @@ const Header = styled.div`
   justify-content: space-between;
   gap: 1em;
   width: 100%;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const HeaderDetails = styled.div`
@@ -39,6 +43,10 @@ const HeaderDetails = styled.div`
   justify-content: flex-start;
   gap: 1em;
   width: 80%;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const HeaderProgress = styled.div`
@@ -47,6 +55,11 @@ const HeaderProgress = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 20%;
+  min-width: fit-content;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -64,17 +77,8 @@ const MainContent = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 80%;
+  width: 100%;
   padding-top: 0.25em;
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 1em;
-  width: 20%;
 `;
 
 const chat = (
@@ -123,32 +127,19 @@ if (!state.isAdminIsFetched) {
   }
 }
 
-const content = {
-  overview: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.About`}
-      props={{ accountId, isAdmin: state.isAdmin }}
-    />
-  ),
-  admins: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.Admins`}
-      props={{ accountId, isAdmin: state.isAdmin }}
-    />
-  ),
-  contracts: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.Contracts`}
-      props={{ accountId, isAdmin: state.isAdmin }}
-    />
-  ),
-  history: (
-    <Widget
-      src={`${ownerId}/widget/Vendor.History`}
-      props={{ accountId, isAdmin: state.isAdmin }}
-    />
-  ),
+const tab = {
+  overview: "About",
+  admins: "Admins",
+  contracts: "Contracts",
+  history: "History",
 }[getContent(props.content)];
+
+const content = (
+  <Widget
+    src={`${ownerId}/widget/Vendor.${tab}`}
+    props={{ accountId, isAdmin: state.isAdmin }}
+  />
+);
 
 return (
   <Container>
@@ -214,12 +205,6 @@ return (
         />
         {content}
       </MainContent>
-      <Sidebar>
-        <Widget
-          src={`${ownerId}/widget/Vendor.Sidebar`}
-          props={{ accountId, isAdmin: state.isAdmin }}
-        />
-      </Sidebar>
     </ContentContainer>
   </Container>
 );

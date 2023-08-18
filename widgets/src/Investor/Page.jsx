@@ -50,7 +50,7 @@ const MainContent = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 1em;
-  width: 80%;
+  width: 100%;
   padding-top: 0.25em;
 `;
 
@@ -169,12 +169,6 @@ return (
           <></>
         )}
       </MainContent>
-      <Sidebar>
-        <Widget
-          src={`${ownerId}/widget/Investor.Sidebar`}
-          props={{ accountId, isAdmin: state.isAdmin }}
-        />
-      </Sidebar>
     </ContentContainer>
   </Container>
 );
