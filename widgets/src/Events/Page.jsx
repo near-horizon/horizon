@@ -593,6 +593,11 @@ const Event = styled.div`
   align-items: center;
   gap: 1.5rem;
   align-self: stretch;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const EventDetails = styled.div`
