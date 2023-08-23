@@ -66,6 +66,45 @@ and [SQLx](https://docs.rs/sqlx) as the database query engine.
       - "/avarage/project/requests" - avarage requests created per project
       - "/avarage/project/mau" - avarage MAU (monthly active users) per project
 
+```bash
+└── /
+    ├── encrypt/
+    │   └── :account_id (POST)
+    ├── decrypt/
+    │   └── :account_id (POST)
+    ├── transactions/
+    │   ├── all (GET)
+    │   ├── count/:entity_type (GET)
+    │   └── stats (GET)
+    ├── atlas/
+    │   └── total-raised (GET)
+    └── data/
+        ├── claims (GET)
+        ├── contributions (GET)
+        ├── credits/
+        │   ├── projects/:account_id/balance (GET)
+        │   ├── vendors/:account_id/balance (GET)
+        │   ├── applications (GET)
+        │   └── :account_id/transfers/:transfer_type (GET)
+        ├── investors/ (GET)
+        │   └── completion (GET)
+        ├── metrics/ (GET)
+        │   ├── counts (GET)
+        │   ├── average/
+        │   │   ├── fulfillment (GET)
+        │   │   └── project/
+        │   │       ├── transactions (GET)
+        │   │       ├── requests (GET)
+        │   │       └── mau (GET)
+        ├── projects/ (GET)
+        │   ├── completion (GET)
+        │   └── :account_id/similar (GET)
+        ├── proposals/ (GET)
+        ├── requests/ (GET)
+        └── vendors.rs/ (GET)
+            └── completion (GET)
+```
+
 [^1]:
     The user could be able to authenticate with a third party server by logging
     in to that server separately from the BOS login, but that is very unintuitive and
