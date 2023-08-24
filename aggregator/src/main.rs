@@ -8,7 +8,7 @@ use aggregator::{
     project::{self, Project},
     request::{self, FullRequest},
     vendor::{self, Vendor},
-    Completion, FetchAll,
+    FetchAll,
 };
 
 #[tokio::main]
@@ -36,28 +36,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     eprintln!("Projects:");
     let projects = Project::fetch_all(&client, &horizon_account, &social_account).await?;
-    let filled_out = Project::count_with_min_completion(3, projects.values().cloned());
-    let filled = Project::average_completion(projects.values().cloned());
-    eprintln!("{:#?}/{:#?}", filled_out, projects.len());
-    eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
     project::insert_many(&pool, projects.values().cloned().collect_vec()).await?;
 
     eprintln!("Vendors:");
     let vendors = Vendor::fetch_all(&client, &horizon_account, &social_account).await?;
-    let filled_out = Vendor::count_with_min_completion(3, vendors.values().cloned());
-    let filled = Vendor::average_completion(vendors.values().cloned());
-    eprintln!("{:#?}/{:#?}", filled_out, vendors.len());
-    eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
     vendor::insert_many(&pool, vendors.values().cloned().collect_vec()).await?;
 
     eprintln!("Investors:");
     let investors = Investor::fetch_all(&client, &horizon_account, &social_account).await?;
-    let filled_out = Investor::count_with_min_completion(3, investors.values().cloned());
-    let filled = Investor::average_completion(investors.values().cloned());
-    eprintln!("{:#?}/{:#?}", filled_out, investors.len());
-    eprintln!("Average completion: {:#?}", filled);
     eprintln!("Inserting...");
     investor::insert_many(&pool, investors.values().cloned().collect_vec()).await?;
 
