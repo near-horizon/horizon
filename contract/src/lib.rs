@@ -21,6 +21,7 @@ pub mod claim;
 pub mod contribution;
 pub mod dec_serde;
 pub mod events;
+pub mod incentives;
 pub mod investor;
 pub mod project;
 pub mod proposal;

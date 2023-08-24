@@ -78,7 +78,7 @@ impl Contract {
         self.assert_admin(&request.project_id, &env::predecessor_account_id());
         require!(
             request.source == PaymentSource::Other
-                || self.get_project(request.project_id.clone()).credits,
+                || self.get_project(request.project_id.clone()).project.credits,
             "ERR_CREDITS_NOT_APPROVED",
         );
         let cid = crate::create_cid(&serde_json::to_string(&request).unwrap());

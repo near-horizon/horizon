@@ -20,6 +20,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let social_account = std::env::var("SOCIAL_CONTRACT")
         .unwrap_or("social.near".to_string())
         .parse()?;
+    let signer_account = std::env::var("SIGNER_ACCOUNT")
+        .expect("SIGNER_ACCOUNT is not set")
+        .parse()?;
+    let secret_key = std::env::var("SECRET_KEY").expect("SECRET_KEY is not set");
 
     let pool = sqlx::postgres::PgPoolOptions::new()
         .max_connections(5)
@@ -36,6 +40,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     eprintln!("Projects:");
     let projects = Project::fetch_all(&client, &horizon_account, &social_account).await?;
+    eprintln!("Fetching state of projects before update...");
+    let before_state =
+        project::get_state(&pool, projects.keys().cloned().collect_vec().clone()).await;
     eprintln!("Inserting...");
     project::insert_many(&pool, projects.values().cloned().collect_vec()).await?;
 
@@ -146,6 +153,38 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .collect(),
     )
     .await?;
+
+    eprintln!("Fetching state of projects after update...");
+    let after_state =
+        project::get_state(&pool, projects.keys().cloned().collect_vec().clone()).await;
+
+    eprintln!("Checking for changes...");
+    let for_achievements = after_state
+        .iter()
+        .filter_map(|project| {
+            let incentinves = project::check_incentives(
+                before_state.iter().find(|before| before.id == project.id),
+                project,
+            );
+
+            (!incentinves.is_empty()).then_some((project.id.clone(), incentinves))
+        })
+        .collect_vec();
+
+    if for_achievements.is_empty() {
+        eprintln!("No incentives to award");
+    } else {
+        eprintln!("Awarding {} incentives...", for_achievements.len());
+        project::award_incentives(
+            &client,
+            signer_account,
+            horizon_account,
+            &secret_key,
+            for_achievements,
+        )
+        .await;
+        eprintln!("Awarded incentives");
+    }
 
     eprintln!("Done");
 

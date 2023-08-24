@@ -8,6 +8,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::dec_serde::u64_dec_format;
 use crate::events::Events;
+use crate::incentives::Incentive;
 use crate::{Contract, ContractExt};
 
 /// Permissions table for interaction between a contributor and an entity.
@@ -67,7 +68,7 @@ pub struct OldProject {
 
 #[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default, Debug)]
 #[serde(crate = "near_sdk::serde")]
-pub struct Project {
+pub struct ProjectV2 {
     pub founders: HashSet<AccountId>,
     pub team: Permissions,
     pub why: String,
@@ -87,7 +88,7 @@ pub struct Project {
     pub credits: bool,
 }
 
-impl Project {
+impl ProjectV2 {
     pub fn is_admin(&self, account_id: &AccountId) -> bool {
         self.founders.contains(account_id)
             || self.team.get(account_id).map_or(false, |permissions| {
@@ -96,51 +97,18 @@ impl Project {
     }
 
     pub fn completion(&self) -> (u8, u8) {
-        let mut completed = 0;
-        let total = 14;
-        if !self.founders.is_empty() {
-            completed += 1;
-        }
-        if !self.team.is_empty() {
-            completed += 1;
-        }
-        if !self.why.is_empty() {
-            completed += 1;
-        }
-        if !self.tam.is_empty() {
-            completed += 1;
-        }
-        if !self.roadmap.is_empty() {
-            completed += 1;
-        }
-        if !self.success_position.is_empty() {
-            completed += 1;
-        }
-        if !self.white_paper.is_empty() {
-            completed += 1;
-        }
-        if !self.integration.is_empty() {
-            completed += 1;
-        }
-        if !self.team_deck.is_empty() {
-            completed += 1;
-        }
-        if !self.problem.is_empty() {
-            completed += 1;
-        }
-        if !self.vision.is_empty() {
-            completed += 1;
-        }
-        if !self.demo.is_empty() {
-            completed += 1;
-        }
-        if !self.geo.is_empty() {
-            completed += 1;
-        }
-        if !self.deck.is_empty() {
-            completed += 1;
-        }
-        (completed, total)
+        let completion_array = [
+            self.integration.is_empty(),
+            self.geo.is_empty(),
+            self.problem.is_empty(),
+            self.success_position.is_empty(),
+            self.why.is_empty(),
+            self.vision.is_empty(),
+        ];
+        (
+            completion_array.iter().filter(|&x| !x).count() as u8,
+            completion_array.len() as u8,
+        )
     }
 
     pub fn patch(&mut self, value: &Value) {
@@ -204,10 +172,150 @@ impl Project {
     }
 }
 
+#[derive(BorshSerialize, BorshDeserialize, Deserialize, Serialize, Clone, Default, Debug)]
+#[serde(crate = "near_sdk::serde")]
+pub struct Project {
+    #[serde(flatten)]
+    pub project: ProjectV2,
+    pub contracts: HashSet<AccountId>,
+    pub credit_balance: u64,
+    pub achieved_incentives: HashMap<Incentive, u8>,
+}
+
+impl Project {
+    pub fn is_admin(&self, account_id: &AccountId) -> bool {
+        self.project.is_admin(account_id)
+    }
+
+    pub fn completion(&self) -> (u8, u8) {
+        let (completion, total) = self.project.completion();
+        (
+            completion + if self.contracts.is_empty() { 0 } else { 1 },
+            total + 1,
+        )
+    }
+
+    pub fn patch(&mut self, value: &Value) {
+        self.project.patch(value);
+        let project = value.as_object().expect("ERR_INVALID_PROJECT");
+        if let Some(contracts) = project.get("contracts") {
+            self.contracts = HashSet::from_iter(
+                contracts
+                    .as_array()
+                    .expect("ERR_INVALID_CONTRACTS")
+                    .iter()
+                    .map(|v| serde_json::from_value(v.clone()).expect("ERR_INVALID_CONTRACTS")),
+            );
+        }
+    }
+}
+
+// #[derive(Serialize, Deserialize, Clone, Default, Debug)]
+// #[serde(crate = "near_sdk::serde")]
+// #[serde(rename_all = "camelCase")]
+// pub struct Nft {
+//     contract_id: String,
+//     token_id: String,
+// }
+//
+// #[derive(Serialize, Deserialize, Clone, Debug, Default)]
+// #[serde(crate = "near_sdk::serde")]
+// #[serde(untagged)]
+// pub enum Image {
+//     Img {
+//         img: String,
+//     },
+//     Url {
+//         url: String,
+//     },
+//     Ipfs {
+//         ipfs_cid: String,
+//     },
+//     Nft {
+//         nft: Nft,
+//     },
+//     #[default]
+//     None,
+// }
+//
+// #[derive(Deserialize, Serialize, Clone, Default, Debug)]
+// #[serde(crate = "near_sdk::serde")]
+// struct SocialProfile {
+//     #[serde(default)]
+//     pub name: String,
+//     #[serde(default)]
+//     pub description: String,
+//     #[serde(default)]
+//     pub image: Image,
+//     #[serde(default)]
+//     pub tagline: String,
+//     #[serde(default)]
+//     pub website: String,
+//     #[serde(default)]
+//     pub linktree: HashMap<String, String>,
+//     #[serde(default)]
+//     pub verticals: HashMap<String, String>,
+//     #[serde(default)]
+//     pub product_type: HashMap<String, String>,
+//     #[serde(default)]
+//     pub category: String,
+//     #[serde(default)]
+//     pub stage: String,
+//     #[serde(default)]
+//     pub distribution: String,
+//     #[serde(default)]
+//     pub dev: String,
+//     #[serde(default)]
+//     pub team: String,
+// }
+//
+// impl SocialProfile {
+//     pub fn completion(&self) -> (u8, u8) {
+//         let completion_array = [
+//             self.name.is_empty(),
+//             self.description.is_empty(),
+//             matches!(self.image, Image::None),
+//             self.tagline.is_empty(),
+//             self.website.is_empty(),
+//             self.linktree.is_empty(),
+//             self.verticals.is_empty() || self.category.is_empty(),
+//             self.product_type.is_empty(),
+//             self.stage.is_empty(),
+//             self.distribution.is_empty(),
+//             self.dev.is_empty(),
+//             self.team.is_empty(),
+//         ];
+//         (
+//             completion_array.iter().filter(|&v| !v).count() as u8,
+//             completion_array.len() as u8,
+//         )
+//     }
+// }
+//
+// #[derive(Deserialize, Serialize, Clone, Default, Debug)]
+// #[serde(crate = "near_sdk::serde")]
+// struct SocialMetadata {
+//     pub profile: SocialProfile,
+// }
+//
+// #[derive(Deserialize, Serialize, Clone, Default, Debug)]
+// #[serde(crate = "near_sdk::serde")]
+// struct SocialData {
+//     #[serde(flatten)]
+//     pub accounts: HashMap<AccountId, SocialMetadata>,
+// }
+//
+// #[derive(Deserialize, Serialize, Clone, Default, Debug)]
+// #[serde(crate = "near_sdk::serde")]
+// struct SocialArgs {
+//     pub keys: Vec<String>,
+// }
+
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum VersionedProject {
-    V2(Project),
+    V2(ProjectV2),
     V1(OldProject),
+    V3(Project),
 }
 
 impl VersionedProject {
@@ -218,40 +326,83 @@ impl VersionedProject {
 
 impl Default for VersionedProject {
     fn default() -> Self {
-        Self::V2(Project {
-            founders: HashSet::new(),
-            application: ApplicationStatus::NotSubmitted,
-            team: HashMap::new(),
-            verified: false,
-            credits: false,
-            ..Default::default()
+        Self::V3(Project {
+            contracts: HashSet::new(),
+            credit_balance: 0,
+            achieved_incentives: HashMap::new(),
+            project: ProjectV2 {
+                founders: HashSet::new(),
+                application: ApplicationStatus::NotSubmitted,
+                team: HashMap::new(),
+                verified: false,
+                credits: false,
+                ..Default::default()
+            },
         })
+    }
+}
+
+impl From<OldProject> for ProjectV2 {
+    fn from(value: OldProject) -> Self {
+        Self {
+            credits: false,
+            founders: value.founders,
+            team: value.team,
+            why: value.why,
+            integration: value.integration,
+            success_position: value.success_position,
+            problem: value.problem,
+            vision: value.vision,
+            deck: value.deck,
+            white_paper: value.white_paper,
+            roadmap: value.roadmap,
+            team_deck: value.team_deck,
+            demo: value.demo,
+            tam: value.tam,
+            geo: value.geo,
+            verified: value.verified,
+            application: value.application,
+        }
+    }
+}
+
+impl From<ProjectV2> for Project {
+    fn from(value: ProjectV2) -> Self {
+        Self {
+            project: value,
+            contracts: HashSet::new(),
+            achieved_incentives: HashMap::new(),
+            credit_balance: 0,
+        }
+    }
+}
+
+impl From<VersionedProject> for ProjectV2 {
+    fn from(value: VersionedProject) -> Self {
+        match value {
+            VersionedProject::V1(o) => o.into(),
+            VersionedProject::V2(e) => e,
+            VersionedProject::V3(e) => e.project,
+        }
+    }
+}
+
+impl From<&VersionedProject> for ProjectV2 {
+    fn from(value: &VersionedProject) -> Self {
+        match value {
+            VersionedProject::V1(o) => o.clone().into(),
+            VersionedProject::V2(e) => e.clone(),
+            VersionedProject::V3(e) => e.project.clone(),
+        }
     }
 }
 
 impl From<VersionedProject> for Project {
     fn from(value: VersionedProject) -> Self {
         match value {
-            VersionedProject::V1(o) => Project {
-                credits: false,
-                founders: o.founders,
-                team: o.team,
-                why: o.why,
-                integration: o.integration,
-                success_position: o.success_position,
-                problem: o.problem,
-                vision: o.vision,
-                deck: o.deck,
-                white_paper: o.white_paper,
-                roadmap: o.roadmap,
-                team_deck: o.team_deck,
-                demo: o.demo,
-                tam: o.tam,
-                geo: o.geo,
-                verified: o.verified,
-                application: o.application,
-            },
-            VersionedProject::V2(e) => e,
+            VersionedProject::V1(o) => ProjectV2::from(o).into(),
+            VersionedProject::V2(e) => e.into(),
+            VersionedProject::V3(e) => e,
         }
     }
 }
@@ -259,34 +410,20 @@ impl From<VersionedProject> for Project {
 impl From<&VersionedProject> for Project {
     fn from(value: &VersionedProject) -> Self {
         match value {
-            VersionedProject::V1(o) => Project {
-                credits: false,
-                founders: o.founders.clone(),
-                team: o.team.clone(),
-                why: o.why.clone(),
-                integration: o.integration.clone(),
-                success_position: o.success_position.clone(),
-                problem: o.problem.clone(),
-                vision: o.vision.clone(),
-                deck: o.deck.clone(),
-                white_paper: o.white_paper.clone(),
-                roadmap: o.roadmap.clone(),
-                team_deck: o.team_deck.clone(),
-                demo: o.demo.clone(),
-                tam: o.tam.clone(),
-                geo: o.geo.clone(),
-                verified: o.verified,
-                application: o.application.clone(),
-            },
-            VersionedProject::V2(e) => e.clone(),
+            VersionedProject::V1(o) => ProjectV2::from(o.clone()).into(),
+            VersionedProject::V2(e) => e.clone().into(),
+            VersionedProject::V3(e) => e.clone(),
         }
     }
 }
 
 impl VersionedProject {
     pub fn new(founders: HashSet<AccountId>) -> Self {
-        Self::V2(Project {
-            founders,
+        Self::V3(Project {
+            project: ProjectV2 {
+                founders,
+                ..Default::default()
+            },
             ..Default::default()
         })
     }
@@ -315,7 +452,7 @@ impl Contract {
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
                 old.patch(&project);
-                *existing = VersionedProject::V2(old);
+                *existing = VersionedProject::V3(old);
             });
         Events::EditProject { account_id }.emit();
     }
@@ -333,8 +470,8 @@ impl Contract {
             .entry(account_id.clone())
             .and_modify(|existing| {
                 let mut old: Project = existing.clone().into();
-                old.verified = true;
-                *existing = VersionedProject::V2(old);
+                old.project.verified = true;
+                *existing = VersionedProject::V3(old);
             });
         Events::VerifyProject { account_id }.emit();
     }
@@ -344,8 +481,8 @@ impl Contract {
         self.assert_can_edit_project(&account_id, &env::predecessor_account_id());
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
-            old.founders.extend(founders);
-            *existing = VersionedProject::V2(old);
+            old.project.founders.extend(founders);
+            *existing = VersionedProject::V3(old);
         });
     }
 
@@ -355,9 +492,9 @@ impl Contract {
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
             for founder in founders {
-                old.founders.remove(&founder);
+                old.project.founders.remove(&founder);
             }
-            *existing = VersionedProject::V2(old);
+            *existing = VersionedProject::V3(old);
         });
     }
 
@@ -367,9 +504,9 @@ impl Contract {
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
             for (account_id, permissions) in team {
-                old.team.insert(account_id, permissions);
+                old.project.team.insert(account_id, permissions);
             }
-            *existing = VersionedProject::V2(old);
+            *existing = VersionedProject::V3(old);
         });
     }
 
@@ -383,9 +520,9 @@ impl Contract {
         self.projects.entry(account_id).and_modify(|existing| {
             let mut old: Project = existing.clone().into();
             for (account_id, _) in team {
-                old.team.remove(&account_id);
+                old.project.team.remove(&account_id);
             }
-            *existing = VersionedProject::V2(old);
+            *existing = VersionedProject::V3(old);
         });
     }
 
@@ -397,8 +534,9 @@ impl Contract {
             //     project.application.is_some(),
             //     "ERR_APPLICATION_NOT_FILLED_OUT"
             // );
-            project.application = ApplicationStatus::Submitted(near_sdk::env::block_timestamp());
-            *old = VersionedProject::V2(project);
+            project.project.application =
+                ApplicationStatus::Submitted(near_sdk::env::block_timestamp());
+            *old = VersionedProject::V3(project);
         });
         Events::SubmitApplication { account_id }.emit();
     }
@@ -413,14 +551,14 @@ impl Contract {
             .expect("ERR_NOT_PROJECT")
             .into();
         require!(
-            matches!(project.application, ApplicationStatus::Submitted(_)),
+            matches!(project.project.application, ApplicationStatus::Submitted(_)),
             "ERR_APPLICATION_NOT_SUBMITTED"
         );
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
-            project.application = ApplicationStatus::Accepted;
-            project.credits = true;
-            *old = VersionedProject::V2(project);
+            project.project.application = ApplicationStatus::Accepted;
+            project.project.credits = true;
+            *old = VersionedProject::V3(project);
         });
         Events::ApproveApplication { account_id }.emit();
     }
@@ -450,15 +588,124 @@ impl Contract {
             .expect("ERR_NOT_PROJECT")
             .into();
         require!(
-            matches!(project.application, ApplicationStatus::Submitted(_)),
+            matches!(project.project.application, ApplicationStatus::Submitted(_)),
             "ERR_APPLICATION_NOT_SUBMITTED"
         );
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
-            project.application = ApplicationStatus::Rejected(reason.clone());
-            *old = VersionedProject::V2(project);
+            project.project.application = ApplicationStatus::Rejected(reason.clone());
+            *old = VersionedProject::V3(project);
         });
         Events::RejectApplication { account_id, reason }.emit();
+    }
+
+    /// Enable a project to utilize credits.
+    pub fn enable_credits(&mut self, account_id: AccountId, note: Option<String>) {
+        self.assert_owner();
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            project.project.credits = true;
+            *old = VersionedProject::V3(project);
+        });
+        Events::EnableCredits { account_id, note }.emit();
+    }
+
+    /// Disable a project from utilizing credits.
+    pub fn disable_credits(&mut self, account_id: AccountId, note: Option<String>) {
+        self.assert_owner();
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            project.project.credits = false;
+            *old = VersionedProject::V3(project);
+        });
+        Events::DisableCredits { account_id, note }.emit();
+    }
+
+    /// Add credits to a project.
+    pub fn add_credits(&mut self, account_id: AccountId, amount: u64, note: Option<String>) {
+        self.assert_owner();
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
+            project.project.credits = true;
+            project.credit_balance += amount;
+            *old = VersionedProject::V3(project);
+        });
+        Events::AddCredits {
+            account_id,
+            amount,
+            note,
+        }
+        .emit();
+    }
+
+    /// Remove credits from a project.
+    pub fn remove_credits(&mut self, account_id: AccountId, amount: u64, note: Option<String>) {
+        self.assert_owner();
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
+            require!(amount <= project.credit_balance, "ERR_NOT_ENOUGH_CREDITS");
+            project.credit_balance -= amount;
+            *old = VersionedProject::V3(project);
+        });
+        Events::RemoveCredits {
+            account_id,
+            amount,
+            note,
+        }
+        .emit();
+    }
+
+    /// Spend credits from a project.
+    pub fn spend_credits(&mut self, account_id: AccountId, amount: u64, note: Option<String>) {
+        self.assert_admin(&account_id, &env::predecessor_account_id());
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
+            require!(amount <= project.credit_balance, "ERR_NOT_ENOUGH_CREDITS");
+            project.credit_balance -= amount;
+            *old = VersionedProject::V3(project);
+        });
+        Events::SpendCredits {
+            account_id,
+            amount,
+            note,
+        }
+        .emit();
+    }
+
+    /// Add incentive.
+    pub fn add_incentive(
+        &mut self,
+        account_id: AccountId,
+        incentive: Incentive,
+        note: Option<String>,
+    ) {
+        self.assert_owner();
+        let mut credits_accrued = false;
+        self.projects.entry(account_id.clone()).and_modify(|old| {
+            let mut project: Project = old.clone().into();
+            require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
+            let achieved = project
+                .achieved_incentives
+                .entry(incentive.clone())
+                .or_default();
+            if let Some(credits) = incentive.produce_incentive(*achieved > 0) {
+                project.credit_balance += credits;
+                credits_accrued = true;
+            }
+            *achieved += 1;
+            *old = VersionedProject::V3(project);
+        });
+        if credits_accrued {
+            Events::AchieveIncentive {
+                account_id,
+                incentive,
+                note,
+            }
+            .emit();
+        }
     }
 
     /// Views
@@ -496,12 +743,16 @@ impl Contract {
 
     /// List project founders.
     pub fn get_founders(&self, account_id: AccountId) -> HashSet<AccountId> {
-        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY")).founders
+        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
+            .project
+            .founders
     }
 
     /// List project team.
     pub fn get_team(&self, account_id: AccountId) -> Permissions {
-        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY")).team
+        Project::from(self.projects.get(&account_id).expect("ERR_NO_ENTITY"))
+            .project
+            .team
     }
 
     /// Check if account ID is an project.
