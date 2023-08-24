@@ -4,8 +4,8 @@ This monorepo contains all the services and code that make up the Horizon produc
 
 ## Directory structure
 
-Each of the directories in this repository will have it's own README file, so for
-more detailed explanations of the directory go to it's README.
+Each of the directories in this repository will have its own README file, so for
+more detailed explanations of the directory go to its README.
 
 - **[aggregator](./aggregator)** - This directory contains the source code which
   aggregates and ingests data from chain into our database
@@ -16,11 +16,11 @@ more detailed explanations of the directory go to it's README.
 - **[awesome-near-fetcher](./awesome-near-fetcher)** - This directory contains
   the source code for fetching data from the AwesomeNEAR GraphQL API (**deprecated**)
 - **[backup](./backup)** - This directory contains the source code for dumping
-  the data from our database into a AWS S3 bucket
+  the data from our database into an AWS S3 bucket
 - **[contract](./contract)** - This directory contains the main smart contract
   that powers the interactions and logic behind the product
 - **[data](./data)** - This directory contains the static assets that are to be
-  used in the frontend content places (tooltips ,etc.)
+  used in the frontend content places (tooltips, etc.)
 - **[indexer](./indexer)** - This directory contains the source code for our
   indexer which listens to all function calls sent to our smart contract and
   captures them in our database
