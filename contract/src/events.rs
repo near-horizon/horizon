@@ -3,6 +3,8 @@ use std::collections::HashSet;
 use near_sdk::AccountId;
 use near_sdk_contract_tools::event;
 
+use crate::incentives::Incentive;
+
 #[event(standard = "horizon", version = "1", serde = "near_sdk::serde")]
 pub enum Events {
     AddProject {
@@ -29,6 +31,34 @@ pub enum Events {
     RejectApplication {
         account_id: AccountId,
         reason: String,
+    },
+    EnableCredits {
+        account_id: AccountId,
+        note: Option<String>,
+    },
+    DisableCredits {
+        account_id: AccountId,
+        note: Option<String>,
+    },
+    AddCredits {
+        account_id: AccountId,
+        amount: u64,
+        note: Option<String>,
+    },
+    RemoveCredits {
+        account_id: AccountId,
+        amount: u64,
+        note: Option<String>,
+    },
+    SpendCredits {
+        account_id: AccountId,
+        amount: u64,
+        note: Option<String>,
+    },
+    AchieveIncentive {
+        account_id: AccountId,
+        incentive: Incentive,
+        note: Option<String>,
     },
     AddVendor {
         account_id: AccountId,
