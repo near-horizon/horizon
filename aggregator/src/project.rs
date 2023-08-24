@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::PgPool;
 
-use crate::{empty_args, view_function_call, Completion, FetchAll, Image};
+use crate::{empty_args, view_function_call, FetchAll, Image};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Social {
@@ -50,42 +50,6 @@ pub struct Project {
     pub horizon: HorizonProject,
     #[serde(default)]
     pub profile: Social,
-}
-
-impl Completion for Project {
-    fn completion(&self) -> (u8, u8) {
-        let field_completion = [
-            self.horizon.founders.is_empty(),
-            self.horizon.team.is_empty(),
-            self.horizon.why.is_empty(),
-            self.horizon.integration.is_empty(),
-            self.horizon.success_position.is_empty(),
-            self.horizon.problem.is_empty(),
-            self.horizon.vision.is_empty(),
-            self.horizon.deck.is_empty(),
-            self.horizon.white_paper.is_empty(),
-            self.horizon.roadmap.is_empty(),
-            self.horizon.team_deck.is_empty(),
-            self.horizon.demo.is_empty(),
-            self.horizon.tam.is_empty(),
-            self.horizon.geo.is_empty(),
-            self.profile.name.is_empty(),
-            self.profile.description.is_empty(),
-            self.profile.image.is_empty(),
-            self.profile.website.is_empty(),
-            self.profile.tagline.is_empty(),
-            self.profile.linktree.is_empty(),
-            self.profile.verticals.is_empty(),
-            self.profile.category.is_empty(),
-            self.profile.stage.is_empty(),
-            self.profile.userbase.is_empty(),
-            self.profile.distribution.is_empty(),
-        ];
-        (
-            field_completion.iter().filter(|&x| !x).count() as u8,
-            field_completion.len() as u8,
-        )
-    }
 }
 
 pub async fn sync_deleted(pool: &PgPool, projects: &HashSet<String>) -> anyhow::Result<()> {

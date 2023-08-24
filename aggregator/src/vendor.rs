@@ -9,7 +9,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::json;
 use sqlx::PgPool;
 
-use crate::{empty_args, view_function_call, Completion, FetchAll, Image};
+use crate::{empty_args, view_function_call, FetchAll, Image};
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
 #[serde(rename_all = "lowercase")]
@@ -92,28 +92,6 @@ pub struct Vendor {
     pub horizon: HorizonVendor,
     #[serde(default)]
     pub profile: Social,
-}
-
-impl Completion for Vendor {
-    fn completion(&self) -> (u8, u8) {
-        let field_completion = [
-            self.profile.name.is_empty(),
-            self.profile.description.is_empty(),
-            self.profile.services.is_empty(),
-            self.profile.tagline.is_empty(),
-            self.profile.image.is_empty(),
-            self.profile.website.is_empty(),
-            self.profile.linktree.is_empty(),
-            self.profile.location.is_empty(),
-            self.profile.payments.is_empty(),
-            self.profile.rate == 0,
-            self.profile.work.is_empty(),
-        ];
-        (
-            field_completion.iter().filter(|&x| !x).count() as u8,
-            field_completion.len() as u8,
-        )
-    }
 }
 
 pub async fn sync_deleted(pool: &PgPool, vendors: &HashSet<String>) -> anyhow::Result<()> {

@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::PgPool;
 
-use crate::{empty_args, view_function_call, Completion, FetchAll, Image};
+use crate::{empty_args, view_function_call, FetchAll, Image};
 
 #[derive(Serialize, Deserialize, Clone, Default)]
 pub struct Social {
@@ -40,26 +40,6 @@ pub struct Investor {
     pub horizon: HorizonInvestor,
     #[serde(default)]
     pub profile: Social,
-}
-
-impl Completion for Investor {
-    fn completion(&self) -> (u8, u8) {
-        let field_completion = [
-            self.profile.name.is_empty(),
-            self.profile.description.is_empty(),
-            self.profile.tagline.is_empty(),
-            self.profile.image.is_empty(),
-            self.profile.website.is_empty(),
-            self.profile.linktree.is_empty(),
-            self.profile.vertical.is_empty(),
-            self.profile.specialization.is_empty(),
-            self.profile.location.is_empty(),
-        ];
-        (
-            field_completion.iter().filter(|&field| !field).count() as u8,
-            field_completion.len() as u8,
-        )
-    }
 }
 
 pub async fn sync_deleted(pool: &PgPool, investors: &HashSet<String>) -> anyhow::Result<()> {
