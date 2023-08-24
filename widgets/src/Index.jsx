@@ -120,6 +120,7 @@ const isForm = [
   "createvendor",
   "createbacker",
 ].includes(props.tab);
+const showTncDialog = !state.tnc && state.tosAccept && props.tab !== "legal";
 
 return (
   <>
@@ -127,7 +128,7 @@ return (
     <Widget
       src={`${ownerId}/widget/TNCModal`}
       props={{
-        open: !state.tnc && state.tosAccept,
+        open: showTncDialog,
         accept: () =>
           Social.set(
             { profile: { horizon_tnc: true } },

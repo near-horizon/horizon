@@ -8,6 +8,10 @@ declare global {
     widgetSrc: string;
   };
 
+  const clipboard: {
+    writeText: (text: string) => void;
+  };
+
   function useCache(
     promiseGenerator: () => Promise<any>,
     dataKey: string,
