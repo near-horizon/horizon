@@ -8,7 +8,7 @@ and [SQLx](https://docs.rs/sqlx) as the database query engine.
 
 ## File structure
 
-- [main.rs](./src/main.rs) - Here is where the app gets bootstraped and ran
+- [main.rs](./src/main.rs) - Here is where the app gets bootstrapped and ran
   and where the connection with the database gets established
 - [lib.rs](./src/lib.rs) - The top level library file which contains module
   declarations and some helpers used throughout the rest of the library code
@@ -61,10 +61,10 @@ and [SQLx](https://docs.rs/sqlx) as the database query engine.
     - [metrics.rs](./src/routes/data/metrics.rs) - Contains six routes:
       - "/" - completion for projects
       - "/counts" - counts of all entities
-      - "/avarage/fulfillment" - avarage days needed to get a request fulfilled
-      - "/avarage/project/transactions" - avarage transactions performed per project
-      - "/avarage/project/requests" - avarage requests created per project
-      - "/avarage/project/mau" - avarage MAU (monthly active users) per project
+      - "/average/fulfillment" - average days needed to get a request fulfilled
+      - "/average/project/transactions" - average transactions performed per project
+      - "/average/project/requests" - average requests created per project
+      - "/average/project/mau" - average MAU (monthly active users) per project
 
 ```bash
 └── /
