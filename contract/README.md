@@ -5,7 +5,7 @@ business logic lives here.
 
 The contract is upgradeable by the use of the [`Upgrade` trait](https://docs.rs/near-sdk-contract-tools/latest/near_sdk_contract_tools/derive.Upgrade.html).
 The contract also has an owner with help from the [`Owner` trait](https://docs.rs/near-sdk-contract-tools/latest/near_sdk_contract_tools/derive.Owner.html).
-All the top level entities are versioned so upgrading a entity struct doesn't
+All the top level entities are versioned so upgrading an entity struct doesn't
 require a state migration in order to keep the contract working, just a contract
 deployment.
 
