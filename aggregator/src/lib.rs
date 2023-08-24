@@ -59,36 +59,6 @@ impl Image {
     }
 }
 
-pub trait Completion
-where
-    Self: Sized,
-{
-    fn completion(&self) -> (u8, u8);
-
-    fn average_completion<I>(entries: I) -> f64
-    where
-        I: Iterator<Item = Self>,
-    {
-        let (sum, count) = entries
-            .into_iter()
-            .map(|entry| entry.completion())
-            .fold((0f64, 0usize), |(sum, count), (completed, total)| {
-                (sum + completed as f64 / total as f64, count + 1)
-            });
-        sum / count as f64
-    }
-
-    fn count_with_min_completion<I>(min: u8, entries: I) -> usize
-    where
-        I: Iterator<Item = Self>,
-    {
-        entries
-            .into_iter()
-            .filter(|entry| entry.completion().0 > min)
-            .count()
-    }
-}
-
 #[async_trait::async_trait]
 pub trait FetchAll
 where
