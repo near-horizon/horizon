@@ -89,12 +89,12 @@ and then [fetching their details](https://github.com/near-horizon/horizon/blob/5
 
 All entities are inserted using the same flow, a transaction is initiated and each
 entry is flattened and inserted in the appropriate table in the database and at the
-end the transaction is commited. This is done for two reasons:
+end the transaction is committed. This is done for two reasons:
 
 - Only sending one transaction to the database makes this more performant
 - In case any insert fails, no entries get inserted preserving the database state
 
-Here are the imlpementations for each respectively:
+Here are the implementations for each respectively:
 
 - [project.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/project.rs#L107)
 - [vendor.rs](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/vendor.rs#L140)
@@ -103,7 +103,7 @@ Here are the imlpementations for each respectively:
 #### Requests insertion
 
 Similar to entities, requests are inserted by initiating a transaction and inserting
-each entity separately with the addition of creating a array of insertions for all
+each entity separately with the addition of creating an array of insertions for all
 proposals associated with the request.
 
 Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/request.rs#L230).
