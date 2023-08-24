@@ -4,7 +4,7 @@ This directory contains utility shell scripts that are used as
 helpers for performing dev tasks when working with the staging
 environment and/or quick fixes for production.
 
-Each script is mostly self explanatory by virtue of it's filename
+Each script is mostly self explanatory by virtue of its filename
 so here are explanations for some slightly more ambiguous ones:
 
 - [single_widget_deploy.sh](./single_widget_deploy.sh) - This script
