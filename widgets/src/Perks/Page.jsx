@@ -1,0 +1,275 @@
+const ownerId = "nearhorizon.near";
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3.5rem;
+  width: 100%;
+`;
+
+const Heading = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 100%;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+
+  & > h1 {
+    color: var(--gray-900, #101828);
+    font-family: FK Grotesk;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 2.5rem; /* 125% */
+    letter-spacing: 0.02rem;
+  }
+
+  & > span {
+    color: var(--ui-elements-gray, #7e868c);
+    leading-trim: both;
+    text-edge: cap;
+    font-family: "FK Grotesk";
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 2.5rem; /* 166.667% */
+    letter-spacing: 0.015rem;
+  }
+`;
+
+const SubHeader = styled.h2`
+  color: var(--gray-900, #101828);
+  font-family: Inter;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.25rem; /* 142.857% */
+`;
+
+State.init({
+  perks: [],
+  perksIsFetched: false,
+  categories: [],
+  search: "",
+});
+
+if (!state.perksIsFetched) {
+  // asyncFetch("https://api-op3o.onrender.com/data/perks")
+  State.update({
+    /** @type {{id: string; name: string; icon: string; about: string; benefit: string; categories: string[]; criteria: {text: string; completed: boolean;}[]}[]} */
+    perks: [
+      {
+        id: "nearcon",
+        name: "NEARCON",
+        icon: "https://res.cloudinary.com/du2vhtskz/image/upload/v1692869644/750c2a6c556232409a129ed18ba02f6a_ztfcoc.png",
+        about:
+          "The biggest experience of the year is near! 7-10 Nov 2023, Lisbon, Potugal",
+        benefit: "25% off the ticket price",
+        categories: ["Other"],
+        criteria: [
+          {
+            text: "Create profile",
+            completed: false,
+          },
+          {
+            text: "Complete profile overview",
+            completed: false,
+          },
+        ],
+      },
+    ],
+    perksIsFetched: true,
+  });
+  return <>Loading...</>;
+}
+
+const icon = (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M17.5 17.5L14.5834 14.5833M16.6667 9.58333C16.6667 13.4954 13.4954 16.6667 9.58333 16.6667C5.67132 16.6667 2.5 13.4954 2.5 9.58333C2.5 5.67132 5.67132 2.5 9.58333 2.5C13.4954 2.5 16.6667 5.67132 16.6667 9.58333Z"
+      stroke="#667085"
+      stroke-width="1.66667"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
+const SearchInput = styled.input`
+  display: block;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5em 0.75em;
+  padding-left: 2.25em;
+  gap: 0.5em;
+  width: 359px;
+  max-width: 100%;
+  height: 36px;
+  border-radius: 6.25rem;
+  border: 1px solid var(--gray-300, #d0d5dd);
+  background: var(--base-white, #fff);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+`;
+
+const Icon = styled.div`
+  position: absolute;
+  inset: 0.3em auto auto 0.6em;
+`;
+
+const SearchContainer = styled.div`
+  position: relative;
+  max-width: 100%;
+`;
+
+const SearchArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const Perks = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  width: 100%;
+
+  & > div {
+    width: 100%;
+
+    @media screen and (min-width: 768px) {
+      width: calc((100% - 1.5rem) / 2);
+    }
+
+    @media screen and (min-width: 1024px) {
+      width: calc((100% - 1.5rem * 2) / 3);
+    }
+  }
+`;
+
+const data = [
+  ...state.perks,
+  {
+    ...state.perks[0],
+    criteria: [
+      {
+        text: "Create profile",
+        completed: true,
+      },
+      {
+        text: "Complete profile overview",
+        completed: false,
+      },
+    ],
+  },
+  {
+    ...state.perks[0],
+    criteria: [
+      {
+        text: "Create profile",
+        completed: true,
+      },
+      {
+        text: "Complete profile overview",
+        completed: true,
+      },
+    ],
+    categories: ["Other", "Developer tools"],
+  },
+  {
+    ...state.perks[0],
+    criteria: [
+      {
+        text: "Create profile",
+        completed: true,
+      },
+      {
+        text: "Complete profile overview",
+        completed: true,
+      },
+    ],
+    code: "HORIZON2234",
+  },
+];
+
+const toRender = data
+  .filter((perk) => {
+    if (
+      state.categories.length > 0 &&
+      !state.categories.includes("All") &&
+      !perk.categories.some((category) => state.categories.includes(category))
+    ) {
+      return false;
+    }
+
+    return (
+      perk.name.toLowerCase().includes(state.search.toLowerCase()) ||
+      perk.about.toLowerCase().includes(state.search.toLowerCase()) ||
+      perk.benefit.toLowerCase().includes(state.search.toLowerCase())
+    );
+  })
+  .map((perk, index) => (
+    <div key={perk.id + index}>
+      <Widget src={`${ownerId}/widget/Perks.Card`} props={{ perk }} />
+    </div>
+  ));
+
+return (
+  <Container>
+    <Heading>
+      <Header>
+        <h1>Perks</h1>
+        <span>{state.perks.length}</span>
+      </Header>
+      <SubHeader>
+        Crypto ipsum bitcoin ethereum dogecoin litecoin. Ethereum kadena
+        polkadot ICON BitTorrent. Crypto ipsum bitcoin ethereum dogecoin
+        litecoin.
+      </SubHeader>
+    </Heading>
+    <SearchArea>
+      <Widget
+        src={`${ownerId}/widget/Perks.Categories`}
+        props={{
+          categories: ["All", "Other", "Developer tools"],
+          selected: state.categories,
+          setCategories: (categories) => State.update({ categories }),
+          results: data,
+        }}
+      />
+      <SearchContainer>
+        <Icon>{icon}</Icon>
+        <SearchInput
+          type="search"
+          value={state.search}
+          placeholder="Search"
+          onChange={(e) => State.update({ search: e.target.value })}
+        />
+      </SearchContainer>
+    </SearchArea>
+    <Perks>{toRender}</Perks>
+  </Container>
+);

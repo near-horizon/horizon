@@ -189,7 +189,7 @@ return (
             <GreyContent>
               <Link
                 href={`/${ownerId}/widget/Index?tab=${
-                  state.project ? "project" : "contributor"
+                  state.project ? "profile" : "contributor"
                 }&accountId=${context.accountId}`}
               >
                 {profileIcon} Your profile
