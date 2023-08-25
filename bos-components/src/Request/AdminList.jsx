@@ -96,50 +96,42 @@ const Header = styled.div`
 `;
 
 return (
-  <Widget
-    src={`${ownerId}/widget/Project.Layout`}
-    props={{
-      accountId: context.accountId,
-      children: (
-        <Container>
-          <Header>
-            <h1>Your requests</h1>
-            <Link href={`/${ownerId}/widget/Index?tab=createrequest`}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-              >
-                <path
-                  d="M9 3.75V14.25M3.75 9H14.25"
-                  stroke="currentColor"
-                  stroke-width="1.66667"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              Create a request
-            </Link>
-          </Header>
-          <Widget
-            src={`${ownerId}/widget/List`}
-            props={{
-              full: true,
-              separator: true,
-              filter: ([accountId]) => accountId.includes(search),
-              items: state.items,
-              createItem: ([accountId, cid]) => (
-                <Widget
-                  src={`${ownerId}/widget/Request.AdminCard`}
-                  props={{ accountId, cid }}
-                />
-              ),
-            }}
+  <Container>
+    <Header>
+      <h1>Your requests</h1>
+      <Link href={`/${ownerId}/widget/Index?tab=createrequest`}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+        >
+          <path
+            d="M9 3.75V14.25M3.75 9H14.25"
+            stroke="currentColor"
+            stroke-width="1.66667"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           />
-        </Container>
-      ),
-    }}
-  />
+        </svg>
+        Create a request
+      </Link>
+    </Header>
+    <Widget
+      src={`${ownerId}/widget/List`}
+      props={{
+        full: true,
+        separator: true,
+        filter: ([accountId]) => accountId.includes(search),
+        items: state.items,
+        createItem: ([accountId, cid]) => (
+          <Widget
+            src={`${ownerId}/widget/Request.AdminCard`}
+            props={{ accountId, cid }}
+          />
+        ),
+      }}
+    />
+  </Container>
 );

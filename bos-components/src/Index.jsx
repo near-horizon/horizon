@@ -61,6 +61,8 @@ const tabContentWidget = {
   "my-contracts": "Manage.Contracts",
   "my-applications": "Manage.Applications",
   events: "Events.Page",
+  perks: "Perks.Page",
+  profile: "Profile.Page",
 };
 
 const getTabWidget = (tab) => {

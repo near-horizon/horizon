@@ -73,33 +73,25 @@ const Header = styled.div`
 `;
 
 return (
-  <Widget
-    src={`${ownerId}/widget/Project.Layout`}
-    props={{
-      accountId: context.accountId,
-      children: (
-        <Container>
-          <Header>
-            <h1>Your contracts</h1>
-          </Header>
+  <Container>
+    <Header>
+      <h1>Your contracts</h1>
+    </Header>
+    <Widget
+      src={`${ownerId}/widget/List`}
+      props={{
+        full: true,
+        separator: true,
+        filter: ([[projectId], vendorId]) =>
+          projectId.includes(search) || vendorId.includes(search),
+        items: state.items,
+        createItem: ([[projectId, cid], vendorId]) => (
           <Widget
-            src={`${ownerId}/widget/List`}
-            props={{
-              full: true,
-              separator: true,
-              filter: ([[projectId], vendorId]) =>
-                projectId.includes(search) || vendorId.includes(search),
-              items: state.items,
-              createItem: ([[projectId, cid], vendorId]) => (
-                <Widget
-                  src={`${ownerId}/widget/Contribution.AdminCard`}
-                  props={{ projectId, cid, vendorId }}
-                />
-              ),
-            }}
+            src={`${ownerId}/widget/Contribution.AdminCard`}
+            props={{ projectId, cid, vendorId }}
           />
-        </Container>
-      ),
-    }}
-  />
+        ),
+      }}
+    />
+  </Container>
 );
