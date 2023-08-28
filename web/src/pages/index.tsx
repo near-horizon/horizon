@@ -25,6 +25,7 @@ import { ironSessionConfig } from "~/lib/constants/iron-session";
 import { MainStats } from "~/components/main-stats";
 
 const query: z.infer<typeof fetchManySchema> = {
+  from: 0,
   sort: "timedesc",
   limit: 8,
 };
@@ -92,7 +93,7 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({ req }) {
+export const getServerSideProps = withIronSessionSsr(async function ({ req }) {
   const user = req.session.user ?? null;
 
   const queryClient = new QueryClient();
