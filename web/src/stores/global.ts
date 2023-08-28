@@ -1,6 +1,7 @@
 import {
   type WalletSelector,
   setupWalletSelector,
+  type Transaction,
 } from "@near-wallet-selector/core";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
@@ -117,6 +118,54 @@ export function useSignOut() {
       }
     },
     [selector, router]
+  );
+}
+
+export const GAS = "300_000_000_000_000";
+
+export function useSignTx() {
+  const selector = useWalletSelector();
+
+  return React.useCallback(
+    async (methodName: string, args: object) => {
+      try {
+        const wallet = await selector?.wallet();
+        await wallet?.signAndSendTransaction({
+          actions: [
+            {
+              type: "FunctionCall",
+              params: {
+                methodName,
+                args,
+                gas: GAS,
+                deposit: "0",
+              },
+            },
+          ],
+        });
+      } catch (err) {
+        console.error("Could not sign tx:", err);
+      }
+    },
+    [selector]
+  );
+}
+
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+export function useSignTxs() {
+  const selector = useWalletSelector();
+
+  return React.useCallback(
+    async (transactions: Optional<Transaction, "signerId">[]) => {
+      try {
+        const wallet = await selector?.wallet();
+        await wallet?.signAndSendTransactions({ transactions });
+      } catch (err) {
+        console.error("Could not sign txs:", err);
+      }
+    },
+    [selector]
   );
 }
 

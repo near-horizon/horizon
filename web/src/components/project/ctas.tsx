@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import React from "react";
 // import { useProject } from "~/lib/projects";
-import { type AccountId } from "~/lib/utils";
 import { useWalletSelector } from "~/stores/global";
 
 export function CTA({

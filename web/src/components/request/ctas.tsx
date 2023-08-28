@@ -4,7 +4,7 @@ import { type CID, type AccountId } from "~/lib/utils";
 import { useUser } from "~/stores/global";
 import { CTA } from "../ui/cta";
 
-export function CTAs({ accountId, cid }: { accountId: AccountId; cid: CID }) {
+export function CTAs({ accountId }: { accountId: AccountId; cid: CID }) {
   const user = useUser();
   const isSignedIn = !!user;
   const isAdmin = isSignedIn && user.accountId === accountId;
