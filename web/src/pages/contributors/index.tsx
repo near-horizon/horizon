@@ -6,8 +6,7 @@ import { getContributors } from "../api/contributors";
 import { pageSize } from "~/lib/constants/pagination";
 import { getContributor } from "../api/contributors/[accountId]";
 import { removeEmpty } from "~/lib/utils";
-import { withIronSessionSsr } from "iron-session/next";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
+import { withSSRSession } from "~/lib/auth";
 
 export default function Requests() {
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
@@ -28,8 +27,7 @@ export default function Requests() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({ req }) {
-  const user = req.session.user ?? null;
+export const getServerSideProps = withSSRSession(async function () {
   const queryClient = new QueryClient();
 
   const contributors = await getContributors({ limit: pageSize });
@@ -52,8 +50,7 @@ export const getServerSideProps = withIronSessionSsr(async function({ req }) {
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-}, ironSessionConfig);
+});

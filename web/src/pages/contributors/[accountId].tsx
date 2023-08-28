@@ -6,13 +6,12 @@ import { Details } from "~/components/contributor/details";
 import { accountIdSchema, removeEmpty } from "~/lib/utils";
 import { History } from "~/components/contributor/history";
 import ContentTabs from "~/components/ui/content-tabs";
-import { withIronSessionSsr } from "iron-session/next";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { getContributor } from "../api/contributors/[accountId]";
 import { getContributorContracts } from "../api/contributors/[accountId]/contracts";
 import { getContract } from "../api/contracts/[projectId]/[contributorId]/[cid]";
 import { getContributorCompletedContracts } from "../api/contributors/[accountId]/contracts/completed";
+import { withSSRSession } from "~/lib/auth";
 
 export default function Contributor() {
   const { query } = useRouter();
@@ -52,11 +51,7 @@ export default function Contributor() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({
-  req,
-  query,
-}) {
-  const user = req.session.user ?? null;
+export const getServerSideProps = withSSRSession(async function ({ query }) {
   const accountId = accountIdSchema.parse(query.accountId);
 
   const queryClient = new QueryClient();
@@ -92,9 +87,7 @@ export const getServerSideProps = withIronSessionSsr(async function({
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-},
-  ironSessionConfig);
+});

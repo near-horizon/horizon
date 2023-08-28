@@ -9,12 +9,11 @@ import { accountIdSchema, removeEmpty } from "~/lib/utils";
 import { Requests } from "~/components/project/requests-tab";
 import { Contracts } from "~/components/project/contracts";
 import ContentTabs from "~/components/ui/content-tabs";
-import { withIronSessionSsr } from "iron-session/next";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { getProject } from "../api/projects/[accountId]";
 import { getRequestsForProject } from "../api/projects/[accountId]/requests";
 import { getRequest } from "../api/requests/[accountId]/[cid]";
+import { withSSRSession } from "~/lib/auth";
 
 export default function Project() {
   const { query } = useRouter();
@@ -64,11 +63,7 @@ export default function Project() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({
-  req,
-  query,
-}) {
-  const user = req.session.user ?? null;
+export const getServerSideProps = withSSRSession(async function ({ query }) {
   const accountId = accountIdSchema.parse(query.accountId);
 
   const queryClient = new QueryClient();
@@ -97,9 +92,7 @@ export const getServerSideProps = withIronSessionSsr(async function({
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-},
-  ironSessionConfig);
+});

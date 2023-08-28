@@ -1,12 +1,11 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { withIronSessionSsr } from "iron-session/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { Availability } from "~/components/availability";
 import { Activity } from "~/components/contract/activity";
 import { Details } from "~/components/contract/details";
 import ContentTabs from "~/components/ui/content-tabs";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
+import { withSSRSession } from "~/lib/auth";
 import { useContract } from "~/lib/contracts";
 import { useRequest } from "~/lib/requests";
 import { accountIdSchema, cidSchema, removeEmpty } from "~/lib/utils";
@@ -85,12 +84,7 @@ export default function Contract() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({
-  req,
-  query,
-}) {
-  const user = req.session.user ?? null;
-
+export const getServerSideProps = withSSRSession(async function ({ query }) {
   const queryClient = new QueryClient();
   const projectId = accountIdSchema.parse(query.projectId);
   const contributorId = accountIdSchema.parse(query.contributorId);
@@ -136,9 +130,7 @@ export const getServerSideProps = withIronSessionSsr(async function({
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-},
-  ironSessionConfig);
+});

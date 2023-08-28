@@ -1,11 +1,10 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { withIronSessionSsr } from "iron-session/next";
 import { useRouter } from "next/router";
 import { Details } from "~/components/backer/details";
 import { Header } from "~/components/backer/header";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
 import { accountIdSchema, removeEmpty } from "~/lib/utils";
 import { getBacker } from "../api/backers/[accountId]";
+import { withSSRSession } from "~/lib/auth";
 
 export default function Backer() {
   const { query } = useRouter();
@@ -24,11 +23,7 @@ export default function Backer() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({
-  req,
-  query,
-}) {
-  const user = req.session.user ?? null;
+export const getServerSideProps = withSSRSession(async function ({ query }) {
   const accountId = accountIdSchema.parse(query.accountId);
 
   const queryClient = new QueryClient();
@@ -43,9 +38,7 @@ export const getServerSideProps = withIronSessionSsr(async function({
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-},
-  ironSessionConfig);
+});
