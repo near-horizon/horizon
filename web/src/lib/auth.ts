@@ -2,6 +2,13 @@ import { type IronSession } from "iron-session";
 import { sleep, type AccountId } from "./utils";
 import { getKeyInfo, viewCall } from "./fetching";
 import { env } from "~/env.mjs";
+import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
+import { ironSessionConfig } from "./constants/iron-session";
+import {
+  type NextApiHandler,
+  type GetServerSidePropsContext,
+  type GetServerSidePropsResult,
+} from "next";
 
 export async function loginUser(
   accountId: AccountId,
@@ -26,4 +33,32 @@ export async function loginUser(
     publicKey,
     admin,
   };
+}
+
+export function withSSRSession<Props>(
+  ssrFunction: (
+    context: GetServerSidePropsContext,
+    user: IronSession["user"] | null
+  ) => Promise<GetServerSidePropsResult<Props>>
+) {
+  return withIronSessionSsr(async function (context) {
+    const user = context.req.session.user ?? null;
+
+    const result = await ssrFunction(context, user);
+
+    return {
+      ...result,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      props: {
+        user,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        ...result.props,
+      },
+    };
+  }, ironSessionConfig);
+}
+
+export function withAPISession<T>(apiHandler: NextApiHandler<T>) {
+  return withIronSessionApiRoute(apiHandler, ironSessionConfig);
 }

@@ -1,5 +1,4 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { withIronSessionSsr } from "iron-session/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { Availability } from "~/components/availability";
@@ -7,7 +6,7 @@ import { CTAs } from "~/components/request/ctas";
 import { Overview } from "~/components/request/overview";
 import { Proposals } from "~/components/request/proposals";
 import ContentTabs from "~/components/ui/content-tabs";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
+import { withSSRSession } from "~/lib/auth";
 import { useRequest } from "~/lib/requests";
 import { accountIdSchema, cidSchema, removeEmpty } from "~/lib/utils";
 import { getRequest } from "~/pages/api/requests/[accountId]/[cid]";
@@ -65,12 +64,7 @@ export default function Request() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({
-  req,
-  query,
-}) {
-  const user = req.session.user ?? null;
-
+export const getServerSideProps = withSSRSession(async function ({ query }) {
   const queryClient = new QueryClient();
   const accountId = accountIdSchema.parse(query.accountId as string);
   const cid = z.string().parse(query.cid as string);
@@ -87,9 +81,7 @@ export const getServerSideProps = withIronSessionSsr(async function({
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-},
-  ironSessionConfig);
+});

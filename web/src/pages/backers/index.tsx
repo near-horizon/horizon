@@ -6,8 +6,7 @@ import { pageSize } from "~/lib/constants/pagination";
 import { getBackers } from "../api/backers";
 import { removeEmpty } from "~/lib/utils";
 import { getBacker } from "../api/backers/[accountId]";
-import { withIronSessionSsr } from "iron-session/next";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
+import { withSSRSession } from "~/lib/auth";
 
 export default function Backers() {
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
@@ -28,8 +27,7 @@ export default function Backers() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function({ req }) {
-  const user = req.session.user ?? null;
+export const getServerSideProps = withSSRSession(async function () {
   const queryClient = new QueryClient();
 
   const backers = await getBackers({ limit: pageSize });
@@ -52,8 +50,7 @@ export const getServerSideProps = withIronSessionSsr(async function({ req }) {
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-}, ironSessionConfig);
+});

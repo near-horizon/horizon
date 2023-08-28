@@ -1,5 +1,4 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { withIronSessionSsr } from "iron-session/next";
 import { Backer } from "~/components/backer";
 import { Contributor } from "~/components/contributor";
 import { List } from "~/components/home/list";
@@ -21,8 +20,8 @@ import { getContributor } from "./api/contributors/[accountId]";
 import { getBacker } from "./api/backers/[accountId]";
 import { removeEmpty } from "~/lib/utils";
 import { getStats } from "./api/transactions/stats";
-import { ironSessionConfig } from "~/lib/constants/iron-session";
 import { MainStats } from "~/components/main-stats";
+import { withSSRSession } from "~/lib/auth";
 
 const query: z.infer<typeof fetchManySchema> = {
   from: 0,
@@ -93,9 +92,7 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withIronSessionSsr(async function ({ req }) {
-  const user = req.session.user ?? null;
-
+export const getServerSideProps = withSSRSession(async function () {
   const queryClient = new QueryClient();
 
   const [projects, requests, contributors, backers, stats] = await Promise.all([
@@ -153,8 +150,7 @@ export const getServerSideProps = withIronSessionSsr(async function ({ req }) {
 
   return {
     props: {
-      user,
       dehydratedState: dehydrate(queryClient),
     },
   };
-}, ironSessionConfig);
+});
