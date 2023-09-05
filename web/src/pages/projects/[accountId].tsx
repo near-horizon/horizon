@@ -20,7 +20,7 @@ export default function Project() {
   const accountId = accountIdSchema.parse(query.accountId);
 
   return (
-    <div className="flex flex-row">
+    <div className="flex w-full flex-row">
       <div className="flex w-full flex-col gap-6">
         <Header accountId={accountId} />
         <CTAs /* accountId={accountId} */ />
@@ -63,7 +63,7 @@ export default function Project() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function ({ query }) {
+export const getServerSideProps = withSSRSession(async function({ query }) {
   const accountId = accountIdSchema.parse(query.accountId);
 
   const queryClient = new QueryClient();
