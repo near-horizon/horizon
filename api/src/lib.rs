@@ -1,11 +1,15 @@
 use std::str::FromStr;
 
 use auth::{decrypt_string, encrypt_string};
-use near_account_id::AccountId;
-use reqwest::Client;
+use near_crypto::InMemorySigner;
+use near_jsonrpc_client::JsonRpcClient;
+use near_primitives::types::AccountId;
+use reqwest::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 
 pub mod auth;
+pub mod chain_actions;
+pub mod fetching;
 pub mod routes;
 
 pub const RPC_URL: &str = "https://rpc.mainnet.near.org";
@@ -75,6 +79,31 @@ impl PrivateData {
 }
 
 #[derive(Clone)]
+pub struct AirtableConfig {
+    pub api_key: String,
+    pub base_id: String,
+    pub table_name: String,
+}
+
+impl AirtableConfig {
+    pub fn new() -> Self {
+        Self {
+            api_key: ensure_var("AIRTABLE_API_KEY"),
+            base_id: ensure_var("AIRTABLE_BASE_ID"),
+            table_name: ensure_var("AIRTABLE_TABLE_NAME"),
+        }
+    }
+}
+
+impl Default for AirtableConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+pub type ApiResult<T> = Result<T, (StatusCode, String)>;
+
+#[derive(Clone)]
 pub struct AppState {
     pub client: Client,
     pub contract_id: AccountId,
@@ -82,6 +111,9 @@ pub struct AppState {
     pub atlas_auth: String,
     pub key: sodiumoxide::crypto::secretbox::Key,
     pub pool: sqlx::PgPool,
+    pub signer: InMemorySigner,
+    pub rpc_client: near_jsonrpc_client::JsonRpcClient,
+    pub airtable_config: AirtableConfig,
 }
 
 impl AppState {
@@ -122,6 +154,17 @@ impl AppState {
             .await
             .expect("Failed to connect to database");
 
+        let signer_id = AccountId::from_str(&ensure_var("SIGNER_ID")).expect("Invalid signer id");
+        let signer_key = ensure_var("SIGNER_KEY");
+        let signer = InMemorySigner::from_secret_key(
+            signer_id,
+            near_crypto::SecretKey::from_str(&signer_key).expect("Invalid signer key"),
+        );
+
+        let rpc_client = JsonRpcClient::connect(RPC_URL);
+
+        let airtable_config = AirtableConfig::new();
+
         Self {
             client: Client::new(),
             contract_id,
@@ -129,6 +172,9 @@ impl AppState {
             atlas_route,
             atlas_auth,
             pool,
+            signer,
+            rpc_client,
+            airtable_config,
         }
     }
 }

@@ -7,7 +7,7 @@ use axum::{
 use reqwest::StatusCode;
 use serde::Deserialize;
 
-use crate::AppState;
+use crate::{ApiResult, AppState};
 
 #[derive(Debug, Clone, Deserialize)]
 struct Params {}
@@ -16,7 +16,7 @@ struct Params {}
 async fn get_all(
     Query(Params {}): Query<Params>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<(String, String, String)>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<(String, String, String)>>> {
     sqlx::query!(
         r#"
         SELECT

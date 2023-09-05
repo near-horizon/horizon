@@ -1,10 +1,10 @@
 use axum::{debug_handler, extract::State, routing::get, Json, Router};
 use reqwest::StatusCode;
 
-use crate::AppState;
+use crate::{ApiResult, AppState};
 
 #[debug_handler(state = AppState)]
-async fn total_raised(State(state): State<AppState>) -> Result<Json<u64>, (StatusCode, String)> {
+async fn total_raised(State(state): State<AppState>) -> ApiResult<Json<u64>> {
     let response = state
         .client
         .get(state.atlas_route)

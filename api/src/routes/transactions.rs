@@ -8,7 +8,7 @@ use chrono::prelude::*;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::AppState;
+use crate::{ApiResult, AppState};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Transaction {
@@ -26,7 +26,7 @@ pub struct Transaction {
 #[debug_handler(state = AppState)]
 pub async fn get_transactions(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<Transaction>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<Transaction>>> {
     sqlx::query_as!(Transaction, "SELECT * FROM transactions ORDER BY id DESC")
         .fetch_all(&pool)
         .await
@@ -113,7 +113,7 @@ async fn get_created_entity_count(
     Path(entity_type): Path<EntityType>,
     Query(DateParams { date }): Query<DateParams>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<i64>, (StatusCode, String)> {
+) -> ApiResult<Json<i64>> {
     let (from, to) = date.unwrap_or_else(|| {
         let date = Utc::now()
             .with_hour(0)
@@ -167,9 +167,7 @@ struct Stats {
 }
 
 #[debug_handler(state = AppState)]
-async fn get_stats(
-    State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Stats>, (StatusCode, String)> {
+async fn get_stats(State(AppState { pool, .. }): State<AppState>) -> ApiResult<Json<Stats>> {
     sqlx::query_as!(
         Stats,
         r#"
