@@ -33,7 +33,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             <Dialog>
               <MetaHead />
               <div className="flex min-h-[100dvh] flex-col ">
-                <div className="max-h-screen-2xl mx-2 flex w-full flex-grow flex-col 2xl:mx-auto">
+                <div className="mx-2 flex w-full max-w-screen-2xl flex-grow flex-col 2xl:mx-auto">
                   <Navbar />
 
                   <main className="w-full flex-grow">
