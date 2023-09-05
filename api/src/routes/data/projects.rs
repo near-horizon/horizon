@@ -12,7 +12,7 @@ use sqlx::Row;
 
 use crate::{
     routes::data::{set_deserialize, Completion, CompletionPair},
-    AppState,
+    ApiResult, AppState,
 };
 
 pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<HashSet<(u32, u32)>>, D::Error>
@@ -198,7 +198,7 @@ pub struct Params {
 pub async fn all_projects(
     Query(params): Query<Params>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<String>>> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
         SELECT
@@ -354,7 +354,7 @@ pub async fn all_projects(
 pub async fn get_similar_projects(
     Path(account_id): Path<String>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<String>>> {
     let project = sqlx::query!(
         r#"
         SELECT
@@ -436,7 +436,7 @@ pub async fn get_similar_projects(
 #[debug_handler(state = AppState)]
 async fn get_completion(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Completion>, (StatusCode, String)> {
+) -> ApiResult<Json<Completion>> {
     let list = sqlx::query_as!(
         CompletionPair,
         r#"

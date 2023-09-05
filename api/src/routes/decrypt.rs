@@ -5,11 +5,10 @@ use axum::{
     routing::post,
     Json, Router,
 };
-use near_account_id::AccountId;
-use reqwest::StatusCode;
+use near_primitives::types::AccountId;
 use serde_json::json;
 
-use crate::{auth::authorize, AppState, PrivateData};
+use crate::{auth::authorize, ApiResult, AppState, PrivateData};
 
 #[debug_handler(state = AppState)]
 pub async fn decrypt(
@@ -17,7 +16,7 @@ pub async fn decrypt(
     Path(project_id): Path<AccountId>,
     State(state): State<AppState>,
     Json(private_data): Json<PrivateData>,
-) -> Result<Json<PrivateData>, (StatusCode, String)> {
+) -> ApiResult<Json<PrivateData>> {
     authorize(
         headers,
         &json!(private_data).to_string(),

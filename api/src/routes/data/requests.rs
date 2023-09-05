@@ -10,7 +10,7 @@ use reqwest::StatusCode;
 use serde::{Deserialize, Deserializer, Serialize};
 use sqlx::Row;
 
-use crate::{routes::data::set_deserialize, AppState};
+use crate::{routes::data::set_deserialize, ApiResult, AppState};
 
 pub fn size_deserialize<'de, D>(deserializer: D) -> Result<Option<(u32, u32)>, D::Error>
 where
@@ -369,7 +369,7 @@ pub struct Params {
 pub async fn all_requests(
     Query(params): Query<Params>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<(String, String)>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<(String, String)>>> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
         SELECT

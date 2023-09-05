@@ -10,6 +10,7 @@ pub mod contributions;
 pub mod credits;
 pub mod investors;
 pub mod metrics;
+pub mod perks;
 pub mod projects;
 pub mod proposals;
 pub mod requests;
@@ -46,6 +47,7 @@ pub fn create_router() -> Router<AppState> {
         .nest("/credits", credits::create_router())
         .nest("/investors", investors::create_router())
         .nest("/metrics", metrics::create_router())
+        .nest("/perks", perks::create_router())
         .nest("/projects", projects::create_router())
         .nest("/proposals", proposals::create_router())
         .nest("/requests", requests::create_router())
