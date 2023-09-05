@@ -1,5 +1,5 @@
 import { type AppType } from "next/dist/shared/lib/utils";
-import { setUser, useWalletSelectorEffect } from "~/stores/global";
+import { setUser } from "~/stores/global";
 import { ThemeProvider } from "~/components/theme-provider";
 import "~/styles/globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
@@ -15,6 +15,7 @@ import { type IronSession } from "iron-session";
 import { MetaHead } from "~/components/meta/head";
 import { Footer } from "~/components/footer";
 import { TooltipProvider } from "~/components/ui/tooltip";
+import { useWalletSelectorEffect } from "~/hooks/selector";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -32,10 +33,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             <Dialog>
               <MetaHead />
               <div className="flex min-h-[100dvh] flex-col ">
-                <div className="max-h-screen-2xl mx-2 flex flex-grow flex-col 2xl:mx-auto">
+                <div className="max-h-screen-2xl mx-2 flex w-full flex-grow flex-col 2xl:mx-auto">
                   <Navbar />
 
-                  <main className="flex-grow">
+                  <main className="w-full flex-grow">
                     <Component {...pageProps} />
                   </main>
                 </div>
