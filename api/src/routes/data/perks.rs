@@ -16,7 +16,7 @@ pub async fn is_claimed(
     amount: u64,
     account_id: String,
 ) -> ApiResult<bool> {
-    let claimed = sqlx::query!(
+    sqlx::query!(
         r#"
         SELECT
           hash
@@ -39,8 +39,8 @@ pub async fn is_claimed(
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Could not fetch from db {e}"),
         )
-    })?;
-    Ok(claimed.is_some())
+    })
+    .map(|r| r.is_some())
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
