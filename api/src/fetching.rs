@@ -35,30 +35,31 @@ pub struct AttachmentObject {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Perk {
-    #[serde(alias = "Name")]
+    #[serde(alias = "fldUb764dFRV9t2X9", default)]
     pub name: String,
-    #[serde(alias = "Benefit", default)]
+    #[serde(alias = "fldOS7EEgDSOAtnod", default)]
     pub benefit: String,
-    #[serde(alias = "About", default)]
+    #[serde(alias = "fldnkMNnLUxAFu4te", default)]
     pub description: String,
     #[serde(alias = "Cost", default)]
     pub price: u64,
     #[serde(
-        alias = "Product Readiness",
-        deserialize_with = "deserialize_available"
+        alias = "fldC2oRsuHtSOvEjY",
+        deserialize_with = "deserialize_available",
+        default
     )]
     pub available: bool,
     #[serde(alias = "URL", default, skip_serializing)]
     pub url: String,
-    #[serde(alias = "Claim Instructions", default)]
+    #[serde(alias = "fldLoyiR8D7u7bjwz", default)]
     pub instructions: String,
     #[serde(alias = "Code", default, skip_serializing)]
     pub code: Option<String>,
-    #[serde(alias = "Logo")]
+    #[serde(alias = "fldc4uLRTGBAjauTs", default)]
     pub logo: Vec<AttachmentObject>,
-    #[serde(alias = "Banner")]
+    #[serde(alias = "fldTmpRheSB76mmpK", default)]
     pub banner: Vec<AttachmentObject>,
-    #[serde(alias = "Category", default)]
+    #[serde(alias = "fldsxdrpgkULGWEle", default)]
     pub category: Vec<String>,
 }
 
@@ -87,7 +88,7 @@ pub async fn get_perk(
     perk_id: String,
 ) -> ApiResult<Perk> {
     let url = format!(
-        "https://api.airtable.com/v0/{}/{}/{}",
+        "https://api.airtable.com/v0/{}/{}/{}?returnFieldsByFieldId=true",
         airtable_config.base_id, airtable_config.table_name, perk_id,
     );
 
@@ -132,7 +133,7 @@ pub async fn get_perks(
     }: AppState,
 ) -> ApiResult<Vec<PerkResponse>> {
     let url = format!(
-        "https://api.airtable.com/v0/{}/{}",
+        "https://api.airtable.com/v0/{}/{}?returnFieldsByFieldId=true",
         airtable_config.base_id, airtable_config.table_name,
     );
 
