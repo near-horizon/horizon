@@ -140,10 +140,7 @@ async fn get_perks(
 ) -> ApiResult<Json<Vec<crate::fetching::PerkResponse>>> {
     let perks = crate::fetching::get_perks(state.clone()).await?;
     Ok(Json(
-        perks
-            .into_iter()
-            .filter(|p| p.fields.available > 0)
-            .collect(),
+        perks.into_iter().filter(|p| p.fields.available).collect(),
     ))
 }
 
