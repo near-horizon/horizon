@@ -154,8 +154,9 @@ impl AppState {
             .await
             .expect("Failed to connect to database");
 
-        let signer_id = AccountId::from_str(&ensure_var("SIGNER_ID")).expect("Invalid signer id");
-        let signer_key = ensure_var("SIGNER_KEY");
+        let signer_id =
+            AccountId::from_str(&ensure_var("SIGNER_ACCOUNT")).expect("Invalid signer id");
+        let signer_key = ensure_var("SECRET_KEY");
         let signer = InMemorySigner::from_secret_key(
             signer_id,
             near_crypto::SecretKey::from_str(&signer_key).expect("Invalid signer key"),
