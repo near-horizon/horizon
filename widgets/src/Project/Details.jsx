@@ -199,7 +199,9 @@ return (
           label: "Website",
           id: "website",
           value: state.profile.linktree?.website ?? state.profile.website ?? "",
-          link: `https://${state.profile.linktree.website}`,
+          link: `https://${
+            state.profile.linktree.website ?? state.profile.website
+          }`,
           onSave: (website) => onSave({ profile: { linktree: { website } } }),
           canEdit: isAdmin,
         }}
