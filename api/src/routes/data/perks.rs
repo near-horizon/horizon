@@ -139,7 +139,12 @@ async fn get_perks(
     State(state): State<AppState>,
 ) -> ApiResult<Json<Vec<crate::fetching::PerkResponse>>> {
     let perks = crate::fetching::get_perks(state.clone()).await?;
-    Ok(Json(perks))
+    Ok(Json(
+        perks
+            .into_iter()
+            .filter(|p| p.fields.available > 0)
+            .collect(),
+    ))
 }
 
 pub fn create_router() -> Router<AppState> {
