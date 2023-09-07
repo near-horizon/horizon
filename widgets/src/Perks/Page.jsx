@@ -65,32 +65,11 @@ State.init({
 });
 
 if (!state.perksIsFetched) {
-  // asyncFetch("https://api-op3o.onrender.com/data/perks")
-  State.update({
-    /** @type {{id: string; name: string; icon: string; about: string; benefit: string; categories: string[]; criteria: {text: string; completed: boolean;}[]}[]} */
-    perks: [
-      {
-        id: "nearcon",
-        name: "NEARCON",
-        icon: "https://res.cloudinary.com/du2vhtskz/image/upload/v1692869644/750c2a6c556232409a129ed18ba02f6a_ztfcoc.png",
-        about:
-          "The biggest experience of the year is near! 7-10 Nov 2023, Lisbon, Potugal",
-        benefit: "25% off the ticket price",
-        categories: ["Other"],
-        criteria: [
-          {
-            text: "Create profile",
-            completed: false,
-          },
-          {
-            text: "Complete profile overview",
-            completed: false,
-          },
-        ],
-      },
-    ],
-    perksIsFetched: true,
-  });
+  asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks").then(
+    ({ body: perks }) => {
+      State.update({ perks: perks ?? [], perksIsFetched: true });
+    }
+  );
   return <>Loading...</>;
 }
 
@@ -170,65 +149,24 @@ const Perks = styled.div`
   }
 `;
 
-const data = [
-  ...state.perks,
-  {
-    ...state.perks[0],
-    criteria: [
-      {
-        text: "Create profile",
-        completed: true,
-      },
-      {
-        text: "Complete profile overview",
-        completed: false,
-      },
-    ],
-  },
-  {
-    ...state.perks[0],
-    criteria: [
-      {
-        text: "Create profile",
-        completed: true,
-      },
-      {
-        text: "Complete profile overview",
-        completed: true,
-      },
-    ],
-    categories: ["Other", "Developer tools"],
-  },
-  {
-    ...state.perks[0],
-    criteria: [
-      {
-        text: "Create profile",
-        completed: true,
-      },
-      {
-        text: "Complete profile overview",
-        completed: true,
-      },
-    ],
-    code: "HORIZON2234",
-  },
-];
-
-const toRender = data
+const toRender = state.perks
   .filter((perk) => {
     if (
       state.categories.length > 0 &&
       !state.categories.includes("All") &&
-      !perk.categories.some((category) => state.categories.includes(category))
+      !perk.fields.category.some((category) =>
+        state.categories.includes(category)
+      )
     ) {
       return false;
     }
 
     return (
-      perk.name.toLowerCase().includes(state.search.toLowerCase()) ||
-      perk.about.toLowerCase().includes(state.search.toLowerCase()) ||
-      perk.benefit.toLowerCase().includes(state.search.toLowerCase())
+      perk.fields.name.toLowerCase().includes(state.search.toLowerCase()) ||
+      perk.fields.description
+        .toLowerCase()
+        .includes(state.search.toLowerCase()) ||
+      perk.fields.benefit.toLowerCase().includes(state.search.toLowerCase())
     );
   })
   .map((perk, index) => (
@@ -254,7 +192,10 @@ return (
       <Widget
         src={`${ownerId}/widget/Perks.Categories`}
         props={{
-          categories: ["All", "Other", "Developer tools"],
+          categories: state.perks.reduce(
+            (all, perk) => [...all, ...perk.fields.category],
+            []
+          ),
           selected: state.categories,
           setCategories: (categories) => State.update({ categories }),
           results: data,

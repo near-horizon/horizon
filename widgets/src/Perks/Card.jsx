@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-/** @type {{id: string; link: string; code?: string; name: string; icon: string; about: string; benefit: string; categories: string[]; criteria: {text: string; completed: boolean;}[]}} */
+/** @type {{id: string; fields: {url?: string; code?: string; name: string; logo: string; about: string; benefit: string; categories: string[]; criteria?: {text: string; completed: boolean;}[]}}} */
 const perk = props.perk;
 
 const Container = styled.div`
@@ -10,6 +10,10 @@ const Container = styled.div`
   background: var(--base-white, #fff);
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
     0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 
   & > div {
     padding: 1.25rem 1.375rem;
@@ -18,6 +22,7 @@ const Container = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1rem;
+    flex-grow: 1;
   }
 `;
 
@@ -72,6 +77,10 @@ const Benefit = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 1.225rem */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 `;
 
@@ -152,6 +161,7 @@ const Separator = styled("Separator.Root")`
   background: var(--slate-light-4, #eceef0);
   margin: 0;
   padding: 0 !important;
+  flex-grow: 0 !important;
 `;
 
 const Footer = styled.div`
@@ -161,6 +171,7 @@ const Footer = styled.div`
   justify-content: space-between !important ;
   padding: 1.5rem !important;
   width: 100%;
+  flex-grow: 0 !important;
 
   &.single {
     justify-content: center !important;
@@ -237,75 +248,89 @@ const ClipboardButton = styled.button`
   line-height: 140%; /* 1.225rem */
 `;
 
-const completedCount = perk.criteria.filter(
-  ({ completed }) => completed
-).length;
-const allCompleted = completedCount === perk.criteria.length;
+const completedCount = perks.fields.criteria
+  ? perk.fields.criteria.filter(({ completed }) => completed).length
+  : 0;
+const allCompleted =
+  completedCount === (perk.fields.criteria ? perk.fields.criteria.length : 0);
 
 return (
   <Container>
     <div>
       <Heading>
-        <h4>{perk.name}</h4>
-        <img src={perk.icon} alt={perk.name} />
+        <h4>{perk.fields.name}</h4>
+        <img src={perk.fields.logo[0].url} alt={perk.fields.name} />
       </Heading>
-      <Benefit>
-        <b>Benefit</b>
-        <span>{perk.benefit}</span>
-      </Benefit>
+      <Tooltip.Root>
+        <Tooltip.Trigger>
+          <Benefit>
+            <b>Benefit</b>
+            <span>{perk.fields.benefit}</span>
+          </Benefit>
+          <Tooltip.Content>{perk.fields.benefit}</Tooltip.Content>
+        </Tooltip.Trigger>
+      </Tooltip.Root>
       <About>
         <b>About</b>
-        <span>{perk.about}</span>
+        <span>{perk.fields.description}</span>
       </About>
-      <Criteria>
-        <b>Eligibility criteria</b>
-        {perk.criteria.map(({ text, completed }, index) => (
-          <div key={text}>
-            {!completed ? (
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+      {perks.fields.criteria ? (
+        <Criteria>
+          <b>Eligibility criteria</b>
+          {perk.fields.criteria.map(({ text, completed }, index) => (
+            <div key={text}>
+              {!completed ? (
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z"
+                    stroke="#a8acb3"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.875 2.75H4.125C3.76044 2.75036 3.41091 2.89534 3.15313 3.15313C2.89534 3.41091 2.75036 3.76044 2.75 4.125V17.875C2.75036 18.2396 2.89534 18.5891 3.15313 18.8469C3.41091 19.1047 3.76044 19.2496 4.125 19.25H17.875C18.2396 19.2496 18.5891 19.1047 18.8469 18.8469C19.1047 18.5891 19.2496 18.2396 19.25 17.875V4.125C19.2496 3.76044 19.1047 3.41091 18.8469 3.15313C18.5891 2.89534 18.2396 2.75036 17.875 2.75ZM15.2559 9.43433L10.2138 14.2468C10.0861 14.3692 9.91602 14.4375 9.73914 14.4375C9.56225 14.4375 9.3922 14.3692 9.26447 14.2468L6.74408 11.8406C6.67865 11.7783 6.62616 11.7037 6.58958 11.6211C6.55301 11.5385 6.53309 11.4495 6.53095 11.3592C6.52881 11.2689 6.5445 11.179 6.57712 11.0948C6.60974 11.0106 6.65866 10.9336 6.72106 10.8683C6.78346 10.8029 6.85814 10.7506 6.9408 10.7141C7.02347 10.6777 7.1125 10.6579 7.20282 10.656C7.29313 10.654 7.38295 10.6698 7.46713 10.7026C7.55132 10.7354 7.62821 10.7844 7.69342 10.8469L9.73914 12.7993L14.3066 8.44067C14.3718 8.37816 14.4487 8.32911 14.5329 8.29634C14.617 8.26358 14.7069 8.24773 14.7972 8.24971C14.8875 8.25169 14.9765 8.27146 15.0592 8.30789C15.1419 8.34432 15.2165 8.39669 15.2789 8.46201C15.3413 8.52732 15.3903 8.6043 15.4229 8.68854C15.4555 8.77278 15.4712 8.86263 15.469 8.95294C15.4669 9.04325 15.447 9.13225 15.4104 9.21485C15.3738 9.29746 15.3213 9.37204 15.2559 9.43433H15.2559Z"
+                    fill="#04a46e"
+                  />
+                </svg>
+              )}
+              <span
+                className={
+                  completed
+                    ? "completed"
+                    : index === completedCount
+                    ? "next"
+                    : ""
+                }
               >
-                <path
-                  d="M17.875 3.4375H4.125C3.7453 3.4375 3.4375 3.7453 3.4375 4.125V17.875C3.4375 18.2547 3.7453 18.5625 4.125 18.5625H17.875C18.2547 18.5625 18.5625 18.2547 18.5625 17.875V4.125C18.5625 3.7453 18.2547 3.4375 17.875 3.4375Z"
-                  stroke="#a8acb3"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            ) : (
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M17.875 2.75H4.125C3.76044 2.75036 3.41091 2.89534 3.15313 3.15313C2.89534 3.41091 2.75036 3.76044 2.75 4.125V17.875C2.75036 18.2396 2.89534 18.5891 3.15313 18.8469C3.41091 19.1047 3.76044 19.2496 4.125 19.25H17.875C18.2396 19.2496 18.5891 19.1047 18.8469 18.8469C19.1047 18.5891 19.2496 18.2396 19.25 17.875V4.125C19.2496 3.76044 19.1047 3.41091 18.8469 3.15313C18.5891 2.89534 18.2396 2.75036 17.875 2.75ZM15.2559 9.43433L10.2138 14.2468C10.0861 14.3692 9.91602 14.4375 9.73914 14.4375C9.56225 14.4375 9.3922 14.3692 9.26447 14.2468L6.74408 11.8406C6.67865 11.7783 6.62616 11.7037 6.58958 11.6211C6.55301 11.5385 6.53309 11.4495 6.53095 11.3592C6.52881 11.2689 6.5445 11.179 6.57712 11.0948C6.60974 11.0106 6.65866 10.9336 6.72106 10.8683C6.78346 10.8029 6.85814 10.7506 6.9408 10.7141C7.02347 10.6777 7.1125 10.6579 7.20282 10.656C7.29313 10.654 7.38295 10.6698 7.46713 10.7026C7.55132 10.7354 7.62821 10.7844 7.69342 10.8469L9.73914 12.7993L14.3066 8.44067C14.3718 8.37816 14.4487 8.32911 14.5329 8.29634C14.617 8.26358 14.7069 8.24773 14.7972 8.24971C14.8875 8.25169 14.9765 8.27146 15.0592 8.30789C15.1419 8.34432 15.2165 8.39669 15.2789 8.46201C15.3413 8.52732 15.3903 8.6043 15.4229 8.68854C15.4555 8.77278 15.4712 8.86263 15.469 8.95294C15.4669 9.04325 15.447 9.13225 15.4104 9.21485C15.3738 9.29746 15.3213 9.37204 15.2559 9.43433H15.2559Z"
-                  fill="#04a46e"
-                />
-              </svg>
-            )}
-            <span
-              className={
-                completed ? "completed" : index === completedCount ? "next" : ""
-              }
-            >
-              {text}
-            </span>
-          </div>
-        ))}
-      </Criteria>
+                {text}
+              </span>
+            </div>
+          ))}
+        </Criteria>
+      ) : (
+        <></>
+      )}
       <Widget
         src={`${ownerId}/widget/Tags`}
         props={{
           tags: Object.fromEntries(
-            perk.categories.map((category) => [category, ""])
+            perk.fields.category.map((category) => [category, ""])
           ),
         }}
       />
@@ -315,7 +340,7 @@ return (
       {allCompleted ? (
         <>
           <ClaimButton>
-            <Link href={perk.link}>
+            <Link href={perk.fields.url}>
               Claim perk
               <svg
                 width="12"
@@ -333,10 +358,12 @@ return (
               </svg>
             </Link>
           </ClaimButton>
-          {perk.code ? (
+          {perk.fields.code ? (
             <div>
               <ClaimDetails>Register with this code:</ClaimDetails>
-              <ClipboardButton onClick={() => clipboard.writeText(perk.code)}>
+              <ClipboardButton
+                onClick={() => clipboard.writeText(perk.fields.code)}
+              >
                 <svg
                   width="16"
                   height="17"
@@ -364,7 +391,7 @@ return (
                     </clipPath>
                   </defs>
                 </svg>
-                {perk.code}
+                {perk.fields.code}
               </ClipboardButton>
             </div>
           ) : (
@@ -390,7 +417,8 @@ return (
               stroke-linejoin="round"
             />
           </svg>
-          Eligibility criteria not met ({completedCount}/{perk.criteria.length})
+          Eligibility criteria not met ({completedCount}/
+          {perk.fields.criteria.length})
         </NotEligible>
       )}
     </Footer>
