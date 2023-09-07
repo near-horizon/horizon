@@ -15,7 +15,7 @@ if [ "$WIDGET_DIR" == "." ]; then
 fi
 
 mkdir -p .tmp/src/"$WIDGET_DIR"
-cp "widgets/src/$WIDGET_NAME" .tmp/src/"$WIDGET_DIR"
+cp "bos-components/src/$WIDGET_NAME" .tmp/src/"$WIDGET_DIR"
 
 cd .tmp
 

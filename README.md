@@ -28,8 +28,8 @@ more detailed explanations of the directory go to its README.
   scripts used for more convenient development
 - **[time-metrics](./time-metrics)** - This directory contains the source code
   for capturing metrics we track for a given time period on each day
-- **[widgets](./widgets)** - This directory contains the source code for the
-  frontend of the product which consists of [BOS components](https://docs.near.org/bos)
+- **[bos-components](./bos-components)** - This directory contains the source code
+  for the frontend of the product which consists of [BOS components](https://docs.near.org/bos)
 - **root directory (/)** - This directory contains everything listed above
   as well as some individual files, namely:
   - **[build.sh](./build.sh)** - This script builds the smart contract for production
@@ -39,9 +39,9 @@ more detailed explanations of the directory go to its README.
   - **[dev_deploy.sh](./dev_deploy.sh)** - This script builds the smart contract
     and deploys it to a provided account without invoking any additional
     function calls
-  - **[dev_widget_deploy.sh](./dev_widget_deploy.sh)** - This script substitutes
+  - **[dev_bos_deploy.sh](./dev_bos_deploy.sh)** - This script substitutes
     variables (like contract account ID and the API URL) for the provided
-    alternatives and deploys the widgets to the social contract on mainnet
+    alternatives and deploys the bos components to the social contract on mainnet
   - **[dirty_deploy.sh](./dirty_deploy.sh)** - This script builds the smart
     contract, deploys a state cleaner smart contract (`state_cleanup.wasm`) and
     cleans up all the state the smart contract has had, then deploys the newly
@@ -86,7 +86,7 @@ depending on which part of the repository you want to work on:
 rustup target add wasm32-unknown-unknown
 ```
 
-- widgets:
+- BOS components:
   - [Node.js](https://nodejs.org/en) - can be installed any way you want (
     personal recommendation is to use [rtx-cli](https://github.com/jdxcode/rtx)
     ) - using the latest stable version is encouraged
@@ -145,5 +145,5 @@ but if you have installed the `husky` hooks, this should be done for you on
 each commit.
 
 **_Tip_**: _When working with the component files, open up the
-[types.d.ts](./widgets/types.d.ts) file first as this will load in the type
+[types.d.ts](./bos-components/types.d.ts) file first as this will load in the type
 definitions of the environment you are working with (BOS APIs)._
