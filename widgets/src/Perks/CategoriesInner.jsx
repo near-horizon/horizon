@@ -105,7 +105,7 @@ const ShowButton = styled.button`
 `;
 
 const resultCount = results.filter(
-  ({ categories }) =>
+  ({ fields: { category: categories } }) =>
     state.selected.length === 0 ||
     state.selected.includes("All") ||
     categories.some((category) => state.selected.includes(category))

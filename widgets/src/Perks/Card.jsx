@@ -53,13 +53,14 @@ const Benefit = styled.div`
   display: flex;
   padding: 0.4375rem 0.8125rem;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 0.375rem;
   border-radius: 0.5rem;
   border: 1px dashed #c0ab8b;
   background: linear-gradient(180deg, #fcfbe9 0%, rgba(252, 251, 233, 0) 100%);
   width: 100%;
+  height: 82px;
 
   & > b {
     color: var(--ui-elements-dark, #11181c);
@@ -87,10 +88,11 @@ const Benefit = styled.div`
 const About = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 0.375rem;
   align-self: stretch;
+  height: 85px;
 
   & > b {
     color: var(--ui-elements-dark, #11181c);
@@ -108,6 +110,10 @@ const About = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 140%; /* 1.225rem */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 `;
 
@@ -248,6 +254,15 @@ const ClipboardButton = styled.button`
   line-height: 140%; /* 1.225rem */
 `;
 
+const TooltipContent = styled("Tooltip.Content")`
+  background: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  max-width: 40ch;
+  transform: translateY(-0.3rem);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+`;
+
 const completedCount = perks.fields.criteria
   ? perk.fields.criteria.filter(({ completed }) => completed).length
   : 0;
@@ -261,19 +276,28 @@ return (
         <h4>{perk.fields.name}</h4>
         <img src={perk.fields.logo[0].url} alt={perk.fields.name} />
       </Heading>
-      <Tooltip.Root>
-        <Tooltip.Trigger>
-          <Benefit>
-            <b>Benefit</b>
-            <span>{perk.fields.benefit}</span>
-          </Benefit>
-          <Tooltip.Content>{perk.fields.benefit}</Tooltip.Content>
-        </Tooltip.Trigger>
-      </Tooltip.Root>
-      <About>
-        <b>About</b>
-        <span>{perk.fields.description}</span>
-      </About>
+      <Tooltip.Provider>
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <Benefit>
+              <b>Benefit</b>
+              <span>{perk.fields.benefit}</span>
+            </Benefit>
+          </Tooltip.Trigger>
+          <TooltipContent>{perk.fields.benefit}</TooltipContent>
+        </Tooltip.Root>
+      </Tooltip.Provider>
+      <Tooltip.Provider>
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <About>
+              <b>About</b>
+              <span>{perk.fields.description}</span>
+            </About>
+          </Tooltip.Trigger>
+          <TooltipContent>{perk.fields.description}</TooltipContent>
+        </Tooltip.Root>
+      </Tooltip.Provider>
       {perks.fields.criteria ? (
         <Criteria>
           <b>Eligibility criteria</b>
