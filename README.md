@@ -13,6 +13,8 @@ more detailed explanations of the directory go to its README.
   which updates the tables in airtable for manual processing
 - **[api](./api)** - This directory contains the main backend for fetching the data
   stored in our database
+- **[app](./app)** - This directory contains the frontend code for the Horizon
+  website
 - **[backup](./backup)** - This directory contains the source code for dumping
   the data from our database into an AWS S3 bucket
 - **[contract](./contract)** - This directory contains the main smart contract
@@ -34,8 +36,6 @@ more detailed explanations of the directory go to its README.
   as well as some individual files, namely:
   - **[build.sh](./build.sh)** - This script builds the smart contract for production
     and copies the build output into the res folder
-  - **[build_token.sh](./build_token.sh)** - This script builds the token smart
-    contract for production and copies the build output into the res folder
   - **[dev_deploy.sh](./dev_deploy.sh)** - This script builds the smart contract
     and deploys it to a provided account without invoking any additional
     function calls
@@ -98,6 +98,49 @@ rustup target add wasm32-unknown-unknown
     following the instructions in the tool
     [repository](https://github.com/near/bos-loader/releases) (if you want
     to preview the changes locally before deploying the components)
+
+#### Environment management
+
+As mentioned earlier, there are two environments other than the local environment
+on your machine:
+
+- Staging environment - lives on `contribut3.near` and has it's separate indexer,
+  aggegator and API/database but doesn't have any syncs or backup jobs
+- Production environment - lives on `nearhorizon.near` and has all the projects
+  deployed and running
+
+The usual process for developing features/updates is to test everything locally,
+create a PR for that feature and deploy the contract and bos components to the
+staging account (if they were affected by that particular PR).
+When the changes are tested by other team members on the staging environment,
+we can merge the PR and deploy the changes to the production account.
+
+**_Note_**: Keep in mind that the changes to the `indexer`, `aggregator`,
+`airtable-sync`, `api` and `app` are all handled automatically by the platform
+service providers (e.g. Render and Vercel).
+
+#### Platforms
+
+The 2 platforms that are currently used for deploying projects are [Render.com](https://render.com)
+and the [BOS](https://near.org).
+
+Currently the following projects live on Render.com:
+
+- Database
+- Database backup
+- API
+- Indexer
+- Aggregator
+- Airtable sync
+
+Whereas the contract and bos components live on the BOS (either as on chain
+smart contract or on chain stored code for components).
+
+The website which is in the works will potentialy live on Vercel.
+
+**_Note_**: The projects which are currently on Render.com are manually created
+with plans to migrate that into a blueprint deployment - having the infrastructure
+documented as part of the repository.
 
 ### Guidelines
 
