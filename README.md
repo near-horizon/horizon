@@ -13,8 +13,6 @@ more detailed explanations of the directory go to its README.
   which updates the tables in airtable for manual processing
 - **[api](./api)** - This directory contains the main backend for fetching the data
   stored in our database
-- **[awesome-near-fetcher](./awesome-near-fetcher)** - This directory contains
-  the source code for fetching data from the AwesomeNEAR GraphQL API (**deprecated**)
 - **[backup](./backup)** - This directory contains the source code for dumping
   the data from our database into an AWS S3 bucket
 - **[contract](./contract)** - This directory contains the main smart contract
@@ -28,11 +26,6 @@ more detailed explanations of the directory go to its README.
   migration scripts
 - **[scripts](./scripts)** - This directory contains a collection of utility
   scripts used for more convenient development
-- **[seed](./seed)** - This directory contains the source code for seeding the smart
-  contract with initial data (**deprecated**)
-- **[token](./token)** - This directory contains the source code for the Horizon
-  token that should function as the credit system in the future (**NOTE** not yet
-  implemented - credit system is still off-chain)
 - **[time-metrics](./time-metrics)** - This directory contains the source code
   for capturing metrics we track for a given time period on each day
 - **[widgets](./widgets)** - This directory contains the source code for the
@@ -56,7 +49,6 @@ more detailed explanations of the directory go to its README.
     environment from a bad contract upgrade or migration)
   - **[indexer_run.sh](./indexer_run.sh)** - This script runs the indexer like
     you would in a dev environment
-  - **[seed.sh](./seed.sh)** - This script runs the seed package (**deprecated**)
 
 ## Accounts
 
