@@ -61,13 +61,21 @@ State.init({
   perks: [],
   perksIsFetched: false,
   categories: [],
+  options: [],
   search: "",
 });
 
 if (!state.perksIsFetched) {
   asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks").then(
     ({ body: perks }) => {
-      State.update({ perks: perks ?? [], perksIsFetched: true });
+      State.update({
+        perks: perks ?? [],
+        perksIsFetched: true,
+        options: [
+          "All",
+          ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
+        ],
+      });
     }
   );
   return <>Loading...</>;
@@ -192,13 +200,10 @@ return (
       <Widget
         src={`${ownerId}/widget/Perks.Categories`}
         props={{
-          categories: state.perks.reduce(
-            (all, perk) => [...all, ...perk.fields.category],
-            []
-          ),
+          categories: state.options,
           selected: state.categories,
           setCategories: (categories) => State.update({ categories }),
-          results: data,
+          results: state.perks,
         }}
       />
       <SearchContainer>
