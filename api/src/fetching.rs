@@ -41,7 +41,7 @@ pub struct Perk {
     pub benefit: String,
     #[serde(alias = "fldnkMNnLUxAFu4te", default)]
     pub description: String,
-    #[serde(alias = "Cost", default)]
+    #[serde(alias = "flddeOtSu7AprqSxi", default)]
     pub price: u64,
     #[serde(
         alias = "fldC2oRsuHtSOvEjY",
@@ -49,11 +49,11 @@ pub struct Perk {
         default
     )]
     pub available: bool,
-    #[serde(alias = "URL", default, skip_serializing)]
+    #[serde(alias = "fldL0d6Jw25dtNawv", default, skip_serializing)]
     pub url: String,
     #[serde(alias = "fldLoyiR8D7u7bjwz", default)]
     pub instructions: String,
-    #[serde(alias = "Code", default, skip_serializing)]
+    #[serde(alias = "fld4lCFQ1jP0fB8k5", default, skip_serializing)]
     pub code: Option<String>,
     #[serde(alias = "fldc4uLRTGBAjauTs", default)]
     pub logo: Vec<AttachmentObject>,
