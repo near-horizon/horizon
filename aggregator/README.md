@@ -10,24 +10,29 @@ Here are the steps which the aggregator performs:
 
 1. Connect to the database and blockchain.
 2. Fetch all the projects (more details on how this is done can be found [here](#project-vendor-investor-fetching))
-3. Insert all the projects (more details on how this is done can be found [here](#project-vendor-investor-insertion))
-4. Fetch all the vendors
-5. Insert all the vendors
-6. Fetch all the investors
-7. Insert all the investors
-8. Fetch all the requests (more details on how this is done can be found [here](#requests-fetching))
-9. Insert all the requests (more details on how this is done can be found [here](#requests-insertion))
-10. Fetch all the contributions (more details on how this is done can be found [here](#contributions-fetching))
-11. Insert all the contributions (more details on how this is done can be found [here](#contributions-insertion))
-12. Fetch all the claims (more details on how this is done can be found [here](#claims-fetching))
-13. Insert all the claims (more details on how this is done can be found [here](#claims-insertion))
-14. Delete all deleted claims (more details on how this is done can be found [here](#claims-deletion))
-15. Delete all deleted contributions (more details on how this is done can be found
+3. Record the state of the projects for activities we want to track
+4. Insert all the projects (more details on how this is done can be found [here](#project-vendor-investor-insertion))
+5. Fetch all the vendors
+6. Insert all the vendors
+7. Fetch all the investors
+8. Insert all the investors
+9. Fetch all the requests (more details on how this is done can be found [here](#requests-fetching))
+10. Insert all the requests (more details on how this is done can be found [here](#requests-insertion))
+11. Fetch all the contributions (more details on how this is done can be found [here](#contributions-fetching))
+12. Insert all the contributions (more details on how this is done can be found [here](#contributions-insertion))
+13. Fetch all the claims (more details on how this is done can be found [here](#claims-fetching))
+14. Insert all the claims (more details on how this is done can be found [here](#claims-insertion))
+15. Delete all deleted claims (more details on how this is done can be found [here](#claims-deletion))
+16. Delete all deleted contributions (more details on how this is done can be found
     [here](#contributions-deletion))
-16. Delete all deleted requests (more details on how this is done can be found [here](#requests-deletion))
-17. Delete all deleted investors (more details on how this is done can be found [here](#project-vendor-investor-deletion))
-18. Delete all deleted vendors
-19. Delete all deleted projects
+17. Delete all deleted requests (more details on how this is done can be found [here](#requests-deletion))
+18. Delete all deleted investors (more details on how this is done can be found [here](#project-vendor-investor-deletion))
+19. Delete all deleted vendors
+20. Delete all deleted projects
+21. Capture the state of the projects for activities we want to track
+22. Compare state captures before and after the aggregation to check for incentive
+    achievements
+23. Award projects with achieved incentives
 
 ### Fetching
 
@@ -158,3 +163,17 @@ constraints depending on them, by simply deleting all the claims which are no lo
 listed in the Horizon smart contract.
 
 Here is the [implementation](https://github.com/near-horizon/horizon/blob/fcf1f7125987b5a35945374dd9881e1172cf95e3/aggregator/src/claims.rs#L76).
+
+### Incentive awarding
+
+Currently only projects are awarded incentives for in app activities.
+
+#### Projects
+
+Compare the two states by iterating over the projects captured after deletion and
+calculate any achieved incentives.
+Map those incentive achievements into transaction batches for awarding the credits
+on-chain.
+Broadcast and wait for those incentive transactions to go through.
+
+Here is the [implementation](https://github.com/near-horizon/horizon/blob/1bfe622d2c5ff500a7e8de443ab752c5a4471a6d/aggregator/src/project.rs#L338).
