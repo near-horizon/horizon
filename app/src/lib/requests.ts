@@ -6,11 +6,11 @@ import {
   transactionSchema,
   cidSchema,
   type CID,
-  intoURLSearchParams,
-} from "./utils";
+} from "./validation/common";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { pageSize } from "./constants/pagination";
+import { intoURLSearchParams } from "./utils";
 
 export const requestTypeSchema = z.enum([
   "OneTime",

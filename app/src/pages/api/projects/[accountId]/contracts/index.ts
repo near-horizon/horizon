@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { viewCall } from "~/lib/fetching";
-import { accountIdSchema, type AccountId } from "~/lib/utils";
+import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import {
   type ContributorContracts,
   contractsListSchema,

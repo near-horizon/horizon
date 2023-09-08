@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useProposal } from "~/lib/proposal";
-import { type CID, type AccountId } from "~/lib/utils";
+import { type CID, type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { format } from "timeago.js";

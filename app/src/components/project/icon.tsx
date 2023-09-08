@@ -1,14 +1,14 @@
 import clsx from "clsx";
-import { type z } from "zod";
 import { getImageURL, useProfile } from "~/lib/fetching";
-import { cn, type accountIdSchema } from "~/lib/utils";
+import { cn } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 
 export function ProjectIcon({
   accountId,
   className = "",
   loading = false,
 }: {
-  accountId: z.infer<typeof accountIdSchema>;
+  accountId: AccountId;
   className?: string;
   loading?: boolean;
 }) {

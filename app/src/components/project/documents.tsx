@@ -1,5 +1,5 @@
 import { useProject } from "~/lib/projects";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 
 export function Documents({ accountId }: { accountId: AccountId }) {
   const { data, status } = useProject(accountId);

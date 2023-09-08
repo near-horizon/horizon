@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { type AccountId, accountIdSchema, transactionSchema } from "./utils";
+import {
+  type AccountId,
+  accountIdSchema,
+  transactionSchema,
+} from "./validation/common";
 import { useQuery } from "@tanstack/react-query";
 import { proposalIdSchema } from "./proposal";
 

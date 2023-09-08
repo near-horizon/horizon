@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { type z } from "zod";
 import { getImageURL, useProfile } from "~/lib/fetching";
-import { type accountIdSchema } from "~/lib/utils";
+import { type accountIdSchema } from "~/lib/validation/common";
 
 export function FounderIcon({
   accountId,

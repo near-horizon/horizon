@@ -1,5 +1,5 @@
 import { useProject } from "~/lib/projects";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { Description } from "./description";

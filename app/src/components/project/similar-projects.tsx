@@ -1,6 +1,6 @@
 import { useSimilarProjects } from "~/lib/projects";
 import { Project } from "../project";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 
 export function SimilarProjects({ accountId }: { accountId: AccountId }) {
   const { data, status } = useSimilarProjects(accountId);

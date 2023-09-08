@@ -7,7 +7,7 @@ import {
   type AccountId,
   cidSchema,
   type CID,
-} from "~/lib/utils";
+} from "~/lib/validation/common";
 import { getTransactions } from "~/pages/api/transactions/all";
 
 export async function getRequest(accountId: AccountId, cid: CID) {

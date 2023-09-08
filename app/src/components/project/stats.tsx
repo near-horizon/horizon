@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { z } from "zod";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import {
   Select,
   SelectContent,

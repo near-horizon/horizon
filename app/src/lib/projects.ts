@@ -7,9 +7,9 @@ import {
   applicationSchema,
   permissionSchema,
   transactionSchema,
-  intoURLSearchParams,
-} from "~/lib/utils";
-import { pageSize } from "./constants/pagination";
+} from "~/lib/validation/common";
+import { intoURLSearchParams } from "~/lib/utils";
+import { pageSize } from "~/lib/constants/pagination";
 
 export const projectsQuerySchema = fetchManySchema.extend({
   vertical: z.array(z.string()).optional(),

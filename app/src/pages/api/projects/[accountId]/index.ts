@@ -3,7 +3,7 @@ import { type z } from "zod";
 import { env } from "~/env.mjs";
 import { getProfile, profileSchema, viewCall } from "~/lib/fetching";
 import { horizonSchema, projectSchema } from "~/lib/projects";
-import { accountIdSchema, type AccountId } from "~/lib/utils";
+import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import { getTransactions } from "../../transactions/all";
 
 export async function getProject(accountId: AccountId) {

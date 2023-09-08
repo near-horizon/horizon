@@ -1,5 +1,5 @@
 import { useProjectCompletedContracts } from "~/lib/contracts";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { Contract } from "../contract";
 
 export function History({ accountId }: { accountId: AccountId }) {

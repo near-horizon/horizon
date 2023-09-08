@@ -1,5 +1,5 @@
 import { useProject } from "~/lib/projects";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { Founder } from "./founder";
 
 export function Founders({ accountId }: { accountId: AccountId }) {

@@ -1,9 +1,4 @@
-import {
-  type AccountId,
-  formatDate,
-  formatBudget,
-  type CID,
-} from "~/lib/utils";
+import { formatDate, formatBudget } from "~/lib/utils";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import Link from "next/link";
@@ -11,6 +6,7 @@ import { useRequest } from "~/lib/requests";
 import { Title } from "./title";
 import { Tags } from "./tags";
 import { Availability } from "./availability";
+import { type AccountId, type CID } from "~/lib/validation/common";
 
 export function Request({
   accountId,

@@ -2,9 +2,10 @@ import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { Details } from "~/components/backer/details";
 import { Header } from "~/components/backer/header";
-import { accountIdSchema, removeEmpty } from "~/lib/utils";
+import { removeEmpty } from "~/lib/utils";
 import { getBacker } from "../api/backers/[accountId]";
 import { withSSRSession } from "~/lib/auth";
+import { accountIdSchema } from "~/lib/validation/common";
 
 export default function Backer() {
   const { query } = useRouter();
@@ -23,7 +24,7 @@ export default function Backer() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function ({ query }) {
+export const getServerSideProps = withSSRSession(async function({ query }) {
   const accountId = accountIdSchema.parse(query.accountId);
 
   const queryClient = new QueryClient();

@@ -1,7 +1,7 @@
-import { formatBudget, type AccountId, type CID } from "~/lib/utils";
+import { type AccountId, type CID } from "~/lib/validation/common";
 import { Description } from "../description";
 import { Detail } from "../detail";
-import { formatDate } from "~/lib/utils";
+import { formatBudget, formatDate } from "~/lib/utils";
 import { useContract } from "~/lib/contracts";
 import Link from "next/link";
 import { ProjectIcon } from "../project/icon";

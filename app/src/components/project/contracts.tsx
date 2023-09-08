@@ -1,5 +1,5 @@
 import { useProjectContracts } from "~/lib/contracts";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { Contract } from "../contract";
 
 export function Contracts({ accountId }: { accountId: AccountId }) {

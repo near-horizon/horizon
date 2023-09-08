@@ -1,13 +1,13 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { fetchManySchema, profileSchema } from "~/lib/fetching";
+import { intoURLSearchParams } from "~/lib/utils";
 import {
   type AccountId,
   accountIdSchema,
   permissionSchema,
   transactionSchema,
-  intoURLSearchParams,
-} from "~/lib/utils";
+} from "~/lib/validation/common";
 import { pageSize } from "./constants/pagination";
 
 export const backersQuerySchema = fetchManySchema.extend({

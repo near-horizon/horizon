@@ -5,7 +5,7 @@ import { CTAs } from "~/components/project/ctas";
 import { Details } from "~/components/project/details";
 import { Header } from "~/components/project/header";
 import { Overview } from "~/components/project/overview";
-import { accountIdSchema, removeEmpty } from "~/lib/utils";
+import { removeEmpty } from "~/lib/utils";
 import { Requests } from "~/components/project/requests-tab";
 import { Contracts } from "~/components/project/contracts";
 import ContentTabs from "~/components/ui/content-tabs";
@@ -14,6 +14,7 @@ import { getProject } from "../api/projects/[accountId]";
 import { getRequestsForProject } from "../api/projects/[accountId]/requests";
 import { getRequest } from "../api/requests/[accountId]/[cid]";
 import { withSSRSession } from "~/lib/auth";
+import { accountIdSchema } from "~/lib/validation/common";
 
 export default function Project() {
   const { query } = useRouter();

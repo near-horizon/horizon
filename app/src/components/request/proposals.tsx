@@ -1,5 +1,5 @@
 import { useRequestProposals } from "~/lib/proposal";
-import { type CID, type AccountId } from "~/lib/utils";
+import { type CID, type AccountId } from "~/lib/validation/common";
 import { Proposal } from "../proposal";
 
 export function Proposals({

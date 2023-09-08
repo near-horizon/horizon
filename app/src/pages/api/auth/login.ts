@@ -2,7 +2,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import { z } from "zod";
 import { loginUser } from "~/lib/auth";
 import { ironSessionConfig } from "~/lib/constants/iron-session";
-import { accountIdSchema } from "~/lib/utils";
+import { accountIdSchema } from "~/lib/validation/common";
 
 const bodySchema = z.object({
   accountId: accountIdSchema,

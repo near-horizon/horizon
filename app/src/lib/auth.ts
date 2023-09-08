@@ -1,5 +1,4 @@
 import { type IronSession } from "iron-session";
-import { sleep, type AccountId } from "./utils";
 import { getKeyInfo, viewCall } from "./fetching";
 import { env } from "~/env.mjs";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
@@ -9,6 +8,8 @@ import {
   type GetServerSidePropsContext,
   type GetServerSidePropsResult,
 } from "next";
+import { type AccountId } from "./validation/common";
+import { sleep } from "./utils";
 
 export async function loginUser(
   accountId: AccountId,
@@ -41,7 +42,7 @@ export function withSSRSession<Props>(
     user: IronSession["user"] | null
   ) => Promise<GetServerSidePropsResult<Props>>
 ) {
-  return withIronSessionSsr(async function (context) {
+  return withIronSessionSsr(async function(context) {
     const user = context.req.session.user ?? null;
 
     const result = await ssrFunction(context, user);
