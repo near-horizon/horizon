@@ -6,10 +6,10 @@ import {
   accountIdSchema,
   permissionSchema,
   transactionSchema,
-  intoURLSearchParams,
-} from "~/lib/utils";
+} from "~/lib/validation/common";
 import { paymentTypeSchema } from "./requests";
 import { pageSize } from "./constants/pagination";
+import { intoURLSearchParams } from "./utils";
 
 export const contributorsQuerySchema = fetchManySchema.extend({
   verified: z.array(z.boolean()).optional(),

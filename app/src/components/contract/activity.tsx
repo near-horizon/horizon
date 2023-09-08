@@ -4,7 +4,7 @@ import { useContract } from "~/lib/contracts";
 import { useContributor } from "~/lib/contributors";
 import { useProject } from "~/lib/projects";
 import { useRequest } from "~/lib/requests";
-import { type CID, type AccountId } from "~/lib/utils";
+import { type CID, type AccountId } from "~/lib/validation/common";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export function Activity({

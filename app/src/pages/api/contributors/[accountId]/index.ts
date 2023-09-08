@@ -7,7 +7,7 @@ import {
   horizonSchema,
 } from "~/lib/contributors";
 import { getProfile, viewCall } from "~/lib/fetching";
-import { accountIdSchema, type AccountId } from "~/lib/utils";
+import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import { getTransactions } from "../../transactions/all";
 
 export async function getContributor(accountId: AccountId) {

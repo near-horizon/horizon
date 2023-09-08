@@ -1,4 +1,5 @@
-import { formatTimestamp, type AccountId } from "~/lib/utils";
+import { formatTimestamp } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { Detail } from "../detail";
 import { Socials } from "../socials";
 import { useBacker } from "~/lib/backers";

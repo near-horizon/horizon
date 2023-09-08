@@ -1,5 +1,5 @@
 import { useProjectRequests } from "~/lib/requests";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { Request } from "../request";
 
 export function Requests({ accountId }: { accountId: AccountId }) {

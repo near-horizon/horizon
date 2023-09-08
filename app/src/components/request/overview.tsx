@@ -1,15 +1,11 @@
-import {
-  formatTimestamp,
-  type AccountId,
-  formatBudget,
-  type CID,
-} from "~/lib/utils";
+import { formatTimestamp, formatBudget } from "~/lib/utils";
 import { Description } from "../description";
 import { Detail } from "../detail";
 import { useRequest } from "~/lib/requests";
 import { Tags } from "../tags";
 import { formatDate } from "~/lib/utils";
 import { format } from "timeago.js";
+import { type AccountId, type CID } from "~/lib/validation/common";
 
 export function Overview({
   accountId,

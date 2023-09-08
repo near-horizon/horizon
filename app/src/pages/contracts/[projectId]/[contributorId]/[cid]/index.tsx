@@ -8,7 +8,8 @@ import ContentTabs from "~/components/ui/content-tabs";
 import { withSSRSession } from "~/lib/auth";
 import { useContract } from "~/lib/contracts";
 import { useRequest } from "~/lib/requests";
-import { accountIdSchema, cidSchema, removeEmpty } from "~/lib/utils";
+import { removeEmpty } from "~/lib/utils";
+import { accountIdSchema, cidSchema } from "~/lib/validation/common";
 import { getContract } from "~/pages/api/contracts/[projectId]/[contributorId]/[cid]";
 import { getContributor } from "~/pages/api/contributors/[accountId]";
 import { getProject } from "~/pages/api/projects/[accountId]";
@@ -84,7 +85,7 @@ export default function Contract() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function ({ query }) {
+export const getServerSideProps = withSSRSession(async function({ query }) {
   const queryClient = new QueryClient();
   const projectId = accountIdSchema.parse(query.projectId);
   const contributorId = accountIdSchema.parse(query.contributorId);

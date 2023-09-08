@@ -1,6 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { env } from "~/env.mjs";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 
 async function getProjects(accountId: AccountId): Promise<string[]> {
   const projects = await fetch(

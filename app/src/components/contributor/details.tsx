@@ -1,4 +1,4 @@
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { type FC, type ReactNode } from "react";
 import { General } from "./general";
 import { Description } from "../description";

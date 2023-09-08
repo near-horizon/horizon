@@ -1,5 +1,5 @@
 import { useBacker } from "~/lib/backers";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "../project/icon";
 import { Handle } from "../handle";
 

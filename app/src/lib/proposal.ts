@@ -5,7 +5,7 @@ import {
   transactionSchema,
   cidSchema,
   type CID,
-} from "./utils";
+} from "./validation/common";
 import {
   paymentSourceSchema,
   paymentTypeSchema,

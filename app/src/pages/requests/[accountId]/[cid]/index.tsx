@@ -8,7 +8,8 @@ import { Proposals } from "~/components/request/proposals";
 import ContentTabs from "~/components/ui/content-tabs";
 import { withSSRSession } from "~/lib/auth";
 import { useRequest } from "~/lib/requests";
-import { accountIdSchema, cidSchema, removeEmpty } from "~/lib/utils";
+import { removeEmpty } from "~/lib/utils";
+import { accountIdSchema, cidSchema } from "~/lib/validation/common";
 import { getRequest } from "~/pages/api/requests/[accountId]/[cid]";
 import { useUser } from "~/stores/global";
 
@@ -64,7 +65,7 @@ export default function Request() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function ({ query }) {
+export const getServerSideProps = withSSRSession(async function({ query }) {
   const queryClient = new QueryClient();
   const accountId = accountIdSchema.parse(query.accountId as string);
   const cid = z.string().parse(query.cid as string);

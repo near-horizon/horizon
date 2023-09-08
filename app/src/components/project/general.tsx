@@ -1,9 +1,10 @@
 import { useProject } from "~/lib/projects";
-import { formatTimestamp, type AccountId } from "~/lib/utils";
+import { formatTimestamp } from "~/lib/utils";
 import { Description } from "../description";
 import { Detail } from "../detail";
 import { PointOfContact } from "../point-of-contact";
 import { Socials } from "../socials";
+import { type AccountId } from "~/lib/validation/common";
 
 export function General({ accountId }: { accountId: AccountId }) {
   const { data, status } = useProject(accountId);

@@ -1,5 +1,5 @@
 import { useProfile } from "~/lib/fetching";
-import { type AccountId } from "~/lib/utils";
+import { type AccountId } from "~/lib/validation/common";
 import { FounderIcon } from "../founder/icon";
 import { Socials } from "../socials";
 
