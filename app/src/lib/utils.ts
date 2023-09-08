@@ -11,7 +11,7 @@ export function formatTimestamp(timestamp = 0) {
 }
 
 export function formatDate(timestamp: string | number) {
-  return new Date(timestamp).toLocaleDateString();
+  return new Date(timestamp).toLocaleDateString("en-GB");
 }
 
 export function formatBudget(budget: number) {
