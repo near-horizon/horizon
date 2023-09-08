@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { viewCall } from "~/lib/fetching";
-import { projectRequestsSchema } from "~/lib/requests";
+import { projectRequestsSchema } from "~/lib/validation/requests";
 import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 
 export async function getRequestsForProject(accountId: AccountId) {

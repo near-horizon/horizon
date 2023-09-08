@@ -1,20 +1,8 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import { fetchManySchema, profileSchema } from "~/lib/fetching";
 import { intoURLSearchParams } from "~/lib/utils";
-import {
-  type AccountId,
-  accountIdSchema,
-  permissionSchema,
-  transactionSchema,
-} from "~/lib/validation/common";
+import { type AccountId } from "~/lib/validation/common";
 import { pageSize } from "./constants/pagination";
-
-export const backersQuerySchema = fetchManySchema.extend({
-  vertical: z.array(z.string()).optional(),
-});
-
-export type BackersQuery = z.infer<typeof backersQuerySchema>;
+import { backerSchema, type BackersQuery } from "./validation/backers";
 
 export async function getBackers(query: BackersQuery) {
   const result = await fetch("/api/backers?" + intoURLSearchParams(query));
@@ -51,24 +39,7 @@ export function usePaginatedBackers() {
   });
 }
 
-export const horizonSchema = z.object({
-  permissions: z.record(accountIdSchema, z.array(permissionSchema)),
-  verified: z.boolean(),
-});
-
-export const backerProfileSchema = profileSchema.extend({
-  specialization: z.string().optional(),
-  location: z.string().optional(),
-});
-
-export const backerSchema = horizonSchema
-  .merge(backerProfileSchema.omit({ team: true }))
-  .extend({
-    creationTx: transactionSchema.optional(),
-    account_id: accountIdSchema,
-  });
-
-export async function getBacker(accountId: z.infer<typeof accountIdSchema>) {
+export async function getBacker(accountId: AccountId) {
   const response = await fetch("/api/backers/" + accountId);
 
   return backerSchema.parse(await response.json());

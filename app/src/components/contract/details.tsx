@@ -6,7 +6,7 @@ import { useContract } from "~/lib/contracts";
 import Link from "next/link";
 import { ProjectIcon } from "../project/icon";
 import { Handle } from "../handle";
-import { useProposal } from "~/lib/proposal";
+import { useProposal } from "~/lib/proposals";
 import { useContributor } from "~/lib/contributors";
 import { useProject } from "~/lib/projects";
 import { useRequest } from "~/lib/requests";

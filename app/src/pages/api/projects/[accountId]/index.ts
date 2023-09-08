@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { type z } from "zod";
 import { env } from "~/env.mjs";
-import { getProfile, profileSchema, viewCall } from "~/lib/fetching";
-import { horizonSchema, projectSchema } from "~/lib/projects";
+import { getProfile, viewCall } from "~/lib/fetching";
 import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import { getTransactions } from "../../transactions/all";
+import { horizonSchema, projectSchema } from "~/lib/validation/projects";
+import { profileSchema } from "~/lib/validation/fetching";
 
 export async function getProject(accountId: AccountId) {
   const [response, horizonData, transactions] = await Promise.all([

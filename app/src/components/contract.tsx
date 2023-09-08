@@ -1,13 +1,14 @@
 import { ProjectIcon } from "./project/icon";
 import { Description } from "./description";
 import Link from "next/link";
-import { type ContractId, useContract } from "~/lib/contracts";
+import { useContract } from "~/lib/contracts";
 import { useRequest } from "~/lib/requests";
 import { format } from "timeago.js";
 import { Availability } from "./availability";
 import { formatBudget, formatDate } from "~/lib/utils";
-import { useProposal } from "~/lib/proposal";
+import { useProposal } from "~/lib/proposals";
 import { Handle } from "./handle";
+import { type ContractId } from "~/lib/validation/contracts";
 
 export function Contract({
   contractId: [[projectId, cid], contributorId],

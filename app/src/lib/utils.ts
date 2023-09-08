@@ -39,28 +39,26 @@ export function removeEmpty<T>(obj: T): T | null {
   if (obj === null) return null;
 
   if (typeof obj === "object") {
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
     Object.keys(obj).forEach((key) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       if (typeof obj[key] === "object") {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         removeEmpty(obj[key] as object);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
       } else if (obj[key] === undefined) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         delete obj[key];
       }
     });
+    return obj;
   }
 
   if (Array.isArray(obj)) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     obj = obj.map((item) => removeEmpty(item));
+    /* eslint-enable @typescript-eslint/ban-ts-comment */
   }
 
   return obj;

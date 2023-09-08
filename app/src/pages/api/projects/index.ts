@@ -1,8 +1,8 @@
 import { type NextApiResponse, type NextApiRequest } from "next";
 import { z } from "zod";
 import { env } from "~/env.mjs";
-import { fetchManyURLSchema } from "~/lib/fetching";
-import { type ProjectsQuery } from "~/lib/projects";
+import { fetchManyURLSchema } from "~/lib/validation/fetching";
+import { type ProjectsQuery } from "~/lib/validation/projects";
 import { intoURLSearchParams } from "~/lib/utils";
 
 const projectsURLQuerySchema = fetchManyURLSchema.extend({

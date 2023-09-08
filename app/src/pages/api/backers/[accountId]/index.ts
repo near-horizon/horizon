@@ -5,7 +5,7 @@ import {
   backerProfileSchema,
   backerSchema,
   horizonSchema,
-} from "~/lib/backers";
+} from "~/lib/validation/backers";
 import { getProfile, viewCall } from "~/lib/fetching";
 import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import { getTransactions } from "../../transactions/all";

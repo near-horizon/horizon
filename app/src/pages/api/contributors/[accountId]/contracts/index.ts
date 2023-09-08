@@ -5,7 +5,7 @@ import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import {
   type ContributorContracts,
   contractsListSchema,
-} from "~/lib/contracts";
+} from "~/lib/validation/contracts";
 
 export async function getContributorContracts(accountId: AccountId) {
   const contracts = await viewCall<ContributorContracts>(

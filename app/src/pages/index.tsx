@@ -12,8 +12,7 @@ import { getProjects } from "./api/projects";
 import { getRequests } from "./api/requests";
 import { getContributors } from "./api/contributors";
 import { getBackers } from "./api/backers";
-import { useStats, type fetchManySchema } from "~/lib/fetching";
-import { type z } from "zod";
+import { useStats } from "~/lib/fetching";
 import { getProject } from "./api/projects/[accountId]";
 import { getRequest } from "./api/requests/[accountId]/[cid]";
 import { getContributor } from "./api/contributors/[accountId]";
@@ -22,8 +21,9 @@ import { removeEmpty } from "~/lib/utils";
 import { getStats } from "./api/transactions/stats";
 import { MainStats } from "~/components/main-stats";
 import { withSSRSession } from "~/lib/auth";
+import { type FetchMany } from "~/lib/validation/fetching";
 
-const query: z.infer<typeof fetchManySchema> = {
+const query: FetchMany = {
   from: 0,
   sort: "timedesc",
   limit: 8,
@@ -92,7 +92,7 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function () {
+export const getServerSideProps = withSSRSession(async function() {
   const queryClient = new QueryClient();
 
   const [projects, requests, contributors, backers, stats] = await Promise.all([

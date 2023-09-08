@@ -2,7 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { viewCall } from "~/lib/fetching";
 import { accountIdSchema, type AccountId } from "~/lib/validation/common";
-import { contractsListSchema, type ContractId } from "~/lib/contracts";
+import {
+  contractsListSchema,
+  type ContractId,
+} from "~/lib/validation/contracts";
 
 export async function getContributorCompletedContracts(accountId: AccountId) {
   const contracts = await viewCall<ContractId[]>(

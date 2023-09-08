@@ -1,4 +1,4 @@
-import { useRequestProposals } from "~/lib/proposal";
+import { useRequestProposals } from "~/lib/proposals";
 import { type CID, type AccountId } from "~/lib/validation/common";
 import { Proposal } from "../proposal";
 

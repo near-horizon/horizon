@@ -1,8 +1,8 @@
 import { type NextApiResponse, type NextApiRequest } from "next";
 import { z } from "zod";
 import { env } from "~/env.mjs";
-import { type BackersQuery } from "~/lib/backers";
-import { fetchManyURLSchema } from "~/lib/fetching";
+import { type BackersQuery } from "~/lib/validation/backers";
+import { fetchManyURLSchema } from "~/lib/validation/fetching";
 import { intoURLSearchParams } from "~/lib/utils";
 
 const backersURLQuerySchema = fetchManyURLSchema.extend({
