@@ -23,11 +23,11 @@ import { MainStats } from "~/components/main-stats";
 import { withSSRSession } from "~/lib/auth";
 import { type FetchMany } from "~/lib/validation/fetching";
 
-const query: FetchMany = {
+const query = {
   from: 0,
   sort: "timedesc",
   limit: 8,
-};
+} satisfies FetchMany;
 
 export default function Home() {
   const { data: projects } = useProjects(query);
