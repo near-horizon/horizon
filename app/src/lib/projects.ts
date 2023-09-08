@@ -1,26 +1,8 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import { fetchManySchema, profileSchema } from "~/lib/fetching";
-import {
-  type AccountId,
-  accountIdSchema,
-  applicationSchema,
-  permissionSchema,
-  transactionSchema,
-} from "~/lib/validation/common";
+import { type AccountId } from "~/lib/validation/common";
 import { intoURLSearchParams } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
-
-export const projectsQuerySchema = fetchManySchema.extend({
-  vertical: z.array(z.string()).optional(),
-  integration: z.array(z.string()).optional(),
-  dev: z.array(z.string()).optional(),
-  stage: z.array(z.string()).optional(),
-  size: z.array(z.tuple([z.number(), z.number()])).optional(),
-  distribution: z.array(z.string()).optional(),
-});
-
-export type ProjectsQuery = z.infer<typeof projectsQuerySchema>;
+import { projectSchema, type ProjectsQuery } from "./validation/projects";
 
 export async function getProjects(query: ProjectsQuery) {
   const result = await fetch("/api/projects?" + intoURLSearchParams(query));
@@ -70,35 +52,6 @@ export function useSimilarProjects(accountId: AccountId) {
     enabled: !!accountId,
   });
 }
-
-export const horizonSchema = z.object({
-  founders: z.array(accountIdSchema),
-  team: z.record(accountIdSchema, z.array(permissionSchema)),
-  why: z.string(),
-  integration: z.string(),
-  success_position: z.string(),
-  problem: z.string(),
-  vision: z.string(),
-  deck: z.string(),
-  white_paper: z.string(),
-  roadmap: z.string(),
-  demo: z.string(),
-  tam: z.string(),
-  geo: z.string(),
-  verified: z.boolean(),
-  application: applicationSchema,
-});
-
-export const projectSchema = horizonSchema
-  .merge(
-    profileSchema.omit({ team: true }).extend({
-      company_size: z.string().optional(),
-    })
-  )
-  .extend({
-    creationTx: transactionSchema.optional(),
-    account_id: accountIdSchema,
-  });
 
 export async function getProject(accountId: AccountId) {
   const response = await fetch("/api/projects/" + accountId);

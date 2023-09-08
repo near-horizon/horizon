@@ -1,6 +1,6 @@
 import { type NextApiResponse, type NextApiRequest } from "next";
 import { env } from "~/env.mjs";
-import { type Stats, statsSchema } from "~/lib/fetching";
+import { type Stats, statsSchema } from "~/lib/validation/fetching";
 
 export async function getStats(): Promise<Stats> {
   const projects = await fetch(env.API_URL + "/transactions/stats", {

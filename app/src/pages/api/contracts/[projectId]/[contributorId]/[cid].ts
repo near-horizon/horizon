@@ -5,9 +5,9 @@ import {
   type ContractId,
   type Contract,
   contractSchema,
-} from "~/lib/contracts";
+} from "~/lib/validation/contracts";
 import { getTransactions } from "~/pages/api/transactions/all";
-import { proposalIdSchema } from "~/lib/proposal";
+import { proposalIdSchema } from "~/lib/validation/proposals";
 
 export async function getContract([[project_id, cid], vendor_id]: ContractId) {
   const [contract, transactions] = await Promise.all([

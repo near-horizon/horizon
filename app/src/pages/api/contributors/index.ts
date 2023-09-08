@@ -1,9 +1,9 @@
 import { type NextApiResponse, type NextApiRequest } from "next";
 import { z } from "zod";
 import { env } from "~/env.mjs";
-import { type ContributorsQuery } from "~/lib/contributors";
-import { fetchManyURLSchema } from "~/lib/fetching";
-import { paymentTypeSchema } from "~/lib/requests";
+import { type ContributorsQuery } from "~/lib/validation/contributors";
+import { fetchManyURLSchema } from "~/lib/validation/fetching";
+import { paymentTypeSchema } from "~/lib/validation/requests";
 import { intoURLSearchParams } from "~/lib/utils";
 
 const contributorsURLQuerySchema = fetchManyURLSchema.extend({

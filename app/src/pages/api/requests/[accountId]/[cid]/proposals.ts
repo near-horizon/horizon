@@ -6,8 +6,8 @@ import {
   type AccountId,
   cidSchema,
 } from "~/lib/validation/common";
-import { contractsListSchema } from "~/lib/contracts";
-import { type ProposalId } from "~/lib/proposal";
+import { contractsListSchema } from "~/lib/validation/contracts";
+import { type ProposalId } from "~/lib/validation/proposals";
 
 export async function getRequestProposals(accountId: AccountId, cid: string) {
   const contracts = await viewCall<ProposalId[]>(

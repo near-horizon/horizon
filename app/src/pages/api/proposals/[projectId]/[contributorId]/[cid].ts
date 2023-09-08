@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { viewCall } from "~/lib/fetching";
-import { type Contract } from "~/lib/contracts";
+import { type Contract } from "~/lib/validation/contracts";
 import { getTransactions } from "~/pages/api/transactions/all";
 import {
   type ProposalId,
   proposalIdSchema,
   type Proposal,
   proposalSchema,
-} from "~/lib/proposal";
+} from "~/lib/validation/proposals";
 
 export async function getProposal([[project_id, cid], vendor_id]: ProposalId) {
   const [contract, transactions] = await Promise.all([

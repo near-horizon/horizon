@@ -5,7 +5,7 @@ import {
   contributorProfileSchema,
   contributorSchema,
   horizonSchema,
-} from "~/lib/contributors";
+} from "~/lib/validation/contributors";
 import { getProfile, viewCall } from "~/lib/fetching";
 import { accountIdSchema, type AccountId } from "~/lib/validation/common";
 import { getTransactions } from "../../transactions/all";

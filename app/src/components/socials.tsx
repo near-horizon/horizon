@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type Linktree } from "~/lib/fetching";
+import { type Linktree } from "~/lib/validation/fetching";
 import { cn } from "~/lib/utils";
 
 const supportedLinks: { name: keyof Linktree; url: string; icon: ReactNode }[] =

@@ -1,13 +1,13 @@
 import { type NextApiResponse, type NextApiRequest } from "next";
 import { z } from "zod";
 import { env } from "~/env.mjs";
-import { fetchManyURLSchema } from "~/lib/fetching";
+import { fetchManyURLSchema } from "~/lib/validation/fetching";
 import {
   type RequestsQuery,
   requestTypeSchema,
   paymentTypeSchema,
   paymentSourceSchema,
-} from "~/lib/requests";
+} from "~/lib/validation/requests";
 import { intoURLSearchParams } from "~/lib/utils";
 
 const requestsURLQuerySchema = fetchManyURLSchema.extend({

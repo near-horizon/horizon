@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useProposal } from "~/lib/proposal";
+import { useProposal } from "~/lib/proposals";
 import { type CID, type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
