@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatTimestamp(timestamp = 0) {
-  return new Date(timestamp / 1000000).toLocaleString("en-US", {});
+  return new Date(timestamp / 1000000).toLocaleString("en-GB", {});
 }
 
 export function formatDate(timestamp: string | number) {
@@ -39,15 +39,10 @@ export function removeEmpty<T>(obj: T): T | null {
   if (obj === null) return null;
 
   if (typeof obj === "object") {
-    /* eslint-disable @typescript-eslint/ban-ts-comment */
-    Object.keys(obj).forEach((key) => {
-      // @ts-ignore
+    (Object.keys(obj) as (keyof typeof obj)[]).forEach((key) => {
       if (typeof obj[key] === "object") {
-        // @ts-ignore
-        removeEmpty(obj[key] as object);
-        // @ts-ignore
+        removeEmpty(obj[key]);
       } else if (obj[key] === undefined) {
-        // @ts-ignore
         delete obj[key];
       }
     });
@@ -55,10 +50,10 @@ export function removeEmpty<T>(obj: T): T | null {
   }
 
   if (Array.isArray(obj)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     obj = obj.map((item) => removeEmpty(item));
-    /* eslint-enable @typescript-eslint/ban-ts-comment */
   }
 
   return obj;

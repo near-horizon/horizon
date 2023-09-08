@@ -27,6 +27,6 @@ export function Description({
         "line-clamp-3": !full,
       })}
       dangerouslySetInnerHTML={{ __html: text }}
-    ></article>
+    />
   );
 }
