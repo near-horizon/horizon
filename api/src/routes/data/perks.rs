@@ -45,7 +45,7 @@ pub async fn is_claimed(
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Project {
-    #[serde(rename = "credits_balance")]
+    #[serde(rename = "credit_balance")]
     pub credits: u128,
 }
 
