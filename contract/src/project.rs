@@ -664,7 +664,7 @@ impl Contract {
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
             require!(
-                project.project.credits || is_owner,
+                project.project.credits || is_owner || amount == 0,
                 "ERR_CREDITS_NOT_ENABLED"
             );
             require!(amount <= project.credit_balance, "ERR_NOT_ENOUGH_CREDITS");
