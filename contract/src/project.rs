@@ -686,7 +686,7 @@ impl Contract {
         let mut credits_accrued = false;
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
-            require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
+            // require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
             let achieved = project
                 .achieved_incentives
                 .entry(incentive.clone())
