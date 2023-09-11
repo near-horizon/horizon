@@ -660,9 +660,13 @@ impl Contract {
     /// Spend credits from a project.
     pub fn spend_credits(&mut self, account_id: AccountId, amount: u64, note: Option<String>) {
         self.assert_admin(&account_id, &env::predecessor_account_id());
+        let is_owner = self.check_is_owner(&env::predecessor_account_id());
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
-            require!(project.project.credits, "ERR_CREDITS_NOT_ENABLED");
+            require!(
+                project.project.credits || is_owner,
+                "ERR_CREDITS_NOT_ENABLED"
+            );
             require!(amount <= project.credit_balance, "ERR_NOT_ENOUGH_CREDITS");
             project.credit_balance -= amount;
             *old = VersionedProject::V3(project);
