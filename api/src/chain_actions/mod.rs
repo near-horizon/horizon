@@ -180,9 +180,12 @@ pub async fn call_contract(
         block_hash,
     );
 
-    client
+    let outcome = client
         .call(RpcBroadcastTxCommitRequest { signed_transaction })
         .await
         .expect("Failed to broadcast transaction");
+
+    println!("Outcome: {:?}", outcome);
+
     Ok(())
 }
