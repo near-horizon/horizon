@@ -1,7 +1,7 @@
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::{ApiResult, AppState};
+use crate::{routes::data::perks::Project, ApiResult, AppState};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Thumbnail {
@@ -34,6 +34,22 @@ pub struct AttachmentObject {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "kebab-case")]
+pub enum Requirement {
+    ProfileCreated,
+    ProfileCompleted,
+}
+
+impl Requirement {
+    pub fn check_if_met(&self, completion: f64) -> bool {
+        match self {
+            Requirement::ProfileCreated => completion > 0.0,
+            Requirement::ProfileCompleted => completion >= 1.0,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Perk {
     #[serde(alias = "fldUb764dFRV9t2X9", default)]
     pub name: String,
@@ -61,6 +77,8 @@ pub struct Perk {
     pub banner: Vec<AttachmentObject>,
     #[serde(alias = "fldsxdrpgkULGWEle", default)]
     pub category: Vec<String>,
+    #[serde(alias = "fldGZasraOf49CqXy", default)]
+    pub requiremets: Vec<Requirement>,
 }
 
 fn deserialize_available<'de, D>(deserializer: D) -> Result<bool, D::Error>
