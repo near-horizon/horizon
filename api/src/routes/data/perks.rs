@@ -134,7 +134,7 @@ async fn claim_perk(
         ));
     }
     let claimed = is_claimed(&state.pool, perk_id.clone(), perk.price, account_id.clone()).await?;
-    if claimed {
+    if !claimed {
         crate::chain_actions::call_contract(
             &state.signer,
             &state.rpc_client,
