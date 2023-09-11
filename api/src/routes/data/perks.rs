@@ -95,6 +95,38 @@ async fn claim_perk(
             ))
         }
     };
+    let db_project = sqlx::query!(
+        r#"
+        SELECT
+          completion
+        FROM
+          projects
+        WHERE
+          id = $1
+        "#,
+        account_id,
+    )
+    .fetch_optional(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get project from db: {}", e),
+        )
+    })?;
+    let completion = if let Some(db_project) = db_project {
+        db_project.completion
+    } else {
+        0.0
+    };
+    for requirement in perk.requiremets {
+        if !requirement.check_if_met(completion) {
+            return Err((
+                StatusCode::BAD_REQUEST,
+                "Perk does not meet requirements".to_string(),
+            ));
+        }
+    }
     if project.credits < perk.price.into() {
         return Err((
             StatusCode::BAD_REQUEST,
