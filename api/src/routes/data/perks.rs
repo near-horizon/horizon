@@ -45,6 +45,7 @@ pub async fn is_claimed(
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Project {
+    #[serde(rename = "credits_balance")]
     pub credits: u128,
 }
 
@@ -79,15 +80,14 @@ async fn claim_perk(
         },
     )
     .await?;
-    let project: Project = match project_response.kind {
-        QueryResponseKind::CallResult(result) => {
-            serde_json::from_slice(&result.result).map_err(|e| {
+    let project = match project_response.kind {
+        QueryResponseKind::CallResult(result) => serde_json::from_slice::<Project>(&result.result)
+            .map_err(|e| {
                 (
                     StatusCode::INTERNAL_SERVER_ERROR,
                     format!("Failed to parse project: {}", e),
                 )
-            })?
-        }
+            })?,
         _ => {
             return Err((
                 StatusCode::INTERNAL_SERVER_ERROR,
