@@ -1,7 +1,7 @@
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::{routes::data::perks::Project, ApiResult, AppState};
+use crate::{ApiResult, AppState};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Thumbnail {
