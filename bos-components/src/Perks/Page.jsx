@@ -70,7 +70,11 @@ if (!state.perksIsFetched) {
     `https://api-pr-52-sm9d.onrender.com/data/perks/${context.accountId}`,
   ).then(({ body: perks }) => {
     State.update({
-      perks: perks ?? [],
+      perks: (perks ?? []).sort(
+        (a, b) =>
+          new Date(a.created_time).getTime() -
+          new Date(b.created_time).getTime(),
+      ),
       perksIsFetched: true,
       options: [
         "All",
