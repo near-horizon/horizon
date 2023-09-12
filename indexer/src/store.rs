@@ -10,6 +10,7 @@ pub struct Transaction {
     pub log: String,
     pub block_hash: CryptoHash,
     pub timestamp: u64,
+    pub success: bool,
 }
 
 impl Transaction {
@@ -21,6 +22,7 @@ impl Transaction {
         log: String,
         block_hash: CryptoHash,
         timestamp: u64,
+        success: bool,
     ) -> Self {
         Self {
             hash,
@@ -30,6 +32,7 @@ impl Transaction {
             log,
             block_hash,
             timestamp,
+            success,
         }
     }
 
@@ -38,8 +41,19 @@ impl Transaction {
 
         sqlx::query!(
             r#"
-            INSERT INTO transactions (hash, signer_id, method_name, args, log, block_hash, timestamp)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO
+              transactions (
+                hash,
+                signer_id,
+                method_name,
+                args,
+                log,
+                block_hash,
+                timestamp,
+                success
+              )
+            VALUES
+              ($1, $2, $3, $4, $5, $6, $7, $8)
             "#,
             self.hash.to_string(),
             self.signer_id.to_string(),
@@ -48,6 +62,7 @@ impl Transaction {
             self.log,
             self.block_hash.to_string(),
             self.timestamp as i64,
+            self.success,
         )
         .execute(pool)
         .await?;
