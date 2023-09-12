@@ -7,7 +7,7 @@ use near_primitives::{
     hash::CryptoHash,
     transaction::{Action, FunctionCallAction, SignedTransaction},
     types::{AccountId, BlockReference, Finality, FunctionArgs},
-    views::QueryRequest,
+    views::{FinalExecutionStatus, QueryRequest},
 };
 use reqwest::StatusCode;
 
@@ -185,7 +185,11 @@ pub async fn call_contract(
         .await
         .expect("Failed to broadcast transaction");
 
-    println!("Outcome: {:?}", outcome);
-
-    Ok(())
+    match outcome.status {
+        FinalExecutionStatus::SuccessValue(_) => Ok(()),
+        _ => Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Transaction failed: {:?}", outcome.status),
+        )),
+    }
 }
