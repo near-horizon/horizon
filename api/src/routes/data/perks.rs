@@ -4,17 +4,19 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
+use futures::StreamExt;
+use itertools::Itertools;
 use near_jsonrpc_primitives::types::query::QueryResponseKind;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::{ApiResult, AppState};
+use crate::{ApiError, ApiResult, AppState};
 
 pub async fn is_claimed(
     pool: &sqlx::PgPool,
     perk_id: String,
     amount: u64,
-    account_id: String,
+    account_id: &str,
 ) -> ApiResult<bool> {
     sqlx::query!(
         r#"
@@ -60,6 +62,15 @@ struct PerkClaim {
 struct PerkDetails {
     url: String,
     code: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+struct CompletePerk {
+    #[serde(flatten)]
+    response: crate::fetching::PerkResponse,
+    #[serde(flatten)]
+    details: PerkDetails,
+    claimed: bool,
 }
 
 #[debug_handler(state = AppState)]
@@ -134,7 +145,7 @@ async fn claim_perk(
             "Not enough credits to claim perk".to_string(),
         ));
     }
-    let claimed = is_claimed(&state.pool, perk_id.clone(), perk.price, account_id.clone()).await?;
+    let claimed = is_claimed(&state.pool, perk_id.clone(), perk.price, &account_id).await?;
     if !claimed {
         crate::chain_actions::call_contract(
             &state.signer,
@@ -163,7 +174,7 @@ async fn check_claimed(
     }): Path<PerkClaim>,
 ) -> ApiResult<Json<bool>> {
     let perk = crate::fetching::get_perk(state.clone(), perk_id.clone()).await?;
-    let claimed = is_claimed(&state.pool, perk_id.clone(), perk.price, account_id.clone()).await?;
+    let claimed = is_claimed(&state.pool, perk_id.clone(), perk.price, &account_id).await?;
     Ok(Json(claimed))
 }
 
@@ -177,8 +188,50 @@ async fn get_perks(
     ))
 }
 
+#[debug_handler(state = AppState)]
+async fn get_account_perks(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+) -> ApiResult<Json<Vec<CompletePerk>>> {
+    let perks = crate::fetching::get_perks(state.clone()).await?;
+    futures::stream::iter(
+        perks
+            .into_iter()
+            .filter(|p| p.fields.available)
+            .map(|p| (p, account_id.clone(), state.pool.clone())),
+    )
+    .map(move |(perk, id, pool)| async move {
+        let claimed = is_claimed(&pool, perk.id.clone(), perk.fields.price.clone(), &id)
+            .await
+            .unwrap_or(false);
+        Ok::<CompletePerk, ApiError>(CompletePerk {
+            details: claimed
+                .then(|| PerkDetails {
+                    url: perk.fields.url.clone(),
+                    code: perk.fields.code.clone(),
+                })
+                .unwrap_or_default(),
+            response: perk,
+            claimed,
+        })
+    })
+    .buffer_unordered(10)
+    .collect::<Vec<_>>()
+    .await
+    .into_iter()
+    .try_collect()
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Could not fetch from db: {e:?}"),
+        )
+    })
+    .map(Json)
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", post(claim_perk).get(get_perks))
+        .route("/:account_id", get(get_account_perks))
         .route("/:account_id/:perk_id", get(check_claimed))
 }

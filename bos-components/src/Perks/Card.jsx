@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-/** @type {{id: string; fields: {url?: string; code?: string; name: string; logo: string; about: string; benefit: string; categories: string[]; requirements?: {text: string; completed: boolean;}[]}}} */
+/** @type {{id: string; url?: string; code?: string; claimed?: boolean; fields: {name: string; logo: string; about: string; benefit: string; categories: string[]; requirements?: {text: string; completed: boolean;}[]}}} */
 const perk = props.perk;
 
 const Container = styled.div`
@@ -291,40 +291,10 @@ const allCompleted =
 
 State.init({
   claiming: false,
-  claimed: false,
-  claimedIsFetched: false,
   error: null,
   url: null,
   code: null,
 });
-
-if (!state.claimedIsFetched) {
-  asyncFetch(
-    `https://api-pr-52-sm9d.onrender.com/data/perks/${context.accountId}/${perk.id}`,
-  ).then(({ body }) => {
-    if (body) {
-      asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          perk_id: perk.id,
-          account_id: context.accountId,
-        }),
-      }).then(({ body }) => {
-        State.update({
-          claimed: true,
-          claimedIsFetched: true,
-          url: body.url,
-          code: body.code,
-        });
-      });
-    } else {
-      State.update({ claimedIsFetched: true });
-    }
-  });
-}
 
 const claimPerk = () => {
   State.update({ claiming: true });
@@ -336,7 +306,6 @@ const claimPerk = () => {
     }),
   }).then(({ body, ok }) => {
     if (!ok) {
-      console.log(body);
       State.update({ claiming: false, claimed: false, error: body });
       return;
     }
@@ -443,9 +412,9 @@ return (
     <Footer className={allCompleted ? "" : "single"}>
       {allCompleted ? (
         <>
-          {state.claimed ? (
+          {state.claimed || perk.claimed ? (
             <ClaimButton>
-              <Link href={state.url}>
+              <Link href={state.url || perk.url}>
                 Claim perk
                 <svg
                   width="12"
@@ -491,7 +460,9 @@ return (
           {state.code ? (
             <div>
               <ClaimDetails>Register with this code:</ClaimDetails>
-              <ClipboardButton onClick={() => clipboard.writeText(state.code)}>
+              <ClipboardButton
+                onClick={() => clipboard.writeText(state.code || perk.code)}
+              >
                 <svg
                   width="16"
                   height="17"

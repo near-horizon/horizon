@@ -101,7 +101,8 @@ impl Default for AirtableConfig {
     }
 }
 
-pub type ApiResult<T> = Result<T, (StatusCode, String)>;
+pub type ApiError = (StatusCode, String);
+pub type ApiResult<T> = Result<T, ApiError>;
 
 #[derive(Clone)]
 pub struct AppState {
