@@ -1,5 +1,6 @@
 const ownerId = "nearhorizon.near";
-const urlPrefix = "https://api-op3o.onrender.com/data";
+const apiUrl = "https://api-op3o.onrender.com";
+const urlPrefix = `${apiUrl}/data`;
 
 const Row = styled.div`
   display: flex;

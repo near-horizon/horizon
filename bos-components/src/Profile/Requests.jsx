@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const Button = styled.button`
   display: flex;
@@ -62,39 +63,37 @@ State.init({
 });
 
 if (!state.requestsIsFetched) {
-  asyncFetch("https://api-op3o.onrender.com/transactions/all").then(
-    ({ body: txs }) => {
-      Near.asyncView(
-        ownerId,
-        "get_project_requests",
-        { account_id: context.accountId },
-        "final",
-        false,
-      ).then((requests) => {
-        txs = txs.filter(
-          ({ method_name, args }) =>
-            method_name === "add_request" &&
-            args.request.project_id === context.accountId,
-        );
+  asyncFetch(`${apiUrl}/transactions/all`).then(({ body: txs }) => {
+    Near.asyncView(
+      ownerId,
+      "get_project_requests",
+      { account_id: context.accountId },
+      "final",
+      false,
+    ).then((requests) => {
+      txs = txs.filter(
+        ({ method_name, args }) =>
+          method_name === "add_request" &&
+          args.request.project_id === context.accountId,
+      );
 
-        const requestsWithTxs = requests.map(([project_id, cid]) => {
-          const tx = txs.find((tx) => {
-            const start = "EVENT_JSON:";
-            const logData = JSON.parse(tx.log.substring(start.length)).data;
+      const requestsWithTxs = requests.map(([project_id, cid]) => {
+        const tx = txs.find((tx) => {
+          const start = "EVENT_JSON:";
+          const logData = JSON.parse(tx.log.substring(start.length)).data;
 
-            return (
-              logData.cid === cid &&
-              tx.method_name === "add_request" &&
-              tx.args.request.project_id === project_id
-            );
-          });
-
-          return [project_id, cid, tx];
+          return (
+            logData.cid === cid &&
+            tx.method_name === "add_request" &&
+            tx.args.request.project_id === project_id
+          );
         });
-        State.update({ requests: requestsWithTxs, requestsIsFetched: true });
+
+        return [project_id, cid, tx];
       });
-    },
-  );
+      State.update({ requests: requestsWithTxs, requestsIsFetched: true });
+    });
+  });
 }
 
 return (

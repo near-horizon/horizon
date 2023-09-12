@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const accountId = props.accountId;
 
 State.init({
@@ -7,10 +8,9 @@ State.init({
 });
 
 if (!state.projectsIsFetched) {
-  asyncFetch(
-    `https://api-op3o.onrender.com/data/projects/${accountId}/similar`,
-  ).then(({ body: projects }) =>
-    State.update({ projects: projects.slice(0, 5), projectsIsFetched: true }),
+  asyncFetch(`${apiUrl}/data/projects/${accountId}/similar`).then(
+    ({ body: projects }) =>
+      State.update({ projects: projects.slice(0, 5), projectsIsFetched: true }),
   );
 
   return <>Loading...</>;

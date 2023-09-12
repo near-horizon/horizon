@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const search = props.search ?? "";
 
 State.init({
@@ -17,31 +18,28 @@ if (!state.itemsIsFetched) {
       "final",
       false,
     ).then((items) => {
-      asyncFetch("https://api-op3o.onrender.com/transactions/all").then(
-        ({ body: txs }) => {
-          const timestamps = new Map();
-          txs.forEach((tx) => {
-            if (tx.method_name !== "add_contribution") {
-              return;
-            }
+      asyncFetch(`${apiUrl}/transactions/all`).then(({ body: txs }) => {
+        const timestamps = new Map();
+        txs.forEach((tx) => {
+          if (tx.method_name !== "add_contribution") {
+            return;
+          }
 
-            const id = [tx.args.project_id, tx.args.cid, tx.args.vendor_id];
+          const id = [tx.args.project_id, tx.args.cid, tx.args.vendor_id];
 
-            if (
-              items.find(
-                ([pId, c, vId]) =>
-                  pId === id[0] && c === id[1] && vId === id[2],
-              )
-            ) {
-              timestamps.set(`${id}`, tx.timestamp);
-            }
-          });
+          if (
+            items.find(
+              ([pId, c, vId]) => pId === id[0] && c === id[1] && vId === id[2],
+            )
+          ) {
+            timestamps.set(`${id}`, tx.timestamp);
+          }
+        });
 
-          items.sort((a, b) => timestamps.get(`${b}`) - timestamps.get(`${a}`));
+        items.sort((a, b) => timestamps.get(`${b}`) - timestamps.get(`${a}`));
 
-          State.update({ items, itemsIsFetched: true });
-        },
-      );
+        State.update({ items, itemsIsFetched: true });
+      });
     });
 
     return <>Loading...</>;

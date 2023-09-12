@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const Container = styled.div`
   display: flex;
@@ -66,22 +67,22 @@ State.init({
 });
 
 if (!state.perksIsFetched) {
-  asyncFetch(
-    `https://api-pr-52-sm9d.onrender.com/data/perks/${context.accountId}`,
-  ).then(({ body: perks }) => {
-    State.update({
-      perks: (perks ?? []).sort(
-        (a, b) =>
-          new Date(a.created_time).getTime() -
-          new Date(b.created_time).getTime(),
-      ),
-      perksIsFetched: true,
-      options: [
-        "All",
-        ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
-      ],
-    });
-  });
+  asyncFetch(`${apiUrl}/data/perks/${context.accountId}`).then(
+    ({ body: perks }) => {
+      State.update({
+        perks: (perks ?? []).sort(
+          (a, b) =>
+            new Date(a.created_time).getTime() -
+            new Date(b.created_time).getTime(),
+        ),
+        perksIsFetched: true,
+        options: [
+          "All",
+          ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
+        ],
+      });
+    },
+  );
   return <>Loading...</>;
 }
 

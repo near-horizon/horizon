@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const Container = styled.div`
   display: flex;
@@ -91,18 +92,17 @@ if (!state.projectIsFetched || !state.profileIsFetched) {
 }
 
 if (state.project.credits) {
-  asyncFetch(
-    `https://api-op3o.onrender.com/data/credits/projects/${props.accountId}/balance`,
-  ).then(({ body: credits }) => State.update({ credits }));
+  asyncFetch(`${apiUrl}/data/credits/projects/${props.accountId}/balance`).then(
+    ({ body: credits }) => State.update({ credits }),
+  );
 }
 
-asyncFetch("https://api-op3o.onrender.com/data/projects/completion").then(
-  ({ body: { list } }) =>
-    State.update({
-      completion: list
-        .find(({ id }) => id === props.accountId)
-        .completion.toLocaleString("en-US", { style: "percent" }),
-    }),
+asyncFetch(`${apiUrl}/data/projects/completion`).then(({ body: { list } }) =>
+  State.update({
+    completion: list
+      .find(({ id }) => id === props.accountId)
+      .completion.toLocaleString("en-US", { style: "percent" }),
+  }),
 );
 
 return (
