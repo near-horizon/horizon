@@ -76,7 +76,7 @@ if (!state.perksIsFetched) {
           ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
         ],
       });
-    }
+    },
   );
   return <>Loading...</>;
 }
@@ -163,7 +163,7 @@ const toRender = state.perks
       state.categories.length > 0 &&
       !state.categories.includes("All") &&
       !perk.fields.category.some((category) =>
-        state.categories.includes(category)
+        state.categories.includes(category),
       )
     ) {
       return false;

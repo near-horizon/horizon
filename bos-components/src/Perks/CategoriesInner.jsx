@@ -108,7 +108,7 @@ const resultCount = results.filter(
   ({ fields: { category: categories } }) =>
     state.selected.length === 0 ||
     state.selected.includes("All") ||
-    categories.some((category) => state.selected.includes(category))
+    categories.some((category) => state.selected.includes(category)),
 ).length;
 
 return (
