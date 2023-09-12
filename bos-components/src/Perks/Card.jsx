@@ -321,6 +321,11 @@ const claimPerk = () => {
   });
 };
 
+const requirementMapping = {
+  "profile-created": "Create Profile",
+  "profile-completed": "Complete Profile Overview",
+};
+
 return (
   <Container>
     <div>
@@ -402,7 +407,7 @@ return (
                     : ""
                 }
               >
-                {requirement}
+                {requirementMapping[requirement]}
               </span>
             </div>
           ))}
