@@ -20,6 +20,7 @@ pub struct Transaction {
     pub log: String,
     pub block_hash: String,
     pub timestamp: i64,
+    pub success: bool,
 }
 
 #[debug_handler(state = AppState)]
