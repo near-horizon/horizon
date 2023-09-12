@@ -4,7 +4,7 @@ const perk = props.perk;
 
 const Container = styled.div`
   width: 100%;
-  height: 29rem;
+  height: 32rem;
   border-radius: 0.5rem;
   border: 1px solid var(--slate-light-4, #eceef0);
   background: var(--base-white, #fff);
@@ -350,7 +350,15 @@ return (
           <TooltipContent>{perk.fields.description}</TooltipContent>
         </Tooltip.Root>
       </Tooltip.Provider>
-      {perk.requirements ? (
+      <Widget
+        src={`${ownerId}/widget/Tags`}
+        props={{
+          tags: Object.fromEntries(
+            perk.fields.category.map((category) => [category, ""]),
+          ),
+        }}
+      />
+      {perk.requirements && perk.requirements.length > 0 ? (
         <Criteria>
           <b>Eligibility criteria</b>
           {perk.requirements.map(({ requirement, completed }, index) => (
@@ -402,14 +410,6 @@ return (
       ) : (
         <></>
       )}
-      <Widget
-        src={`${ownerId}/widget/Tags`}
-        props={{
-          tags: Object.fromEntries(
-            perk.fields.category.map((category) => [category, ""]),
-          ),
-        }}
-      />
     </div>
     <Separator />
     <Footer className={allCompleted ? "" : "single"}>
@@ -520,7 +520,7 @@ return (
             />
           </svg>
           Eligibility criteria not met ({completedCount}/
-          {perk.fields.criteria.length})
+          {perk.requirements.length})
         </NotEligible>
       )}
     </Footer>
