@@ -62,7 +62,8 @@ const PopoverContent = styled("Popover.Content")`
   border-radius: 0.5rem;
   border: 1px solid var(--ui-elements-light, #eceef0);
   background: #fff;
-  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.13),
+  box-shadow:
+    0px 4px 6px -2px rgba(16, 24, 40, 0.13),
     0px 12px 16px -4px rgba(16, 24, 40, 0.18);
   transform-origin: var(--radix-popover-content-transform-origin);
   animation: ${scaleIn} 0.2s ease-out;

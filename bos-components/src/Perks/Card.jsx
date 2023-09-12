@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-/** @type {{id: string; fields: {url?: string; code?: string; name: string; logo: string; about: string; benefit: string; categories: string[]; criteria?: {text: string; completed: boolean;}[]}}} */
+/** @type {{id: string; fields: {url?: string; code?: string; name: string; logo: string; about: string; benefit: string; categories: string[]; requirements?: {text: string; completed: boolean;}[]}}} */
 const perk = props.perk;
 
 const Container = styled.div`
@@ -8,7 +8,8 @@ const Container = styled.div`
   border-radius: 0.5rem;
   border: 1px solid var(--slate-light-4, #eceef0);
   background: var(--base-white, #fff);
-  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+  box-shadow:
+    0px 1px 2px 0px rgba(16, 24, 40, 0.06),
     0px 1px 3px 0px rgba(16, 24, 40, 0.1);
   display: flex;
   flex-direction: column;
@@ -223,6 +224,25 @@ const ClaimButton = styled.div`
   }
 `;
 
+const UnlockButton = styled.button`
+  display: flex;
+  height: 2.5rem;
+  padding: 0.5rem 1rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--primary-primary-default, #00ec97);
+  border-radius: 3.125rem;
+  background: var(--primary-primary-default, #00ec97);
+  color: var(--text-text-dark, #11181c);
+  text-align: center;
+  font-family: "Mona Sans";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 142%; /* 1.2425rem */
+`;
+
 const ClaimDetails = styled.div`
   color: var(--ui-elements-gray, #7e868c);
   text-align: right;
@@ -269,6 +289,66 @@ const completedCount = perks.fields.criteria
 const allCompleted =
   completedCount === (perk.fields.criteria ? perk.fields.criteria.length : 0);
 
+State.init({
+  claiming: false,
+  claimed: false,
+  claimedIsFetched: false,
+  error: null,
+  url: null,
+  code: null,
+});
+
+if (!state.claimedIsFetched) {
+  asyncFetch(
+    `https://api-pr-52-sm9d.onrender.com/data/perks/${context.accountId}/${perk.id}`,
+  ).then(({ body }) => {
+    if (body) {
+      asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          perk_id: perk.id,
+          account_id: context.accountId,
+        }),
+      }).then(({ body }) => {
+        State.update({
+          claimed: true,
+          claimedIsFetched: true,
+          url: body.url,
+          code: body.code,
+        });
+      });
+    } else {
+      State.update({ claimedIsFetched: true });
+    }
+  });
+}
+
+const claimPerk = () => {
+  State.update({ claiming: true });
+  asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks", {
+    method: "POST",
+    body: JSON.stringify({
+      perk_id: perk.id,
+      account_id: context.accountId,
+    }),
+  }).then(({ body, ok }) => {
+    if (!ok) {
+      console.log(body);
+      State.update({ claiming: false, claimed: false, error: body });
+      return;
+    }
+    State.update({
+      claiming: false,
+      claimed: true,
+      url: body.url,
+      code: body.code,
+    });
+  });
+};
+
 return (
   <Container>
     <div>
@@ -301,7 +381,7 @@ return (
       {perks.fields.criteria ? (
         <Criteria>
           <b>Eligibility criteria</b>
-          {perk.fields.criteria.map(({ text, completed }, index) => (
+          {perk.fields.requirements.map(({ text, completed }, index) => (
             <div key={text}>
               {!completed ? (
                 <svg
@@ -354,7 +434,7 @@ return (
         src={`${ownerId}/widget/Tags`}
         props={{
           tags: Object.fromEntries(
-            perk.fields.category.map((category) => [category, ""])
+            perk.fields.category.map((category) => [category, ""]),
           ),
         }}
       />
@@ -363,31 +443,55 @@ return (
     <Footer className={allCompleted ? "" : "single"}>
       {allCompleted ? (
         <>
-          <ClaimButton>
-            <Link href={perk.fields.url}>
-              Claim perk
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M6.70796 0H12V5.29204H10.7987V2.05099L6.0977 6.752L5.67325 7.17646L4.82354 6.32755L5.248 5.9031L9.94901 1.20208H6.70796V0ZM1.60171 2.79018H4.80513V1.58889H1.60171C1.17691 1.58889 0.769508 1.75765 0.46913 2.05802C0.168751 2.3584 0 2.7658 0 3.1906V10.3983C0 10.8231 0.168751 11.2305 0.46913 11.5309C0.769508 11.8312 1.17691 12 1.60171 12H8.8094C9.2342 12 9.6416 11.8312 9.94198 11.5309C10.2424 11.2305 10.4111 10.8231 10.4111 10.3983V7.19487H9.20982V10.3983C9.20982 10.5045 9.16764 10.6063 9.09254 10.6814C9.01745 10.7565 8.9156 10.7987 8.8094 10.7987H1.60171C1.49551 10.7987 1.39366 10.7565 1.31856 10.6814C1.24347 10.6063 1.20128 10.5045 1.20128 10.3983V3.1906C1.20128 3.0844 1.24347 2.98255 1.31856 2.90746C1.39366 2.83236 1.49551 2.79018 1.60171 2.79018Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </Link>
-          </ClaimButton>
-          {perk.fields.code ? (
+          {state.claimed ? (
+            <ClaimButton>
+              <Link href={state.url}>
+                Claim perk
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M6.70796 0H12V5.29204H10.7987V2.05099L6.0977 6.752L5.67325 7.17646L4.82354 6.32755L5.248 5.9031L9.94901 1.20208H6.70796V0ZM1.60171 2.79018H4.80513V1.58889H1.60171C1.17691 1.58889 0.769508 1.75765 0.46913 2.05802C0.168751 2.3584 0 2.7658 0 3.1906V10.3983C0 10.8231 0.168751 11.2305 0.46913 11.5309C0.769508 11.8312 1.17691 12 1.60171 12H8.8094C9.2342 12 9.6416 11.8312 9.94198 11.5309C10.2424 11.2305 10.4111 10.8231 10.4111 10.3983V7.19487H9.20982V10.3983C9.20982 10.5045 9.16764 10.6063 9.09254 10.6814C9.01745 10.7565 8.9156 10.7987 8.8094 10.7987H1.60171C1.49551 10.7987 1.39366 10.7565 1.31856 10.6814C1.24347 10.6063 1.20128 10.5045 1.20128 10.3983V3.1906C1.20128 3.0844 1.24347 2.98255 1.31856 2.90746C1.39366 2.83236 1.49551 2.79018 1.60171 2.79018Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </Link>
+            </ClaimButton>
+          ) : (
+            <UnlockButton onClick={claimPerk} disabled={state.claiming}>
+              {state.claiming ? (
+                "Claiming..."
+              ) : (
+                <>
+                  Unlock perk
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M6.70796 0H12V5.29204H10.7987V2.05099L6.0977 6.752L5.67325 7.17646L4.82354 6.32755L5.248 5.9031L9.94901 1.20208H6.70796V0ZM1.60171 2.79018H4.80513V1.58889H1.60171C1.17691 1.58889 0.769508 1.75765 0.46913 2.05802C0.168751 2.3584 0 2.7658 0 3.1906V10.3983C0 10.8231 0.168751 11.2305 0.46913 11.5309C0.769508 11.8312 1.17691 12 1.60171 12H8.8094C9.2342 12 9.6416 11.8312 9.94198 11.5309C10.2424 11.2305 10.4111 10.8231 10.4111 10.3983V7.19487H9.20982V10.3983C9.20982 10.5045 9.16764 10.6063 9.09254 10.6814C9.01745 10.7565 8.9156 10.7987 8.8094 10.7987H1.60171C1.49551 10.7987 1.39366 10.7565 1.31856 10.6814C1.24347 10.6063 1.20128 10.5045 1.20128 10.3983V3.1906C1.20128 3.0844 1.24347 2.98255 1.31856 2.90746C1.39366 2.83236 1.49551 2.79018 1.60171 2.79018Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </>
+              )}
+            </UnlockButton>
+          )}
+          {state.code ? (
             <div>
               <ClaimDetails>Register with this code:</ClaimDetails>
-              <ClipboardButton
-                onClick={() => clipboard.writeText(perk.fields.code)}
-              >
+              <ClipboardButton onClick={() => clipboard.writeText(state.code)}>
                 <svg
                   width="16"
                   height="17"
@@ -415,7 +519,7 @@ return (
                     </clipPath>
                   </defs>
                 </svg>
-                {perk.fields.code}
+                {state.code}
               </ClipboardButton>
             </div>
           ) : (

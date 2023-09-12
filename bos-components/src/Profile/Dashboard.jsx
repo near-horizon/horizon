@@ -104,7 +104,7 @@ if (!state.requestsIsFetched) {
     "get_project_requests",
     { account_id: context.accountId },
     "final",
-    false
+    false,
   ).then((requests) => {
     State.update({ requests: requests.length, requestsIsFetched: true });
   });
@@ -116,7 +116,7 @@ if (!state.contractsIsFetched) {
     "get_project_contributions",
     { account_id: context.accountId },
     "final",
-    false
+    false,
   ).then((contracts) => {
     State.update({ contracts: contracts.length, contractsIsFetched: true });
   });
@@ -128,7 +128,7 @@ if (!state.creditsIsFetched) {
     "get_project",
     { account_id: context.accountId },
     "final",
-    false
+    false,
   ).then((project) => {
     State.update({
       credits: project.credits_balance ?? 0,

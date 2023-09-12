@@ -69,12 +69,12 @@ if (!state.requestsIsFetched) {
         "get_project_requests",
         { account_id: context.accountId },
         "final",
-        false
+        false,
       ).then((requests) => {
         txs = txs.filter(
           ({ method_name, args }) =>
             method_name === "add_request" &&
-            args.request.project_id === context.accountId
+            args.request.project_id === context.accountId,
         );
 
         const requestsWithTxs = requests.map(([project_id, cid]) => {
@@ -93,7 +93,7 @@ if (!state.requestsIsFetched) {
         });
         State.update({ requests: requestsWithTxs, requestsIsFetched: true });
       });
-    }
+    },
   );
 }
 

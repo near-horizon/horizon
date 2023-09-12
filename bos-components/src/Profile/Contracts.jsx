@@ -43,17 +43,17 @@ if (!state.contractsIsFetched) {
         "get_project_contributions",
         { account_id: context.accountId },
         "final",
-        false
+        false,
       ).then((contracts) => {
         txs = txs.filter(
           ({ method_name, args }) =>
             method_name === "add_contribution" &&
-            args.project_id === context.accountId
+            args.project_id === context.accountId,
         );
 
         const contractsWithTxs = contracts.map(([_, vendor_id]) => {
           const txsForContribution = txs.filter(
-            ({ args }) => args.vendor_id === vendor_id
+            ({ args }) => args.vendor_id === vendor_id,
           );
 
           return [context.accountId, vendor_id, txsForContribution];
@@ -64,7 +64,7 @@ if (!state.contractsIsFetched) {
           contractsIsFetched: true,
         });
       });
-    }
+    },
   );
 }
 
