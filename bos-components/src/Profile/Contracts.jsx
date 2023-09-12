@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const Centered = styled.div`
   display: flex;
@@ -36,36 +37,34 @@ State.init({
 });
 
 if (!state.contractsIsFetched) {
-  asyncFetch("https://api-op3o.onrender.com/transactions/all").then(
-    ({ body: txs }) => {
-      Near.asyncView(
-        ownerId,
-        "get_project_contributions",
-        { account_id: context.accountId },
-        "final",
-        false,
-      ).then((contracts) => {
-        txs = txs.filter(
-          ({ method_name, args }) =>
-            method_name === "add_contribution" &&
-            args.project_id === context.accountId,
+  asyncFetch(`${apiUrl}/transactions/all`).then(({ body: txs }) => {
+    Near.asyncView(
+      ownerId,
+      "get_project_contributions",
+      { account_id: context.accountId },
+      "final",
+      false,
+    ).then((contracts) => {
+      txs = txs.filter(
+        ({ method_name, args }) =>
+          method_name === "add_contribution" &&
+          args.project_id === context.accountId,
+      );
+
+      const contractsWithTxs = contracts.map(([_, vendor_id]) => {
+        const txsForContribution = txs.filter(
+          ({ args }) => args.vendor_id === vendor_id,
         );
 
-        const contractsWithTxs = contracts.map(([_, vendor_id]) => {
-          const txsForContribution = txs.filter(
-            ({ args }) => args.vendor_id === vendor_id,
-          );
-
-          return [context.accountId, vendor_id, txsForContribution];
-        });
-
-        State.update({
-          contracts: contractsWithTxs,
-          contractsIsFetched: true,
-        });
+        return [context.accountId, vendor_id, txsForContribution];
       });
-    },
-  );
+
+      State.update({
+        contracts: contractsWithTxs,
+        contractsIsFetched: true,
+      });
+    });
+  });
 }
 
 return (

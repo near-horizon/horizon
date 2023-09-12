@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const Header = styled.div`
   display: flex;
@@ -145,7 +146,7 @@ State.init({
   requestsTodayCount: 0,
 });
 
-asyncFetch("https://api-op3o.onrender.com/transactions/stats").then(
+asyncFetch(`${apiUrl}/transactions/stats`).then(
   (response) =>
     response.ok &&
     State.update({
@@ -156,19 +157,19 @@ asyncFetch("https://api-op3o.onrender.com/transactions/stats").then(
     }),
 );
 
-asyncFetch("https://api-op3o.onrender.com/data/projects?sort=timedesc").then(
+asyncFetch(`${apiUrl}/data/projects?sort=timedesc`).then(
   (response) => response.ok && State.update({ projects: response.body }),
 );
 
-asyncFetch("https://api-op3o.onrender.com/data/requests?sort=timedesc").then(
+asyncFetch(`${apiUrl}/data/requests?sort=timedesc`).then(
   (response) => response.ok && State.update({ requests: response.body }),
 );
 
-asyncFetch("https://api-op3o.onrender.com/data/vendors?sort=timedesc").then(
+asyncFetch(`${apiUrl}/data/vendors?sort=timedesc`).then(
   (response) => response.ok && State.update({ vendors: response.body }),
 );
 
-asyncFetch("https://api-op3o.onrender.com/data/investors?sort=timedesc").then(
+asyncFetch(`${apiUrl}/data/investors?sort=timedesc`).then(
   (response) => response.ok && State.update({ investors: response.body }),
 );
 

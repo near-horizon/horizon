@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const urlProps = props.urlProps ?? {};
 const entity = props.entity ?? "projects";
 const filters = props.filters ?? [];
@@ -70,8 +71,8 @@ State.init({
 });
 
 if (!state.itemsIsFetched) {
-  asyncFetch(`https://api-op3o.onrender.com/data/${entity}?${url()}`).then(
-    ({ body: items }) => State.update({ items, itemsIsFetched: true }),
+  asyncFetch(`${apiUrl}/data/${entity}?${url()}`).then(({ body: items }) =>
+    State.update({ items, itemsIsFetched: true }),
   );
 
   return <>Loading...</>;

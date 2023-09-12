@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const search = props.search ?? "";
 
 State.init({
@@ -6,9 +7,9 @@ State.init({
   itemsIsFetched: false,
 });
 
-asyncFetch(
-  `https://api-op3o.onrender.com/data/vendors?sort=timedesc&q=${search}`,
-).then(({ body: items }) => State.update({ items, itemsIsFetched: true }));
+asyncFetch(`${apiUrl}/data/vendors?sort=timedesc&q=${search}`).then(
+  ({ body: items }) => State.update({ items, itemsIsFetched: true }),
+);
 
 if (!state.itemsIsFetched) {
   return <>Loading...</>;

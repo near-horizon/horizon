@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 State.init({
   exists: false,
@@ -22,7 +23,7 @@ if (!state.profileIsFetched) {
     ).then((profileExists) => {
       if (profileExists) {
         asyncFetch(
-          `https://api-op3o.onrender.com/data/credits/projects/${context.accountId}/balance`,
+          `${apiUrl}/data/credits/projects/${context.accountId}/balance`,
         ).then(({ body, ok }) => {
           State.update({
             balance: ok ? body : 0,
@@ -41,7 +42,7 @@ if (!state.profileIsFetched) {
         ).then((contributorExists) => {
           if (contributorExists) {
             asyncFetch(
-              `https://api-op3o.onrender.com/data/credits/vendors/${context.accountId}/balance`,
+              `${apiUrl}/data/credits/vendors/${context.accountId}/balance`,
             ).then(({ body, ok }) => {
               State.update({
                 balance: ok ? body : 0,

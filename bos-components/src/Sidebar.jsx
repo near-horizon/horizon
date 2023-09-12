@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const content = props.content ?? "dashboard";
 
 const Container = styled("NavigationMenu.Root")``;
@@ -16,26 +17,26 @@ if (context.accountId && !state.isOwnerFetched) {
     "check_is_owner",
     { account_id: context.accountId },
     "final",
-    false
+    false,
   ).then((isOwner) =>
     State.update({
       isOwner: isOwner || allowedUsers.includes(context.accountId),
       isOwnerFetched: true,
-    })
+    }),
   );
   Near.asyncView(
     ownerId,
     "get_admin_projects",
     { account_id: context.accountId },
     "final",
-    false
+    false,
   ).then((projects) => State.update({ projects }));
   Near.asyncView(
     ownerId,
     "get_admin_vendors",
     { account_id: context.accountId },
     "final",
-    false
+    false,
   ).then((vendors) => State.update({ vendors }));
 }
 
@@ -155,7 +156,9 @@ const expand = styled.keyframes`
 `;
 
 const Content = styled.div`
-  transition: height 250ms, transform 250ms ease;
+  transition:
+    height 250ms,
+    transform 250ms ease;
   transform-origin: top;
   overflow: hidden;
 
@@ -559,14 +562,14 @@ const toggle = () => {
 };
 
 if (!state.completionFetched) {
-  asyncFetch("https://api-op3o.onrender.com/data/projects/completion").then(
+  asyncFetch(`${apiUrl}/data/projects/completion`).then(
     ({ body: { list } }) => {
       const { completion } = list.find(
-        ({ id }) => id === props.accountId || id === context.accountId
+        ({ id }) => id === props.accountId || id === context.accountId,
       );
 
       State.update({ completion, completionFetched: true });
-    }
+    },
   );
 }
 
