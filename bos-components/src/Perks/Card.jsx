@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-/** @type {{id: string; url?: string; code?: string; claimed?: boolean; fields: {name: string; logo: string; about: string; benefit: string; categories: string[]; requirements?: {text: string; completed: boolean;}[]}}} */
+/** @type {{id: string; url?: string; code?: string; claimed?: boolean; requirements?: {requirement: string; completed: boolean;}[]; fields: {name: string; logo: string; about: string; benefit: string; categories: string[];}}} */
 const perk = props.perk;
 
 const Container = styled.div`
@@ -283,11 +283,11 @@ const TooltipContent = styled("Tooltip.Content")`
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 `;
 
-const completedCount = perks.fields.criteria
-  ? perk.fields.criteria.filter(({ completed }) => completed).length
+const completedCount = perk.requirements
+  ? perk.requirements.filter(({ completed }) => completed).length
   : 0;
 const allCompleted =
-  completedCount === (perk.fields.criteria ? perk.fields.criteria.length : 0);
+  completedCount === (perk.requirements ? perk.requirements.length : 0);
 
 State.init({
   claiming: false,
@@ -300,6 +300,9 @@ const claimPerk = () => {
   State.update({ claiming: true });
   asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       perk_id: perk.id,
       account_id: context.accountId,
@@ -347,11 +350,11 @@ return (
           <TooltipContent>{perk.fields.description}</TooltipContent>
         </Tooltip.Root>
       </Tooltip.Provider>
-      {perks.fields.criteria ? (
+      {perk.requirements ? (
         <Criteria>
           <b>Eligibility criteria</b>
-          {perk.fields.requirements.map(({ text, completed }, index) => (
-            <div key={text}>
+          {perk.requirements.map(({ requirement, completed }, index) => (
+            <div key={requirement}>
               {!completed ? (
                 <svg
                   width="22"
@@ -391,7 +394,7 @@ return (
                     : ""
                 }
               >
-                {text}
+                {requirement}
               </span>
             </div>
           ))}
