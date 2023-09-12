@@ -27,6 +27,7 @@ pub async fn is_claimed(
           AND args ->> 'account_id' = $1
           AND args ->> 'amount' = $2
           AND args ->> 'note' = $3
+          AND success
         "#,
         account_id,
         amount.to_string(),
