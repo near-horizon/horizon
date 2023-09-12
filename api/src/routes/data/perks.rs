@@ -10,7 +10,7 @@ use near_jsonrpc_primitives::types::query::QueryResponseKind;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::{ApiError, ApiResult, AppState};
+use crate::{fetching::Requirement, ApiError, ApiResult, AppState};
 
 pub async fn is_claimed(
     pool: &sqlx::PgPool,
@@ -65,11 +65,18 @@ struct PerkDetails {
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
+struct PerkRequirement {
+    completed: bool,
+    requirement: Requirement,
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
 struct CompletePerk {
     #[serde(flatten)]
     response: crate::fetching::PerkResponse,
     #[serde(flatten)]
     details: PerkDetails,
+    requirements: Vec<PerkRequirement>,
     claimed: bool,
 }
 
@@ -194,6 +201,21 @@ async fn get_account_perks(
     State(state): State<AppState>,
 ) -> ApiResult<Json<Vec<CompletePerk>>> {
     let perks = crate::fetching::get_perks(state.clone()).await?;
+    let completion = sqlx::query_scalar!(
+        r#"
+        SELECT
+          completion
+        FROM
+          projects
+        WHERE
+          id = $1
+        "#,
+        account_id,
+    )
+    .fetch_optional(&state.pool)
+    .await
+    .unwrap_or_default()
+    .unwrap_or_default();
     futures::stream::iter(
         perks
             .into_iter()
@@ -211,6 +233,15 @@ async fn get_account_perks(
                     code: perk.fields.code.clone(),
                 })
                 .unwrap_or_default(),
+            requirements: perk
+                .fields
+                .requiremets
+                .iter()
+                .map(|r| PerkRequirement {
+                    completed: r.check_if_met(completion),
+                    requirement: r.clone(),
+                })
+                .collect(),
             response: perk,
             claimed,
         })
