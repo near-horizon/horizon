@@ -66,18 +66,18 @@ State.init({
 });
 
 if (!state.perksIsFetched) {
-  asyncFetch("https://api-pr-52-sm9d.onrender.com/data/perks").then(
-    ({ body: perks }) => {
-      State.update({
-        perks: perks ?? [],
-        perksIsFetched: true,
-        options: [
-          "All",
-          ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
-        ],
-      });
-    },
-  );
+  asyncFetch(
+    `https://api-pr-52-sm9d.onrender.com/data/perks/${context.accountId}`,
+  ).then(({ body: perks }) => {
+    State.update({
+      perks: perks ?? [],
+      perksIsFetched: true,
+      options: [
+        "All",
+        ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
+      ],
+    });
+  });
   return <>Loading...</>;
 }
 
