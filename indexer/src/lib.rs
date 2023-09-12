@@ -3,7 +3,9 @@ use std::collections::HashMap;
 use base64::Engine as _;
 use itertools::Itertools;
 use near_lake_framework::near_indexer_primitives::{
-    self, views::BlockView, CryptoHash, IndexerExecutionOutcomeWithReceipt, StreamerMessage,
+    self,
+    views::{BlockView, ExecutionStatusView},
+    CryptoHash, IndexerExecutionOutcomeWithReceipt, StreamerMessage,
 };
 use tracing::info;
 
@@ -95,6 +97,10 @@ pub fn process_outcome(
             eprintln!("Can't parse args");
             return None;
         };
+        let success = match execution_outcome.execution_outcome.outcome.status {
+            ExecutionStatusView::Unknown | ExecutionStatusView::Failure(_) => false,
+            ExecutionStatusView::SuccessValue(_) | ExecutionStatusView::SuccessReceiptId(_) => true,
+        };
         Some(store::Transaction::new(
             tx_hash,
             signer_id.clone(),
@@ -103,6 +109,7 @@ pub fn process_outcome(
             log.to_string(),
             block_hash,
             timestamp,
+            success,
         ))
     }).collect()
 }
