@@ -51,6 +51,27 @@ const fundCompletion = () => {
   return [completed, total];
 };
 
+const foundersCompletion = () => {
+  let completed = 0;
+  const total = 2;
+  if (state.founders) completed++;
+  if (state.team) completed++;
+
+  return [completed, total];
+};
+
+const filesCompletion = () => {
+  let completed = 0;
+  const total = 5;
+  if (state.deck) completed++;
+  if (state.white_paper) completed++;
+  if (state.roadmap) completed++;
+  if (state.team_deck) completed++;
+  if (state.demo) completed++;
+
+  return [completed, total];
+};
+
 const Container = styled("NavigationMenu.Root")``;
 
 const List = styled("NavigationMenu.List")`
@@ -426,10 +447,12 @@ const items = [
       {
         text: "Founders",
         href: "founders",
+        completion: percentage(...foundersCompletion()),
       },
       {
         text: "Project files",
         href: "files",
+        completion: percentage(...filesCompletion()),
       },
     ],
     icon: (
@@ -652,6 +675,13 @@ if (!state.projectIsFetched) {
       success_position: project.success_position,
       why: project.why,
       vision: project.vision,
+      deck: project.deck,
+      white_paper: project.white_paper,
+      roadmap: project.roadmap,
+      team_deck: project.team_deck,
+      demo: project.demo,
+      founders: project.founders,
+      team: project.team,
       projectIsFetched: true,
     });
   });
