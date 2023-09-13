@@ -93,39 +93,44 @@ const createChecklistItem = ({ text, completed, award }) => (
   </ChecklistItem>
 );
 
-/** @type {{text:string; completed: boolean; award: number;}[]} */
-const checklist = [
-  {
-    text: "Create project",
-    completed: true,
-    award: 50,
-  },
-  {
-    text: "Complete project overview",
-    completed: false,
-    award: 25,
-  },
-  {
-    text: "Update markeging & tech info",
-    completed: false,
-    award: 20,
-  },
-  {
-    text: "Update funding info",
-    completed: false,
-    award: 10,
-  },
-  {
-    text: "Update founders info",
-    completed: false,
-    award: 20,
-  },
-  {
-    text: "Add project files",
-    completed: false,
-    award: 30,
-  },
-];
+State.init({
+  incentives: null,
+  incentivesIsFetched: false,
+  project: null,
+  projectIsFetched: false,
+});
+
+if (!state.incentivesIsFetched) {
+  Near.asyncView(ownerId, "get_incentive_data", {}, "final", false).then(
+    (incentives) => {
+      State.update({ incentives, incentivesIsFetched: true });
+    },
+  );
+  return <>Loading...</>;
+}
+
+if (!state.projectIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project",
+    { account_id: context.accountId },
+    "final",
+    false,
+  ).then((project) => {
+    State.update({ project, projectIsFetched: true });
+  });
+  return <>Loading...</>;
+}
+
+const checklist = Object.entries(state.incentives)
+  .map(([key, value]) => ({
+    text: key,
+    completed: key in state.project.achieved_incentives,
+    award: value[1],
+  }))
+  .filter(
+    ({ text }) => text !== "QuestionAnswer" && text !== "ProposalSubmission",
+  );
 
 return (
   <>

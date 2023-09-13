@@ -131,7 +131,7 @@ if (!state.creditsIsFetched) {
     false,
   ).then((project) => {
     State.update({
-      credits: project.credits_balance ?? 0,
+      credits: project.credit_balance ?? 0,
       creditsIsFetched: true,
     });
   });
