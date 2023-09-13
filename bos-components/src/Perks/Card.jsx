@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-const apiUrl = "https://api-op3o.onrender.com";
+const apiUrl = "https://api-pr-52-sm9d.onrender.com";
 /** @type {{id: string; url?: string; code?: string; claimed?: boolean; requirements?: {requirement: string; completed: boolean;}[]; fields: {name: string; logo: string; about: string; benefit: string; categories: string[];}}} */
 const perk = props.perk;
 
@@ -280,7 +280,7 @@ const TooltipContent = styled("Tooltip.Content")`
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   max-width: 40ch;
-  transform: translateY(-0.3rem);
+  transform: translateY(100%);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 `;
 
