@@ -34,7 +34,7 @@ const contentWidget = {
   files: "Profile.Files",
   requests: "Manage.Requests",
   contracts: "Manage.Contracts",
-  credits: "Profile.Credits",
+  credits: "Profile.Credits.Page",
   growth: "Profile.Growth",
   permissions: "Profile.Permissions",
   settings: "Profile.Settings",
@@ -43,6 +43,10 @@ const contentWidget = {
 const getContent = (tab) => {
   if (tab in contentWidget) {
     return tab;
+  }
+
+  if (tab.startsWith("credits")) {
+    return "credits";
   }
 
   return "dashboard";
