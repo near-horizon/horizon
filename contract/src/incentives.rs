@@ -1,5 +1,10 @@
+use std::collections::HashMap;
+
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::near_bindgen;
 use near_sdk::serde::{Deserialize, Serialize};
+
+use crate::{Contract, ContractExt};
 
 #[derive(
     BorshSerialize,
@@ -33,6 +38,8 @@ pub enum Incentive {
     ReferalToPlatform,
 }
 
+#[derive(Serialize)]
+#[serde(crate = "near_sdk::serde")]
 pub enum IncentiveRepetition {
     Once,
     Infinite,
@@ -79,5 +86,33 @@ impl IncentiveRepetition {
             Once => false,
             Infinite => true,
         }
+    }
+}
+
+#[near_bindgen]
+impl Contract {
+    pub fn get_incentive_data() -> HashMap<Incentive, (IncentiveRepetition, u64)> {
+        use Incentive::*;
+        HashMap::from_iter(
+            [
+                FirstProposalAcceptance,
+                ContractCompletion,
+                AdditionOfTeamMember,
+                ProposalSubmission,
+                QuestionAnswer,
+                ProfileCompletion,
+                ProfileCompletionHalf,
+                ReferalToPlatform,
+            ]
+            .map(|incentive| {
+                (
+                    incentive.clone(),
+                    (
+                        incentive.get_incentive_repetition(),
+                        incentive.get_incentive(),
+                    ),
+                )
+            }),
+        )
     }
 }
