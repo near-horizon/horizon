@@ -53,6 +53,10 @@ const ContractsContainer = styled.div`
 
 const HalfWidth = styled.div`
   width: 50%;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const data = (
