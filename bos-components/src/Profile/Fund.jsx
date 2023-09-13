@@ -2,24 +2,15 @@ const ownerId = "nearhorizon.near";
 
 State.init({
   // Profile data
-  userbase: "",
-  userbaseError: "",
-  tam: "",
-  tamError: "",
-  dev: "",
-  devError: "",
-  distribution: "",
-  distributionError: "",
   stage: "",
   stageError: "",
+  fundraising: "",
+  fundraisingError: "",
+  raise: "",
+  raiseError: "",
+  investment: "",
+  investmentError: "",
   profileIsFetched: false,
-
-  // Project data
-  integration: "",
-  integrationError: "",
-  contracts: [],
-  contractsError: "",
-  projectIsFetched: false,
 });
 
 if (!state.profileIsFetched) {
@@ -42,32 +33,14 @@ if (!state.profileIsFetched) {
   });
 }
 
-if (!state.projectIsFetched) {
-  Near.asyncView(
-    ownerId,
-    "get_project",
-    { account_id: context.accountId },
-    "final",
-    false,
-  ).then((project) => {
-    State.update({
-      integration: project.integration,
-      contracts: project.contracts,
-      projectIsFetched: true,
-    });
-  });
-}
-
 let completed = 0;
-const total = 6;
-if (state.userbase) completed++;
-if (state.tam) completed++;
-if (state.dev) completed++;
-if (state.distribution) completed++;
-if (state.integration) completed++;
-if (state.contracts) completed++;
+const total = 4;
+if (state.stage) completed++;
+if (state.fundraising) completed++;
+if (state.raise) completed++;
+if (state.investment) completed++;
 
-if (!state.profileIsFetched || !state.projectIsFetched) {
+if (!state.profileIsFetched) {
   return <>Loading...</>;
 }
 
@@ -143,51 +116,29 @@ const data = (
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Userbase",
-        content: state.userbase,
+        label: "Project stage",
+        content: state.stage,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Total Addressable Market",
-        content: state.tam,
+        label: "Are you currently fundraising?",
+        content: state.fundraising,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Integration with NEAR",
-        content: state.integration,
+        label: "How mush are you looking to raise?",
+        content: state.raise,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Development phase",
-        content: state.dev,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "Are you Open Source?",
-        content: state.distribution,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "What are your contracts?",
-        content:
-          state.contracts && state.contracts.length > 0 ? (
-            <Widget
-              src={`${ownerId}/widget/Tags`}
-              props={{
-                tags: Object.fromEntries(state.contracts.map((c) => [c, ""])),
-              }}
-            />
-          ) : null,
+        label: "Have you raised any investment?",
+        content: state.investment,
       }}
     />
   </>
@@ -197,15 +148,14 @@ const { edit: _, ...editData } = state;
 
 const edit = (
   <Widget
-    src={`${ownerId}/widget/Profile.TechForm`}
+    src={`${ownerId}/widget/Profile.FundForm`}
     props={{
       data: editData,
       save: state.save,
       onSave: (data) => {
         State.update({ save: false });
 
-        const profileKeys = ["userbase", "tam", "dev", "distribution"];
-        const projectKeys = ["integration", "contracts"];
+        const profileKeys = ["stage", "fundraising", "raise", "investment"];
 
         const profileData = {};
 
@@ -238,42 +188,7 @@ const edit = (
           }
         }
 
-        const projectData = {};
-
-        for (const key of projectKeys) {
-          if (Array.isArray(data[key])) {
-            if (
-              data[key].every((v) => state[key].includes(v)) &&
-              state[key].every((v) => data[key].includes(v)) &&
-              data[key].length === state[key].length &&
-              data[key].length > 0
-            ) {
-              continue;
-            }
-          }
-
-          if (typeof data[key] === "object") {
-            if (
-              Object.keys(data[key]).every(
-                (k) => data[key][k] === state[key][k],
-              ) &&
-              Object.keys(state[key]).every(
-                (k) => data[key][k] === state[key][k],
-              )
-            ) {
-              continue;
-            }
-          }
-
-          if (data[key] !== state[key]) {
-            projectData[key] = data[key];
-          }
-        }
-
-        if (
-          Object.keys(profileData).length > 0 &&
-          Object.keys(projectData).length === 0
-        ) {
+        if (Object.keys(profileData).length > 0) {
           Social.set(
             { profile: profileData },
             {
@@ -282,40 +197,6 @@ const edit = (
               },
             },
           );
-          return;
-        }
-
-        if (
-          Object.keys(profileData).length === 0 &&
-          Object.keys(projectData).length > 0
-        ) {
-          Near.call(ownerId, "edit_project", {
-            project: projectData,
-            account_id: context.accountId,
-          });
-          return;
-        }
-
-        if (
-          Object.keys(profileData).length > 0 &&
-          Object.keys(projectData).length > 0
-        ) {
-          Near.call([
-            {
-              contractName: ownerId,
-              methodName: "edit_project",
-              args: { project: projectData, account_id: context.accountId },
-            },
-            {
-              contractName: "social.near",
-              methodName: "set",
-              args: {
-                data: {
-                  [context.accountId]: { profile: profileData },
-                },
-              },
-            },
-          ]);
           return;
         }
       },
@@ -401,7 +282,7 @@ return (
   <Container>
     <Header>
       <div>
-        <h2>Marketing & techical info</h2>
+        <h2>Fundraising information</h2>
         <small>
           Completed:{" "}
           {(completed / total).toLocaleString("en-GB", { style: "percent" })}

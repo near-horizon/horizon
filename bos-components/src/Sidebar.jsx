@@ -2,6 +2,55 @@ const ownerId = "nearhorizon.near";
 const apiUrl = "https://api-op3o.onrender.com";
 const content = props.content ?? "dashboard";
 
+const percentage = (completed, total) => {
+  return (completed / total).toLocaleString("en-GB", { style: "percent" });
+};
+
+const basicCompletion = () => {
+  let completed = 0;
+  const total = 14;
+  if (state.name) completed++;
+  if (state.description) completed++;
+  if (state.tagline) completed++;
+  if (state.image) completed++;
+  if (state.website) completed++;
+  if (state.linktree) completed++;
+  if (state.verticals) completed++;
+  if (state.product_type) completed++;
+  if (state.company_size) completed++;
+  if (state.geo) completed++;
+  if (state.problem) completed++;
+  if (state.success_position) completed++;
+  if (state.why) completed++;
+  if (state.vision) completed++;
+
+  return [completed, total];
+};
+
+const techCompletion = () => {
+  let completed = 0;
+  const total = 6;
+  if (state.userbase) completed++;
+  if (state.tam) completed++;
+  if (state.dev) completed++;
+  if (state.distribution) completed++;
+  if (state.integration) completed++;
+  if (state.contracts) completed++;
+
+  return [completed, total];
+};
+
+const fundCompletion = () => {
+  let completed = 0;
+  const total = 4;
+  if (state.stage) completed++;
+  if (state.fundraising) completed++;
+  if (state.raise) completed++;
+  if (state.investment) completed++;
+
+  return [completed, total];
+};
+
 const Container = styled("NavigationMenu.Root")``;
 
 const List = styled("NavigationMenu.List")`
@@ -362,17 +411,17 @@ const items = [
       {
         text: "Basic information",
         href: "basic",
-        completion: Number(state.completion).toLocaleString("en-US", {
-          style: "percent",
-        }),
+        completion: percentage(...basicCompletion()),
       },
       {
         text: "Marketing & tech",
         href: "tech",
+        completion: percentage(...techCompletion()),
       },
       {
         text: "Funding",
         href: "funding",
+        completion: percentage(...fundCompletion()),
       },
       {
         text: "Founders",
@@ -553,24 +602,59 @@ const items = [
 
 State.init({
   open: items[2].children.some((item) => item.href === content) ?? false,
-  completion: 0,
-  completionFetched: false,
+  profileIsFetched: false,
+  projectIsFetched: false,
 });
 
 const toggle = () => {
   State.update({ open: !state.open });
 };
 
-if (!state.completionFetched) {
-  asyncFetch(`${apiUrl}/data/projects/completion`).then(
-    ({ body: { list } }) => {
-      const { completion } = list.find(
-        ({ id }) => id === props.accountId || id === context.accountId,
-      );
+if (!state.profileIsFetched) {
+  Near.asyncView(
+    "social.near",
+    "get",
+    { keys: [`${context.accountId}/profile/**`] },
+    "final",
+    false,
+  ).then((data) => {
+    const profile = data[`${context.accountId}`]?.profile || {};
+    State.update({
+      description: profile.description,
+      website: profile.website ?? profile.linktree?.website,
+      linktree: profile.linktree,
+      verticals: profile.verticals ?? { [profile.category]: "" },
+      product_type: profile.product_type,
+      company_size: profile.team,
+      userbase: profile.userbase,
+      tam: profile.tam,
+      dev: profile.dev,
+      distribution: profile.distribution,
+      stage: profile.stage,
+      profileIsFetched: true,
+    });
+  });
+}
 
-      State.update({ completion, completionFetched: true });
-    },
-  );
+if (!state.projectIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project",
+    { account_id: context.accountId },
+    "final",
+    false,
+  ).then((project) => {
+    State.update({
+      integration: project.integration,
+      contracts: project.contracts,
+      geo: project.geo,
+      problem: project.problem,
+      success_position: project.success_position,
+      why: project.why,
+      vision: project.vision,
+      projectIsFetched: true,
+    });
+  });
 }
 
 return (
