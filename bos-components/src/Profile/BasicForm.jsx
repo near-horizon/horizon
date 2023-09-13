@@ -42,15 +42,6 @@ const Container = styled.div`
   background: var(--background-light, #fafafa);
 `;
 
-const ContractsContainer = styled.div`
-  width: 100%;
-
-  & > div {
-    width: 50%;
-    height: 1.5rem;
-  }
-`;
-
 const HalfWidth = styled.div`
   width: 50%;
 
@@ -259,28 +250,6 @@ const data = (
           State.update({ visionError: "" });
         },
         error: state.visionError,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "What are your contracts?",
-        content: (
-          <ContractsContainer>
-            <Typeahead
-              id="contracts"
-              labelKey="name"
-              onChange={(contracts) => {
-                State.update({ contracts: contracts.map(({ name }) => name) });
-              }}
-              options={[]}
-              selected={state.contracts.map((name) => ({ name }))}
-              positionFixed
-              multiple
-              allowNew
-            />
-          </ContractsContainer>
-        ),
       }}
     />
   </>

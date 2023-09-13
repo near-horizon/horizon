@@ -2,31 +2,23 @@ const ownerId = "nearhorizon.near";
 
 State.init({
   // Profile data
-  description: "",
-  descriptionError: "",
-  website: "",
-  websiteError: "",
-  linktree: "",
-  linktreeError: "",
-  verticals: "",
-  verticalsError: "",
-  product_type: [],
-  product_typeError: "",
-  company_size: 0,
-  company_sizeError: "",
+  userbase: "",
+  userbaseError: "",
+  tam: "",
+  tamError: "",
+  dev: "",
+  devError: "",
+  distribution: "",
+  distributionError: "",
+  stage: "",
+  stageError: "",
   profileIsFetched: false,
 
   // Project data
-  geo: "",
-  geoError: "",
-  problem: "",
-  problemError: "",
-  success_position: "",
-  success_positionError: "",
-  why: "",
-  whyError: "",
-  vision: "",
-  visionError: "",
+  integration: "",
+  integrationError: "",
+  contracts: [],
+  contractsError: "",
   projectIsFetched: false,
 });
 
@@ -40,12 +32,11 @@ if (!state.profileIsFetched) {
   ).then((data) => {
     const profile = data[`${context.accountId}`]?.profile || {};
     State.update({
-      description: profile.description,
-      website: profile.website ?? profile.linktree?.website,
-      linktree: profile.linktree,
-      verticals: profile.verticals ?? { [profile.category]: "" },
-      product_type: profile.product_type,
-      company_size: profile.team,
+      userbase: profile.userbase,
+      tam: profile.tam,
+      dev: profile.dev,
+      distribution: profile.distribution,
+      stage: profile.stage,
       profileIsFetched: true,
     });
   });
@@ -60,32 +51,22 @@ if (!state.projectIsFetched) {
     false,
   ).then((project) => {
     State.update({
-      geo: project.geo,
-      problem: project.problem,
-      success_position: project.success_position,
-      why: project.why,
-      vision: project.vision,
+      integration: project.integration,
+      contracts: project.contracts,
       projectIsFetched: true,
     });
   });
 }
 
 let completed = 0;
-const total = 14;
-if (state.name) completed++;
-if (state.description) completed++;
-if (state.tagline) completed++;
-if (state.image) completed++;
-if (state.website) completed++;
-if (state.linktree) completed++;
-if (state.verticals) completed++;
-if (state.product_type) completed++;
-if (state.company_size) completed++;
-if (state.geo) completed++;
-if (state.problem) completed++;
-if (state.success_position) completed++;
-if (state.why) completed++;
-if (state.vision) completed++;
+const total = 7;
+if (state.userbase) completed++;
+if (state.tam) completed++;
+if (state.dev) completed++;
+if (state.distribution) completed++;
+if (state.stage) completed++;
+if (state.integration) completed++;
+if (state.contracts) completed++;
 
 if (!state.profileIsFetched || !state.projectIsFetched) {
   return <>Loading...</>;
@@ -163,120 +144,58 @@ const data = (
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Description",
-        content: (
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.description, width: "100%" }}
-          />
-        ),
+        label: "Userbase",
+        content: state.userbase,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Website",
-        content: state.website ? (
-          <a
-            href={`https://${state.website}`}
-            target="_blank"
-            referrerPolicy="no-referrer"
-          >
-            {state.website}
-          </a>
-        ) : null,
+        label: "Total Addressable Market",
+        content: state.tam,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Point of contact",
+        label: "Integration with NEAR",
+        content: state.integration,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Company size",
-        content: state.company_size,
+        label: "Growth phase",
+        content: state.stage,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Location",
-        content: state.geo,
+        label: "Development phase",
+        content: state.dev,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "Social profiles",
-        content: (
-          <Widget
-            src={`${ownerId}/widget/SocialLinks`}
-            props={{ links: state.linktree }}
-          />
-        ),
+        label: "Are you Open Source?",
+        content: state.distribution,
       }}
     />
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{
-        label: "What problem(s) are you solving?",
-        content: state.problem ? (
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.problem, width: "100%" }}
-          />
-        ) : null,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "What makes your team uniquely positioned for success?",
-        content: state.success_position ? (
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.success_position, width: "100%" }}
-          />
-        ) : null,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "Why are you building on NEAR?",
-        content: state.why ? (
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.why, width: "100%" }}
-          />
-        ) : null,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "Why do you think you are going to win?",
-        content: state.win ? (
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.win, width: "100%" }}
-          />
-        ) : null,
-      }}
-    />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "What is your vision for the future?",
-        content: state.vision ? (
-          <Widget
-            src={`${ownerId}/widget/DescriptionArea`}
-            props={{ description: state.vision, width: "100%" }}
-          />
-        ) : null,
+        label: "What are your contracts?",
+        content:
+          state.contracts && state.contracts.length > 0 ? (
+            <Widget
+              src={`${ownerId}/widget/Tags`}
+              props={{
+                tags: Object.fromEntries(state.contracts.map((c) => [c, ""])),
+              }}
+            />
+          ) : null,
       }}
     />
   </>
@@ -286,27 +205,15 @@ const { edit: _, ...editData } = state;
 
 const edit = (
   <Widget
-    src={`${ownerId}/widget/Profile.BasicForm`}
+    src={`${ownerId}/widget/Profile.TechForm`}
     props={{
       data: editData,
       save: state.save,
       onSave: (data) => {
         State.update({ save: false });
 
-        const profileKeys = [
-          "description",
-          "website",
-          "company_size",
-          "linktree",
-        ];
-        const projectKeys = [
-          "problem",
-          "success_position",
-          "why",
-          "win",
-          "vision",
-          "geo",
-        ];
+        const profileKeys = ["userbase", "tam", "dev", "distribution", "stage"];
+        const projectKeys = ["integration", "contracts"];
 
         const profileData = {};
 
@@ -502,7 +409,7 @@ return (
   <Container>
     <Header>
       <div>
-        <h2>Project overview</h2>
+        <h2>Marketing & techical info</h2>
         <small>
           Completed:{" "}
           {(completed / total).toLocaleString("en-GB", { style: "percent" })}
