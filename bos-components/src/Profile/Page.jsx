@@ -29,7 +29,7 @@ const contentWidget = {
   inbox: "Inbox",
   basic: "Profile.Basic",
   tech: "Profile.Tech",
-  funding: "Profile.Funding",
+  funding: "Profile.Fund",
   founders: "Profile.Founders",
   files: "Profile.Files",
   requests: "Manage.Requests",

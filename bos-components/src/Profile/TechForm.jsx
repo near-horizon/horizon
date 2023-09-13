@@ -1,29 +1,6 @@
 const ownerId = "nearhorizon.near";
 const onSave = props.onSave;
 
-const supportedLinks = [
-  {
-    name: "github",
-    url: "github.com/",
-  },
-  {
-    name: "discord",
-    url: "discord.com/",
-  },
-  {
-    name: "reddit",
-    url: "reddit.com/u/",
-  },
-  {
-    name: "twitter",
-    url: "twitter.com/",
-  },
-  {
-    name: "youtube",
-    url: "youtube.com/",
-  },
-];
-
 State.init({ ...props.data });
 
 if (props.save) {
