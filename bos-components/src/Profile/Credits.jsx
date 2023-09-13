@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const CreditAward = styled.div`
   display: flex;
@@ -86,16 +87,82 @@ const Button = styled.button`
   }
 `;
 
+State.init({
+  project: null,
+  projectIsFetched: false,
+  transactions: [],
+  transactionsIsFetched: false,
+  incentiveDetails: null,
+  incentiveDetailsIsFetched: false,
+});
+
+if (!state.projectIsFetched) {
+  Near.asyncView(
+    ownerId,
+    "get_project",
+    { account_id: context.accountId },
+    "final",
+    false,
+  ).then((project) => {
+    State.update({ project, projectIsFetched: true });
+  });
+}
+
+if (!state.transactionsIsFetched) {
+  asyncFetch(`${apiUrl}/transactions/all`).then(({ body: transactions }) => {
+    State.update({
+      transactions: transactions
+        .filter(
+          (tx) =>
+            tx.method_name === "add_incentive" &&
+            tx.args.account_id === context.accountId,
+        )
+        .sort((a, b) => Number(a.timestamp) - Number(b.timestamp)),
+      transactionsIsFetched: true,
+    });
+  });
+}
+
+if (!state.incentiveDetailsIsFetched) {
+  Near.asyncView(ownerId, "get_incentive_data", {}, "final", false).then(
+    (incentiveDetails) => {
+      State.update({ incentiveDetails, incentiveDetailsIsFetched: true });
+    },
+  );
+}
+
+const achievements = state.transactions
+  .reduce(
+    ([seenSet, list], current) => {
+      if (
+        seenSet.has(current.args.incentive) &&
+        state.incentiveDetails[current.args.incentive][0] === "Once"
+      ) {
+        return [seenSet, list];
+      }
+
+      return [seenSet.add(current.args.incentive), list.concat(current)];
+    },
+    [new Set(), []],
+  )[1]
+  .map((tx) => (
+    <CreditAward key={tx.hash}>
+      <small>
+        {new Date(Number(`${tx.timestamp}`.substring(0, 13)))
+          .toLocaleDateString("en-GB")
+          .replace(/\//g, ".")}
+      </small>
+      <div>
+        <span>{tx.args.incentive}</span>
+        <b>+{state.incentiveDetails[tx.args.incentive][1]} NHZN</b>
+      </div>
+    </CreditAward>
+  ));
+
 return (
   <>
     <List>
-      <CreditAward>
-        <small>12.05.2023.</small>
-        <div>
-          <span>Project created</span>
-          <b>+50 NHZN</b>
-        </div>
-      </CreditAward>
+      {achievements.length > 0 ? achievements : <p>No achievements yet</p>}
     </List>
     <Button>
       <svg
