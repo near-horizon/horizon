@@ -22,11 +22,15 @@ if (!state.profileIsFetched) {
       false,
     ).then((profileExists) => {
       if (profileExists) {
-        asyncFetch(
-          `${apiUrl}/data/credits/projects/${context.accountId}/balance`,
-        ).then(({ body, ok }) => {
+        Near.asyncView(
+          ownerId,
+          "get_project",
+          { account_id: context.accountId },
+          "final",
+          false,
+        ).then((project) => {
           State.update({
-            balance: ok ? body : 0,
+            balance: project.credit_balance,
             project: true,
             exists: true,
             profileIsFetched: true,
