@@ -11,7 +11,7 @@ const getContent = (tab) => {
     return tab;
   }
 
-  return "activity";
+  return "credits-activity";
 };
 
 State.init({
@@ -25,7 +25,7 @@ if (!state.creditsIsFetched) {
     "get_project",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((project) => {
     State.update({
       credits: project.credit_balance,

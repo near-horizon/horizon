@@ -52,7 +52,7 @@ const getContent = (tab) => {
   return "dashboard";
 };
 
-const contentKey = getContent(props.content);
+const contentKey = getContent(props.content ?? "");
 
 const content = (
   <Widget

@@ -87,26 +87,26 @@ if (context.accountId && !state.isOwnerFetched) {
     "check_is_owner",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((isOwner) =>
     State.update({
       isOwner: isOwner || allowedUsers.includes(context.accountId),
       isOwnerFetched: true,
-    }),
+    })
   );
   Near.asyncView(
     ownerId,
     "get_admin_projects",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((projects) => State.update({ projects }));
   Near.asyncView(
     ownerId,
     "get_admin_vendors",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((vendors) => State.update({ vendors }));
 }
 
@@ -226,9 +226,7 @@ const expand = styled.keyframes`
 `;
 
 const Content = styled.div`
-  transition:
-    height 250ms,
-    transform 250ms ease;
+  transition: height 250ms, transform 250ms ease;
   transform-origin: top;
   overflow: hidden;
 
@@ -282,7 +280,7 @@ const arrow = (
 
 const createItem = ({ text, href, icon, children, hasSeparator }) => (
   <>
-    <Item className={href === content ? "active" : ""}>
+    <Item className={content.startsWith(href) ? "active" : ""}>
       {!!children ? (
         <>
           <Trigger onClick={toggle} className={!state.open ? "closed" : "open"}>
@@ -639,7 +637,7 @@ if (!state.profileIsFetched) {
     "get",
     { keys: [`${context.accountId}/profile/**`] },
     "final",
-    false,
+    false
   ).then((data) => {
     const profile = data[`${context.accountId}`]?.profile || {};
     State.update({
@@ -665,7 +663,7 @@ if (!state.projectIsFetched) {
     "get_project",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((project) => {
     State.update({
       integration: project.integration,
