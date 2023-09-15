@@ -75,6 +75,8 @@ return (
     <p>
       Can’t find the answer you’re looking for? Feel free to join our community!
     </p>
-    <a>Talk to us</a>
+    <a href="mailto:support.horizon@near.foundation" target="_blank">
+      Talk to us
+    </a>
   </Container>
 );
