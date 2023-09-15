@@ -63,7 +63,21 @@ const Card = styled.div`
   gap: 1.9375rem;
   border-radius: 1rem;
   background: #fff;
-  height: 100%;
+
+  &.blue,
+  &.orange {
+    & > div > h6 {
+      color: var(--ui-elements-white, #fff);
+    }
+  }
+
+  &.blue {
+    background: linear-gradient(90deg, #0096ea 3.17%, #32ceff 90.93%);
+  }
+
+  &.orange {
+    background: linear-gradient(90deg, #ff6c4a 3.17%, #ffa654 90.93%);
+  }
 
   & > div {
     display: flex;
@@ -71,6 +85,7 @@ const Card = styled.div`
     align-items: center;
     gap: 0.625rem;
     width: 100%;
+    height: 100%;
 
     & > h6 {
       color: var(--ui-elements-black, #000);
@@ -101,7 +116,26 @@ const Card = styled.div`
         font-style: normal;
         font-weight: 400;
         line-height: 160%; /* 1.6rem */
+
+        & > svg {
+          width: 1.5rem;
+          min-width: 1.5rem;
+        }
       }
+    }
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ui-elements-white, #fff);
+      text-align: center;
+      font-family: FK Grotesk;
+      font-size: 2.625rem;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 140%; /* 3.675rem */
+      height: 100%;
     }
   }
 `;
@@ -142,7 +176,36 @@ const cards = [
     ],
   },
   {
-    heading: "Week 1",
+    heading: "Week 2",
+    items: [
+      "Designing an Organizational Culture as a Founder",
+      "Tech Tree walkthrough",
+      "Product Demo Day #1",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 3",
+    items: [
+      "Tech Tree walkthrough",
+      "Service Provider AMA",
+      "IRL Meetup 1",
+      "Fundraising Bootcamp Kickoff: Storytelling 101",
+      "Consumer Products 101 and Product Design in Web3",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 4",
+    items: [
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 5",
     items: [
       "Cohort onboarding & welcome",
       "Signature session / Fireside chat",
@@ -152,131 +215,92 @@ const cards = [
     ],
   },
   {
-    heading: "Week 1",
+    heading: "Week 6",
     items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
+      "Designing an Organizational Culture as a Founder",
+      "Tech Tree walkthrough",
+      "Product Demo Day #1",
       "Weekly product audit",
     ],
   },
   {
-    heading: "Week 1",
+    heading: "Week 7",
     items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
-      "Weekly product audit",
-    ],
-  },
-  {
-    heading: "Week 1",
-    items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
-      "Weekly product audit",
-    ],
-  },
-  {
-    heading: "Week 1",
-    items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
-      "Weekly product audit",
-    ],
-  },
-  {
-    heading: "Week 1",
-    items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
+      "Tech Tree walkthrough",
+      "Service Provider AMA",
+      "IRL Meetup 1",
+      "Fundraising Bootcamp Kickoff: Storytelling 101",
+      "Consumer Products 101 and Product Design in Web3",
       "Weekly product audit",
     ],
   },
   {
     heading: "Week 8",
+    subheading: "Founder Retreat",
+    highlight: "blue",
+  },
+  {
+    heading: "Week 9",
     items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
       "Weekly product audit",
     ],
   },
   {
-    heading: "Week 1",
+    heading: "Week 10",
     items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
       "Weekly product audit",
     ],
   },
   {
-    heading: "Week 1",
+    heading: "Week 11",
     items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
-      "Weekly product audit",
-    ],
-  },
-  {
-    heading: "Week 1",
-    items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
       "Weekly product audit",
     ],
   },
   {
     heading: "Week 12",
-    items: [
-      "Cohort onboarding & welcome",
-      "Signature session / Fireside chat",
-      "Cohort social meetup",
-      "Mentorship kickoff & introductions",
-      "Weekly product audit",
-    ],
+    subheading: "Final Demo Day & Celebration!",
+    highlight: "orange",
   },
-].map(({ heading, items }) => (
-  <Card key={heading}>
+].map(({ heading, items, subheading, highlight }) => (
+  <Card key={heading} className={highlight}>
     <div>
       <h6>{heading}</h6>
-      <ul>
-        {items.reduce((items, item) => {
-          if (items.length === 0) {
-            return [
+      {items ? (
+        <ul>
+          {items.reduce((items, item) => {
+            if (items.length === 0) {
+              return [
+                <li key={item}>
+                  {Check}
+                  {item}
+                </li>,
+              ];
+            }
+
+            items.push(<Separator />);
+            items.push(
               <li key={item}>
                 {Check}
                 {item}
-              </li>,
-            ];
-          }
+              </li>
+            );
 
-          items.push(<Separator />);
-          items.push(
-            <li key={item}>
-              {Check}
-              {item}
-            </li>
-          );
-
-          return items;
-        }, [])}
-      </ul>
+            return items;
+          }, [])}
+        </ul>
+      ) : (
+        <div>{subheading}</div>
+      )}
     </div>
   </Card>
 ));
