@@ -467,7 +467,7 @@ return (
               )}
             </UnlockButton>
           )}
-          {state.code ? (
+          {state.code || perk.code ? (
             <div>
               <ClaimDetails>Register with this code:</ClaimDetails>
               <ClipboardButton
@@ -500,7 +500,7 @@ return (
                     </clipPath>
                   </defs>
                 </svg>
-                {state.code}
+                {state.code || perk.code}
               </ClipboardButton>
             </div>
           ) : (
