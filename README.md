@@ -165,13 +165,13 @@ When working with the source code for components, you should run the following
 commands to get everything set up:
 
 ```shell
-npm i
+pnpm i
 ```
 
 to install all the dependencies,
 
 ```shell
-npm run prepare
+pnpm prepare
 ```
 
 in case the prepare script doesn't run after the install script (this will
@@ -181,7 +181,7 @@ running the pre-commit hooks).
 Make sure all files are properly formatted by running
 
 ```shell
-npm run format
+pnpm format
 ```
 
 but if you have installed the `husky` hooks, this should be done for you on

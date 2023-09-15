@@ -19,12 +19,22 @@ cp "bos-components/src/$WIDGET_NAME" .tmp/src/"$WIDGET_DIR"
 
 cd .tmp
 
-if [ -n "$OLD_ACCOUNT" ]; then
-  fd -e jsx -e json -x sed -i "s/$OLD_ACCOUNT/$ACCOUNT/g" {}
-fi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	if [ -n "$OLD_ACCOUNT" ]; then
+  	fd -e jsx -e json -x sed -i '' -e "s/$OLD_ACCOUNT/$ACCOUNT/g" {}
+	fi
 
-if [ -n "$OLD_API" ]; then
-	fd -e jsx -e json -x sed -i "s/$OLD_API/$API/g" {}
+	if [ -n "$OLD_API" ]; then
+		fd -e jsx -e json -x sed -i '' -e "s/$OLD_API/$API/g" {}
+	fi
+else
+	if [ -n "$OLD_ACCOUNT" ]; then
+  	fd -e jsx -e json -x sed -i "s/$OLD_ACCOUNT/$ACCOUNT/g" {}
+	fi
+
+	if [ -n "$OLD_API" ]; then
+		fd -e jsx -e json -x sed -i "s/$OLD_API/$API/g" {}
+	fi
 fi
 
 bos components deploy $ACCOUNT sign-as $ACCOUNT network-config mainnet sign-with-access-key-file ~/.near-credentials/mainnet/$ACCOUNT.json send
