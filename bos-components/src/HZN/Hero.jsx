@@ -113,35 +113,6 @@ const ApplyButton = styled.a`
   }
 `;
 
-const DiscordButton = styled.a`
-  display: flex;
-  padding: 1.0625rem 1.875rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  align-self: stretch;
-  border-radius: 3.125rem;
-  border: 2px solid #fff;
-  color: var(--ui-elements-white, #fff);
-  text-align: center;
-  leading-trim: both;
-  text-edge: cap;
-  font-family: FK Grotesk;
-  font-size: 1.125rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: 0.01125rem;
-  cursor: pointer;
-
-  &:hover,
-  &:focus,
-  &:active {
-    color: var(--ui-elements-white, #fff);
-    text-decoration: none;
-  }
-`;
-
 return (
   <Container>
     {videoBackground}
@@ -156,8 +127,12 @@ return (
         applications are considered on a rolling basis.
       </p>
       <div>
-        <ApplyButton>Apply for HZN2</ApplyButton>
-        <DiscordButton>Join Discord</DiscordButton>
+        <ApplyButton
+          href="https://airtable.com/appFoIqAoY0ikoVIb/shrst8Tt4PUtYTSvD"
+          target="_blank"
+        >
+          Apply for HZN2
+        </ApplyButton>
       </div>
     </Hero>
   </Container>
