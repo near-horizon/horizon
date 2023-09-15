@@ -13,6 +13,10 @@ const Sidebar = styled.div`
   position: sticky;
   top: 0.25rem;
   width: calc((100% - 3.5rem) / 5);
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Content = styled.div`
@@ -22,6 +26,10 @@ const Content = styled.div`
   justify-content: flex-start;
   width: calc((100% - 3.5rem) / 5 * 4);
   gap: 3rem;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const contentWidget = {
@@ -38,6 +46,7 @@ const contentWidget = {
   growth: "Profile.Growth",
   permissions: "Profile.Permissions",
   settings: "Profile.Settings",
+  admin: "Admin.Page",
 };
 
 const getContent = (tab) => {
