@@ -1,2 +1,2 @@
-cd widgets;
-npx lint-staged
+cd bos-components;
+pnpx lint-staged
