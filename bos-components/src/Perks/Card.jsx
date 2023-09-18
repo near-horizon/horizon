@@ -9,8 +9,7 @@ const Container = styled.div`
   border-radius: 0.5rem;
   border: 1px solid var(--slate-light-4, #eceef0);
   background: var(--base-white, #fff);
-  box-shadow:
-    0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
     0px 1px 3px 0px rgba(16, 24, 40, 0.1);
   display: flex;
   flex-direction: column;
@@ -243,6 +242,7 @@ const UnlockButton = styled.button`
   font-style: normal;
   font-weight: 600;
   line-height: 142%; /* 1.2425rem */
+  white-space: nowrap;
 `;
 
 const ClaimDetails = styled.div`
@@ -406,7 +406,7 @@ return (
         src={`${ownerId}/widget/Tags`}
         props={{
           tags: Object.fromEntries(
-            perk.fields.category.map((category) => [category, ""]),
+            perk.fields.category.map((category) => [category, ""])
           ),
         }}
       />
