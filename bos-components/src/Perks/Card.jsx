@@ -222,6 +222,7 @@ const ClaimButton = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 142%; /* 1.2425rem */
+    white-space: nowrap;
   }
 `;
 
