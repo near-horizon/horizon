@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.1",
     "@near-wallet-selector/core": "^8.5.2",
     "@near-wallet-selector/here-wallet": "^8.5.2",
     "@near-wallet-selector/meteor-wallet": "^8.5.2",
