@@ -1,14 +1,13 @@
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { EmailInput } from "~/components/inputs/email";
+import { useZodForm } from "~/hooks/form";
 
 const formSchema = z.object({
   email: z.string().email(),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
-
 export default function Create() {
-  const { handleSubmit, register } = useForm<FormSchema>();
+  const { handleSubmit, control } = useZodForm(formSchema);
 
   return (
     <div>
@@ -25,15 +24,9 @@ export default function Create() {
           }
         })}
       >
-        <label htmlFor="email">Email</label>
-        <input {...register("email")} />
+        <EmailInput control={control} name="email" />
         <button type="submit">Create</button>
       </form>
-      {/* <div className="animate-bounce animate-pulse "> */}
-      {/*   <h1 className="translate-x-1/3 translate-y-8 scale-150 text-9xl"> */}
-      {/*     Lucija */}
-      {/*   </h1> */}
-      {/* </div> */}
     </div>
   );
 }
