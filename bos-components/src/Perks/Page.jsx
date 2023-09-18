@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-const apiUrl = "https://api-pr-52-sm9d.onrender.com";
+const apiUrl = "https://api-op3o.onrender.com";
 
 const Container = styled.div`
   display: flex;

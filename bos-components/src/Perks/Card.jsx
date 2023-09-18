@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-const apiUrl = "https://api-pr-52-sm9d.onrender.com";
+const apiUrl = "https://api-op3o.onrender.com";
 /** @type {{id: string; url?: string; code?: string; claimed?: boolean; requirements?: {requirement: string; completed: boolean;}[]; fields: {name: string; logo: string; about: string; benefit: string; categories: string[];}}} */
 const perk = props.perk;
 
