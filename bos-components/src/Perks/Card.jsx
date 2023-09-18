@@ -311,7 +311,11 @@ const claimPerk = () => {
     }),
   }).then(({ body, ok }) => {
     if (!ok) {
-      State.update({ claiming: false, claimed: false, error: body });
+      State.update({
+        claiming: false,
+        claimed: false,
+        error: "Not enough credits to claim perk",
+      });
       return;
     }
     State.update({
@@ -372,6 +376,11 @@ const criteria = perk.requirements.map(({ requirement, completed }, index) => {
     </div>
   );
 });
+
+const Error = styled.span`
+  color: red;
+  font-size: 12px;
+`;
 
 return (
   <Container>
@@ -447,7 +456,7 @@ return (
             <Tooltip.Provider>
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
-                  Error occured (hover to see details)
+                  <Error>Error occured (hover to see details)</Error>
                 </Tooltip.Trigger>
                 <TooltipContent>{state.error}</TooltipContent>
               </Tooltip.Root>
