@@ -73,7 +73,7 @@ if (!state.perksIsFetched) {
         perks: (perks ?? []).sort(
           (a, b) =>
             new Date(a.created_time).getTime() -
-            new Date(b.created_time).getTime(),
+            new Date(b.created_time).getTime()
         ),
         perksIsFetched: true,
         options: [
@@ -81,7 +81,7 @@ if (!state.perksIsFetched) {
           ...new Set(perks.flatMap((perk) => perk.fields.category).sort()),
         ],
       });
-    },
+    }
   );
   return <>Loading...</>;
 }
@@ -168,7 +168,7 @@ const toRender = state.perks
       state.categories.length > 0 &&
       !state.categories.includes("All") &&
       !perk.fields.category.some((category) =>
-        state.categories.includes(category),
+        state.categories.includes(category)
       )
     ) {
       return false;
@@ -196,9 +196,8 @@ return (
         <span>{state.perks.length}</span>
       </Header>
       <SubHeader>
-        Crypto ipsum bitcoin ethereum dogecoin litecoin. Ethereum kadena
-        polkadot ICON BitTorrent. Crypto ipsum bitcoin ethereum dogecoin
-        litecoin.
+        Whether you are a early stage founder or are on mainnet, we’ve got your
+        covered! Discover the top tools & perks to build in web3.
       </SubHeader>
     </Heading>
     <SearchArea>
