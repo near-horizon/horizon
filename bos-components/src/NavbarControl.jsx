@@ -107,6 +107,27 @@ const navItems = [
     ),
   },
   {
+    text: "Perks",
+    link: "perks",
+    icon: (
+      <svg
+        width="15"
+        height="16"
+        viewBox="0 0 15 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.375 3V1.75M9.375 10.5V9.25M5 6.125H6.25M12.5 6.125H13.75M11.125 7.875L11.875 8.625M11.125 4.375L11.875 3.625M1.875 13.625L7.5 8M7.625 4.375L6.875 3.625"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
     text: "Events",
     link: "events",
     icon: (
@@ -140,93 +161,6 @@ const navItems = [
       >
         <path
           d="M7.5 13H3.25C2.54993 13 2.1999 13 1.93251 12.8638C1.69731 12.7439 1.50608 12.5527 1.38624 12.3175C1.25 12.0501 1.25 11.7001 1.25 11V5C1.25 4.29993 1.25 3.9499 1.38624 3.68251C1.50608 3.44731 1.69731 3.25608 1.93251 3.13624C2.1999 3 2.54993 3 3.25 3H3.5C4.90013 3 5.6002 3 6.13498 3.27248C6.60538 3.51217 6.98783 3.89462 7.22752 4.36502C7.5 4.8998 7.5 5.59987 7.5 7M7.5 13V7M7.5 13H11.75C12.4501 13 12.8001 13 13.0675 12.8638C13.3027 12.7439 13.4939 12.5527 13.6138 12.3175C13.75 12.0501 13.75 11.7001 13.75 11V5C13.75 4.29993 13.75 3.9499 13.6138 3.68251C13.4939 3.44731 13.3027 3.25608 13.0675 3.13624C12.8001 3 12.4501 3 11.75 3H11.5C10.0999 3 9.3998 3 8.86502 3.27248C8.39462 3.51217 8.01217 3.89462 7.77248 4.36502C7.5 4.8998 7.5 5.59987 7.5 7"
-          stroke="currentColor"
-          stroke-width="1.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    ),
-  },
-];
-/** @type {{ icon: SVGElement; text: string; link: string; }[]} */
-const profileItems = [
-  {
-    text: "Inbox",
-    link: "inbox",
-    icon: (
-      <svg
-        width="19"
-        height="20"
-        viewBox="0 0 19 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M1.97916 10.0003H4.65655C5.19901 10.0003 5.6949 10.3068 5.93749 10.792C6.18009 11.2772 6.67598 11.5837 7.21844 11.5837H11.7816C12.324 11.5837 12.8199 11.2772 13.0625 10.792C13.3051 10.3068 13.801 10.0003 14.3434 10.0003H17.0208M7.09852 3.66699H11.9015C12.754 3.66699 13.1803 3.66699 13.5566 3.7968C13.8894 3.91159 14.1925 4.09892 14.444 4.34525C14.7284 4.6238 14.919 5.00507 15.3003 5.76758L17.0155 9.19797C17.1651 9.49721 17.2399 9.64683 17.2927 9.80363C17.3395 9.94289 17.3734 10.0862 17.3937 10.2317C17.4167 10.3955 17.4167 10.5628 17.4167 10.8974V12.5337C17.4167 13.8638 17.4167 14.5288 17.1578 15.0369C16.9301 15.4838 16.5668 15.8471 16.1199 16.0748C15.6118 16.3337 14.9468 16.3337 13.6167 16.3337H5.38333C4.0532 16.3337 3.38814 16.3337 2.8801 16.0748C2.43322 15.8471 2.06989 15.4838 1.84219 15.0369C1.58333 14.5288 1.58333 13.8638 1.58333 12.5337V10.8974C1.58333 10.5628 1.58333 10.3955 1.60627 10.2317C1.62664 10.0862 1.66047 9.94289 1.70732 9.80363C1.76008 9.64683 1.83489 9.49721 1.9845 9.19797L3.6997 5.76758C4.08096 5.00506 4.27159 4.6238 4.55599 4.34525C4.80749 4.09892 5.11061 3.91159 5.44341 3.7968C5.81974 3.66699 6.246 3.66699 7.09852 3.66699Z"
-          stroke="currentColor"
-          stroke-width="1.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    text: "My projects",
-    link: "my-projects",
-    icon: (
-      <svg
-        width="19"
-        height="20"
-        viewBox="0 0 19 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M15.8333 17.125C15.8333 16.0202 15.8333 15.4678 15.697 15.0183C15.39 14.0062 14.598 13.2142 13.5859 12.9072C13.1364 12.7708 12.584 12.7708 11.4792 12.7708H7.52084C6.41602 12.7708 5.86361 12.7708 5.4141 12.9072C4.40203 13.2142 3.61004 14.0062 3.30303 15.0183C3.16667 15.4678 3.16667 16.0202 3.16667 17.125M13.0625 6.4375C13.0625 8.40501 11.4675 10 9.5 10C7.53249 10 5.9375 8.40501 5.9375 6.4375C5.9375 4.46999 7.53249 2.875 9.5 2.875C11.4675 2.875 13.0625 4.46999 13.0625 6.4375Z"
-          stroke="currentColor"
-          stroke-width="1.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    text: "My requests",
-    link: "my-requests",
-    icon: (
-      <svg
-        width="19"
-        height="20"
-        viewBox="0 0 19 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M15.8333 17.125C15.8333 16.0202 15.8333 15.4678 15.697 15.0183C15.39 14.0062 14.598 13.2142 13.5859 12.9072C13.1364 12.7708 12.584 12.7708 11.4792 12.7708H7.52084C6.41602 12.7708 5.86361 12.7708 5.4141 12.9072C4.40203 13.2142 3.61004 14.0062 3.30303 15.0183C3.16667 15.4678 3.16667 16.0202 3.16667 17.125M13.0625 6.4375C13.0625 8.40501 11.4675 10 9.5 10C7.53249 10 5.9375 8.40501 5.9375 6.4375C5.9375 4.46999 7.53249 2.875 9.5 2.875C11.4675 2.875 13.0625 4.46999 13.0625 6.4375Z"
-          stroke="currentColor"
-          stroke-width="1.4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    text: "My contracts",
-    link: "my-contracts",
-    icon: (
-      <svg
-        width="19"
-        height="20"
-        viewBox="0 0 19 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M12.6667 6.04167C12.6667 5.30544 12.6667 4.93733 12.5857 4.6353C12.3661 3.81571 11.7259 3.17554 10.9064 2.95593C10.6043 2.875 10.2362 2.875 9.49999 2.875C8.76377 2.875 8.39565 2.875 8.09363 2.95593C7.27404 3.17554 6.63386 3.81571 6.41425 4.6353C6.33333 4.93733 6.33333 5.30544 6.33333 6.04167M4.11666 17.125H14.8833C15.7701 17.125 16.2135 17.125 16.5521 16.9524C16.8501 16.8006 17.0923 16.5584 17.2441 16.2605C17.4167 15.9218 17.4167 15.4784 17.4167 14.5917V8.575C17.4167 7.68825 17.4167 7.24488 17.2441 6.90618C17.0923 6.60826 16.8501 6.36604 16.5521 6.21424C16.2135 6.04167 15.7701 6.04167 14.8833 6.04167H4.11666C3.22991 6.04167 2.78654 6.04167 2.44784 6.21424C2.14992 6.36604 1.9077 6.60826 1.7559 6.90618C1.58333 7.24488 1.58333 7.68825 1.58333 8.575V14.5917C1.58333 15.4784 1.58333 15.9218 1.7559 16.2605C1.9077 16.5584 2.14992 16.8006 2.44784 16.9524C2.78654 17.125 3.22991 17.125 4.11666 17.125Z"
           stroke="currentColor"
           stroke-width="1.4"
           stroke-linecap="round"
@@ -487,10 +421,7 @@ const Viewport = styled("NavigationMenu.Viewport")`
   position: relative;
   width: var(--radix-navigation-menu-viewport-width);
   height: var(--radix-navigation-menu-viewport-height);
-  transition:
-    width,
-    height,
-    250ms ease;
+  transition: width, height, 250ms ease;
   overflow: hidden;
   transform-origin: top;
   animation: ${scaleDown} 250ms ease;
@@ -554,44 +485,8 @@ const profileIcon = (
   />
 );
 
-if (state.isAdmin) {
-  profileItems.push({
-    text: "Admin",
-    link: "admin",
-    icon: (
-      <svg
-        width="18"
-        height="22"
-        viewBox="0 0 18 22"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M8.30201 20.6149C8.5234 20.7441 8.6341 20.8087 8.79032 20.8422C8.91156 20.8682 9.08844 20.8682 9.20968 20.8422C9.3659 20.8087 9.4766 20.7441 9.69799 20.6149C11.646 19.4785 17 15.9085 17 11.0001V7.20007C17 6.12617 17 5.58923 16.8345 5.20807C16.6662 4.82067 16.4986 4.61458 16.1536 4.37097C15.8141 4.13129 15.1486 3.99289 13.8177 3.71609C12.3508 3.41101 11.2243 2.8601 10.1944 2.06339C9.70051 1.68133 9.45357 1.49031 9.26034 1.43821C9.05644 1.38323 8.94356 1.38323 8.73966 1.43821C8.54643 1.49031 8.29949 1.68134 7.80562 2.06339C6.77572 2.8601 5.6492 3.41101 4.1823 3.71609C2.85137 3.99289 2.18591 4.13129 1.84645 4.37097C1.50142 4.61458 1.33379 4.82067 1.16554 5.20807C1 5.58923 1 6.12617 1 7.20007V11.0001C1 15.9085 6.35396 19.4785 8.30201 20.6149Z"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    ),
-  });
-}
-
-const desktopNav = [...navItems, ...profileItems].map(createNavItem);
+const desktopNav = navItems.map(createNavItem);
 const mobileNav = navItems
-  .map(createMobileNavItem)
-  .reduce((acc, item, index) => {
-    if (index === 0) {
-      acc.push(item);
-      return acc;
-    }
-
-    acc.push(<Separator />, item);
-
-    return acc;
-  }, []);
-const profileNav = profileItems
   .map(createMobileNavItem)
   .reduce((acc, item, index) => {
     if (index === 0) {
@@ -607,8 +502,6 @@ const profileNav = profileItems
 State.init({
   isProfile: false,
   isProfileIsFetched: false,
-  isAdmin: false,
-  isAdminIsFetched: false,
 });
 
 if (!state.isProfileIsFetched) {
@@ -618,7 +511,7 @@ if (!state.isProfileIsFetched) {
       "check_is_project",
       { account_id: context.accountId },
       "final",
-      false,
+      false
     ).then((isProfile) => {
       if (isProfile) {
         State.update({ isProfile: true, isProfileIsFetched: true });
@@ -628,26 +521,12 @@ if (!state.isProfileIsFetched) {
           "check_is_vendor",
           { account_id: context.accountId },
           "final",
-          false,
+          false
         ).then((isProfile) => {
           State.update({ isProfile: isProfile, isProfileIsFetched: true });
         });
       }
     });
-    Near.asyncView(
-      ownerId,
-      "check_is_owner",
-      { account_id: context.accountId },
-      "final",
-      false,
-    ).then((isAdmin) =>
-      State.update({
-        isAdmin:
-          isAdmin ||
-          ["lccc.near", "jarrodbarnes.near"].includes(context.accountId),
-        isAdminIsFetched: true,
-      }),
-    );
   } else {
     State.update({ isProfile: false, isProfileIsFetched: true });
   }
@@ -686,7 +565,9 @@ return (
                   {profileIcon} Your profile {arrowDown}
                 </Trigger>
                 <Content>
-                  <ul>{profileNav}</ul>
+                  <ul>
+                    <Widget src={`${ownerId}/widget/Sidebar`} />
+                  </ul>
                 </Content>
               </>
             ) : (

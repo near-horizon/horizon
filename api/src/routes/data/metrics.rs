@@ -8,7 +8,7 @@ use num_traits::ToPrimitive;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::AppState;
+use crate::{ApiResult, AppState};
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
 struct CompletionDetails {
@@ -25,7 +25,7 @@ struct Params {
 async fn completion(
     Query(Params { above }): Query<Params>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<CompletionDetails>, (StatusCode, String)> {
+) -> ApiResult<Json<CompletionDetails>> {
     sqlx::query_as!(
         CompletionDetails,
         r#"
@@ -68,9 +68,7 @@ struct Counts {
 }
 
 #[debug_handler(state = AppState)]
-async fn get_counts(
-    State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Counts>, (StatusCode, String)> {
+async fn get_counts(State(AppState { pool, .. }): State<AppState>) -> ApiResult<Json<Counts>> {
     sqlx::query_as!(
         Counts,
         r#"
@@ -121,7 +119,7 @@ async fn get_counts(
 #[debug_handler(state = AppState)]
 async fn get_average_fulfillment(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<i64>, (StatusCode, String)> {
+) -> ApiResult<Json<i64>> {
     sqlx::query!(
         r#"
         SELECT
@@ -182,7 +180,7 @@ async fn get_average_fulfillment(
 #[debug_handler(state = AppState)]
 async fn get_average_transactions_per_project(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<f64>, (StatusCode, String)> {
+) -> ApiResult<Json<f64>> {
     sqlx::query!(
         r#"
         SELECT
@@ -241,7 +239,7 @@ async fn get_average_transactions_per_project(
 #[debug_handler(state = AppState)]
 async fn get_average_project_requests(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<f64>, (StatusCode, String)> {
+) -> ApiResult<Json<f64>> {
     sqlx::query!(
         r#"
         SELECT
@@ -282,7 +280,7 @@ struct ProjectMau {
 #[debug_handler(state = AppState)]
 async fn get_average_project_mau(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<ProjectMau>, (StatusCode, String)> {
+) -> ApiResult<Json<ProjectMau>> {
     sqlx::query!(
         r#"
         SELECT

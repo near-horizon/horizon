@@ -8,13 +8,13 @@ use near_account_id::AccountId;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::AppState;
+use crate::{ApiResult, AppState};
 
 #[debug_handler(state = AppState)]
 async fn get_projects_balance(
     Path(account_id): Path<AccountId>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<i64>, (StatusCode, String)> {
+) -> ApiResult<Json<i64>> {
     sqlx::query!(
         r#"
         SELECT
@@ -42,7 +42,7 @@ async fn get_projects_balance(
 async fn get_vendors_balance(
     Path(account_id): Path<AccountId>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<i64>, (StatusCode, String)> {
+) -> ApiResult<Json<i64>> {
     sqlx::query!(
         r#"
         SELECT
@@ -69,7 +69,7 @@ async fn get_vendors_balance(
 #[debug_handler(state = AppState)]
 async fn get_credit_applications(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<String>>> {
     sqlx::query!(
         r#"
         SELECT
@@ -128,7 +128,7 @@ enum TransferType {
 async fn get_credit_transfers(
     Path((account_id, tranfer_type)): Path<(AccountId, TransferType)>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<Transfer>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<Transfer>>> {
     sqlx::query_as!(
         Transfer,
         r#"

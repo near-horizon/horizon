@@ -12,7 +12,7 @@ use sqlx::Row;
 
 use crate::{
     routes::data::{projects::size_deserialize, set_deserialize, Completion, CompletionPair},
-    AppState,
+    ApiResult, AppState,
 };
 
 #[derive(Deserialize, Serialize, Debug, Clone, Copy, Default)]
@@ -192,7 +192,7 @@ pub struct Params {
 pub async fn all_vendors(
     Query(params): Query<Params>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<String>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<String>>> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
         SELECT
@@ -340,7 +340,7 @@ pub async fn all_vendors(
 #[debug_handler(state = AppState)]
 async fn get_completion(
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Completion>, (StatusCode, String)> {
+) -> ApiResult<Json<Completion>> {
     let list = sqlx::query_as!(
         CompletionPair,
         r#"

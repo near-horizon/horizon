@@ -253,7 +253,7 @@ return (
         props={{
           label: "Development phase",
           value: state.profile.dev,
-          onSave: ({ value: stage }) => onSave({ profile: { stage } }),
+          onSave: ({ value: dev }) => onSave({ profile: { dev } }),
           canEdit: isAdmin,
         }}
       />

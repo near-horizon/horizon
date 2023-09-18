@@ -3,12 +3,13 @@ use std::str::FromStr;
 use axum::http::HeaderMap;
 use base58::{FromBase58, ToBase58};
 use ed25519_dalek::{PublicKey, Signature, Verifier};
-use near_account_id::AccountId;
+
+use near_primitives::types::AccountId;
 use reqwest::{Client, StatusCode};
 use serde_json::json;
 use sodiumoxide::base64::{self, Variant};
 
-use crate::{AppState, RPC_URL};
+use crate::{ApiResult, AppState, RPC_URL};
 
 pub async fn verify_public_key(public_key: &str, account_id: &str, client: &Client) -> bool {
     let Ok(account_id) = AccountId::from_str(account_id) else {
@@ -65,11 +66,7 @@ pub async fn verify_recency(hash: &str, client: &Client) -> bool {
     hash == current_hash || hash == previous_hash
 }
 
-pub async fn authenticate(
-    headers: HeaderMap,
-    client: &Client,
-    body: &str,
-) -> Result<AccountId, (StatusCode, String)> {
+pub async fn authenticate(headers: HeaderMap, client: &Client, body: &str) -> ApiResult<AccountId> {
     let Some(public_key) = headers.get("X-Near-Public-Key") else {
         return Err((StatusCode::UNAUTHORIZED, "Missing public key".to_string()));
     };
@@ -164,7 +161,7 @@ pub async fn authorize(
     body: &str,
     project_id: AccountId,
     state: AppState,
-) -> Result<(), (StatusCode, String)> {
+) -> ApiResult<()> {
     let account_id = authenticate(headers, &state.client, body).await?;
     if verify_permissions(account_id, project_id, state.contract_id, &state.client).await {
         Ok(())

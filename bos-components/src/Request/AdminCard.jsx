@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const accountId = props.accountId;
 const cid = props.cid;
 
@@ -26,20 +27,18 @@ if (!state.requestIsFetched) {
     "final",
     false,
   ).then((request) => State.update({ request, requestIsFetched: true }));
-  asyncFetch("https://api-op3o.onrender.com/transactions/all").then(
-    ({ body: txs }) => {
-      const tx = txs.find((tx) => {
-        const start = "EVENT_JSON:";
-        const logData = JSON.parse(tx.log.substring(start.length)).data;
-        return (
-          logData.cid === cid &&
-          tx.method_name === "add_request" &&
-          tx.args.request.project_id === accountId
-        );
-      });
-      State.update({ created_at: tx.timestamp });
-    },
-  );
+  asyncFetch(`${apiUrl}/transactions/all`).then(({ body: txs }) => {
+    const tx = txs.find((tx) => {
+      const start = "EVENT_JSON:";
+      const logData = JSON.parse(tx.log.substring(start.length)).data;
+      return (
+        logData.cid === cid &&
+        tx.method_name === "add_request" &&
+        tx.args.request.project_id === accountId
+      );
+    });
+    State.update({ created_at: tx.timestamp });
+  });
 }
 
 if (!state.proposalsIsFetched) {

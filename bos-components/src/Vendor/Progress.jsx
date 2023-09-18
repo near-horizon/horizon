@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 const accountId = props.accountId;
 
 const Container = styled.div`
@@ -76,9 +77,9 @@ if (!state.showCreditsIsFetched) {
 }
 
 if (state.showCredits && !state.earnedIsFetched) {
-  asyncFetch(
-    `https://api-op3o.onrender.com/data/credits/vendors/${accountId}/balance`,
-  ).then(({ body: earned }) => State.update({ earned, earnedIsFetched: true }));
+  asyncFetch(`${apiUrl}/data/credits/vendors/${accountId}/balance`).then(
+    ({ body: earned }) => State.update({ earned, earnedIsFetched: true }),
+  );
 }
 
 if (!state.activeIsFetched) {
@@ -96,13 +97,12 @@ if (!state.activeIsFetched) {
   );
 }
 
-asyncFetch("https://api-op3o.onrender.com/data/vendors/completion").then(
-  ({ body: { list } }) =>
-    State.update({
-      completion: list
-        .find(({ id }) => id === props.accountId)
-        .completion.toLocaleString("en-US", { style: "percent" }),
-    }),
+asyncFetch(`${apiUrl}/data/vendors/completion`).then(({ body: { list } }) =>
+  State.update({
+    completion: list
+      .find(({ id }) => id === props.accountId)
+      .completion.toLocaleString("en-US", { style: "percent" }),
+  }),
 );
 
 if (!state.activeIsFetched) {

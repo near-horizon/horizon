@@ -7,7 +7,7 @@ use axum::{
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 
-use crate::AppState;
+use crate::{ApiResult, AppState};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 enum ContributionStatus {
@@ -29,7 +29,7 @@ struct Params {
 async fn get_all(
     Query(Params { status }): Query<Params>,
     State(AppState { pool, .. }): State<AppState>,
-) -> Result<Json<Vec<(String, String, String)>>, (StatusCode, String)> {
+) -> ApiResult<Json<Vec<(String, String, String)>>> {
     let status = if let Some(status) = status {
         serde_json::to_string(&status).map_err(|e| {
             (

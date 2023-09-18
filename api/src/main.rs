@@ -15,7 +15,10 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     let trace = TraceLayer::new_for_http();
-    let cors = CorsLayer::new().allow_methods(Any).allow_origin(Any);
+    let cors = CorsLayer::new()
+        .allow_headers(Any)
+        .allow_origin(Any)
+        .allow_methods(Any);
     let middleware = ServiceBuilder::new().layer(trace).layer(cors);
 
     let app = api::routes::create_router()

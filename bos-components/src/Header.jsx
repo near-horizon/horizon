@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const apiUrl = "https://api-op3o.onrender.com";
 
 State.init({
   exists: false,
@@ -21,11 +22,15 @@ if (!state.profileIsFetched) {
       false,
     ).then((profileExists) => {
       if (profileExists) {
-        asyncFetch(
-          `https://api-op3o.onrender.com/data/credits/projects/${context.accountId}/balance`,
-        ).then(({ body, ok }) => {
+        Near.asyncView(
+          ownerId,
+          "get_project",
+          { account_id: context.accountId },
+          "final",
+          false,
+        ).then((project) => {
           State.update({
-            balance: ok ? body : 0,
+            balance: project.credit_balance,
             project: true,
             exists: true,
             profileIsFetched: true,
@@ -41,7 +46,7 @@ if (!state.profileIsFetched) {
         ).then((contributorExists) => {
           if (contributorExists) {
             asyncFetch(
-              `https://api-op3o.onrender.com/data/credits/vendors/${context.accountId}/balance`,
+              `${apiUrl}/data/credits/vendors/${context.accountId}/balance`,
             ).then(({ body, ok }) => {
               State.update({
                 balance: ok ? body : 0,
@@ -189,7 +194,7 @@ return (
             <GreyContent>
               <Link
                 href={`/${ownerId}/widget/Index?tab=${
-                  state.project ? "project" : "contributor"
+                  state.project ? "profile" : "contributor"
                 }&accountId=${context.accountId}`}
               >
                 {profileIcon} Your profile
