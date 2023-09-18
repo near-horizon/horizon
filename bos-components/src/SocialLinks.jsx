@@ -1,4 +1,4 @@
-const links = props.links;
+const links = props.links ?? {};
 
 const supportedLinks = [
   {
