@@ -16,7 +16,7 @@ fi
 
 cd bos-components/
 
-pnpm deploy
+pnpm run deploy
 
 cd ..
 
