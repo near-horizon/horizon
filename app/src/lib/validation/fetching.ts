@@ -13,7 +13,7 @@ const socialsSchema = z.enum([
   "telegram",
 ]);
 
-const linktreeSchema = z.record(socialsSchema, z.string());
+export const linktreeSchema = z.record(socialsSchema, z.string());
 
 export type Linktree = z.infer<typeof linktreeSchema>;
 
@@ -39,6 +39,10 @@ export const profileSchema = z
   .passthrough();
 
 export type Profile = z.infer<typeof profileSchema>;
+
+export function isProfileKey(key: string | number): key is keyof Profile {
+  return key in profileSchema.shape;
+}
 
 export const validKeySchema = z.object({
   result: z.object({

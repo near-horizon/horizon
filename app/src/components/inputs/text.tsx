@@ -13,7 +13,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 
-export function EmailInput<
+export function TextInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
@@ -32,7 +32,7 @@ export function EmailInput<
             {props.rules?.required && " *"}
           </FormLabel>
           <FormControl>
-            <Input {...field} placeholder={props.placeholder} type="email" />
+            <Input {...field} placeholder={props.placeholder} type="text" />
           </FormControl>
           <FormDescription>{props.description}</FormDescription>
           <FormMessage />
