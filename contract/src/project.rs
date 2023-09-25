@@ -659,8 +659,10 @@ impl Contract {
 
     /// Spend credits from a project.
     pub fn spend_credits(&mut self, account_id: AccountId, amount: u64, note: Option<String>) {
-        self.assert_admin(&account_id, &env::predecessor_account_id());
         let is_owner = self.check_is_owner(&env::predecessor_account_id());
+        if !is_owner {
+            self.assert_admin(&account_id, &env::predecessor_account_id());
+        }
         self.projects.entry(account_id.clone()).and_modify(|old| {
             let mut project: Project = old.clone().into();
             require!(
