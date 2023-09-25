@@ -9,11 +9,10 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
+import { Checkbox } from "../ui/checkbox";
 
-export function EmailInput<
+export function CheckboxInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
@@ -26,16 +25,14 @@ export function EmailInput<
     <FormField
       {...props}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel className="capitalize">
-            {field.name}
-            {props.rules?.required && " *"}
-          </FormLabel>
+        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
           <FormControl>
-            <Input {...field} placeholder={props.placeholder} type="email" />
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
-          <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <div className="space-y-1 leading-none">
+            <FormLabel className="capitalize">{props.name}</FormLabel>
+            <FormDescription>{props.description}</FormDescription>
+          </div>
         </FormItem>
       )}
     />

@@ -11,15 +11,16 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
-export function EmailInput<
+export function TextAreaInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
   props: UseControllerProps<TFieldValues, TName> & {
     placeholder?: string;
     description?: string;
+    maxLength?: number;
   }
 ) {
   return (
@@ -28,11 +29,16 @@ export function EmailInput<
       render={({ field }) => (
         <FormItem>
           <FormLabel className="capitalize">
-            {field.name}
+            {props.name}
             {props.rules?.required && " *"}
+            {props.maxLength && (
+              <span className="ml-3 text-text-gray">
+                {(field.value as string).length}/{props.maxLength}
+              </span>
+            )}
           </FormLabel>
           <FormControl>
-            <Input {...field} placeholder={props.placeholder} type="email" />
+            <Textarea {...field} placeholder={props.placeholder} />
           </FormControl>
           <FormDescription>{props.description}</FormDescription>
           <FormMessage />

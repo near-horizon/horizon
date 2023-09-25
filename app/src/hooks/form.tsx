@@ -23,3 +23,7 @@ export function useZodForm<Schema extends z.Schema<FieldValues>>(
     resolver: zodResolver(schema),
   });
 }
+
+export type ZodSubmitHandler<Schema extends z.Schema<FieldValues>> = Parameters<
+  ReturnType<typeof useZodForm<Schema>>["handleSubmit"]
+>[0];

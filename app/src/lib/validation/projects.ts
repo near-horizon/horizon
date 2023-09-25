@@ -36,6 +36,12 @@ export const horizonSchema = z.object({
   application: applicationSchema,
 });
 
+export function isHorizonProjectKey(key: string): key is keyof HorizonProject {
+  return key in horizonSchema.shape;
+}
+
+export type HorizonProject = z.infer<typeof horizonSchema>;
+
 export const projectSchema = horizonSchema
   .merge(
     profileSchema.omit({ team: true }).extend({
@@ -46,3 +52,11 @@ export const projectSchema = horizonSchema
     creationTx: transactionSchema.optional(),
     account_id: accountIdSchema,
   });
+
+export type Project = z.infer<typeof projectSchema>;
+
+export const privateProjectSchema = z.object({
+  email: z.string().email(),
+});
+
+export type PrivateProject = z.infer<typeof privateProjectSchema>;

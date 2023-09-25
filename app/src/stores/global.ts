@@ -121,7 +121,7 @@ export function useSignOut() {
   );
 }
 
-export const GAS = "300_000_000_000_000";
+export const GAS = "300000000000000";
 
 export function useSignTx() {
   const selector = useWalletSelector();
