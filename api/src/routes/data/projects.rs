@@ -3,7 +3,8 @@ use std::collections::HashSet;
 use axum::{
     debug_handler,
     extract::{Path, Query, State},
-    routing::get,
+    http::HeaderMap,
+    routing::{get, put},
     Json, Router,
 };
 use reqwest::StatusCode;
@@ -11,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::Row;
 
 use crate::{
+    auth::authorize_bearer,
     routes::data::{set_deserialize, Completion, CompletionPair},
     ApiResult, AppState,
 };
@@ -31,17 +33,17 @@ where
                     return None;
                 }
                 let Some(from) = parts.first() else {
-                return None;
-            };
+                    return None;
+                };
                 let Some(to) = parts.last() else {
-                return None;
-            };
+                    return None;
+                };
                 let Ok(from) = from.parse::<u32>() else {
-                return None;
-            };
+                    return None;
+                };
                 let Ok(to) = to.parse::<u32>() else {
-                return None;
-            };
+                    return None;
+                };
                 if from > to {
                     return None;
                 }
@@ -463,9 +465,187 @@ async fn get_completion(
     Ok(Json(Completion { avg, list }))
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PatchProject {
+    #[serde(default)]
+    email: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    description: Option<String>,
+    #[serde(default)]
+    image: Option<serde_json::Value>,
+    #[serde(default)]
+    website: Option<String>,
+    #[serde(default)]
+    tagline: Option<String>,
+    #[serde(default)]
+    linktree: Option<serde_json::Value>,
+    #[serde(default)]
+    vertical: Option<serde_json::Value>,
+    #[serde(default)]
+    stage: Option<String>,
+    #[serde(default)]
+    userbase: Option<i32>,
+    #[serde(default)]
+    distribution: Option<String>,
+    #[serde(default)]
+    dev: Option<String>,
+    #[serde(default)]
+    product_type: Option<Vec<String>>,
+    #[serde(default)]
+    company_size: Option<i32>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PatchProjectResonse {
+    pub status: bool,
+}
+
+#[debug_handler(state = AppState)]
+async fn put_project(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+    headers: HeaderMap,
+    Json(params): Json<PatchProject>,
+) -> ApiResult<Json<PatchProjectResonse>> {
+    authorize_bearer(&headers, &state).await?;
+    sqlx::query_scalar!(
+        r#"
+        INSERT INTO
+          changes (
+            account_id,
+            email,
+            name,
+            description,
+            image,
+            website,
+            tagline,
+            linktree,
+            vertical,
+            stage,
+            userbase,
+            distribution,
+            dev,
+            product_type,
+            company_size
+          )
+        VALUES
+          (
+            $1, $2, $3, $4, $5, $6, $7, $8,
+            $9, $10, $11, $12, $13, $14, $15
+          ) ON CONFLICT (account_id) DO
+        UPDATE
+        SET
+          email = EXCLUDED.email,
+          name = EXCLUDED.name,
+          description = EXCLUDED.description,
+          image = EXCLUDED.image,
+          website = EXCLUDED.website,
+          tagline = EXCLUDED.tagline,
+          linktree = EXCLUDED.linktree,
+          vertical = EXCLUDED.vertical,
+          stage = EXCLUDED.stage,
+          userbase = EXCLUDED.userbase,
+          distribution = EXCLUDED.distribution,
+          dev = EXCLUDED.dev,
+          product_type = EXCLUDED.product_type,
+          company_size = EXCLUDED.company_size 
+        RETURNING TRUE;
+       "#,
+        account_id,
+        params.email.unwrap_or_default(),
+        params.name.unwrap_or_default(),
+        params.description.unwrap_or_default(),
+        params.image.unwrap_or_default(),
+        params.website.unwrap_or_default(),
+        params.tagline.unwrap_or_default(),
+        params.linktree.unwrap_or_default(),
+        params.vertical.unwrap_or_default(),
+        params.stage.unwrap_or_default(),
+        params.userbase.unwrap_or_default(),
+        params.distribution.unwrap_or_default(),
+        params.dev.unwrap_or_default(),
+        &params.product_type.unwrap_or_default(),
+        params.company_size.unwrap_or_default(),
+    )
+    .fetch_one(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to update project: {e}"),
+        )
+    })
+    .map(|status| {
+        Json(PatchProjectResonse {
+            status: status.unwrap_or_default(),
+        })
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ChangesResponse {
+    pub name: String,
+    pub description: String,
+    pub image: serde_json::Value,
+    pub website: String,
+    pub tagline: String,
+    pub linktree: serde_json::Value,
+    pub vertical: serde_json::Value,
+    pub stage: String,
+    pub userbase: i32,
+    pub distribution: String,
+    pub dev: String,
+    pub product_type: Vec<String>,
+    pub company_size: i32,
+}
+
+#[debug_handler(state = AppState)]
+async fn changes(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+) -> ApiResult<Json<Option<ChangesResponse>>> {
+    sqlx::query_as!(
+        ChangesResponse,
+        r#"
+        SELECT
+          name,
+          description,
+          image,
+          website,
+          tagline,
+          linktree,
+          vertical,
+          stage,
+          userbase,
+          distribution,
+          dev,
+          product_type,
+          company_size
+        FROM
+          changes
+        WHERE
+          account_id = $1
+        "#,
+        account_id.split_whitespace().collect::<Vec<_>>().join("")
+    )
+    .fetch_optional(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get changes: {}", e),
+        )
+    })
+    .map(Json)
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(all_projects))
         .route("/completion", get(get_completion))
         .route("/:account_id/similar", get(get_similar_projects))
+        .route("/:account_id", put(put_project))
+        .route("/:account_id/changes", get(changes))
 }

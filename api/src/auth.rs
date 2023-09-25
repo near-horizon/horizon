@@ -206,3 +206,25 @@ pub async fn verify_signature(message: &str, signature: &str, public_key: &str) 
     };
     public_key.verify(message.as_bytes(), &signature).is_ok()
 }
+
+pub async fn authorize_bearer(headers: &HeaderMap, state: &AppState) -> ApiResult<()> {
+    let Some(authorization) = headers.get("Authorization") else {
+        return Err((
+            StatusCode::UNAUTHORIZED,
+            "Missing authorization".to_string(),
+        ));
+    };
+    let authorization = authorization.to_str().unwrap();
+    let split = authorization.split(' ').collect::<Vec<&str>>();
+    if split.len() != 2 || split.first().unwrap() != &"Bearer" {
+        return Err((
+            StatusCode::UNAUTHORIZED,
+            "Invalid authorization".to_string(),
+        ));
+    }
+    if split.last().unwrap() == &state.bearer_key {
+        Ok(())
+    } else {
+        Err((StatusCode::UNAUTHORIZED, "Unauthorized".to_string()))
+    }
+}
