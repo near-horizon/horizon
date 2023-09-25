@@ -115,37 +115,31 @@ pub struct AppState {
     pub signer: InMemorySigner,
     pub rpc_client: near_jsonrpc_client::JsonRpcClient,
     pub airtable_config: AirtableConfig,
+    pub bearer_key: String,
 }
 
 impl AppState {
     pub async fn new() -> Self {
         #[cfg(not(debug_assertions))]
-        let contract_id =
-            AccountId::from_str(&ensure_var("CONTRACT_ID")).expect("Invalid contract id");
+        let (contract_id, key, atlas_route, atlas_auth, bearer_key) = (
+            AccountId::from_str(&ensure_var("CONTRACT_ID")).expect("Invalid contract id"),
+            {
+                let key = hex::decode(ensure_var("ENCRYPTION_KEY")).expect("Invalid key");
+                sodiumoxide::crypto::secretbox::Key::from_slice(&key).expect("Invalid key")
+            },
+            ensure_var("TOTAL_FUNDRAISE_ROUTE"),
+            ensure_var("TOTAL_FUNDRAISE_AUTH"),
+            ensure_var("API_KEY"),
+        );
 
         #[cfg(debug_assertions)]
-        let contract_id = AccountId::from_str("nearhorizon.near").expect("Invalid contract id");
-
-        #[cfg(not(debug_assertions))]
-        let key = {
-            let key = hex::decode(ensure_var("ENCRYPTION_KEY")).expect("Invalid key");
-            sodiumoxide::crypto::secretbox::Key::from_slice(&key).expect("Invalid key")
-        };
-
-        #[cfg(debug_assertions)]
-        let key = sodiumoxide::crypto::secretbox::gen_key();
-
-        #[cfg(not(debug_assertions))]
-        let atlas_route = ensure_var("TOTAL_FUNDRAISE_ROUTE");
-
-        #[cfg(debug_assertions)]
-        let atlas_route = "".to_string();
-
-        #[cfg(not(debug_assertions))]
-        let atlas_auth = ensure_var("TOTAL_FUNDRAISE_AUTH");
-
-        #[cfg(debug_assertions)]
-        let atlas_auth = "".to_string();
+        let (contract_id, key, atlas_route, atlas_auth, bearer_key) = (
+            AccountId::from_str(&ensure_var("CONTRACT_ID")).expect("Invalid contract id"),
+            sodiumoxide::crypto::secretbox::gen_key(),
+            "".to_string(),
+            "".to_string(),
+            "12345678qwertyuiasdfghjkzxcvbnm,".to_string(),
+        );
 
         let db_url = ensure_var("DATABASE_URL");
 
@@ -177,6 +171,7 @@ impl AppState {
             signer,
             rpc_client,
             airtable_config,
+            bearer_key,
         }
     }
 }
