@@ -11,9 +11,6 @@ import { useZodForm } from "~/hooks/form";
 import { withSSRSession } from "~/lib/auth";
 import { hasProject, useCreateProject } from "~/lib/projects";
 import { useUser } from "~/stores/global";
-import { viewCall } from "~/lib/fetching";
-import { env } from "~/env.mjs";
-import { type HorizonProject } from "~/lib/validation/projects";
 
 const verticals = [
   { text: "DeSci", value: "desci" },

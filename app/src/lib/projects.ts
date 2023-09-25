@@ -13,7 +13,7 @@ import {
   type Project,
   projectSchema,
   type ProjectsQuery,
-  HorizonProject,
+  type HorizonProject,
 } from "./validation/projects";
 import { useSignTx } from "~/stores/global";
 import { type Profile, profileSchema } from "./validation/fetching";
