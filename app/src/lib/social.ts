@@ -18,6 +18,7 @@ import {
 import { type AccountId } from "./validation/common";
 import { type Progress } from "./mutating";
 import { useState } from "react";
+import { type Optional, type Transaction } from "@near-wallet-selector/core";
 
 export async function calculateDeposit(
   accountId: string,
@@ -122,6 +123,29 @@ export function estimateDataCost(
   return 0n;
 }
 
+export function createSocialUpdate(
+  accountId: AccountId,
+  profile: Profile,
+  deposit: bigint
+): Optional<Transaction, "signerId"> {
+  return {
+    receiverId: "social.near",
+    actions: [
+      {
+        type: "FunctionCall",
+        params: {
+          methodName: "set",
+          args: {
+            data: { [accountId]: { profile } },
+          },
+          gas: TX_GAS.toString(),
+          deposit: deposit.toString(),
+        },
+      },
+    ],
+  };
+}
+
 export function useSocialSet(): [
   progress: Progress,
   mutation: UseMutationResult<
@@ -159,24 +183,7 @@ export function useSocialSet(): [
         }
 
         setProgress({ value: 75, label: "Signing transaction..." });
-        await signTxs([
-          {
-            receiverId: "social.near",
-            actions: [
-              {
-                type: "FunctionCall",
-                params: {
-                  methodName: "set",
-                  args: {
-                    data: { [accountId]: { profile } },
-                  },
-                  gas: TX_GAS.toString(),
-                  deposit: deposit.toString(),
-                },
-              },
-            ],
-          },
-        ]);
+        await signTxs([createSocialUpdate(accountId, profile, deposit)]);
         setProgress({ value: 100, label: "Transaction signed" });
       },
       onSuccess: async (_, { accountId }) => {
