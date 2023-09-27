@@ -98,6 +98,14 @@ export async function hasProject(accountId: AccountId) {
   }
 }
 
+export function useHasProject(accountId: AccountId) {
+  return useQuery({
+    queryKey: ["has-project", accountId],
+    queryFn: () => hasProject(accountId),
+    enabled: !!accountId,
+  });
+}
+
 export function useCreateProject(): [
   progress: Progress,
   mutation: UseMutationResult<
