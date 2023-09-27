@@ -11,9 +11,9 @@ export const useHookFormDefaultProps = {
   reValidateMode: "onChange",
   criteriaMode: "all",
   delayError: 300,
-} satisfies UseZodFormParams<z.Schema<FieldValues>>;
+} satisfies UseZodFormParams<z.ZodObject<FieldValues>>;
 
-export function useZodForm<Schema extends z.Schema<FieldValues>>(
+export function useZodForm<Schema extends z.ZodObject<FieldValues>>(
   schema: Schema,
   props?: UseZodFormParams<Schema>
 ) {
@@ -24,6 +24,5 @@ export function useZodForm<Schema extends z.Schema<FieldValues>>(
   });
 }
 
-export type ZodSubmitHandler<Schema extends z.Schema<FieldValues>> = Parameters<
-  ReturnType<typeof useZodForm<Schema>>["handleSubmit"]
->[0];
+export type ZodSubmitHandler<Schema extends z.ZodObject<FieldValues>> =
+  Parameters<ReturnType<typeof useZodForm<Schema>>["handleSubmit"]>[0];
