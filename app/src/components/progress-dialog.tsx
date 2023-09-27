@@ -15,11 +15,15 @@ export function ProgressDialog({
   title,
   description,
   triggerText,
+  ctaLink = "/profile",
+  ctaText = "Go to profile",
 }: {
   progress: number;
   title: string;
   description: string;
   triggerText: string;
+  ctaLink?: string;
+  ctaText?: string;
 }) {
   return (
     <>
@@ -39,7 +43,7 @@ export function ProgressDialog({
         <DialogFooter>
           {progress === 100 && (
             <Button variant="link">
-              <Link href="/profile">Go to profile</Link>
+              <Link href={ctaLink}>{ctaText}</Link>
             </Button>
           )}
         </DialogFooter>
