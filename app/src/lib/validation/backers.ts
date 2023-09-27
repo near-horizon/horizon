@@ -13,6 +13,8 @@ export const horizonSchema = z.object({
   verified: z.boolean(),
 });
 
+export type HorizonBacker = z.infer<typeof horizonSchema>;
+
 export const backerProfileSchema = profileSchema.extend({
   specialization: z.string().optional(),
   location: z.string().optional(),
@@ -24,3 +26,5 @@ export const backerSchema = horizonSchema
     creationTx: transactionSchema.optional(),
     account_id: accountIdSchema,
   });
+
+export type Backer = z.infer<typeof backerSchema>;
