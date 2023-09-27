@@ -20,6 +20,8 @@ export const horizonSchema = z.object({
   credits: z.boolean(),
 });
 
+export type HorizonContributor = z.infer<typeof horizonSchema>;
+
 export const contributorProfileSchema = profileSchema.extend({
   services: z.string().optional(),
   active: z.string().optional(),
@@ -39,3 +41,5 @@ export const contributorSchema = horizonSchema
     creationTx: transactionSchema.optional(),
     account_id: accountIdSchema,
   });
+
+export type Contributor = z.infer<typeof contributorSchema>;
