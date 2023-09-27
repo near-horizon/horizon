@@ -1,10 +1,23 @@
 import { env } from "~/env.mjs";
 import { viewCall } from "./fetching";
 import { type AccountId, type CID } from "./validation/common";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  type UseMutationResult,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+  useMutation,
+} from "@tanstack/react-query";
 import { pageSize } from "./constants/pagination";
 import { intoURLSearchParams } from "./utils";
-import { requestSchema, type RequestsQuery } from "./validation/requests";
+import {
+  requestSchema,
+  type RequestsQuery,
+  type Request,
+} from "./validation/requests";
+import { type Progress } from "./mutating";
+import { useSignTx } from "~/stores/global";
+import { useState } from "react";
 
 export async function getRequests(
   query: RequestsQuery
@@ -80,4 +93,88 @@ export function useRequest(accountId: AccountId, cid: CID, enabled = true) {
     queryFn: () => getRequest(accountId, cid),
     enabled,
   });
+}
+
+export function useCreateRequest(): [
+  progress: Progress,
+  mutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      accountId: AccountId;
+      request: Omit<Request, "cid" | "creationTx">;
+    },
+    unknown
+  >
+] {
+  const signTx = useSignTx();
+  const queryClient = useQueryClient();
+  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
+
+  return [
+    progress,
+    useMutation({
+      mutationFn: async ({
+        accountId,
+        request,
+      }: {
+        accountId: AccountId;
+        request: Omit<Request, "cid" | "creationTx">;
+      }) => {
+        try {
+          setProgress({ value: 50, label: "Creating request..." });
+          await signTx("add_request", { account_id: accountId, request });
+        } catch (e) {
+          setProgress({ value: 50, label: "Failed to create request!" });
+          throw new Error("Failed to create request");
+        }
+        setProgress({ value: 100, label: "Request created!" });
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["requests"] });
+      },
+    }),
+  ];
+}
+
+export function useUpdateBacker(): [
+  progress: Progress,
+  mutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      accountId: AccountId;
+      request: Request;
+    },
+    unknown
+  >
+] {
+  const signTx = useSignTx();
+  const queryClient = useQueryClient();
+  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
+
+  return [
+    progress,
+    useMutation({
+      mutationFn: async ({
+        accountId,
+        request,
+      }: {
+        accountId: AccountId;
+        request: Request;
+      }) => {
+        setProgress({ value: 50, label: "Editing on-chain details..." });
+        try {
+          await signTx("edit_request", { account_id: accountId, request });
+        } catch (e) {
+          setProgress({ value: 50, label: "Failed to update on-chain data!" });
+          throw new Error("Failed to update request");
+        }
+        setProgress({ value: 100, label: "On-chain data saved!" });
+      },
+      onSuccess: async (_, { accountId, request: { cid } }) => {
+        await queryClient.invalidateQueries(["request", accountId, cid]);
+      },
+    }),
+  ];
 }

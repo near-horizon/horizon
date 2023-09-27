@@ -9,8 +9,8 @@ import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
 import { useZodForm } from "~/hooks/form";
 import { withSSRSession } from "~/lib/auth";
+import { hasContributor, useCreateContributor } from "~/lib/contributors";
 import { clearLocalSaveForm, useLocalSaveForm } from "~/lib/mutating";
-import { hasProject, useCreateProject } from "~/lib/projects";
 import { useUser } from "~/stores/global";
 
 const verticals = [
@@ -32,7 +32,7 @@ const verticals = [
 
 const formSchema = z.object({
   email: z.string().email(),
-  "Project name": z.string().min(3).max(50),
+  "Contributor name": z.string().min(3).max(50),
   vertical: z
     .string()
     .refine((val) => verticals.some(({ value }) => value === val), {
@@ -42,12 +42,12 @@ const formSchema = z.object({
   description: z.string().min(30).max(500),
 });
 
-const formId = "create-project";
+const formId = "create-contributor";
 
 export default function Create() {
   const form = useZodForm(formSchema);
   const user = useUser();
-  const [progress, createProject] = useCreateProject();
+  const [progress, createContributor] = useCreateContributor();
   useLocalSaveForm(form, formSchema, formId);
 
   return (
@@ -58,20 +58,20 @@ export default function Create() {
         description="You need to be logged in to create a project profile"
       />
       <h1 className="text-4xl font-bold text-text-black">
-        Create a new project profile
+        Create a new contributor profile
       </h1>
       <Form {...form}>
         <form
           className="w-full"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={form.handleSubmit(({ vertical, email, ...project }) => {
+          onSubmit={form.handleSubmit(({ vertical, email, ...contributor }) => {
             clearLocalSaveForm(formId);
-            createProject.mutate({
+            createContributor.mutate({
               accountId: user!.accountId,
               email,
               profile: {
-                ...project,
-                name: project["Project name"],
+                ...contributor,
+                name: contributor["Contributor name"],
                 vertical: { [vertical]: "" },
               },
             });
@@ -79,8 +79,8 @@ export default function Create() {
         >
           <TextInput
             control={form.control}
-            name="Project name"
-            placeholder="Enter your project's name"
+            name="Contributor name"
+            placeholder="Enter your name"
             rules={{ required: true }}
             defaultValue=""
             disabled={false}
@@ -107,7 +107,7 @@ export default function Create() {
           <TextAreaInput
             control={form.control}
             name="description"
-            placeholder="Describe your project"
+            placeholder="Add a short description"
             rules={{ required: true }}
             defaultValue=""
             disabled={false}
@@ -127,7 +127,7 @@ export default function Create() {
               progress={progress.value}
               description={progress.label}
               title="Creating your profile"
-              triggerText="Create project profile"
+              triggerText="Create contributor profile"
             />
           </div>
         </form>
@@ -137,7 +137,7 @@ export default function Create() {
 }
 
 export const getServerSideProps = withSSRSession(async function({ req }) {
-  if (req.session.user && (await hasProject(req.session.user.accountId))) {
+  if (req.session.user && (await hasContributor(req.session.user.accountId))) {
     return {
       redirect: {
         destination: "/profile",
