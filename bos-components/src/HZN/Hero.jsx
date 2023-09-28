@@ -1,6 +1,6 @@
 const ownerId = "nearhorizon.near";
 const videoUrl =
-  "https://s3-figma-videos-production-sig.figma.com/video/997014367794546530/TEAM/82ee/d904/-8d2f-4850-9ac8-3c823acdcdd8?Expires=1695600000&Signature=HsR-SejEZ9gGzHU1jAOohJEOkqI9AZ5QfU7vAOutKanXvzOoR-C80LgsWXk1sCzLQeilFxdKSiwu56GIj2dHbmQVB5JVtpQawRTsnyge7DcYy0awV7ZhIn7iXkNyjDUPSuHP8po9aT9z79YfVwVIRzSuglMQgp1syV0--5Qm-XrQpv~g06d4jI0M4GgNm42xY4n7ZDZnO3tH1KcUGBFvJLsDFMS32cjbSYqkl7Eh7QR~7wpNmj0JZ~ghkrmaG8uyZz~pxBMdonTR2akAP28-Okwu6WshUaKbOzdieGm5JC~c4TQeTWVORMoAKdXtgy5Ngc4cmTE84TBKlIstTg4diA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4";
+  "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/hzn-visual.mp4";
 
 const Container = styled.div`
   position: relative;
