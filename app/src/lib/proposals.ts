@@ -1,11 +1,20 @@
 import { z } from "zod";
 import { type AccountId, type CID } from "./validation/common";
-import { useQuery } from "@tanstack/react-query";
+import {
+  UseMutationResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   type ProposalId,
   proposalIdSchema,
   proposalSchema,
+  Proposal,
 } from "./validation/proposals";
+import { Progress } from "./mutating";
+import { useSignTx } from "~/stores/global";
+import { useState } from "react";
 
 export async function getProposal([
   [projectId, cid],
@@ -41,4 +50,39 @@ export function useRequestProposals(accountId: AccountId, cid: string) {
       [["", ""], ""],
     ] as ProposalId[],
   });
+}
+
+export function useCreateProposal(): [
+  progress: Progress,
+  mutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      proposal: Proposal;
+    },
+    unknown
+  >
+] {
+  const signTx = useSignTx();
+  const queryClient = useQueryClient();
+  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
+
+  return [
+    progress,
+    useMutation({
+      mutationFn: async ({ proposal }: { proposal: Proposal }) => {
+        try {
+          setProgress({ value: 50, label: "Creating proposal on-chian..." });
+          await signTx("add_proposal", { proposal });
+        } catch (e) {
+          setProgress({ value: 50, label: "Failed to create proposal!" });
+          throw new Error("Failed to create proposal!");
+        }
+        setProgress({ value: 100, label: "Proposal created!" });
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["proposals"] });
+      },
+    }),
+  ];
 }
