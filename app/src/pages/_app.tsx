@@ -32,14 +32,14 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           <TooltipProvider>
             <Dialog>
               <MetaHead />
-              <div className="flex min-h-[100dvh] flex-col ">
-                <div className="mx-2 flex w-full max-w-[min(calc(100%-1rem),1536px)] flex-grow flex-col 2xl:mx-auto">
+              <div className="flex min-h-[100dvh] flex-col">
+                <div className="mx-2 flex w-full max-w-[min(calc(100%-1rem),1536px)] flex-col 2xl:mx-auto">
                   <Navbar />
-
-                  <main className="w-full flex-grow">
-                    <Component {...pageProps} />
-                  </main>
                 </div>
+
+                <main className="flex h-full w-full flex-grow flex-col items-stretch justify-stretch">
+                  <Component {...pageProps} />
+                </main>
 
                 <Footer />
               </div>
