@@ -77,6 +77,7 @@ export function CTAs({ accountId, cid }: { accountId: AccountId; cid: CID }) {
     <div className="flex flex-row items-center justify-start gap-3">
       {adminActions}
       {userActions}
+      <ProposalDialog accountId={accountId} cid={cid} disabled={false} />
       <CTA
         color="gray"
         icon={
