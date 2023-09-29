@@ -8,14 +8,22 @@ interface LearningResourceItem {
   height: string;
 }
 
-interface LearningResources {
+export interface LearningResources {
   encodeEducate: LearningResourceItem[];
   bdBasics: LearningResourceItem[];
   legalHR: LearningResourceItem[];
   growth: LearningResourceItem[];
   technical: LearningResourceItem[];
 }
-export const learningResource: LearningResources = {
+
+export enum SectionTitles {
+  encodeEducate = "NEAR Horizon x Encode Club Educate Series",
+  bdBasics = "Business Fundamentals",
+  legalHr = "Recruiting & Legal",
+  growth = "Growth & Marketing",
+  technical = "Technical",
+}
+export const learningResources: LearningResources = {
   encodeEducate: [
     {
       height: "425px",
