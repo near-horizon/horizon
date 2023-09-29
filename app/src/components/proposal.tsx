@@ -6,6 +6,8 @@ import { Handle } from "./handle";
 import { format } from "timeago.js";
 import { Description } from "./description";
 import { CTA } from "./ui/cta";
+import { useCreateContract, useDeclineProposal } from "~/lib/contracts";
+import { ProgressDialog } from "./progress-dialog";
 
 export function Proposal({
   projectId,
@@ -19,6 +21,8 @@ export function Proposal({
   loading?: boolean;
 }) {
   const { data, status } = useProposal([[projectId, cid], contributorId]);
+  const [acceptProgress, createContract] = useCreateContract();
+  const [declineProgress, declineProposal] = useDeclineProposal();
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -42,8 +46,33 @@ export function Proposal({
         loading={status === "loading" || loading}
       />
       <div className="flex w-full flex-row items-center justify-start gap-4">
-        <CTA icon={<></>} text="Decline" color="gray" />
-        <CTA icon={<></>} text="Hire" color="green" />
+        <ProgressDialog
+          progress={declineProgress.value}
+          title="Declining Proposal"
+          description={declineProgress.label}
+          triggerText="Decline"
+          ctaLink={`/requests/${projectId}/${cid}`}
+          ctaText="Back to request"
+          buttonVariant="destructive"
+          onClick={() => {
+            declineProposal.mutate({
+              proposal_id: [[projectId, cid], contributorId],
+            });
+          }}
+        />
+        <ProgressDialog
+          progress={acceptProgress.value}
+          title="Creating Contract"
+          description={acceptProgress.label}
+          triggerText="Hire"
+          ctaLink={`/contracts/${projectId}/${contributorId}/${cid}`}
+          ctaText="View Contract"
+          onClick={() => {
+            createContract.mutate({
+              proposal_id: [[projectId, cid], contributorId],
+            });
+          }}
+        />
       </div>
     </div>
   );
