@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="mt-4 bg-stone-300 pb-4 pt-16 md:px-8">
+    <footer className="bg-stone-300 pb-4 pt-16 md:px-8">
       <div className="flex max-w-screen-2xl flex-col gap-12 2xl:mx-auto">
         <div className="flex flex-row items-center justify-start gap-6 md:items-start">
           <FooterSection
@@ -103,7 +103,7 @@ export function Footer() {
             </ul>
           </FooterSection>
           <FooterSection
-            header={<Link href="/projects/create">Create profile</Link>}
+            header={<Link href="/onboarding">Create profile</Link>}
           />
         </div>
         <div className="flex flex-row items-center justify-between text-gray-600">
