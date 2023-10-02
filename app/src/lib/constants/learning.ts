@@ -1,4 +1,4 @@
-interface LearningResourceItem {
+export interface LearningResourceItem {
   title: string;
   link: string;
   description: string;
@@ -19,7 +19,7 @@ export interface LearningResources {
 export enum SectionTitles {
   encodeEducate = "NEAR Horizon x Encode Club Educate Series",
   bdBasics = "Business Fundamentals",
-  legalHr = "Recruiting & Legal",
+  legalHR = "Recruiting & Legal",
   growth = "Growth & Marketing",
   technical = "Technical",
 }

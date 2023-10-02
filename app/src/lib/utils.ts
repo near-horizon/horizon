@@ -58,3 +58,22 @@ export function removeEmpty<T>(obj: T): T | null {
 
   return obj;
 }
+
+type DebouncedFunction<T extends any[]> = (...args: T) => void;
+
+export function debounce<T extends any[]>(
+  func: DebouncedFunction<T>,
+  delayMicroseconds: number
+) {
+  let timerId: ReturnType<typeof setTimeout> | null;
+  const delayMilliseconds = delayMicroseconds / 1000;
+  return function (...args: T) {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
+      func(...args);
+      timerId = null;
+    }, delayMilliseconds);
+  };
+}
