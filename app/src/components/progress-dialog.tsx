@@ -20,20 +20,27 @@ export function ProgressDialog({
   ctaText = "Go to profile",
   buttonVariant = "default",
   onClick,
+  className,
 }: {
   progress: number;
   title: string;
   description: string;
-  triggerText: string;
+  triggerText: React.ReactNode;
   ctaLink?: string;
   ctaText?: string;
   buttonVariant?: Parameters<typeof Button>[0]["variant"];
   onClick?: React.MouseEventHandler;
+  className?: string;
 }) {
   return (
     <>
       <DialogTrigger asChild>
-        <Button variant={buttonVariant} type="submit" onClick={onClick}>
+        <Button
+          variant={buttonVariant}
+          type="submit"
+          onClick={onClick}
+          className={className}
+        >
           {triggerText}
         </Button>
       </DialogTrigger>

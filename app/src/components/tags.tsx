@@ -1,4 +1,5 @@
-import clsx from "clsx";
+import { cn } from "~/lib/utils";
+import { Badge } from "./ui/badge";
 
 export function Tags({
   tags,
@@ -23,20 +24,18 @@ export function Tags({
   );
 
   return (
-    <div>
+    <span className="mt-2 inline-flex flex-row flex-wrap items-center justify-start">
       {items.slice(0, 4).map((tag, i) => (
-        <span
+        <Badge
           key={tag + i}
-          className={clsx(
-            "mr-2 inline-block rounded-sm border border-gray-400 bg-white px-2 py-1 text-sm font-medium leading-4 text-gray-400",
-            {
-              "w-20 animate-pulse bg-gray-200": loading,
-            }
-          )}
+          className={cn("mr-2 rounded-lg font-normal text-ui-elements-gray", {
+            "w-20 animate-pulse bg-gray-200": loading,
+          })}
+          variant="outline"
         >
           {tag}
-        </span>
+        </Badge>
       ))}
-    </div>
+    </span>
   );
 }
