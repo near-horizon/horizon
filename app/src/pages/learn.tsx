@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   Card,
@@ -12,7 +12,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Toggle } from "~/components/ui/toggle";
 import { Input } from "~/components/ui/input";
@@ -33,13 +32,12 @@ import { Button } from "~/components/ui/button";
 export default function Learn() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-
   const [searchText, setSearchText] = useState("");
-  const [filteredResources, setFilteredResources] = useState<
+  const [resources, setResources] = useState<
     { type: string; resources: LearningResourceItem[] }[]
   >([]);
 
-  const totalCount: number = Object.values(learningResources).reduce(
+  const totalResourcesCount: number = Object.values(learningResources).reduce(
     (acc, resourceArray) => acc + resourceArray.length,
     0
   );
@@ -59,11 +57,85 @@ export default function Learn() {
 
   const filterTypeOptions = Object.entries(SectionTitles);
 
-  const filteredResourcesCount = filteredResources.reduce(
+  const filterResults = useMemo(
+    () =>
+      Object.entries(learningResources)
+        .filter(([resourceKey, resourceArray]) => {
+          const selectedCategoriesEmpty = selectedCategories.length === 0;
+          const selectedTypesEmpty = selectedTypes.length === 0;
+
+          const resourceTags: string[] = resourceArray.reduce(
+            (acc: string[], resource: LearningResourceItem) => {
+              resource.tags.forEach((tag: string) => {
+                if (!acc.includes(tag)) {
+                  acc.push(tag);
+                }
+              });
+
+              return acc;
+            },
+            [] as string[]
+          );
+
+          if (
+            (selectedTypesEmpty || selectedTypes.includes(resourceKey)) &&
+            (selectedCategoriesEmpty ||
+              selectedCategories.some((cat) => resourceTags.includes(cat))) &&
+            (searchText === "" ||
+              resourceArray.some(
+                (resource: LearningResourceItem) =>
+                  resource.title
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase()) ||
+                  resource.description
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase())
+              ))
+          ) {
+            return true;
+          }
+          return false;
+        })
+        .map(
+          ([resourceKey, resourceArray]): {
+            type: string;
+            resources: LearningResourceItem[];
+          } => ({
+            type: resourceKey,
+            resources: resourceArray.filter(
+              (resource: LearningResourceItem) =>
+                (selectedCategories.length === 0 ||
+                  resource.tags.some((tag) =>
+                    selectedCategories.includes(tag)
+                  )) &&
+                (selectedTypes.length === 0 ||
+                  selectedTypes.includes(resourceKey)) &&
+                (searchText === "" ||
+                  resource.title
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase()) ||
+                  resource.description
+                    .toLowerCase()
+                    .includes(searchText.toLowerCase()))
+            ),
+          })
+        ),
+    [selectedCategories, selectedTypes, searchText]
+  );
+
+  const resourcesCount = resources.reduce(
     (acc, resourceArray) => acc + resourceArray.resources.length,
     0
   );
 
+  const filterResultsCount = filterResults.reduce(
+    (acc, resourceArray) => acc + resourceArray.resources.length,
+    0
+  );
+
+  useEffect(() => {
+    setResources(filterResults);
+  }, []);
   const formatCategoryLabel = (categoryString: string) => {
     let formattedString = categoryString
       .replace(/-/g, " ")
@@ -96,81 +168,14 @@ export default function Learn() {
 
   const handleInputChange = debounce((inputVal) => {
     setSearchText(inputVal);
-    handleApplyFilters();
+    setResources(filterResults);
   }, 300);
 
   const handleClearSelectedTypes = () => {
     setSelectedTypes([]);
-    handleApplyFilters();
   };
   const handleClearSelectedCategories = () => {
     setSelectedCategories([]);
-    handleApplyFilters();
-  };
-
-  const handleApplyFilters = () => {
-    const filterResults = Object.entries(learningResources)
-      .filter(([resourceKey, resourceArray]) => {
-        const selectedCategoriesEmpty = selectedCategories.length === 0;
-        const selectedTypesEmpty = selectedTypes.length === 0;
-
-        const resourceTags: string[] = resourceArray.reduce(
-          (acc: string[], resource: LearningResourceItem) => {
-            resource.tags.forEach((tag: string) => {
-              if (!acc.includes(tag)) {
-                acc.push(tag);
-              }
-            });
-
-            return acc;
-          },
-          [] as string[]
-        );
-
-        if (
-          (selectedTypesEmpty || selectedTypes.includes(resourceKey)) &&
-          (selectedCategoriesEmpty ||
-            selectedCategories.some((cat) => resourceTags.includes(cat))) &&
-          (searchText === "" ||
-            resourceArray.some(
-              (resource: LearningResourceItem) =>
-                resource.title
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase()) ||
-                resource.description
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase())
-            ))
-        ) {
-          return true;
-        }
-        return false;
-      })
-      .map(
-        ([resourceKey, resourceArray]): {
-          type: string;
-          resources: LearningResourceItem[];
-        } => ({
-          type: resourceKey,
-          resources: resourceArray.filter(
-            (resource: LearningResourceItem) =>
-              (selectedCategories.length === 0 ||
-                resource.tags.some((tag) =>
-                  selectedCategories.includes(tag)
-                )) &&
-              (selectedTypes.length === 0 ||
-                selectedTypes.includes(resourceKey)) &&
-              (searchText === "" ||
-                resource.title
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase()) ||
-                resource.description
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase()))
-          ),
-        })
-      );
-    setFilteredResources(filterResults);
   };
 
   return (
@@ -178,7 +183,7 @@ export default function Learn() {
       <div className="mb-6 text-3xl font-bold tracking-wide text-gray-900">
         Learning resources{" "}
         <span className="text-2xl font-normal text-ui-elements-gray">
-          {totalCount}
+          {totalResourcesCount}
         </span>
       </div>
       <div>
@@ -211,8 +216,8 @@ export default function Learn() {
                 >
                   Clear filters
                 </Button>
-                <Button onClick={handleApplyFilters}>
-                  Show {filteredResourcesCount || totalCount} results
+                <Button onClick={() => setResources(filterResults)}>
+                  Show {filterResultsCount} results
                 </Button>
               </div>
             </DropdownMenuContent>
@@ -241,8 +246,8 @@ export default function Learn() {
                 >
                   Clear filters
                 </Button>
-                <Button onClick={handleApplyFilters}>
-                  Show {filteredResourcesCount || totalCount} results
+                <Button onClick={() => setResources(filterResults)}>
+                  Show {filterResultsCount} results
                 </Button>
               </div>
             </DropdownMenuContent>
@@ -251,7 +256,7 @@ export default function Learn() {
         {/* Quick filters will go here */}
         <div className="mt-8 flex items-center justify-between">
           <div className="text-sm text-ui-elements-dark">
-            <span className="font-bold">{filteredResourcesCount} </span>
+            <span className="font-bold">{resourcesCount} </span>
             <span className="font-normal">results</span>
           </div>
 
@@ -265,7 +270,7 @@ export default function Learn() {
         </div>
       </div>
       <div>
-        {filteredResources.map((resource, i) => {
+        {resources.map((resource, i) => {
           return (
             <div key={resource.type} className={`${i !== 0 ? "mt-14" : ""}`}>
               <h3 className="mb-8 text-2xl font-bold">
