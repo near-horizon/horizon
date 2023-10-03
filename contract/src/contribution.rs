@@ -180,6 +180,7 @@ impl Contract {
     ) {
         self.assert_can_edit_project(&project_id, &near_sdk::env::predecessor_account_id());
         self.assert_is_contribution(&project_id, &cid, &vendor_id);
+        let is_owner = self.check_is_owner(&near_sdk::env::predecessor_account_id());
         self.contributions
             // Get the contribution history between the project and vendor.
             .entry((project_id.clone(), vendor_id.clone()))
@@ -191,7 +192,10 @@ impl Contract {
                         // Remove the specific contribution entry.
                         history.remove(&cid);
                     }
-                    _ => {}
+                    _ => {
+                        require!(is_owner, "ERR_CONTRIBUTION_ALREADY_RESPONDED_TO");
+                        history.remove(&cid);
+                    }
                 };
             });
         Events::RemoveContribution {

@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Progress } from "./ui/progress";
+import React from "react";
 
 export function ProgressDialog({
   progress,
@@ -17,18 +18,29 @@ export function ProgressDialog({
   triggerText,
   ctaLink = "/profile",
   ctaText = "Go to profile",
+  buttonVariant = "default",
+  onClick,
+  className,
 }: {
   progress: number;
   title: string;
   description: string;
-  triggerText: string;
+  triggerText: React.ReactNode;
   ctaLink?: string;
   ctaText?: string;
+  buttonVariant?: Parameters<typeof Button>[0]["variant"];
+  onClick?: React.MouseEventHandler;
+  className?: string;
 }) {
   return (
     <>
       <DialogTrigger asChild>
-        <Button variant="default" type="submit">
+        <Button
+          variant={buttonVariant}
+          type="submit"
+          onClick={onClick}
+          className={className}
+        >
           {triggerText}
         </Button>
       </DialogTrigger>

@@ -10,6 +10,19 @@ fn generate_key() -> String {
 
 #[tokio::main]
 async fn main() {
+    match dotenvy::dotenv() {
+        Ok(_) => {}
+        Err(e) => {
+            eprintln!(
+                r#"
+                Error loading .env file: {}
+                Continuing without .env file.
+                "#,
+                e
+            );
+        }
+    }
+
     let state = AppState::new().await;
 
     tracing_subscriber::fmt::init();

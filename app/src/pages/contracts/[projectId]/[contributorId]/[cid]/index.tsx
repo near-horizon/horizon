@@ -3,7 +3,9 @@ import { useRouter } from "next/router";
 import { z } from "zod";
 import { Availability } from "~/components/availability";
 import { Activity } from "~/components/contract/activity";
+import { CTAs } from "~/components/contract/ctas";
 import { Details } from "~/components/contract/details";
+import { Feedback } from "~/components/contract/feedback";
 import ContentTabs from "~/components/ui/content-tabs";
 import { withSSRSession } from "~/lib/auth";
 import { useContract } from "~/lib/contracts";
@@ -48,7 +50,7 @@ export default function Contract() {
             : ""
         }
       />
-      {/* <CTAs accountId={accountId} cid={cid} /> */}
+      <CTAs contractId={[[projectId, cid], contributorId]} />
 
       <ContentTabs
         tabs={[
@@ -74,7 +76,13 @@ export default function Contract() {
               />
             ),
           },
-          { id: "feedback", text: "Feedback", children: "Feedback here." },
+          {
+            id: "feedback",
+            text: "Feedback",
+            children: (
+              <Feedback contractId={[[projectId, cid], contributorId]} />
+            ),
+          },
         ]}
         tabRule={z
           .enum(["activity", "details", "feedback"])
