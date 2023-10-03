@@ -9,19 +9,19 @@ import {
   type GetServerSidePropsResult,
 } from "next";
 import { type AccountId } from "./validation/common";
-import { sleep } from "./utils";
+// import { sleep } from "./utils";
 
 export async function loginUser(
   accountId: AccountId,
   publicKey: string
 ): Promise<IronSession["user"]> {
   // Wait for chain to update key info
-  await sleep(1500);
+  // await sleep(1500);
 
-  const isKeyValid = await getKeyInfo(accountId, publicKey);
-  if (!isKeyValid) {
-    throw new Error("Key is not valid");
-  }
+  // const isKeyValid = await getKeyInfo(accountId, publicKey);
+  // if (!isKeyValid) {
+  //   throw new Error("Key is not valid");
+  // }
 
   const admin = await viewCall<boolean>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
