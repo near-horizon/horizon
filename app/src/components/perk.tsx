@@ -13,6 +13,7 @@ import ClipboardIcon from "./icons/copy-03.svg";
 import SquareIcon from "./icons/square.svg";
 import CheckSquare from "./icons/check-square.svg";
 import { cn } from "~/lib/utils";
+import { Separator } from "./ui/separator";
 
 const requirementMapping = {
   "profile-created": "Create Profile",
@@ -112,7 +113,7 @@ export function Perk(perk: Perk) {
                 >
                   {
                     requirementMapping[
-                      requirement as keyof typeof requirementMapping
+                    requirement as keyof typeof requirementMapping
                     ]
                   }
                 </span>
@@ -121,6 +122,7 @@ export function Perk(perk: Perk) {
           </Section>
         )}
       </CardContent>
+      <Separator className="mb-3 h-px w-full bg-ui-elements-light" />
       <CardFooter className="flex-grow-0">
         <CTA {...perk} />
       </CardFooter>
