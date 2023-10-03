@@ -47,7 +47,7 @@ export default function Perks() {
         <div className="">
           <FilterDropdown
             triggerText={"Category"}
-            options={categories}
+            options={categories.map((value) => ({ value, label: value }))}
             onChange={setSelected}
             selected={selected}
             getFilteredCount={(selected) => filterData(selected, search).length}
