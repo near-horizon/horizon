@@ -54,7 +54,7 @@ export function FilterDropdown({
             </Button>
           ))}
         </div>
-        <Separator className="h-px w-full bg-ui-elements-dark" />
+        <Separator className="h-px w-full bg-ui-elements-light" />
         <div className="flex flex-row items-center justify-center gap-4 px-3">
           <Button variant="destructive">Clear filters</Button>
           <Button variant="default" onClick={() => onChange(selectedInner)}>
