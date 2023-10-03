@@ -56,7 +56,15 @@ export function FilterDropdown({
         </div>
         <Separator className="h-px w-full bg-ui-elements-light" />
         <div className="flex flex-row items-center justify-center gap-4 px-3">
-          <Button variant="destructive">Clear filters</Button>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              setSelected([]);
+              onChange([]);
+            }}
+          >
+            Clear filters
+          </Button>
           <Button variant="default" onClick={() => onChange(selectedInner)}>
             Show {getFilteredCount(selectedInner)} results
           </Button>
