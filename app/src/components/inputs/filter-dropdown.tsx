@@ -12,7 +12,7 @@ export function FilterDropdown({
   getFilteredCount,
 }: {
   triggerText: React.ReactNode;
-  options: string[];
+  options: { value: string; label: string }[];
   onChange: (value: string[]) => void;
   selected: string[];
   getFilteredCount: (value: string[]) => number;
@@ -38,25 +38,35 @@ export function FilterDropdown({
         <div className="flex flex-row flex-wrap gap-2 px-3">
           {options.map((option) => (
             <Button
-              key={option}
+              key={option.value}
               className="transition-colors duration-300 ease-in-out"
-              variant={selectedInner.includes(option) ? "secondary" : "outline"}
+              variant={
+                selectedInner.includes(option.value) ? "secondary" : "outline"
+              }
               onClick={() => {
-                const isSelected = selectedInner.includes(option);
+                const isSelected = selectedInner.includes(option.value);
                 if (isSelected) {
-                  setSelected(selectedInner.filter((o) => o !== option));
+                  setSelected(selectedInner.filter((o) => o !== option.value));
                 } else {
-                  setSelected([...selectedInner, option]);
+                  setSelected([...selectedInner, option.value]);
                 }
               }}
             >
-              {option}
+              {option.label}
             </Button>
           ))}
         </div>
         <Separator className="h-px w-full bg-ui-elements-light" />
         <div className="flex flex-row items-center justify-center gap-4 px-3">
-          <Button variant="destructive">Clear filters</Button>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              setSelected([]);
+              onChange([]);
+            }}
+          >
+            Clear filters
+          </Button>
           <Button variant="default" onClick={() => onChange(selectedInner)}>
             Show {getFilteredCount(selectedInner)} results
           </Button>
