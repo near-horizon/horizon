@@ -1,8 +1,11 @@
+import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { FilterDropdown } from "~/components/inputs/filter-dropdown";
 import { SearchInput } from "~/components/inputs/search";
 import { Perk } from "~/components/perk";
+import { withSSRSession } from "~/lib/auth";
 import { usePerkCategories, usePerks } from "~/lib/perks";
+import { getPerks } from "./api/perks";
 
 export default function Perks() {
   const { data } = usePerks();
@@ -71,3 +74,28 @@ export default function Perks() {
     </div>
   );
 }
+
+export const getServerSideProps = withSSRSession(async function({ req }) {
+  const accountId = req.session.user?.accountId;
+
+  if (!accountId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const queryClient = new QueryClient();
+
+  const perks = await getPerks(accountId);
+
+  queryClient.setQueryData(["perks"], perks);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+});
