@@ -33,8 +33,19 @@ export const horizonSchema = z.object({
   tam: z.string(),
   geo: z.string(),
   verified: z.boolean(),
+  contracts: z.array(accountIdSchema),
   application: applicationSchema,
 });
+
+export const sectionSchema = z.enum([
+  "basic",
+  "tech",
+  "funding",
+  "founders",
+  "files",
+]);
+
+export type Section = z.infer<typeof sectionSchema>;
 
 export function isHorizonProjectKey(key: string): key is keyof HorizonProject {
   return key in horizonSchema.shape;

@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import { getImageURL, useProfile } from "~/lib/fetching";
 import { cn } from "~/lib/utils";
