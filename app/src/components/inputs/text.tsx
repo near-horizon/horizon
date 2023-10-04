@@ -12,23 +12,19 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function TextInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-  }
-) {
+>(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   return (
     <FormField
       {...props}
       render={({ field }) => (
         <FormItem>
           <FormLabel className="capitalize">
-            {field.name}
+            {props.label ?? field.name}
             {props.rules?.required && " *"}
           </FormLabel>
           <FormControl>

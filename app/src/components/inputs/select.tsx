@@ -20,18 +20,18 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function SelectInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-    options:
-    | { value: string; text: string }[]
-    | { group: string; options: { value: string; text: string }[] }[];
-  }
+  props: UseControllerProps<TFieldValues, TName> &
+    InputProps & {
+      options:
+      | { value: string; text: string }[]
+      | { group: string; options: { value: string; text: string }[] }[];
+    }
 ) {
   const options = props.options.map((option) => {
     if ("group" in option) {
@@ -59,7 +59,10 @@ export function SelectInput<
       {...props}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="capitalize">{props.name}</FormLabel>
+          <FormLabel className="capitalize">
+            {props.label ?? field.name}
+            {props.rules?.required && " *"}
+          </FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>

@@ -11,16 +11,12 @@ import {
   FormLabel,
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function CheckboxInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-  }
-) {
+>(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   return (
     <FormField
       {...props}
@@ -30,7 +26,10 @@ export function CheckboxInput<
             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>
           <div className="space-y-1 leading-none">
-            <FormLabel className="capitalize">{props.name}</FormLabel>
+            <FormLabel className="capitalize">
+              {props.label ?? props.name}
+              {props.rules?.required && " *"}
+            </FormLabel>
             <FormDescription>{props.description}</FormDescription>
           </div>
         </FormItem>
