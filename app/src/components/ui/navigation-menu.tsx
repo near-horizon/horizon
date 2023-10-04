@@ -1,9 +1,11 @@
+"use client";
 import * as React from "react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { cva } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
 
 import { cn } from "~/lib/utils";
+import Link from "next/link";
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
@@ -77,7 +79,17 @@ const NavigationMenuContent = React.forwardRef<
 ));
 NavigationMenuContent.displayName = NavigationMenuPrimitive.Content.displayName;
 
-const NavigationMenuLink = NavigationMenuPrimitive.Link;
+const NavigationMenuLink = React.forwardRef<
+  React.ElementRef<typeof NavigationMenuPrimitive.Link>,
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Link>
+>(({ className, children, href, ...props }, ref) => (
+  <NavigationMenuPrimitive.Link ref={ref} {...props} asChild>
+    <Link className={className} href={href ?? "#"}>
+      {children}
+    </Link>
+  </NavigationMenuPrimitive.Link>
+));
+NavigationMenuLink.displayName = NavigationMenuPrimitive.Link.displayName;
 
 const NavigationMenuViewport = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Viewport>,

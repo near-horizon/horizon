@@ -37,15 +37,19 @@ const config = {
       // Convert all other *.svg imports to React components
       {
         test: /\.svg$/i,
-        issuer: /\.[jt]sx?$/,
-        resourceQuery: { not: /url/ }, // exclude if *.svg?url
+        issuer: fileLoaderRule.issuer,
+        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
         use: ["@svgr/webpack"],
       }
     );
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i;
-
+    config.externals.push({
+      "utf-8-validate": "commonjs utf-8-validate",
+      bufferutil: "commonjs bufferutil",
+      encoding: "commonjs encoding",
+    });
     return config;
     /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-return */
   },

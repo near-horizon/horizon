@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --12: linear-gradient(
+      90deg,
+      rgba(33, 214, 204, 1) 0%,
+      rgba(125, 33, 207, 1) 100%
+    );
+    --3: linear-gradient(
+      90deg,
+      rgba(5, 56, 255, 1) 0%,
+      rgba(64, 255, 199, 1) 100%
+    );
+    --dawn: linear-gradient(
+      90deg,
+      rgba(0, 201, 255, 1) 0%,
+      rgba(146, 254, 157, 1) 100%
+    );
+    --dawn-2: linear-gradient(
+      90deg,
+      rgba(0, 201, 255, 1) 0%,
+      rgba(146, 254, 248, 1) 100%
+    );
+    --ui-elements--light: rgba(236, 238, 240, 1);
+    --ui-elements--gray: rgba(126, 134, 140, 1);
+    --ui-elements--black: rgba(0, 0, 0, 1);
+    --ui-elements--white: rgba(255, 255, 255, 1);
+    --ui-elements--dark: rgba(17, 24, 28, 1);
+    --background--black: rgba(0, 0, 0, 1);
+    --background--darker: rgba(32, 36, 37, 1);
+    --background--dark: rgba(58, 63, 66, 1);
+    --background--light: rgba(250, 250, 250, 1);
+    --background--beige: rgba(242, 241, 234, 1);
+    --background--white: rgba(255, 255, 255, 1);
+    --background--black-2: rgba(22, 22, 21, 1);
+    --error--error-focus: rgba(255, 121, 102, 1);
+    --error--error-pressed: rgba(233, 20, 9, 1);
+    --error--error-hover: rgba(255, 121, 102, 1);
+    --error--error-default: rgba(244, 71, 56, 1);
+    --accent--accent-disabled: rgba(221, 221, 221, 1);
+    --accent--accent-link: rgba(2, 130, 162, 1);
+    --accent--accent-focus: rgba(98, 235, 228, 1);
+    --accent--accent-pressed: rgba(13, 174, 187, 1);
+    --accent--accent-hover: rgba(98, 235, 228, 1);
+    --accent--accent-default: rgba(23, 217, 212, 1);
+    --secondary--secondary-disabled: rgba(221, 221, 221, 1);
+    --secondary--secondary-dark: rgba(77, 59, 194, 1);
+    --secondary--secondary-focus: rgba(186, 186, 252, 1);
+    --secondary--secondary-pressed: rgba(114, 105, 225, 1);
+    --secondary--secondary-hover: rgba(186, 186, 252, 1);
+    --secondary--secondary-default: rgba(151, 151, 255, 1);
+    --primary--primary-disabled: rgba(221, 221, 221, 1);
+    --primary--primary-light: rgba(199, 245, 216, 1);
+    --primary--primary-link: rgba(9, 109, 80, 1);
+    --primary--primary-focus: rgba(100, 241, 184, 1);
+    --primary--primary-pressed: rgba(4, 164, 110, 1);
+    --primary--primary-hover: rgba(100, 241, 184, 1);
+    --primary--primary-default: rgba(0, 236, 151, 1);
+    --text--text-error: rgba(233, 20, 9, 1);
+    --text--text-disabled: rgba(135, 138, 142, 1);
+    --text--text-dark: rgba(17, 24, 28, 1);
+    --text--text-gray: rgba(104, 112, 118, 1);
+    --text--text-primary: rgba(16, 24, 40, 1);
+    --text--text-black: rgba(0, 0, 0, 1);
+    --text--text-white: rgba(255, 255, 255, 1);
+    --text--text-link: rgba(0, 106, 220, 1);
+
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+
+    --primary: 24 9.8% 10%;
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 20 14.3% 4.1%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

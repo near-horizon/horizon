@@ -7,7 +7,7 @@ const bodySchema = profileSchema.extend({
   email: z.string().email().optional(),
 });
 
-export default withAPISession(async function userRoute(req, res) {
+export default withAPISession(async function(req, res) {
   if (!req.session.user) {
     res.status(401).send({ error: "Unauthorized" });
     return;
