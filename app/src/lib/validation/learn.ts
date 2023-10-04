@@ -5,8 +5,8 @@ export const learningResourceSchema = z.object({
   description: z.string(),
   height: z.string(),
   link: z.string().url(),
-  img: z.string().url(),
-  video: z.string().url(),
+  img: z.string().url().or(z.literal("")),
+  video: z.string().url().or(z.literal("")),
   tags: z.array(z.string()),
 });
 
