@@ -12,16 +12,16 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function CheckboxesInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-    checkboxes: { id: string; text: string }[];
-  }
+  props: UseControllerProps<TFieldValues, TName> &
+    InputProps & {
+      checkboxes: { id: string; text: string }[];
+    }
 ) {
   const checkboxes = props.checkboxes.map((item) => (
     <FormField
@@ -60,7 +60,10 @@ export function CheckboxesInput<
       render={() => (
         <FormItem>
           <div className="mb-4">
-            <FormLabel className="text-base capitalize">{props.name}</FormLabel>
+            <FormLabel className="text-base capitalize">
+              {props.name}
+              {props.rules?.required && " *"}
+            </FormLabel>
             <FormDescription>{props.description}</FormDescription>
           </div>
           {checkboxes}

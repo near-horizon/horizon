@@ -12,16 +12,16 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function TextAreaInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-    maxLength?: number;
-  }
+  props: UseControllerProps<TFieldValues, TName> &
+    InputProps & {
+      maxLength?: number;
+    }
 ) {
   return (
     <FormField
@@ -29,19 +29,24 @@ export function TextAreaInput<
       render={({ field }) => (
         <FormItem>
           <FormLabel className="capitalize">
-            {props.name}
+            {props.label ?? field.name}
             {props.rules?.required && " *"}
-            {props.maxLength && (
-              <span className="ml-3 text-text-gray">
-                {(field.value as string).length}/{props.maxLength}
-              </span>
-            )}
           </FormLabel>
           <FormControl>
             <Textarea {...field} placeholder={props.placeholder} />
           </FormControl>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <div className="flex flex-row items-start justify-between">
+            <span>
+              <FormMessage />
+            </span>
+            {props.maxLength && (
+              <span className="ml-3 text-text-gray">
+                {props.maxLength - (field.value as string).length} characters
+                left
+              </span>
+            )}
+          </div>
         </FormItem>
       )}
     />
