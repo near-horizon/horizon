@@ -1,5 +1,5 @@
 import { type IronSession } from "iron-session";
-import { getKeyInfo, viewCall } from "./fetching";
+import { viewCall } from "./fetching";
 import { env } from "~/env.mjs";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { ironSessionConfig } from "./constants/iron-session";
@@ -9,6 +9,8 @@ import {
   type GetServerSidePropsResult,
 } from "next";
 import { type AccountId } from "./validation/common";
+import { cookies } from "next/headers";
+import { unsealData } from "iron-session/edge";
 // import { sleep } from "./utils";
 
 export async function loginUser(
@@ -34,6 +36,18 @@ export async function loginUser(
     publicKey,
     admin,
   };
+}
+
+export async function getUserFromSession() {
+  const cookieStore = cookies();
+
+  const session = cookieStore.get(ironSessionConfig.cookieName)?.value;
+
+  return session
+    ? await unsealData<IronSession["user"]>(session, {
+      password: ironSessionConfig.password,
+    })
+    : null;
 }
 
 export function withSSRSession<Props>(
