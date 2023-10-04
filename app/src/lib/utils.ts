@@ -58,9 +58,10 @@ export function removeEmpty<T>(obj: T): T | null {
 
   return obj;
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DebouncedFunction<T extends any[]> = (...args: T) => void;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce<T extends any[]>(
   func: DebouncedFunction<T>,
   delayMicroseconds: number

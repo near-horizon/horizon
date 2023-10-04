@@ -385,7 +385,7 @@ export const learningResource = [
       {
         height: "325px",
         title: "Keypom",
-        link: "hhttps://keypom.xyz/",
+        link: "https://keypom.xyz/",
         description: "Onboarding toolkit for builders and dApp creators",
         img: "",
         video: "",
@@ -395,10 +395,7 @@ export const learningResource = [
   },
 ] satisfies LearningCategory[];
 
-export default function learningHandler(
-  _req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default function handler(_req: NextApiRequest, res: NextApiResponse) {
   res.status(200).json(learningResource);
   return;
 }
