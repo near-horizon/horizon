@@ -3,6 +3,7 @@ import { QueryClient, dehydrate } from "@tanstack/react-query";
 
 import { SearchInput } from "~/components/inputs/search";
 import { FilterDropdown } from "~/components/inputs/filter-dropdown";
+import { LearnCard } from "~/components/learn/learn-card";
 
 import { withSSRSession } from "~/lib/auth";
 import {
@@ -10,13 +11,9 @@ import {
   useLearningResources,
   useLearningResourcesTotalCount,
 } from "~/lib/learn";
-import type {
-  LearningCategory,
-  LearningResource,
-} from "~/lib/validation/learn";
+import type { LearningCategory } from "~/lib/validation/learn";
 
 import { learningResource } from "./api/learn";
-import { LearnCard } from "~/components/learn/learn-card";
 
 export default function Learn() {
   const { data } = useLearningResources();
@@ -31,71 +28,32 @@ export default function Learn() {
   const filterData = useCallback(
     (selectedCategories: string[], selectedTypes: string[], search: string) =>
       data
-        .filter((resourceItem: LearningCategory) => {
-          const selectedCategoriesEmpty = selectedCategories.length === 0;
-          const selectedTypesEmpty = selectedTypes.length === 0;
-
-          const resourceTags: string[] = resourceItem.items.reduce(
-            (uniqueTags: string[], resource: LearningResource) => {
-              resource.tags.forEach((tag: string) => {
-                if (!uniqueTags.includes(tag)) {
-                  uniqueTags.push(tag);
-                }
-              });
-
-              return uniqueTags;
-            },
-            [] as string[]
-          );
-
-          if (
-            (selectedTypesEmpty || selectedTypes.includes(resourceItem.id)) &&
-            (selectedCategoriesEmpty ||
-              selectedCategories.some((cat) => resourceTags.includes(cat))) &&
-            (search === "" ||
-              resourceItem.items.some(
-                (resource: LearningResource) =>
-                  resource.title.toLowerCase().includes(search.toLowerCase()) ||
-                  resource.description
-                    .toLowerCase()
-                    .includes(search.toLowerCase())
-              ))
-          ) {
-            return true;
-          }
-          return false;
-        })
-        .map(
-          (
-            resourceItem: LearningCategory
-          ): {
-            title: string;
-            id: string;
-            items: LearningResource[];
-          } => ({
-            title: resourceItem.title,
-            id: resourceItem.id,
-            items: resourceItem.items.filter(
-              (resource: LearningResource) =>
-                (selectedCategories.length === 0 ||
-                  resource.tags.some((tag) =>
-                    selectedCategories.includes(tag)
-                  )) &&
-                (selectedTypes.length === 0 ||
-                  selectedTypes.includes(resourceItem.id)) &&
-                (search === "" ||
-                  resource.title.toLowerCase().includes(search.toLowerCase()) ||
-                  resource.description
-                    .toLowerCase()
-                    .includes(search.toLowerCase()))
-            ),
-          })
+        .map((resourceItem) => ({
+          ...resourceItem,
+          items: resourceItem.items.filter(
+            (resource) =>
+              (selectedCategories.length === 0 ||
+                resource.tags.some((tag) =>
+                  selectedCategories.includes(tag)
+                )) &&
+              (search.length === 0 ||
+                resource.title.toLowerCase().includes(search.toLowerCase()) ||
+                resource.description
+                  .toLowerCase()
+                  .includes(search.toLowerCase()))
+          ),
+        }))
+        .filter(
+          (resourceItem) =>
+            resourceItem.items.length > 0 &&
+            (selectedTypes.length === 0 ||
+              selectedTypes.includes(resourceItem.id))
         ),
     [data]
   );
 
   return (
-    <div className="flex w-full max-w-[min(calc(100%-1rem),1536px)] flex-col gap-8  2xl:mx-auto">
+    <div className="flex w-full max-w-[max(calc(100%-1rem),1536px)] flex-col gap-8 2xl:mx-auto">
       <div className="mb-6 text-3xl font-bold tracking-wide text-gray-900">
         Learning resources{" "}
         <span className="text-2xl font-normal text-ui-elements-gray">

@@ -58,23 +58,3 @@ export function removeEmpty<T>(obj: T): T | null {
 
   return obj;
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type DebouncedFunction<T extends any[]> = (...args: T) => void;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function debounce<T extends any[]>(
-  func: DebouncedFunction<T>,
-  delayMicroseconds: number
-) {
-  let timerId: ReturnType<typeof setTimeout> | null;
-  const delayMilliseconds = delayMicroseconds / 1000;
-  return function (...args: T) {
-    if (timerId) {
-      clearTimeout(timerId);
-    }
-    timerId = setTimeout(() => {
-      func(...args);
-      timerId = null;
-    }, delayMilliseconds);
-  };
-}
