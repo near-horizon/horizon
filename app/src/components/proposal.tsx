@@ -5,7 +5,6 @@ import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { format } from "timeago.js";
 import { Description } from "./description";
-import { CTA } from "./ui/cta";
 import { useCreateContract, useDeclineProposal } from "~/lib/contracts";
 import { ProgressDialog } from "./progress-dialog";
 

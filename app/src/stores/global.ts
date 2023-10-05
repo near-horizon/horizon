@@ -16,7 +16,6 @@ import { setupNightly } from "@near-wallet-selector/nightly";
 import { setupSender } from "@near-wallet-selector/sender";
 import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { type IronSession } from "iron-session";
-import { useRouter } from "next/router";
 import React from "react";
 import { create } from "zustand";
 import { env } from "~/env.mjs";
