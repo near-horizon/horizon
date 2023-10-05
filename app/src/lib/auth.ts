@@ -9,8 +9,6 @@ import {
   type GetServerSidePropsResult,
 } from "next";
 import { type AccountId } from "./validation/common";
-import { cookies } from "next/headers";
-import { unsealData } from "iron-session/edge";
 // import { sleep } from "./utils";
 
 export async function loginUser(
@@ -38,25 +36,13 @@ export async function loginUser(
   };
 }
 
-export async function getUserFromSession() {
-  const cookieStore = cookies();
-
-  const session = cookieStore.get(ironSessionConfig.cookieName)?.value;
-
-  return session
-    ? await unsealData<IronSession["user"]>(session, {
-      password: ironSessionConfig.password,
-    })
-    : null;
-}
-
 export function withSSRSession<Props>(
   ssrFunction: (
     context: GetServerSidePropsContext,
     user: IronSession["user"] | null
   ) => Promise<GetServerSidePropsResult<Props>>
 ) {
-  return withIronSessionSsr(async function(context) {
+  return withIronSessionSsr(async function (context) {
     const user = context.req.session.user ?? null;
 
     const result = await ssrFunction(context, user);
