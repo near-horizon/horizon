@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  useProject,
-  useProjectCompletion,
-  useUpdateProject,
-} from "~/lib/projects";
+import { useProject, useProjectCompletion } from "~/lib/projects";
 import { ProfileLayout } from "../profile-layout";
-import { useState } from "react";
 import { useAccountId } from "~/stores/global";
 import { LabeledData } from "~/components/profile/labeled-data";
 import { Description } from "~/components/description";
@@ -14,13 +9,11 @@ import { ExternalLink } from "~/components/external-link";
 import { Socials } from "~/components/socials";
 import { z } from "zod";
 import { linktreeSchema } from "~/lib/validation/fetching";
-import { useZodForm } from "~/hooks/form";
-import { Form } from "~/components/ui/form";
+import { updateFields, useZodForm } from "~/hooks/form";
 import { TextAreaInput } from "~/components/inputs/text-area";
 import { TextInput } from "~/components/inputs/text";
 import { NumberInput } from "~/components/inputs/number";
-import { Button } from "~/components/ui/button";
-import { ProgressDialog } from "~/components/progress-dialog";
+import { useEffect } from "react";
 
 const formSchema = z
   .object({
@@ -39,8 +32,6 @@ export default function BasicProfile({ }) {
   const accountId = useAccountId();
   const { data, status } = useProject(accountId ?? "");
   const { basic } = useProjectCompletion();
-  const [edit, setEdit] = useState(false);
-  const toggleEdit = () => setEdit((prev) => !prev);
   const form = useZodForm(formSchema, {
     defaultValues: {
       description: data?.description ?? "",
@@ -53,78 +44,61 @@ export default function BasicProfile({ }) {
       why: data?.why ?? "",
     },
   });
-  const [progress, updateProject] = useUpdateProject();
-
-  const handleSubmit = form.handleSubmit(({ company_size, ...project }) => {
-    updateProject.mutate({
-      accountId: accountId ?? "",
-      project: {
-        ...project,
-        company_size: `${company_size}`,
-      },
-    });
-  });
+  useEffect(() => {
+    if (data) {
+      updateFields(form, formSchema, {
+        description: data?.description ?? "",
+        website: data?.website ?? "",
+        company_size: Number(data?.company_size ?? 0),
+        geo: data?.geo ?? "",
+        linktree: data?.linktree ?? {},
+        problem: data?.problem ?? "",
+        success_position: data?.success_position ?? "",
+        why: data?.why ?? "",
+      });
+    }
+  }, [form, data]);
 
   return (
     <ProfileLayout
       title="Project overview"
       progress={basic}
-      edit={edit}
+      form={form}
       editData={
-        <Form {...form}>
-          <form
-            className="w-full"
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onSubmit={handleSubmit}
-          >
-            <TextAreaInput
-              name="description"
-              control={form.control}
-              label="Description"
-              maxLength={2000}
-            />
-            <TextInput name="website" control={form.control} label="Website" />
-            <NumberInput
-              name="company_size"
-              control={form.control}
-              label="Company size"
-            />
-            <TextInput name="geo" control={form.control} label="Location" />
-            <TextAreaInput
-              name="problem"
-              control={form.control}
-              label="What problem(s) are you solving?"
-              maxLength={2000}
-            />
-            <TextAreaInput
-              name="success_position"
-              control={form.control}
-              label="What makes your team uniquely positioned for success?"
-              maxLength={2000}
-            />
-            <TextAreaInput
-              name="why"
-              control={form.control}
-              label="Why are you building on NEAR?"
-              maxLength={2000}
-            />
-            <div className="mt-6 flex flex-row items-center justify-between">
-              <Button variant="destructive" onClick={toggleEdit}>
-                Cancel
-              </Button>
-              <ProgressDialog
-                progress={progress.value}
-                description={progress.label}
-                title="Updating your profile"
-                triggerText="Update section"
-              />
-            </div>
-          </form>
-        </Form>
+        <>
+          <TextAreaInput
+            name="description"
+            control={form.control}
+            label="Description"
+            maxLength={2000}
+          />
+          <TextInput name="website" control={form.control} label="Website" />
+          <NumberInput
+            name="company_size"
+            control={form.control}
+            label="Company size"
+          />
+          <TextInput name="geo" control={form.control} label="Location" />
+          <TextAreaInput
+            name="problem"
+            control={form.control}
+            label="What problem(s) are you solving?"
+            maxLength={2000}
+          />
+          <TextAreaInput
+            name="success_position"
+            control={form.control}
+            label="What makes your team uniquely positioned for success?"
+            maxLength={2000}
+          />
+          <TextAreaInput
+            name="why"
+            control={form.control}
+            label="Why are you building on NEAR?"
+            maxLength={2000}
+          />
+        </>
       }
-      onEditToggle={toggleEdit}
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      submit={handleSubmit}
     >
       <div className="flex flex-col gap-4">
         <LabeledData label="Description">
