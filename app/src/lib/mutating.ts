@@ -1,11 +1,7 @@
 import { useEffect } from "react";
-import {
-  type Path,
-  type FieldValues,
-  type UseFormReturn,
-  type PathValue,
-} from "react-hook-form";
+import { type FieldValues, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import { updateFields } from "~/hooks/form";
 
 export const progressSchema = z.object({
   value: z.number().min(0).max(100),
@@ -24,16 +20,7 @@ export function useLocalSaveForm<T extends z.ZodObject<FieldValues>>(
 
   useEffect(() => {
     const data = readLocalSaveForm(id);
-    if (data && Object.keys(data).length > 0) {
-      Object.entries(data).forEach(([key, value]) => {
-        if (key in schema.shape) {
-          form.setValue(
-            key as Path<z.infer<T>>,
-            value as PathValue<z.infer<T>, Path<z.infer<T>>>
-          );
-        }
-      });
-    }
+    updateFields(form, schema, data as Partial<z.infer<T>>);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -57,6 +57,7 @@
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
     "deep-equal": "^2.2.2",
+    "framer-motion": "^10.16.4",
     "iron-session": "^6.3.1",
     "lucide-react": "^0.265.0",
     "near-api-js": "^2.1.4",
