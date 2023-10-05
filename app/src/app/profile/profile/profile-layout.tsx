@@ -1,27 +1,58 @@
+"use client";
+
 import { Button } from "~/components/ui/button";
 import EditIcon from "~/components/icons/edit-03.svg";
 import CheckIcon from "~/components/icons/check.svg";
 import { cn } from "~/lib/utils";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { type FieldValues, type UseFormReturn } from "react-hook-form";
+import { useUpdateProject } from "~/lib/projects";
+import { useAccountId } from "~/stores/global";
+import { ProgressDialog } from "~/components/progress-dialog";
+import { Form } from "~/components/ui/form";
+import { type z } from "zod";
 
-export function ProfileLayout({
+interface ToggleEditParam {
+  toggleEdit: () => void;
+}
+type Form = (params: ToggleEditParam) => React.ReactNode;
+
+export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   children,
   title,
   progress,
-  edit,
   editData,
-  onEditToggle,
-  submit,
+  form,
 }: {
   title: string;
   children?: React.ReactNode;
   progress: number;
-  edit: boolean;
-  editData: React.ReactNode;
-  onEditToggle: () => void;
-  submit: () => void;
+  editData: React.ReactNode | Form;
+  form: UseFormReturn<z.infer<Schema>>;
 }) {
+  const accountId = useAccountId();
+  const [edit, setEdit] = useState(false);
+  const toggleEdit = () => setEdit((prev) => !prev);
+  const [progressUpdate, updateProject] = useUpdateProject();
+
+  const handleSubmit = form.handleSubmit((project) => {
+    updateProject.mutate({
+      accountId: accountId ?? "",
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      project,
+    });
+  });
+
   return (
-    <div className="flex flex-col items-stretch justify-start gap-5">
+    <motion.div
+      className="flex flex-col items-stretch justify-start gap-5"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.35 }}
+    >
       <div className="flex flex-col items-start justify-start gap-2 md:flex-row md:items-center md:justify-between md:gap-0">
         <div className="flex flex-row items-center justify-start gap-4">
           <h1 className="text-xl font-bold text-text-black">{title}</h1>
@@ -31,7 +62,7 @@ export function ProfileLayout({
         </div>
         <div className="flex flex-row items-center justify-end gap-4">
           <Button
-            onClick={onEditToggle}
+            onClick={toggleEdit}
             className={cn(
               "transition-all duration-300 ease-in-out",
               edit ? "translate-x-0" : "translate-x-[10.5rem]"
@@ -47,17 +78,20 @@ export function ProfileLayout({
               </>
             )}
           </Button>
-          <Button
-            onClick={submit}
-            variant="default"
-            className={cn(
-              "origin-right transition-transform duration-300",
-              edit ? "scale-x-100" : "scale-x-0"
-            )}
-          >
-            <CheckIcon className="mr-1 h-5 w-5" />
-            Update section
-          </Button>
+          <div className="overflow-hidden">
+            <Button
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={handleSubmit}
+              variant="default"
+              className={cn(
+                "origin-right transition-transform duration-300",
+                edit ? "translate-x-0" : "translate-x-full"
+              )}
+            >
+              <CheckIcon className="mr-1 h-5 w-5" />
+              Update section
+            </Button>
+          </div>
         </div>
       </div>
       <div className={cn("relative [transform-style:preserve-3d]")}>
@@ -75,9 +109,34 @@ export function ProfileLayout({
             !edit ? "[transform:rotateY(-180deg)]" : "[transform:rotateY(0deg)]"
           )}
         >
-          {editData}
+          <Form {...form}>
+            <form
+              className="w-full"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handleSubmit}
+            >
+              {typeof editData === "function"
+                ? editData({ toggleEdit })
+                : editData}
+              <div className="mt-6 flex flex-row items-center justify-between">
+                <Button
+                  variant="destructive"
+                  type="button"
+                  onClick={toggleEdit}
+                >
+                  Cancel
+                </Button>
+                <ProgressDialog
+                  progress={progressUpdate.value}
+                  description={progressUpdate.label}
+                  title="Updating your profile"
+                  triggerText="Update section"
+                />
+              </div>
+            </form>
+          </Form>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
