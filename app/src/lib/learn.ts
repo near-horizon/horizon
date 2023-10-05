@@ -1,11 +1,10 @@
 import { z } from "zod";
-import {
-  LearningCategory,
-  LearningResource,
-  learningCategorySchema,
-} from "./validation/learn";
-
 import { useQuery } from "@tanstack/react-query";
+
+import {
+  learningCategorySchema,
+  type LearningCategory,
+} from "./validation/learn";
 
 export async function getLearningResources(): Promise<LearningCategory[]> {
   const response = await fetch(`/api/learn`);
@@ -43,21 +42,21 @@ const formatCategoryLabel = (categoryString: string) => {
 export function useLearningCategories() {
   const { data: learningResources } = useLearningResources();
   const tagCategories: { value: string; label: string }[] = learningResources
-    .reduce((tags: string[], resourceItem: LearningCategory) => {
-      resourceItem.items.forEach((resource: LearningResource) => {
-        resource.tags.forEach((tag: string) => {
+    .reduce((tags, resourceItem) => {
+      resourceItem.items.forEach((resource) => {
+        resource.tags.forEach((tag) => {
           if (!tags.includes(tag)) tags.push(tag);
         });
       });
       return tags;
     }, new Array<string>())
-    .map((category: string) => ({
+    .map((category) => ({
       value: category,
       label: formatCategoryLabel(category),
     }));
 
   const typeCategories: { value: string; label: string }[] =
-    learningResources.map((resourceItem: LearningCategory) => ({
+    learningResources.map((resourceItem) => ({
       value: resourceItem.id,
       label: resourceItem.title,
     }));
@@ -68,8 +67,7 @@ export function useLearningResourcesTotalCount() {
   const { data: learningResources } = useLearningResources();
 
   return learningResources.reduce(
-    (acc: number, resourceItem: LearningCategory) =>
-      acc + resourceItem.items.length,
+    (acc: number, resourceItem) => acc + resourceItem.items.length,
     0
   );
 }
