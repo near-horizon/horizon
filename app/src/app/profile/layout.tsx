@@ -85,7 +85,7 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full flex-row items-start justify-start">
+    <div className="mx-auto flex w-full max-w-screen-2xl flex-row items-start justify-start px-2">
       <div className="min-w-[240px] flex-grow-0">
         <NavigationMenu
           orientation="vertical"
