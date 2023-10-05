@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { perkSchema } from "./validation/perks";
 import {
-  UseMutationResult,
+  type UseMutationResult,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Progress } from "./mutating";
+import { type Progress } from "./mutating";
 import { useState } from "react";
 
 export async function getPerks() {

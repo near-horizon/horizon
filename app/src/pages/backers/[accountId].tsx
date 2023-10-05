@@ -24,7 +24,7 @@ export default function Backer() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function({ query }) {
+export const getServerSideProps = withSSRSession(async function ({ query }) {
   const accountId = accountIdSchema.parse(query.accountId);
 
   const queryClient = new QueryClient();
