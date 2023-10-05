@@ -34,7 +34,7 @@ export function Navbar() {
       : "";
 
   return (
-    <header className="flex flex-row justify-between">
+    <header className="mx-auto flex max-w-screen-2xl flex-row justify-between px-2">
       {/* <div className="md:hidden"> */}
       <NavbarMobile />
       {/* </div> */}
