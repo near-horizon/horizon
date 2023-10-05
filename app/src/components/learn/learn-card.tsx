@@ -6,16 +6,17 @@ import {
   CardTitle,
   CardFooter,
 } from "~/components/ui/card";
+import ExternalLinkIcon from "~/components/icons/link-external-02.1.svg";
+import { Separator } from "../ui/separator";
+import { ExternalLink } from "../external-link";
 
-import LinkExternal from "~/components/icons/link-external-02.1.svg";
-
-import { LearningResource } from "~/lib/validation/learn";
+import type { LearningResource } from "~/lib/validation/learn";
 
 export function LearnCard({ resource }: { resource: LearningResource }) {
   return (
     <Card
       key={resource.title}
-      className="flex w-full shadow-md md:w-[calc((100%-.5rem)*.99)] lg:w-[calc((100%-1rem)*.45)] 2xl:w-[calc((100%-1.5rem)*.33)]"
+      className="flex w-full shadow-md md:w-[calc((100%-2rem)/2)] xl:w-[calc((100%-4rem)/3)] 2xl:w-[calc((100%-6rem)/4)]"
     >
       <CardContent className="flex flex-1 flex-col p-0 ">
         <CardHeader className="mb-3 flex-1 p-4">
@@ -27,19 +28,17 @@ export function LearnCard({ resource }: { resource: LearningResource }) {
         <CardDescription className="text-md flex-1 p-4 pt-0 text-sm font-normal text-black">
           {resource.description}
         </CardDescription>
-        <CardFooter className="border-t-[1px] pt-6">
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={resource.link}
-            className="w-full rounded-full border border-ui-elements-light bg-background-light py-2 text-text-link"
-          >
-            <div className="flex items-center justify-center">
+        <Separator className="bg-ui-elements-light" />
+        <CardFooter className="justify-center pt-6">
+          <ExternalLink href={resource.link} className="w-full">
+            <div className="flex items-center justify-center rounded-full border border-ui-elements-light bg-background-light px-4 py-2">
               <span className="text-md mr-2 font-semibold">Learn more</span>
-
-              <LinkExternal className="mt-[2px] h-4  w-4" viewBox="0 0 24 24" />
+              <ExternalLinkIcon
+                className="mt-[2px] h-4 w-4"
+                viewBox="0 0 24 24"
+              />
             </div>
-          </a>
+          </ExternalLink>
         </CardFooter>
       </CardContent>
     </Card>
