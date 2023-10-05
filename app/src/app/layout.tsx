@@ -1,6 +1,6 @@
 import { Providers } from "./providers";
 import { Navbar } from "~/components/navbar";
-import { getUserFromSession } from "~/lib/auth";
+import { getUserFromSession } from "~/lib/session";
 
 export default async function RootLayout({
   children,
