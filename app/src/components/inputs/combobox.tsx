@@ -24,17 +24,17 @@ import {
   CommandItem,
 } from "../ui/command";
 import { useRef } from "react";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function ComboboxInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-    emptyText?: string;
-    options: { value: string; text: string }[];
-  }
+  props: UseControllerProps<TFieldValues, TName> &
+    InputProps & {
+      emptyText?: string;
+      options: { value: string; text: string }[];
+    }
 ) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -44,7 +44,7 @@ export function ComboboxInput<
       render={({ field }) => (
         <FormItem className="flex flex-col" ref={ref} onBlur={field.onBlur}>
           <FormLabel className="capitalize">
-            {props.name}
+            {props.label ?? props.name}
             {props.rules?.required && " *"}
           </FormLabel>
           <Popover>

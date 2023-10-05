@@ -1,5 +1,5 @@
 import { type IronSession } from "iron-session";
-import { getKeyInfo, viewCall } from "./fetching";
+import { viewCall } from "./fetching";
 import { env } from "~/env.mjs";
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { ironSessionConfig } from "./constants/iron-session";
@@ -42,7 +42,7 @@ export function withSSRSession<Props>(
     user: IronSession["user"] | null
   ) => Promise<GetServerSidePropsResult<Props>>
 ) {
-  return withIronSessionSsr(async function(context) {
+  return withIronSessionSsr(async function (context) {
     const user = context.req.session.user ?? null;
 
     const result = await ssrFunction(context, user);

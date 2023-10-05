@@ -16,7 +16,6 @@ import { setupNightly } from "@near-wallet-selector/nightly";
 import { setupSender } from "@near-wallet-selector/sender";
 import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
 import { type IronSession } from "iron-session";
-import { useRouter } from "next/router";
 import React from "react";
 import { create } from "zustand";
 import { env } from "~/env.mjs";
@@ -49,6 +48,11 @@ export const setWalletSelectorModal = (modal: WalletSelectorModal) =>
 
 export const useWalletSelectorModal = () =>
   useGlobalStore((state) => state.modal);
+
+export const useAccountId = () =>
+  useGlobalStore(
+    (state) => state.selector?.store.getState().accounts[0]?.accountId
+  );
 
 export const setupSelector = () => {
   // const domain = window.location.origin;
@@ -103,7 +107,6 @@ export function useSignIn() {
 }
 
 export function useSignOut() {
-  const router = useRouter();
   const selector = useWalletSelector();
 
   return React.useCallback(
@@ -113,12 +116,11 @@ export function useSignOut() {
         const wallet = await selector?.wallet();
         await wallet?.signOut();
         await fetch("/api/auth/logout");
-        router.reload();
       } catch (err) {
         console.error("Could not sign out:", err);
       }
     },
-    [selector, router]
+    [selector]
   );
 }
 

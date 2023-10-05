@@ -17,23 +17,26 @@ import { Button } from "../ui/button";
 import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 import { cn } from "~/lib/utils";
+import { type InputProps } from "~/lib/validation/inputs";
 
 export function DateInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-  props: UseControllerProps<TFieldValues, TName> & {
-    placeholder?: string;
-    description?: string;
-    invalidDates?: (date: Date) => boolean;
-  }
+  props: UseControllerProps<TFieldValues, TName> &
+    InputProps & {
+      invalidDates?: (date: Date) => boolean;
+    }
 ) {
   return (
     <FormField
       {...props}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel className="capitalize">{props.name}</FormLabel>
+          <FormLabel className="capitalize">
+            {props.label ?? props.name}
+            {props.rules?.required && " *"}
+          </FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>

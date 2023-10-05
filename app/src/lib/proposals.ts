@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { type AccountId, type CID } from "./validation/common";
 import {
-  UseMutationResult,
+  type UseMutationResult,
   useMutation,
   useQuery,
   useQueryClient,
@@ -10,9 +10,9 @@ import {
   type ProposalId,
   proposalIdSchema,
   proposalSchema,
-  Proposal,
+  type Proposal,
 } from "./validation/proposals";
-import { Progress } from "./mutating";
+import { type Progress } from "./mutating";
 import { useSignTx } from "~/stores/global";
 import { useState } from "react";
 

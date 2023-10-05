@@ -1,8 +1,7 @@
 import { env } from "~/env.mjs";
 import { withAPISession } from "~/lib/auth";
-// import { profileSchema } from "~/lib/validation/fetching";
 
-export default withAPISession(async function userRoute(req, res) {
+export default withAPISession(async function(req, res) {
   if (!req.session.user) {
     res.status(401).send({ error: "Unauthorized" });
     return;
