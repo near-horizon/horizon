@@ -102,3 +102,7 @@ export const statsSchema = z
   }));
 
 export type Stats = z.infer<typeof statsSchema>;
+
+export const fileUploadSchema = z.object({
+  cid: z.string().min(59).max(59),
+});
