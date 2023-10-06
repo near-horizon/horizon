@@ -36,7 +36,7 @@ if (!state.profileIsFetched) {
     "get",
     { keys: [`${context.accountId}/profile/**`] },
     "final",
-    false,
+    false
   ).then((data) => {
     const profile = data[`${context.accountId}`]?.profile || {};
     State.update({
@@ -45,7 +45,7 @@ if (!state.profileIsFetched) {
       linktree: profile.linktree,
       verticals: profile.verticals ?? { [profile.category]: "" },
       product_type: profile.product_type,
-      company_size: profile.team,
+      company_size: profile.team ?? profile.company_size,
       profileIsFetched: true,
     });
   });
@@ -57,7 +57,7 @@ if (!state.projectIsFetched) {
     "get_project",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((project) => {
     State.update({
       geo: project.geo,
@@ -324,10 +324,10 @@ const edit = (
           if (typeof data[key] === "object") {
             if (
               Object.keys(data[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               ) &&
               Object.keys(state[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               )
             ) {
               continue;
@@ -356,10 +356,10 @@ const edit = (
           if (typeof data[key] === "object") {
             if (
               Object.keys(data[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               ) &&
               Object.keys(state[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               )
             ) {
               continue;
@@ -381,7 +381,7 @@ const edit = (
               onCommit: () => {
                 State.update({ ...profileData, edit: false });
               },
-            },
+            }
           );
           return;
         }
