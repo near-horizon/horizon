@@ -100,7 +100,8 @@ const data = (
           label: "Team size",
           placeholder: 10,
           value: state.company_size,
-          onChange: (company_size) => State.update({ company_size }),
+          onChange: (company_size) =>
+            State.update({ company_size: `${company_size}` }),
           validate: () => {
             if (state.team < 1) {
               State.update({ teamError: "Team size must be at least 1" });
