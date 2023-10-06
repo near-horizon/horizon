@@ -11,6 +11,7 @@ export const env = createEnv({
     API_URL: z.string().url(),
     API_KEY: z.string().min(32),
     SESSION_PASSWORD: z.string().min(32),
+    OPENAI_API_KEY: z.string(),
   },
 
   /**
@@ -25,6 +26,7 @@ export const env = createEnv({
       .min(2)
       .max(64)
       .regex(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/),
+    NEXT_PUBLIC_IPFS_URL: z.string().url(),
   },
 
   /**
@@ -38,6 +40,8 @@ export const env = createEnv({
     API_URL: process.env.API_URL,
     API_KEY: process.env.API_KEY,
     SESSION_PASSWORD: process.env.SESSION_PASSWORD,
+    NEXT_PUBLIC_IPFS_URL: process.env.NEXT_PUBLIC_IPFS_URL,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
