@@ -97,7 +97,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
       <div className={cn("relative [transform-style:preserve-3d]")}>
         <div
           className={cn(
-            "absolute z-10 w-full transition-transform duration-500 [backface-visibility:hidden] [transform-style:preserve-3d]",
+            "absolute z-10 w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
             !edit ? "[transform:rotateY(0deg)]" : "[transform:rotateY(180deg)]"
           )}
         >
@@ -105,7 +105,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
         </div>
         <div
           className={cn(
-            "absolute w-full rounded-lg  bg-background-light px-12 py-8 transition-transform duration-500 [backface-visibility:hidden] [transform-style:preserve-3d]",
+            "absolute w-full rounded-lg bg-background-light px-12 py-8 transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
             !edit ? "[transform:rotateY(-180deg)]" : "[transform:rotateY(0deg)]"
           )}
         >
