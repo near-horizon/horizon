@@ -91,6 +91,7 @@ export function FileInput<
                 <Button
                   className="flex flex-row items-center gap-2"
                   variant="outline"
+                  type="button"
                   onClick={() => {
                     ref.current?.click();
                   }}
@@ -103,6 +104,7 @@ export function FileInput<
                   <Button
                     className="flex flex-row items-center gap-2"
                     variant="outline"
+                    type="button"
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     onClick={async () => {
                       try {
@@ -123,6 +125,19 @@ export function FileInput<
                   >
                     <RefreshIcon className="h-5 w-5" />
                     Generate image
+                  </Button>
+                )}
+                {!uploading && props.cid && field.value && (
+                  <Button
+                    className="flex flex-row items-center gap-2"
+                    variant="destructive"
+                    type="button"
+                    onClick={() => {
+                      props.setCid("");
+                      field.onChange("");
+                    }}
+                  >
+                    Clear
                   </Button>
                 )}
               </>
