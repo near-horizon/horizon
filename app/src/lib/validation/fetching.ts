@@ -2,7 +2,7 @@ import { z } from "zod";
 import { imageSchema } from "./common";
 import { env } from "~/env.mjs";
 
-const socialsSchema = z.enum([
+export const socialsSchema = z.enum([
   "github",
   "twitter",
   "discord",
