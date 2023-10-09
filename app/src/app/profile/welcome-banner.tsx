@@ -93,7 +93,7 @@ export function WelcomeBanner() {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-8 overflow-hidden rounded-xl border border-ui-elements-light bg-blue-100 py-8",
+        "flex max-w-full flex-col items-center justify-center gap-8 rounded-xl border border-ui-elements-light bg-blue-100 py-8",
         {
           hidden: !isDashboard,
         }
@@ -107,7 +107,7 @@ export function WelcomeBanner() {
           Use these highlights to get started:
         </p>
       </div>
-      <div className="overflow-x-scroll">
+      <div className="hide-scroll-bar flex max-w-full flex-row items-start justify-start overflow-x-auto">
         <div className="flex flex-row items-stretch justify-start gap-4 px-8">
           {cards.map((props) => (
             <Card key={props.title} {...props} />

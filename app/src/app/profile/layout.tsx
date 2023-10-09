@@ -106,7 +106,7 @@ export default function ProfileLayout({
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <div className="flex max-w-full flex-grow flex-col items-start justify-start gap-6">
+      <div className="flex max-w-[calc(100%-240px)] flex-grow flex-col items-start justify-start gap-6">
         <WelcomeBanner />
         <div className="w-full">
           <ProfileHeader />
