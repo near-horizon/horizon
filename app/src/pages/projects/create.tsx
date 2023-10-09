@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { z } from "zod";
 import { ComboboxInput } from "~/components/inputs/combobox";
 import { EmailInput } from "~/components/inputs/email";
+import { FileInput } from "~/components/inputs/file";
 import { TextInput } from "~/components/inputs/text";
 import { TextAreaInput } from "~/components/inputs/text-area";
 import { LogInDialog } from "~/components/log-in-dialog";
@@ -40,6 +42,7 @@ const formSchema = z.object({
     }),
   tagline: z.string().min(3).max(50),
   description: z.string().min(30).max(500),
+  image: z.string(),
 });
 
 const formId = "create-project";
@@ -48,6 +51,7 @@ export default function Create() {
   const form = useZodForm(formSchema);
   const user = useUser();
   const [progress, createProject] = useCreateProject();
+  const [cid, setCid] = useState<string>("");
   useLocalSaveForm(form, formSchema, formId);
 
   return (
@@ -73,6 +77,7 @@ export default function Create() {
                 ...project,
                 name: project["Project name"],
                 vertical: { [vertical]: "" },
+                image: { ipfs_cid: cid },
               },
             });
           })}
@@ -121,6 +126,17 @@ export default function Create() {
             defaultValue=""
             disabled={false}
           />
+          <FileInput
+            name="image"
+            control={form.control}
+            label="Photo"
+            rules={{ required: true }}
+            defaultValue=""
+            setCid={setCid}
+            cid={cid}
+            generate
+            generateEnabled={form.formState.isValid && form.formState.isDirty}
+          />
           <div className="mt-6 flex flex-row items-center justify-between">
             <Button variant="destructive">Cancel</Button>
             <ProgressDialog
@@ -136,7 +152,7 @@ export default function Create() {
   );
 }
 
-export const getServerSideProps = withSSRSession(async function({ req }) {
+export const getServerSideProps = withSSRSession(async function ({ req }) {
   if (req.session.user && (await hasProject(req.session.user.accountId))) {
     return {
       redirect: {
