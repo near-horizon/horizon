@@ -1,7 +1,13 @@
+import GrowthPrograms from "./growth";
 export default function ProfileSection({
   params: { section },
 }: {
   params: { section: string };
 }) {
-  return section;
+  switch (section) {
+    case "growth":
+      return <GrowthPrograms />;
+    default:
+      return section;
+  }
 }

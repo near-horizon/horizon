@@ -61,9 +61,9 @@ export function removeEmpty<T>(obj: T): T | null {
   return obj;
 }
 
-export function ipfsURL(cid: string) {
-  return `${env.NEXT_PUBLIC_IPFS_URL}/ipfs/${cid}`;
-}
+// export function ipfsURL(cid: string) {
+//   return `${env.NEXT_PUBLIC_IPFS_URL}/ipfs/${cid}`;
+// }
 
 export function toArrayBuffer(buffer: Buffer) {
   return buffer.buffer.slice(
@@ -72,17 +72,17 @@ export function toArrayBuffer(buffer: Buffer) {
   );
 }
 
-export async function uploadImage(file?: File) {
-  if (!file) return;
-  const response = await fetch(`${env.NEXT_PUBLIC_IPFS_URL}/add`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-    },
-    body: file,
-  });
-  return fileUploadSchema.parse(await response.json()).cid;
-}
+// export async function uploadImage(file?: File) {
+//   if (!file) return;
+//   const response = await fetch(`${env.NEXT_PUBLIC_IPFS_URL}/add`, {
+//     method: "POST",
+//     headers: {
+//       Accept: "application/json",
+//     },
+//     body: file,
+//   });
+//   return fileUploadSchema.parse(await response.json()).cid;
+// }
 
 export async function generateImage(
   prompt = "Stock image for a anonymous founder in a startup in a blockchain ecosystem. In a cartoonish style - not realistic"
