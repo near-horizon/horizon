@@ -64,7 +64,7 @@ export function NavItem({
                 {subMenu.map(({ section: subSection, label }) => (
                   <NavigationMenuLink
                     key={subSection}
-                    href={`/profile/${section}/${subSection}`}
+                    href={`/account/${section}/${subSection}`}
                     className={cn(
                       "flex w-full flex-row items-center justify-between",
                       {
@@ -98,7 +98,7 @@ export function NavItem({
       })}
     >
       <NavigationMenuLink
-        href={`/profile/${section}`}
+        href={`/account/${section}`}
         className="flex flex-row items-center justify-between"
       >
         <div

@@ -53,11 +53,11 @@ const cards = [
       "Crypto ipsum bitcoin ethereum dogecoin litecoin. PancakeSwap.",
     cta: {
       text: "Earn credits",
-      link: "/profile/credits",
+      link: "/account/credits",
     },
     secondary: {
       text: "Learn how credits work",
-      link: "/profile/credits/how",
+      link: "/account/credits/how",
     },
   },
   {

@@ -16,7 +16,7 @@ export function ProgressDialog({
   title,
   description,
   triggerText,
-  ctaLink = "/profile",
+  ctaLink = "/account",
   ctaText = "Go to profile",
   buttonVariant = "default",
   onClick,

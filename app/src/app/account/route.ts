@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export function GET() {
-  redirect("/profile/dashboard");
+  redirect("/account/dashboard");
 }
