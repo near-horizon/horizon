@@ -6,6 +6,7 @@ import {
   permissionSchema,
   transactionSchema,
 } from "./common";
+import { incentiveTypeSchema } from "./incentives";
 
 export const projectsQuerySchema = fetchManySchema.extend({
   vertical: z.array(z.string()).optional(),
@@ -33,8 +34,11 @@ export const horizonSchema = z.object({
   tam: z.string(),
   geo: z.string(),
   verified: z.boolean(),
-  contracts: z.array(accountIdSchema),
   application: applicationSchema,
+  credits: z.boolean(),
+  contracts: z.array(accountIdSchema),
+  credit_balance: z.number(),
+  achieved_incentives: z.record(incentiveTypeSchema, z.number()),
 });
 
 export const sectionSchema = z.enum([

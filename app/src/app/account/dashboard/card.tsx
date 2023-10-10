@@ -19,12 +19,12 @@ export function DashboardCard({
   children?: React.ReactNode;
 }) {
   return (
-    <Card>
+    <Card className="flex h-full min-h-[18rem] flex-col">
       <CardHeader className="flex flex-row items-center justify-start gap-4 bg-ui-elements-light p-4">
         <CardTitle className="text-lg">{title}</CardTitle>
         {help && <InfoTooltip>{help}</InfoTooltip>}
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow pt-4">
         {description && <CardDescription>{description}</CardDescription>}
         {children}
       </CardContent>
