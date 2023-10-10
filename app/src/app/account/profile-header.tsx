@@ -4,12 +4,17 @@ import { Handle } from "~/components/handle";
 import { ProjectIcon } from "~/components/project/icon";
 import { Tags } from "~/components/tags";
 import { Button } from "~/components/ui/button";
+import { useChanges, useHasChanges } from "~/lib/profile";
 import { useProject } from "~/lib/projects";
+import { useSocialSet } from "~/lib/social";
 import { useAccountId } from "~/stores/global";
 
 export function ProfileHeader() {
   const accountId = useAccountId() ?? "";
   const { data } = useProject(accountId);
+  const { data: profile } = useChanges();
+  const hasChanges = useHasChanges(accountId);
+  const [, socialSet] = useSocialSet();
 
   return (
     <div className="flex flex-row items-start justify-between">
@@ -26,8 +31,26 @@ export function ProfileHeader() {
         </div>
       </div>
       <div className="flex flex-row items-start justify-end gap-4">
-        <Button variant="outline">Edit</Button>
-        <Button variant="outline">Share</Button>
+        <Button variant="outline" type="button">
+          Edit
+        </Button>
+        <Button variant="outline" type="button">
+          Share
+        </Button>
+        {hasChanges && profile && (
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => {
+              socialSet.mutate({
+                accountId,
+                profile,
+              });
+            }}
+          >
+            Export
+          </Button>
+        )}
       </div>
     </div>
   );

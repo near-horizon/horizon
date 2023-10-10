@@ -15,6 +15,7 @@ import { NavItem } from "./nav-item";
 import { Separator } from "~/components/ui/separator";
 import { Fragment } from "react";
 import { ProfileHeader } from "./profile-header";
+import { WelcomeBanner } from "./welcome-banner";
 
 const navigation = [
   {
@@ -105,7 +106,8 @@ export default function ProfileLayout({
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <div className="flex flex-grow flex-col items-start justify-start gap-6">
+      <div className="flex max-w-[calc(100%-240px)] flex-grow flex-col items-start justify-start gap-6">
+        <WelcomeBanner />
         <div className="w-full">
           <ProfileHeader />
         </div>
