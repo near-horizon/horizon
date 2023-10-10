@@ -11,6 +11,12 @@ import WalletIcon from "~/components/icons/wallet-02.svg";
 import UsersIcon from "~/components/icons/users-01.svg";
 import ChatIcon from "~/components/icons/message-chat-square.svg";
 import BookIcon from "~/components/icons/book-open-02.svg";
+import XIcon from "~/components/icons/x.svg";
+import {
+  setLocalStorageItem,
+  useLocalStorageItem,
+} from "~/hooks/local-storage";
+import { z } from "zod";
 
 const cards = [
   {
@@ -89,16 +95,29 @@ const cards = [
 export function WelcomeBanner() {
   const section = usePathname()?.split("/")[2];
   const isDashboard = section === "dashboard";
+  const dismissed = useLocalStorageItem(
+    "welcome-banner-dismissed",
+    z.boolean()
+  );
 
   return (
     <div
       className={cn(
-        "flex max-w-full flex-col items-center justify-center gap-8 rounded-xl border border-ui-elements-light bg-blue-100 py-8",
+        "relative flex max-w-full flex-col items-center justify-center gap-8 rounded-xl border border-ui-elements-light bg-blue-100 py-8",
         {
-          hidden: !isDashboard,
+          hidden: !isDashboard || dismissed,
         }
       )}
     >
+      <Button
+        variant="ghost"
+        className="absolute right-0 top-0 hover:bg-transparent"
+        onClick={() => {
+          setLocalStorageItem("welcome-banner-dismissed", true);
+        }}
+      >
+        <XIcon className="h-6 w-6" />
+      </Button>
       <div className="flex w-full flex-col items-center justify-center gap-3">
         <h4 className="flex w-full flex-row justify-center gap-4 whitespace-nowrap text-2xl text-text-dark">
           Welcome to <Logo className="h-8" />
@@ -151,20 +170,23 @@ function Card({
             {text}
           </Link>
         </Button>
-        {secondary && (
-          <Button
-            variant="outline"
-            type="button"
-            className="flex items-stretch justify-stretch"
-          >
+        <Button
+          variant="outline"
+          type="button"
+          className={cn("flex items-stretch justify-stretch", {
+            "!opacity-0": !secondary,
+          })}
+          disabled={!secondary}
+        >
+          {secondary && (
             <Link
               href={secondary.link}
               className="flex w-full items-center justify-center text-center"
             >
               {secondary.text}
             </Link>
-          </Button>
-        )}
+          )}
+        </Button>
       </div>
     </div>
   );
