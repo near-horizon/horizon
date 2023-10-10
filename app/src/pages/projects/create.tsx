@@ -156,7 +156,7 @@ export const getServerSideProps = withSSRSession(async function ({ req }) {
   if (req.session.user && (await hasProject(req.session.user.accountId))) {
     return {
       redirect: {
-        destination: "/profile",
+        destination: "/account",
         permanent: false,
       },
     };

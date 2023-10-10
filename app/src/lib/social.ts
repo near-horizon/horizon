@@ -153,7 +153,7 @@ export function useSocialSet(): [
     unknown,
     {
       accountId: AccountId;
-      profile: Profile;
+      profile: Partial<Profile>;
     },
     unknown
   >
@@ -170,7 +170,7 @@ export function useSocialSet(): [
         profile,
       }: {
         accountId: AccountId;
-        profile: Profile;
+        profile: Partial<Profile>;
       }) => {
         let deposit = 0n;
         setProgress({ value: 25, label: "Calculating deposit..." });
