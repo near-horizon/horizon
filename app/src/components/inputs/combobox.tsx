@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type FieldPath,
   type FieldValues,
@@ -60,7 +62,7 @@ export function ComboboxInput<
                 >
                   {field.value
                     ? props.options.find((item) => item.value === field.value)
-                      ?.text
+                        ?.text
                     : "Select option"}
                   <ArrowDown className="h-6 w-6 shrink-0 opacity-50" />
                 </Button>

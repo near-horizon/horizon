@@ -1,10 +1,12 @@
-import { useProject } from "~/lib/projects";
+"use client";
+
+import { useProject } from "~/hooks/projects";
 import { type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { Description } from "./description";
 import Link from "next/link";
-import { useProjectRequests } from "~/lib/requests";
+import { useProjectRequests } from "~/hooks/requests";
 
 export function Project({
   accountId,
@@ -18,13 +20,7 @@ export function Project({
 
   return (
     <div className="flex h-64 w-full flex-col gap-3 rounded-lg border border-gray-200 p-4 shadow">
-      <Link
-        className="h-20"
-        href={{
-          pathname: "/projects/[accountId]",
-          query: { accountId },
-        }}
-      >
+      <Link className="h-20" href={`/projects/${accountId}`}>
         <h3 className="flex flex-row items-start justify-start gap-4">
           <div className="flex-shrink-0">
             <ProjectIcon
@@ -47,10 +43,7 @@ export function Project({
       </div>
       <Link
         className="flex h-5 flex-row items-center justify-start gap-3 text-gray-400"
-        href={{
-          pathname: "/projects/[accountId]",
-          query: { accountId, tab: "requests" },
-        }}
+        href={`/projects/${accountId}`}
       >
         <svg
           width="18"

@@ -1,7 +1,9 @@
+"use client";
+
 import { type AccountId } from "~/lib/validation/common";
 import { General } from "./general";
 import { Description } from "../description";
-import { useContributor } from "~/lib/contributors";
+import { useContributor } from "~/hooks/contributors";
 import { Details as UIDetails } from "~/components/ui/details";
 
 export function Details({ accountId }: { accountId: AccountId }) {

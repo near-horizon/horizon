@@ -3,7 +3,7 @@ import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { Description } from "./description";
 import Link from "next/link";
-import { useContributor } from "~/lib/contributors";
+import { useContributor } from "~/hooks/contributors";
 import { Tags } from "./tags";
 import { Availability } from "./availability";
 
@@ -26,13 +26,7 @@ export function Contributor({
 
   return (
     <div className="flex h-[16.5rem] w-full flex-col gap-3 rounded-lg border border-gray-200 p-4 shadow">
-      <Link
-        className="h-20"
-        href={{
-          pathname: "/contributors/[accountId]",
-          query: { accountId },
-        }}
-      >
+      <Link className="h-20" href={`/contributors/${accountId}`}>
         <h3 className="flex flex-row items-start justify-start gap-4">
           <div className="flex-shrink-0">
             <ProjectIcon

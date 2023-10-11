@@ -17,7 +17,6 @@ export async function getCreditHistory(accountId: AccountId) {
   const response = await fetch(`${env.API_URL}/transactions/all`);
   const data = transactionsSchema.parse(await response.json());
   return data.filter(({ args, method_name }) => {
-    if (args.amount) console.log(args.amount);
     return (
       CREDIT_METHODS.includes(method_name) &&
       args.account_id === accountId &&

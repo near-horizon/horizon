@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { type CID, type AccountId } from "~/lib/validation/common";
 import { useUser } from "~/stores/global";

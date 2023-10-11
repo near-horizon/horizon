@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useStats } from "~/lib/fetching";
+import { useStats } from "~/hooks/fetching";
 
 export function MainStats() {
   const { data } = useStats();

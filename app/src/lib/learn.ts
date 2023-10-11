@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { useQuery } from "@tanstack/react-query";
-
 import {
   learningCategorySchema,
   type LearningCategory,
@@ -15,15 +13,7 @@ export async function getLearningResources(): Promise<LearningCategory[]> {
   return learningResources;
 }
 
-export function useLearningResources() {
-  return useQuery({
-    queryKey: ["learningResources"],
-    queryFn: getLearningResources,
-    initialData: [],
-  });
-}
-
-const formatCategoryLabel = (categoryString: string) => {
+export function formatCategoryLabel(categoryString: string) {
   let formattedString = categoryString
     .replace(/-/g, " ")
     .replace(/\w\S*/g, (word) => {
@@ -37,37 +27,4 @@ const formatCategoryLabel = (categoryString: string) => {
     });
 
   return formattedString;
-};
-
-export function useLearningCategories() {
-  const { data: learningResources } = useLearningResources();
-  const tagCategories: { value: string; label: string }[] = learningResources
-    .reduce((tags, resourceItem) => {
-      resourceItem.items.forEach((resource) => {
-        resource.tags.forEach((tag) => {
-          if (!tags.includes(tag)) tags.push(tag);
-        });
-      });
-      return tags;
-    }, new Array<string>())
-    .map((category) => ({
-      value: category,
-      label: formatCategoryLabel(category),
-    }));
-
-  const typeCategories: { value: string; label: string }[] =
-    learningResources.map((resourceItem) => ({
-      value: resourceItem.id,
-      label: resourceItem.title,
-    }));
-  return { tagCategories, typeCategories };
-}
-
-export function useLearningResourcesTotalCount() {
-  const { data: learningResources } = useLearningResources();
-
-  return learningResources.reduce(
-    (acc: number, resourceItem) => acc + resourceItem.items.length,
-    0
-  );
 }

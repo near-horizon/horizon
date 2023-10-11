@@ -1,14 +1,16 @@
+"use client";
+
 import { Description } from "../description";
 import { Detail } from "../detail";
 import { formatBudget, formatDate } from "~/lib/utils";
-import { useContract } from "~/lib/contracts";
+import { useContract } from "~/hooks/contracts";
 import Link from "next/link";
 import { ProjectIcon } from "../project/icon";
 import { Handle } from "../handle";
-import { useProposal } from "~/lib/proposals";
-import { useContributor } from "~/lib/contributors";
-import { useProject } from "~/lib/projects";
-import { useRequest } from "~/lib/requests";
+import { useProposal } from "~/hooks/proposals";
+import { useContributor } from "~/hooks/contributors";
+import { useProject } from "~/hooks/projects";
+import { useRequest } from "~/hooks/requests";
 import { Details as UIDetails } from "~/components/ui/details";
 import { type AccountId, type CID } from "~/lib/validation/common";
 

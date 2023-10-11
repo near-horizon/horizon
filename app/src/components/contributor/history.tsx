@@ -1,4 +1,6 @@
-import { useContributorCompletedContracts } from "~/lib/contracts";
+"use client";
+
+import { useContributorCompletedContracts } from "~/hooks/contracts";
 import { type AccountId } from "~/lib/validation/common";
 import { Contract } from "../contract";
 
@@ -10,10 +12,10 @@ export function History({ accountId }: { accountId: AccountId }) {
       {status === "loading"
         ? "Loading..."
         : data?.map((contractId) => (
-          <div key={contractId.toString()}>
-            <Contract contractId={contractId} showContributor={false} />
-          </div>
-        ))}
+            <div key={contractId.toString()}>
+              <Contract contractId={contractId} showContributor={false} />
+            </div>
+          ))}
     </div>
   );
 }

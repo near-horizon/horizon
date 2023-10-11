@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   type AccountId,
   transactionsSchema,
@@ -108,14 +107,6 @@ export async function getProfile(accountId: AccountId) {
   } satisfies Profile;
 }
 
-export function useProfile(accountId: string, enabled = true) {
-  return useQuery({
-    queryKey: ["social-profile", accountId],
-    queryFn: () => getProfile(accountId),
-    enabled,
-  });
-}
-
 export function getImageURL(src: string) {
   return `https://ipfs.near.social/ipfs/${src}`;
 }
@@ -131,11 +122,4 @@ export async function getStats() {
   const stats = statsSchema.parseAsync(await result.json());
 
   return stats;
-}
-
-export function useStats() {
-  return useQuery({
-    queryKey: ["stats"],
-    queryFn: getStats,
-  });
 }

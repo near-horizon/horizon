@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { useProposal } from "~/lib/proposals";
+import { useProposal } from "~/hooks/proposals";
 import { type CID, type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { format } from "timeago.js";
 import { Description } from "./description";
-import { useCreateContract, useDeclineProposal } from "~/lib/contracts";
+import { useCreateContract, useDeclineProposal } from "~/hooks/contracts";
 import { ProgressDialog } from "./progress-dialog";
 
 export function Proposal({

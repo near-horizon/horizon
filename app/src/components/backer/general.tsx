@@ -1,8 +1,10 @@
+"use client";
+
 import { formatTimestamp } from "~/lib/utils";
 import { type AccountId } from "~/lib/validation/common";
 import { Detail } from "../detail";
 import { Socials } from "../socials";
-import { useBacker } from "~/lib/backers";
+import { useBacker } from "~/hooks/backers";
 import { Tags } from "../tags";
 
 export function General({ accountId }: { accountId: AccountId }) {

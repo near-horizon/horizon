@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useUser } from "~/stores/global";
 import { type ContractId } from "~/lib/validation/contracts";
@@ -10,7 +12,7 @@ import {
   useContract,
   useDeliverContract,
   useRejectContract,
-} from "~/lib/contracts";
+} from "~/hooks/contracts";
 import { ProgressDialog } from "../progress-dialog";
 
 export function CTAs({
@@ -34,34 +36,34 @@ export function CTAs({
   const [projectProgress, addProjectFeedback] = useAddContractProjectFeedback();
   const isCompleted = Boolean(
     contract &&
-    typeof contract.status !== "string" &&
-    "Completed" in contract.status
+      typeof contract.status !== "string" &&
+      "Completed" in contract.status
   );
 
   const isDelivered = Boolean(
     contract &&
-    typeof contract.status !== "string" &&
-    "Delivered" in contract.status
+      typeof contract.status !== "string" &&
+      "Delivered" in contract.status
   );
   const isRejected = Boolean(
     contract &&
-    typeof contract.status !== "string" &&
-    "Rejected" in contract.status
+      typeof contract.status !== "string" &&
+      "Rejected" in contract.status
   );
   const isAccepted = Boolean(
     contract &&
-    typeof contract.status !== "string" &&
-    "Accepted" in contract.status
+      typeof contract.status !== "string" &&
+      "Accepted" in contract.status
   );
   const isOngoing = Boolean(
     contract &&
-    typeof contract.status === "string" &&
-    contract.status === "Ongoing"
+      typeof contract.status === "string" &&
+      contract.status === "Ongoing"
   );
   const isCreated = Boolean(
     contract &&
-    typeof contract.status !== "string" &&
-    "Created" in contract.status
+      typeof contract.status !== "string" &&
+      "Created" in contract.status
   );
 
   if (nonAdmin) {

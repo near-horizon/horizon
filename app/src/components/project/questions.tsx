@@ -1,6 +1,6 @@
 import { type AccountId } from "~/lib/validation/common";
 import { Description } from "../description";
-import { useProject } from "~/lib/projects";
+import { useProject } from "~/hooks/projects";
 
 export function Questions({ accountId }: { accountId: AccountId }) {
   const { data, status } = useProject(accountId);
