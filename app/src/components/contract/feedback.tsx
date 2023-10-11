@@ -1,10 +1,16 @@
-import { useContract } from "~/lib/contracts";
-import { type ContractId } from "~/lib/validation/contracts";
+"use client";
+
+import { useContract } from "~/hooks/contracts";
+import { type AccountId, type CID } from "~/lib/validation/common";
 
 export function Feedback({
-  contractId: [[projectId, cid], contributorId],
+  projectId,
+  cid,
+  contributorId,
 }: {
-  contractId: ContractId;
+  projectId: AccountId;
+  contributorId: AccountId;
+  cid: CID;
 }) {
   const { data: contract } = useContract([[projectId, cid], contributorId]);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useProject, useProjectCompletion } from "~/lib/projects";
+import { useProject, useProjectCompletion } from "~/hooks/projects";
 import { ProfileLayout } from "../profile-layout";
 import { useEffect } from "react";
 import { useAccountId } from "~/stores/global";
@@ -34,7 +34,7 @@ const stageOptions = Object.entries(stageSchema).map(([value, text]) => ({
   text,
 }));
 
-export default function FundingInfo({ }) {
+export default function FundingInfo({}) {
   const accountId = useAccountId();
   const { data } = useProject(accountId ?? "");
   const { funding } = useProjectCompletion();

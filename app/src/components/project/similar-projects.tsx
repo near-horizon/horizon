@@ -1,4 +1,4 @@
-import { useSimilarProjects } from "~/lib/projects";
+import { useSimilarProjects } from "~/hooks/projects";
 import { Project } from "../project";
 import { type AccountId } from "~/lib/validation/common";
 

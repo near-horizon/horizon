@@ -1,9 +1,11 @@
+"use client";
+
 import { type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { Description } from "./description";
 import Link from "next/link";
-import { useBacker } from "~/lib/backers";
+import { useBacker } from "~/hooks/backers";
 import { Tags } from "./tags";
 
 export function Backer({
@@ -17,13 +19,7 @@ export function Backer({
 
   return (
     <div className="relative flex h-52 w-full flex-col gap-4 rounded-lg border border-gray-200 p-4 shadow">
-      <Link
-        className="h-20"
-        href={{
-          pathname: "/backers/[accountId]",
-          query: { accountId },
-        }}
-      >
+      <Link className="h-20" href={`/backers/${accountId}`}>
         <h3 className="flex flex-row items-start justify-start gap-4">
           <div className="flex-shrink-0">
             <ProjectIcon

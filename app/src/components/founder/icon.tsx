@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { type z } from "zod";
-import { getImageURL, useProfile } from "~/lib/fetching";
+import { useProfile } from "~/hooks/fetching";
+import { getImageURL } from "~/lib/fetching";
 import { type accountIdSchema } from "~/lib/validation/common";
 
 export function FounderIcon({
@@ -38,7 +39,7 @@ export function FounderIcon({
           loading || status === "loading"
             ? "https://img.icons8.com/?size=512&id=Dajn8muCcSHe&format=png"
             : image ||
-            "https://img.icons8.com/?size=512&id=Dajn8muCcSHe&format=png"
+              "https://img.icons8.com/?size=512&id=Dajn8muCcSHe&format=png"
         }
         className={clsx("h-full w-full object-contain", {
           "animate-pulse": status === "loading",

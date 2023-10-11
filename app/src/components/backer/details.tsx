@@ -1,6 +1,8 @@
+"use client";
+
 import { type AccountId } from "~/lib/validation/common";
 import { General } from "./general";
-import { useBacker } from "~/lib/backers";
+import { useBacker } from "~/hooks/backers";
 import { Description } from "../description";
 import { Details as UIDetails } from "~/components/ui/details";
 

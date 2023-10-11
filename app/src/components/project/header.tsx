@@ -1,7 +1,9 @@
+"use client";
+
 import { type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "./icon";
 import { Handle } from "../handle";
-import { useProject } from "~/lib/projects";
+import { useProject } from "~/hooks/projects";
 import { Tags } from "../tags";
 
 export function Header({ accountId }: { accountId: AccountId }) {

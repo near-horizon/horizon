@@ -1,9 +1,11 @@
+"use client";
+
 import { type ReactNode } from "react";
 import { format } from "timeago.js";
-import { useContract } from "~/lib/contracts";
-import { useContributor } from "~/lib/contributors";
-import { useProject } from "~/lib/projects";
-import { useRequest } from "~/lib/requests";
+import { useContract } from "~/hooks/contracts";
+import { useContributor } from "~/hooks/contributors";
+import { useProject } from "~/hooks/projects";
+import { useRequest } from "~/hooks/requests";
 import { type CID, type AccountId } from "~/lib/validation/common";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 

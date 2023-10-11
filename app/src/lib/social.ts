@@ -1,4 +1,3 @@
-import { useSignTxs } from "~/stores/global";
 import {
   ESTIMATED_KEY_VALUE_SIZE,
   ESTIMATED_NODE_SIZE,
@@ -10,14 +9,7 @@ import {
 } from "./constants/tx";
 import { getProfile, viewCall } from "./fetching";
 import { type Profile } from "./validation/fetching";
-import {
-  type UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
 import { type AccountId } from "./validation/common";
-import { type Progress } from "./mutating";
-import { useState } from "react";
 import { type Optional, type Transaction } from "@near-wallet-selector/core";
 
 export async function calculateDeposit(
@@ -144,51 +136,4 @@ export function createSocialUpdate(
       },
     ],
   };
-}
-
-export function useSocialSet(): [
-  progress: Progress,
-  mutation: UseMutationResult<
-    void,
-    unknown,
-    {
-      accountId: AccountId;
-      profile: Partial<Profile>;
-    },
-    unknown
-  >
-] {
-  const signTxs = useSignTxs();
-  const queryClient = useQueryClient();
-  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
-
-  return [
-    progress,
-    useMutation({
-      mutationFn: async ({
-        accountId,
-        profile,
-      }: {
-        accountId: AccountId;
-        profile: Partial<Profile>;
-      }) => {
-        let deposit = 0n;
-        setProgress({ value: 25, label: "Calculating deposit..." });
-        try {
-          deposit = await calculateDeposit(accountId, profile);
-          setProgress({ value: 50, label: "Deposit calculated" });
-        } catch (e) {
-          console.error(e);
-          setProgress({ value: 25, label: "Error calculating deposit" });
-        }
-
-        setProgress({ value: 75, label: "Signing transaction..." });
-        await signTxs([createSocialUpdate(accountId, profile, deposit)]);
-        setProgress({ value: 100, label: "Transaction signed" });
-      },
-      onSuccess: async (_, { accountId }) => {
-        await queryClient.invalidateQueries(["profile", accountId]);
-      },
-    }),
-  ];
 }

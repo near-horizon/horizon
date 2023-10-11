@@ -1,8 +1,8 @@
 "use client";
 
-import { useProject, useProjectCompletion } from "~/lib/projects";
+import { useProject, useProjectCompletion } from "~/hooks/projects";
 import { ProfileLayout } from "../profile-layout";
-import { useAccountId } from "~/stores/global";
+import { useUser } from "~/stores/global";
 import { LabeledData } from "~/components/profile/labeled-data";
 import { Description } from "~/components/description";
 import { ExternalLink } from "~/components/external-link";
@@ -28,9 +28,9 @@ const formSchema = z
   })
   .partial();
 
-export default function BasicProfile({ }) {
-  const accountId = useAccountId();
-  const { data, status } = useProject(accountId ?? "");
+export default function BasicProfile() {
+  const user = useUser();
+  const { data, status } = useProject(user?.accountId ?? "");
   const { basic } = useProjectCompletion();
   const form = useZodForm(formSchema, {
     defaultValues: {

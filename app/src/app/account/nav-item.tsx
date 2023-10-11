@@ -11,7 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { useProjectCompletion } from "~/lib/projects";
+import { useProjectCompletion } from "~/hooks/projects";
 import { useParams, usePathname } from "next/navigation";
 
 export function NavItem({

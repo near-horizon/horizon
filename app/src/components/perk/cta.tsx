@@ -2,7 +2,7 @@ import { type Perk } from "~/lib/validation/perks";
 import { Button } from "../ui/button";
 import LockIcon from "../icons/lock-01.svg";
 import { ProgressDialog } from "../progress-dialog";
-import { useUnlockPerk } from "~/lib/perks";
+import { useUnlockPerk } from "~/hooks/perks";
 
 export function CTA({
   id,
