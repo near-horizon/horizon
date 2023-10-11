@@ -42,9 +42,9 @@ export default function GrowthProgramCard({
             </div>
           ) : (
             <div className="mr-4 h-16 w-16">
-              <Image
+              <img
                 src={program.imageSrc}
-                alt={`${program.name} Brand`}
+                alt={program.name}
                 className="h-full w-full object-contain"
               />
             </div>
