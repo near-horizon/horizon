@@ -1,15 +1,12 @@
 import { z } from "zod";
 
-// keep imageSrc as is, since imageSrc will just point to svg local path
-
 export const growthProgramSchema = z.object({
   name: z.string(),
   imageSvg: z.boolean(),
-  // Update imageSrc to handle SVGs ?
   imageSrc: z.string(),
   subHeader: z.string(),
   open: z.boolean(),
-  equity: z.string(),
+  equity: z.string().optional(),
   tagLine: z.string(),
   href: z.string().url(),
   duration: z.string(),

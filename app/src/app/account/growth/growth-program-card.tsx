@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import {
   Card,
   CardContent,
@@ -7,14 +9,18 @@ import {
   CardFooter,
 } from "~/components/ui/card";
 
-import RocketIcon from "~/components/icons/rocket-02.svg";
 import SendIcon from "~/components/icons/send-01.1.svg";
 import { Tags } from "~/components/tags";
 import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import { ExternalLink } from "~/components/external-link";
 import { Button } from "~/components/ui/button";
-import { GrowthProgram } from "~/lib/validation/growth-programs";
+import type { GrowthProgram } from "~/lib/validation/growth-programs";
+
+import ClockFastFowardIcon from "~/components/icons/clock-fast-forward.svg";
+import ContrastIcon from "~/components/icons/contrast-01.svg";
+import CubeIcon from "~/components/icons/cube-01.2.svg";
+import MarkerPinIcon from "~/components/icons/marker-pin-01.3.svg";
 
 export default function GrowthProgramCard({
   program,
@@ -23,15 +29,27 @@ export default function GrowthProgramCard({
 }) {
   return (
     <Card className="flex w-full shadow-md md:w-[calc((100%-2rem)/2)] xl:w-[calc((100%-4rem)/3)] 2xl:w-[calc((100%-6rem)/4)]">
-      <CardContent className="px-0 pb-0">
+      <CardContent className="flex flex-col px-0  pb-0">
         <CardHeader className="flex flex-row items-center px-6">
-          {program.imageSvg ? null : (
-            <img
-              src={program.imageSrc}
-              alt={`${program.name} Brand`}
-              className="mr-4 h-16 w-16 object-contain"
-            />
+          {program.imageSvg ? (
+            <div className="relative mr-4 h-16 w-16">
+              <Image
+                src={program.imageSrc}
+                alt={program.name}
+                fill
+                loader={({ src }) => src}
+              />
+            </div>
+          ) : (
+            <div className="mr-4 h-16 w-16">
+              <Image
+                src={program.imageSrc}
+                alt={`${program.name} Brand`}
+                className="h-full w-full object-contain"
+              />
+            </div>
           )}
+
           <div>
             <CardTitle className="text-lg font-semibold tracking-wide">
               {program.name}
@@ -56,27 +74,29 @@ export default function GrowthProgramCard({
             </div>
           </div>
         </CardHeader>
-        <CardDescription className="p-6 pt-0">
-          <div className="mb-3 text-sm font-normal tracking-wide text-ui-elements-dark">
+        <CardDescription className="flex flex-grow flex-col p-6 pt-0">
+          <div className="mb-3 flex-grow text-sm font-normal tracking-wide text-ui-elements-dark">
             {program.tagLine}
           </div>
 
           <Tags tags={program.tags} loading={false} />
           <div className="mt-3 flex flex-wrap gap-6">
             <div className="flex items-center gap-1">
-              <RocketIcon className="h-5 w-5" />
+              <ClockFastFowardIcon className="h-5 w-5" />
               <span>{program.duration}</span>
             </div>
+            {program.equity && (
+              <div className="flex items-center gap-1">
+                <ContrastIcon className="h-5 w-5" />
+                <span>{program.equity}</span>
+              </div>
+            )}
             <div className="flex items-center gap-1">
-              <RocketIcon className="h-5 w-5" />
-              <span>{program.equity}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <RocketIcon className="h-5 w-5" />
+              <CubeIcon className="h-5 w-5" />
               <span>{program.chain}</span>
             </div>
             <div className="flex items-center gap-1">
-              <RocketIcon className="h-5 w-5" />
+              <MarkerPinIcon className="h-5 w-5" />
               <span>{program.location}</span>
             </div>
           </div>
@@ -95,12 +115,10 @@ export default function GrowthProgramCard({
           >
             <ExternalLink
               href={program.href}
-              className="text-md font-semibold text-text-primary"
+              className="text-md flex items-center justify-center gap-1 font-semibold text-text-primary"
             >
-              <div className="flex items-center justify-center gap-1">
-                <SendIcon className="h-4 w-4" viewBox="0 0 24 24" />
-                <span>Apply</span>
-              </div>
+              <SendIcon className="h-4 w-4" viewBox="0 0 24 24" />
+              <span>Apply</span>
             </ExternalLink>
           </Button>
         </CardFooter>
