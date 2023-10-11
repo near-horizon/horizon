@@ -1,16 +1,14 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+
 import { GrowthProgram } from "~/lib/validation/growth-programs";
 
 export const programItems = [
   {
     name: "Encode Club",
-    // imageSvg is true
-    imageSvg: false,
-    // imageSrc is actually an SVG, make sure to update accordingly
-    imageSrc:
-      "https://outlierventures.io/wp-content/uploads/2019/11/Outlier_Ventures_Official_logo_Black-5-e1574692790237.png",
+    imageSvg: true,
+    imageSrc: "/encodeclub.svg",
     subHeader: "Hackathon, Accelerator",
-    open: false,
+    open: true,
     tagLine:
       "Encode Club is a web3 education community. We help ambitious, talented people achieve their personal and professional goals together in web3. We do this through organizing great programs like educational workshops, hackathons, coding bootcamps and accelerators in partnership with the leading blockchain protocols. With a track record of over 100 programmes and 10,000s developers trained, Encode helps developers learn, hack and build their own Web3 startups.",
     href: "https://www.encode.club/near2023",
@@ -18,7 +16,7 @@ export const programItems = [
     chain: "Chain agnostic",
     location: "Global",
     tags: { Generalist: "" },
-    equity: "4%",
+    // equity: "4%",
     linkTree: {
       twitter: "encodeclub",
       discord: "invite/encodeclub",
@@ -47,7 +45,7 @@ export const programItems = [
       Infrastructure: "",
       "Real-world Use Cases": "",
     },
-    equity: "4%",
+    // equity: "4%",
     linkTree: {
       website: "https://outlierventures.io",
       twitter: "OVioHQ",
@@ -55,11 +53,8 @@ export const programItems = [
   },
   {
     name: "Major League Hacking",
-    // imageSvg is true
-    imageSvg: false,
-    // imageSrc is actually an SVG, make sure to update accordingly
-    imageSrc:
-      "https://outlierventures.io/wp-content/uploads/2019/11/Outlier_Ventures_Official_logo_Black-5-e1574692790237.png",
+    imageSvg: true,
+    imageSrc: "/mlh.svg",
     subHeader: "Hackathon, Incubator",
     open: true,
     tagLine:
@@ -75,7 +70,7 @@ export const programItems = [
       Infrastructure: "",
       "Real-world Use Cases": "",
     },
-    equity: "4%",
+    // equity: "4%",
     linkTree: {
       twitter: "mlhacks",
       github: "mlh-fellowhip",
@@ -84,7 +79,6 @@ export const programItems = [
   },
 ] satisfies GrowthProgram[];
 
-export default function handler(_req: NextApiRequest, res: NextApiResponse) {
-  res.status(200).json(programItems);
-  return;
+export function GET() {
+  return NextResponse.json(programItems);
 }

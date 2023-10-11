@@ -1,5 +1,5 @@
 "use client";
-import { type GrowthProgram } from "~/lib/validation/growth-programs";
+
 import GrowthProgramCard from "./growth-program-card";
 import { useGrowthPrograms } from "~/lib/growth-programs";
 
@@ -16,7 +16,7 @@ export default function GrowthPrograms() {
       </div>
       <div className="mt-6 flex flex-row flex-wrap items-stretch justify-start gap-8">
         {growthPrograms.map((growthProgram) => (
-          <GrowthProgramCard program={growthProgram} />
+          <GrowthProgramCard program={growthProgram} key={growthProgram.name} />
         ))}
       </div>
     </div>
