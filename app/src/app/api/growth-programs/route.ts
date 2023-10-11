@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { GrowthProgram } from "~/lib/validation/growth-programs";
 
-export const programItems = [
+const programItems = [
   {
     name: "Encode Club",
     imageSvg: true,
