@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { GrowthProgram } from "~/lib/validation/growth-programs";
+import type { GrowthProgram } from "~/lib/validation/growth-programs";
 
 const programItems = [
   {
@@ -26,8 +26,7 @@ const programItems = [
   {
     name: "Outlier Ventures",
     imageSvg: false,
-    imageSrc:
-      "https://outlierventures.io/wp-content/uploads/2019/11/Outlier_Ventures_Official_logo_Black-5-e1574692790237.png",
+    imageSrc: "/Outlier_Ventures_Official_logo.png",
 
     subHeader: "Startup Accelerator",
     open: true,
