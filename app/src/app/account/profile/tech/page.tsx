@@ -1,6 +1,6 @@
 "use client";
 
-import { useProject, useProjectCompletion } from "~/lib/projects";
+import { useProject, useProjectCompletion } from "~/hooks/projects";
 import { ProfileLayout } from "../profile-layout";
 import { useEffect } from "react";
 import { useAccountId } from "~/stores/global";
@@ -57,7 +57,7 @@ const distributionOptions = Object.entries(distributionSchema).map(
   ([id, text]) => ({ id, text })
 );
 
-export default function TechInfo({ }) {
+export default function TechInfo({}) {
   const accountId = useAccountId();
   const { data } = useProject(accountId ?? "");
   const { tech } = useProjectCompletion();

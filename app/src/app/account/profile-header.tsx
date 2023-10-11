@@ -4,9 +4,9 @@ import { Handle } from "~/components/handle";
 import { ProjectIcon } from "~/components/project/icon";
 import { Tags } from "~/components/tags";
 import { Button } from "~/components/ui/button";
-import { useChanges, useHasChanges } from "~/lib/profile";
-import { useProject } from "~/lib/projects";
-import { useSocialSet } from "~/lib/social";
+import { useChanges, useHasChanges } from "~/hooks/profile";
+import { useProject } from "~/hooks/projects";
+import { useSocialSet } from "~/hooks/social";
 import { useAccountId } from "~/stores/global";
 
 export function ProfileHeader() {

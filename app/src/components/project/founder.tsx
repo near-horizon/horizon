@@ -1,4 +1,4 @@
-import { useProfile } from "~/lib/fetching";
+import { useProfile } from "~/hooks/fetching";
 import { type AccountId } from "~/lib/validation/common";
 import { FounderIcon } from "../founder/icon";
 import { Socials } from "../socials";

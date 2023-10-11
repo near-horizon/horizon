@@ -1,3 +1,5 @@
+"use client";
+
 import { type AccountId } from "~/lib/validation/common";
 import { General } from "./general";
 import { Questions } from "./questions";

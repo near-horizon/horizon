@@ -13,8 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { getImageURL, useProfile } from "~/lib/fetching";
+import { getImageURL } from "~/lib/fetching";
 import { NavbarMobile } from "./navbar/mobile";
+import { useProfile } from "~/hooks/fetching";
 // import { NavbarDesktop } from "./navbar/desktop";
 
 export function Navbar() {

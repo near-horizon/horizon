@@ -1,4 +1,4 @@
-import { useProject } from "~/lib/projects";
+import { useProject } from "~/hooks/projects";
 import { type AccountId } from "~/lib/validation/common";
 import { Detail } from "../detail";
 

@@ -1,4 +1,6 @@
-import { useProject } from "~/lib/projects";
+"use client";
+
+import { useProject } from "~/hooks/projects";
 import { formatTimestamp } from "~/lib/utils";
 import { Requests } from "./requests";
 import { Description } from "../description";

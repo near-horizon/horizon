@@ -1,12 +1,12 @@
 import { ProjectIcon } from "./project/icon";
 import { Description } from "./description";
 import Link from "next/link";
-import { useContract } from "~/lib/contracts";
-import { useRequest } from "~/lib/requests";
+import { useContract } from "~/hooks/contracts";
+import { useRequest } from "~/hooks/requests";
 import { format } from "timeago.js";
 import { Availability } from "./availability";
 import { formatBudget, formatDate } from "~/lib/utils";
-import { useProposal } from "~/lib/proposals";
+import { useProposal } from "~/hooks/proposals";
 import { Handle } from "./handle";
 import { type ContractId } from "~/lib/validation/contracts";
 
@@ -97,8 +97,9 @@ export function Contract({
         </div>
         <Link
           href={{
-            pathname: `/${showContributor ? "contributors" : "projects"
-              }/[accountId]`,
+            pathname: `/${
+              showContributor ? "contributors" : "projects"
+            }/[accountId]`,
             query: { accountId: showContributor ? contributorId : projectId },
           }}
           className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400"

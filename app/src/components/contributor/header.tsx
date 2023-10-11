@@ -1,7 +1,9 @@
+"use client";
+
 import { type AccountId } from "~/lib/validation/common";
 import { ProjectIcon } from "../project/icon";
 import { Handle } from "../handle";
-import { useContributor } from "~/lib/contributors";
+import { useContributor } from "~/hooks/contributors";
 
 export function Header({ accountId }: { accountId: AccountId }) {
   const { data, status } = useContributor(accountId);

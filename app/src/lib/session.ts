@@ -9,8 +9,10 @@ export async function getUserFromSession() {
   const session = cookieStore.get(ironSessionConfig.cookieName)?.value;
 
   return session
-    ? await unsealData<IronSession["user"]>(session, {
-        password: ironSessionConfig.password,
-      })
+    ? (
+        await unsealData<IronSession>(session, {
+          password: ironSessionConfig.password,
+        })
+      ).user
     : null;
 }

@@ -1,4 +1,4 @@
-import { useProfile } from "~/lib/fetching";
+import { useProfile } from "~/hooks/fetching";
 import { type AccountId } from "~/lib/validation/common";
 
 export function Handle({
