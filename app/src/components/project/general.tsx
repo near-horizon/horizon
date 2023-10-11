@@ -1,4 +1,4 @@
-import { useProject } from "~/lib/projects";
+import { useProject } from "~/hooks/projects";
 import { formatTimestamp } from "~/lib/utils";
 import { Description } from "../description";
 import { Detail } from "../detail";

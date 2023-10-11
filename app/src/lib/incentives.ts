@@ -1,6 +1,5 @@
 import { env } from "~/env.mjs";
 import { viewCall } from "./fetching";
-import { useQuery } from "@tanstack/react-query";
 
 export async function getIncentives() {
   const response = await viewCall(
@@ -9,14 +8,5 @@ export async function getIncentives() {
     {}
   );
 
-  console.log("getIncentives", response);
-
   return response;
-}
-
-export function useIncetives() {
-  return useQuery({
-    queryKey: ["incentives"],
-    queryFn: getIncentives,
-  });
 }

@@ -1,58 +1,40 @@
-import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
-import { useRouter } from "next/router";
-import { type ReactNode } from "react";
-import { type ZodCatch, type ZodDefault, type ZodEnum } from "zod";
+"use client";
 
-export default function ContentTabs<T extends [string, ...string[]]>({
+import Link from "next/link";
+import { Tabs, TabsList, TabsTrigger } from "./tabs";
+import { type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+
+export default function ContentTabs({
   tabs,
-  tabRule,
 }: {
-  tabs: { text: string; id: string; children: ReactNode }[];
-  tabRule: ZodCatch<ZodDefault<ZodEnum<T>>>;
+  tabs: { id: string; text: ReactNode; href: string }[];
 }) {
-  const { query } = useRouter();
-  const tab = tabRule.parse(query.tab);
+  const tab = usePathname()?.split("/").at(-1) ?? tabs[0]?.id;
 
   return (
     <Tabs value={tab}>
       <TabsList>
-        {tabs.map(({ text, id }) => (
-          <Tab text={text} id={id} key={id} />
+        {tabs.map((props) => (
+          <Tab key={props.id} {...props} />
         ))}
       </TabsList>
-      <div className="relative w-full">
-        {tabs.map(({ id, children }) => (
-          <Content id={id} key={id}>
-            {children}
-          </Content>
-        ))}
-      </div>
     </Tabs>
   );
 }
 
-function Tab({ text, id }: { text: string; id: string }) {
-  const { pathname, query } = useRouter();
-
+function Tab({
+  text,
+  id,
+  href,
+}: {
+  text: ReactNode;
+  id: string;
+  href: string;
+}) {
   return (
     <TabsTrigger value={id} asChild>
-      <Link
-        href={{
-          pathname,
-          query: { ...query, tab: id },
-        }}
-      >
-        {text}
-      </Link>
+      <Link href={href}>{text}</Link>
     </TabsTrigger>
-  );
-}
-
-function Content({ id, children }: { id: string; children: ReactNode }) {
-  return (
-    <TabsContent value={id} className="w-full overflow-visible">
-      {children}
-    </TabsContent>
   );
 }

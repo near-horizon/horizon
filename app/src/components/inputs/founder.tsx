@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { SelectInput } from "./select";
 import { ProgressDialog } from "../progress-dialog";
-import { useProject, useUpdateProject } from "~/lib/projects";
+import { useProject, useUpdateProject } from "~/hooks/projects";
 import { useAccountId } from "~/stores/global";
 
 const formSchema = z.object({

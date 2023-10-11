@@ -5,10 +5,10 @@ import EditIcon from "~/components/icons/edit-03.svg";
 import CheckIcon from "~/components/icons/check.svg";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { type FieldValues, type UseFormReturn } from "react-hook-form";
-import { useUpdateProject } from "~/lib/projects";
-import { useAccountId } from "~/stores/global";
+import { useUpdateProject } from "~/hooks/projects";
+import { useUser } from "~/stores/global";
 import { ProgressDialog } from "~/components/progress-dialog";
 import { Form } from "~/components/ui/form";
 import { type z } from "zod";
@@ -31,14 +31,15 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   editData: React.ReactNode | Form;
   form: UseFormReturn<z.infer<Schema>>;
 }) {
-  const accountId = useAccountId();
+  const user = useUser();
   const [edit, setEdit] = useState(false);
   const toggleEdit = () => setEdit((prev) => !prev);
   const [progressUpdate, updateProject] = useUpdateProject();
-
+  const viewRef = useRef<HTMLDivElement>(null);
+  const editRef = useRef<HTMLDivElement>(null);
   const handleSubmit = form.handleSubmit((project) => {
     updateProject.mutate({
-      accountId: accountId ?? "",
+      accountId: user?.accountId ?? "",
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       project,
@@ -94,8 +95,18 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
           </div>
         </div>
       </div>
-      <div className={cn("relative [transform-style:preserve-3d]")}>
+      <div
+        className={cn("relative [transform-style:preserve-3d]")}
+        style={{
+          height: `${
+            !edit
+              ? viewRef.current?.getBoundingClientRect().height ?? 0
+              : editRef.current?.getBoundingClientRect().height ?? 0
+          }px`,
+        }}
+      >
         <div
+          ref={viewRef}
           className={cn(
             "absolute z-10 w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
             !edit ? "[transform:rotateY(0deg)]" : "[transform:rotateY(180deg)]"
@@ -104,6 +115,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
           {children}
         </div>
         <div
+          ref={editRef}
           className={cn(
             "absolute w-full rounded-lg bg-background-light px-12 py-8 transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
             !edit ? "[transform:rotateY(-180deg)]" : "[transform:rotateY(0deg)]"

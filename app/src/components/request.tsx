@@ -2,7 +2,7 @@ import { formatDate, formatBudget } from "~/lib/utils";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import Link from "next/link";
-import { useRequest } from "~/lib/requests";
+import { useRequest } from "~/hooks/requests";
 import { Title } from "./title";
 import { Tags } from "./tags";
 import { Availability } from "./availability";
@@ -25,25 +25,13 @@ export function Request({
 
   return (
     <div className="relative flex h-[14.5rem] w-full flex-col gap-3 rounded-lg border border-gray-200 p-4 shadow">
-      <Link
-        className="h-16"
-        href={{
-          pathname: "/projects/[accountId]",
-          query: { accountId },
-        }}
-      >
+      <Link className="h-16" href={`/projects/${accountId}`}>
         <h3 className="flex flex-row items-start justify-start gap-4">
           <ProjectIcon accountId={accountId} className="h-16 w-16" />
           <Handle accountId={accountId} />
         </h3>
       </Link>
-      <Link
-        className="h-6"
-        href={{
-          pathname: "/requests/[accountId]/[cid]",
-          query: { accountId, cid },
-        }}
-      >
+      <Link className="h-6" href={`/requests/${accountId}/${cid}`}>
         <Title
           text={data?.title ?? ""}
           loading={loading || status === "loading"}

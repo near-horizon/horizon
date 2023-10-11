@@ -1,7 +1,9 @@
+"use client";
+
 import { formatTimestamp, formatBudget } from "~/lib/utils";
 import { Description } from "../description";
 import { Detail } from "../detail";
-import { useRequest } from "~/lib/requests";
+import { useRequest } from "~/hooks/requests";
 import { Tags } from "../tags";
 import { formatDate } from "~/lib/utils";
 import { format } from "timeago.js";

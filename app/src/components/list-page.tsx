@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "~/lib/utils";
+import { Button } from "./ui/button";
 
 export function ListPage<T extends (string | [string, string])[]>({
   title,
@@ -19,8 +19,8 @@ export function ListPage<T extends (string | [string, string])[]>({
   hasNextPage: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold">{title}</h1>
+    <div className="flex flex-col items-center gap-8">
+      <h1 className="w-full text-3xl font-semibold">{title}</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -39,12 +39,12 @@ export function ListPage<T extends (string | [string, string])[]>({
           ))}
         </ul>
       )}
-      <span className={cn({ hidden: !isFetchingNextPage }, "animate-pulse")}>
-        Loading
-      </span>
-      <button onClick={fetchNextPage} className={cn({ hidden: !hasNextPage })}>
-        Load more
-      </button>
+      {isFetchingNextPage && <span className="animate-pulse">Loading</span>}
+      {hasNextPage && (
+        <Button variant="outline" type="button" onClick={fetchNextPage}>
+          Load more
+        </Button>
+      )}
     </div>
   );
 }

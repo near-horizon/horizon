@@ -1,4 +1,4 @@
-import { useProjectRequests } from "~/lib/requests";
+import { useProjectRequests } from "~/hooks/requests";
 import { type AccountId } from "~/lib/validation/common";
 import { Request } from "../request";
 
