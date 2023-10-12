@@ -1,7 +1,7 @@
 "use client";
 
-import GrowthProgramCard from "./growth-program-card";
-import { useGrowthPrograms } from "~/lib/growth-programs";
+import GrowthProgramCard from "./card";
+import { useGrowthPrograms } from "~/hooks/growth-programs";
 
 export default function GrowthPrograms() {
   const { data: growthPrograms } = useGrowthPrograms();
