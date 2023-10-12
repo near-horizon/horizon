@@ -27,7 +27,6 @@ export function useContributors(query: ContributorsQuery) {
   return useQuery({
     queryKey: ["contributors", query],
     queryFn: () => getContributors(query),
-    initialData: ["", "", ""],
   });
 }
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NoData } from "../empty";
 
 export function List<T extends string | [string, string]>({
   items,
@@ -25,14 +26,18 @@ export function List<T extends string | [string, string]>({
         <Link href={link}>{linkText}</Link>
       </div>
       <div className="flex flex-row flex-wrap gap-4">
-        {items.map((id, index) => (
-          <div
-            key={id.toString() + index}
-            className="w-full md:w-[calc((100%-1rem)*.5)] xl:w-[calc((100%-2rem)*.33)] 2xl:w-[calc((100%-4rem)*.25)] md:[&:nth-child(n+7)]:hidden 2xl:[&:nth-child(n+7)]:block"
-          >
-            {renderItem(id)}
-          </div>
-        ))}
+        {items.length ? (
+          items.map((id, index) => (
+            <div
+              key={id.toString() + index}
+              className="w-full md:w-[calc((100%-1rem)*.5)] xl:w-[calc((100%-2rem)*.33)] 2xl:w-[calc((100%-4rem)*.25)] md:[&:nth-child(n+7)]:hidden 2xl:[&:nth-child(n+7)]:block"
+            >
+              {renderItem(id)}
+            </div>
+          ))
+        ) : (
+          <NoData description="There are no items to show" />
+        )}
       </div>
     </section>
   );

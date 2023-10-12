@@ -1,10 +1,10 @@
 import { ListPageLayout } from "./list-page-layout";
-import { HomeLoader } from "./home-loader";
+import { Home } from "./home";
 
 export default function HomePage() {
   return (
     <ListPageLayout title="Explore NEAR Horizon">
-      <HomeLoader />
+      <Home />
     </ListPageLayout>
   );
 }
