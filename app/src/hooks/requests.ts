@@ -12,7 +12,6 @@ import {
   getRequest,
   getRequests,
   getRequestsForProject,
-  requestsInitialData,
 } from "~/lib/requests";
 import { type Request, type RequestsQuery } from "~/lib/validation/requests";
 import { pageSize } from "~/lib/constants/pagination";
