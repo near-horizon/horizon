@@ -36,7 +36,7 @@ export function Contributor({
             />
           </div>
           <div>
-            <Handle accountId={accountId} loading={loading} />
+            <Handle accountId={accountId} />
             <span>{isOrganization ? "Organization" : "Individual"}</span>
           </div>
         </h3>

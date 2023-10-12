@@ -29,9 +29,7 @@ export function Project({
               className="h-16 w-16"
             />
           </div>
-          <div>
-            <Handle accountId={accountId} loading={loading} />
-          </div>
+          <Handle accountId={accountId} />
         </h3>
       </Link>
       <div className="truncate font-medium">{data?.tagline}</div>

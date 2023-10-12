@@ -25,7 +25,7 @@ export function ProfileHeader() {
           className="h-24 w-24"
         />
         <div className="flex flex-col items-start justify-start gap-1">
-          <Handle accountId={accountId} loading={accountId === ""} />
+          <Handle accountId={accountId} />
           <div className="truncate font-medium">{data?.tagline}</div>
           <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
         </div>

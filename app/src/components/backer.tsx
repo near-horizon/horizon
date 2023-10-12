@@ -28,9 +28,7 @@ export function Backer({
               className="h-16 w-16"
             />
           </div>
-          <div>
-            <Handle accountId={accountId} loading={loading} />
-          </div>
+          <Handle accountId={accountId} />
         </h3>
         <span>{data?.specialization}</span>
       </Link>
