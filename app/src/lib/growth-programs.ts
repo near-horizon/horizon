@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { useQuery } from "@tanstack/react-query";
 
 import {
   type GrowthProgram,
@@ -14,12 +13,4 @@ export async function getGrowthPrograms(): Promise<GrowthProgram[]> {
     .parseAsync(await response.json());
 
   return growthPrograms;
-}
-
-export function useGrowthPrograms() {
-  return useQuery({
-    queryKey: ["growthPrograms"],
-    queryFn: getGrowthPrograms,
-    initialData: [],
-  });
 }

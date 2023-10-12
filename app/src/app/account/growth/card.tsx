@@ -28,29 +28,18 @@ export default function GrowthProgramCard({
   program: GrowthProgram;
 }) {
   return (
-    <Card className="flex w-full shadow-md md:w-[calc((100%-2rem)/2)] xl:w-[calc((100%-4rem)/3)] 2xl:w-[calc((100%-6rem)/4)]">
+    <Card className="flex w-full shadow-md md:w-[calc((100%-2rem)/2)] 2xl:w-[calc((100%-4rem)/3)]">
       <CardContent className="flex flex-col px-0  pb-0">
         <CardHeader className="flex flex-row items-center px-6">
-          {program.imageSvg ? (
-            <div className="relative mr-4 h-16 w-16">
-              <Image
-                src={program.imageSrc}
-                alt={program.name}
-                fill
-                loader={({ src }) => src}
-              />
-            </div>
-          ) : (
-            <div className="mr-4 h-16 w-16">
-              <Image
-                width={71}
-                height={71}
-                src={program.imageSrc}
-                alt={program.name}
-                className="h-full w-full object-contain"
-              />
-            </div>
-          )}
+          <div className="relative mr-4 h-16 w-16">
+            <Image
+              src={program.imageSrc}
+              alt={program.name}
+              objectFit="contain"
+              fill
+              loader={({ src }) => src}
+            />
+          </div>
 
           <div>
             <CardTitle className="text-lg font-semibold tracking-wide">
