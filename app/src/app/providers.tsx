@@ -9,6 +9,7 @@ import { useState } from "react";
 import { type IronSession } from "iron-session";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { useWalletSelectorEffect } from "~/hooks/selector";
+import { ProgressBar } from "./progress-bar";
 
 export function Providers({
   children,
@@ -25,7 +26,9 @@ export function Providers({
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Dialog>{children}</Dialog>
+          <Dialog>
+            <ProgressBar>{children}</ProgressBar>
+          </Dialog>
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
