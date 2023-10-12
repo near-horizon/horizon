@@ -1,5 +1,5 @@
 import { Hydrate, dehydrate } from "@tanstack/react-query";
-import { getQueryClient } from "../query-client";
+import { getQueryClient } from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
 import { getRequests } from "~/pages/api/requests";
