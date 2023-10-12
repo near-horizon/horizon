@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Project } from "~/components/project";
+import { Project } from "../card";
 import { Button } from "~/components/ui/button";
 import { usePaginatedProjects } from "~/hooks/projects";
 

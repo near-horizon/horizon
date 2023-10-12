@@ -23,7 +23,6 @@ export function useBackers(query: BackersQuery) {
   return useQuery({
     queryKey: ["backers", query],
     queryFn: () => getBackers(query),
-    initialData: ["", "", ""],
   });
 }
 

@@ -31,7 +31,6 @@ export function useProjects(query: ProjectsQuery) {
   return useQuery({
     queryKey: ["projects", query],
     queryFn: () => getProjects(query),
-    initialData: ["", "", ""],
   });
 }
 

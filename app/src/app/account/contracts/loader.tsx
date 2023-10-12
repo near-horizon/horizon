@@ -1,6 +1,6 @@
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
-import { getQueryClient } from "~/app/query-client";
+import getQueryClient from "~/app/query-client";
 import { getUserFromSession } from "~/lib/session";
 import { removeEmpty } from "~/lib/utils";
 import { List } from "./list";
