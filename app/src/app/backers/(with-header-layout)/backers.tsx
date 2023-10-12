@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Backer } from "~/components/backer";
+import { Backer } from "../card";
 import { Button } from "~/components/ui/button";
 import { usePaginatedBackers } from "~/hooks/backers";
 

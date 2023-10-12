@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Request } from "~/components/request";
+import { Request } from "../card";
 import { Button } from "~/components/ui/button";
 import { usePaginatedRequests } from "~/hooks/requests";
 

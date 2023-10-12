@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Contributor } from "~/components/contributor";
+import { Contributor } from "../card";
 import { Button } from "~/components/ui/button";
 import { usePaginatedContributors } from "~/hooks/contributors";
 

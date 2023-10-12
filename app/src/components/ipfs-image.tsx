@@ -15,7 +15,7 @@ export function IPFSImage({
       <Image
         src={ipfsURL(cid)}
         alt={alt ?? "image"}
-        className="h-full w-full rounded-full object-cover"
+        className="h-full w-full object-cover"
         loader={({ src }) => src}
         fill
       />

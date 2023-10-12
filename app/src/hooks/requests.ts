@@ -23,7 +23,6 @@ export function useRequests(query: RequestsQuery) {
   return useQuery({
     queryKey: ["requests", query],
     queryFn: () => getRequests(query),
-    initialData: requestsInitialData(),
   });
 }
 

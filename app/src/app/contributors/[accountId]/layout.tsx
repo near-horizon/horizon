@@ -1,5 +1,5 @@
 import { Hydrate, type QueryClient, dehydrate } from "@tanstack/react-query";
-import { getQueryClient } from "~/app/query-client";
+import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { Header } from "~/components/contributor/header";
 import ContentTabs from "~/components/ui/content-tabs";
