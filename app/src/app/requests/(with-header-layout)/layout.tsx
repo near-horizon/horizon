@@ -1,4 +1,4 @@
-import { ListPageLayout } from "../list-page-layout";
+import { ListPageLayout } from "~/app/list-page-layout";
 
 export default function RequestsLayout({
   children,
