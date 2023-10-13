@@ -4,7 +4,7 @@ import getQueryClient from "~/app/query-client";
 import { getUserFromSession } from "~/lib/session";
 import { removeEmpty } from "~/lib/utils";
 import { List } from "./list";
-import { getProjectContracts } from "~/pages/api/projects/[accountId]/contracts";
+import { getProjectContracts } from "~/lib/server/projects";
 
 export async function Loader() {
   const user = await getUserFromSession();

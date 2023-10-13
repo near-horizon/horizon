@@ -13,8 +13,6 @@ import { Form } from "~/components/ui/form";
 import { useCreateContributor } from "~/hooks/contributors";
 import { useZodForm } from "~/hooks/form";
 import { useLocalSaveForm } from "~/hooks/mutating";
-import { withSSRSession } from "~/lib/auth";
-import { hasContributor } from "~/lib/contributors";
 import { clearLocalSaveForm } from "~/lib/mutating";
 import { type AccountId } from "~/lib/validation/common";
 
@@ -148,16 +146,3 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
     </div>
   );
 }
-
-export const getServerSideProps = withSSRSession(async function ({ req }) {
-  if (req.session.user && (await hasContributor(req.session.user.accountId))) {
-    return {
-      redirect: {
-        destination: "/account",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-});

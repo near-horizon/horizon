@@ -1,7 +1,7 @@
 import getQueryClient from "./query-client";
-import { getStats } from "~/pages/api/transactions/stats";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import { MainStats } from "~/components/main-stats";
+import { getStats } from "~/lib/server/transactions";
 
 export async function StatsLoader() {
   const queryClient = getQueryClient();

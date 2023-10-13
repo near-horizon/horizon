@@ -1,7 +1,7 @@
 import { Details } from "~/components/backer/details";
 import { Header } from "~/components/backer/header";
+import { getBackers } from "~/lib/server/backers";
 import { type AccountId } from "~/lib/validation/common";
-import { getBackers } from "~/pages/api/backers";
 
 export default function BackersPage({
   params: { accountId },

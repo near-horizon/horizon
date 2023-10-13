@@ -143,6 +143,9 @@ dependencies:
   cmdk:
     specifier: ^0.2.0
     version: 0.2.0(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+  cookie:
+    specifier: ^0.5.0
+    version: 0.5.0
   date-fns:
     specifier: ^2.30.0
     version: 2.30.0
@@ -208,6 +211,9 @@ devDependencies:
   '@tanstack/eslint-plugin-query':
     specifier: ^4.36.1
     version: 4.36.1(eslint@8.51.0)
+  '@types/cookie':
+    specifier: ^0.5.2
+    version: 0.5.2
   '@types/deep-equal':
     specifier: ^1.0.2
     version: 1.0.2
@@ -4127,7 +4133,6 @@ packages:
 
   /@types/cookie@0.5.2:
     resolution: {integrity: sha512-DBpRoJGKJZn7RY92dPrgoMew8xCWc2P71beqsjyhEI/Ds9mOyVmBwtekyfhpwFIVt1WrxTonFifiOZ62V8CnNA==}
-    dev: false
 
   /@types/cookies@0.7.8:
     resolution: {integrity: sha512-y6KhF1GtsLERUpqOV+qZJrjUGzc0GE6UTa0b5Z/LZ7Nm2mKSdCXmS6Kdnl7fctPNnMSouHjxqEWI12/YqQfk5w==}

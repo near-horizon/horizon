@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import getQueryClient from "~/app/query-client";
 import { getUserFromSession } from "~/lib/session";
 import { removeEmpty } from "~/lib/utils";
-import { getRequestsForProject } from "~/pages/api/projects/[accountId]/requests";
 import { List } from "./list";
+import { getRequestsForProject } from "~/lib/server/projects";
 
 export async function Loader() {
   const user = await getUserFromSession();

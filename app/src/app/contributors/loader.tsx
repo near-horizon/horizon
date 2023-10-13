@@ -2,10 +2,9 @@ import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "../query-client";
 import { ContributorsListSection } from "./list";
 import { removeEmpty } from "~/lib/utils";
-import { getContributors } from "~/pages/api/contributors";
-import { getContributor } from "~/pages/api/contributors/[accountId]";
-import { getStats } from "~/pages/api/transactions/stats";
 import { query } from "~/lib/constants/pagination";
+import { getContributor, getContributors } from "~/lib/server/contributors";
+import { getStats } from "~/lib/server/transactions";
 
 export async function ContributorsListSectionLoader() {
   const queryClient = getQueryClient();

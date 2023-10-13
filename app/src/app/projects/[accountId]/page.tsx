@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
+import { getProjects } from "~/lib/server/projects";
 import { type AccountId } from "~/lib/validation/common";
-import { getProjects } from "~/pages/api/projects";
 
 export default function ProjectPage({
   params: { accountId },

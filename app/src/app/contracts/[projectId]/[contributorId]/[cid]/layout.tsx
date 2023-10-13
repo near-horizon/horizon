@@ -2,15 +2,15 @@ import { Hydrate, type QueryClient, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import ContentTabs from "~/components/ui/content-tabs";
-import { getRequest } from "~/pages/api/requests/[accountId]/[cid]";
 import { type Request } from "~/lib/validation/requests";
 import { Availability } from "~/components/availability";
-import { getContract } from "~/pages/api/contracts/[projectId]/[contributorId]/[cid]";
-import { getProposal } from "~/pages/api/proposals/[projectId]/[contributorId]/[cid]";
-import { getProject } from "~/pages/api/projects/[accountId]";
-import { getContributor } from "~/pages/api/contributors/[accountId]";
 import { type Contract } from "~/lib/validation/contracts";
 import { CTAs } from "~/components/contract/ctas";
+import { getContract } from "~/lib/server/contracts";
+import { getRequest } from "~/lib/server/requests";
+import { getProposal } from "~/lib/server/proposals";
+import { getProject } from "~/lib/server/projects";
+import { getContributor } from "~/lib/server/contributors";
 
 export default async function ContractPageLayout({
   params: { projectId, cid, contributorId },
