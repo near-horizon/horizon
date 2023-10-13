@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
+import { getContributors } from "~/lib/server/contributors";
 import { type AccountId } from "~/lib/validation/common";
-import { getContributors } from "~/pages/api/contributors";
 
 export default function ContributorsPage({
   params: { accountId },

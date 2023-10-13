@@ -46,13 +46,15 @@ export function isProfileKey(key: string | number): key is keyof Profile {
 
 export const validKeySchema = z.object({
   result: z.object({
-    permission: z.object({
-      FunctionCall: z.object({
-        receiver_id: z
-          .string()
-          .refine((value) => value === env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID),
-      }),
-    }),
+    permission: z
+      .object({
+        FunctionCall: z.object({
+          receiver_id: z
+            .string()
+            .refine((value) => value === env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID),
+        }),
+      })
+      .or(z.literal("FullAccess")),
   }),
 });
 

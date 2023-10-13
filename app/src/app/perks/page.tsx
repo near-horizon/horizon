@@ -1,9 +1,9 @@
 import { Hydrate, dehydrate } from "@tanstack/react-query";
-import { getPerks } from "~/pages/api/perks";
 import { Perks } from "./perks";
 import { getUserFromSession } from "~/lib/session";
 import { redirect } from "next/navigation";
 import getQueryClient from "../query-client";
+import { getPerks } from "~/lib/server/perks";
 
 export default async function PerksPage() {
   const user = await getUserFromSession();

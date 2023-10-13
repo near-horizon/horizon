@@ -3,10 +3,12 @@ import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { Header } from "~/components/contributor/header";
 import ContentTabs from "~/components/ui/content-tabs";
-import { getContributorContracts } from "~/pages/api/contributors/[accountId]/contracts";
-import { getContributor } from "~/pages/api/contributors/[accountId]";
-import { getContributorCompletedContracts } from "~/pages/api/contributors/[accountId]/contracts/completed";
-import { getContract } from "~/pages/api/contracts/[projectId]/[contributorId]/[cid]";
+import {
+  getContributor,
+  getContributorCompletedContracts,
+  getContributorContracts,
+} from "~/lib/server/contributors";
+import { getContract } from "~/lib/server/contracts";
 
 export default async function ContributorPageLayout({
   params: { accountId },

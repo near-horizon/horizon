@@ -2,9 +2,8 @@ import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
-import { getRequests } from "~/pages/api/requests";
-import { getRequest } from "~/pages/api/requests/[accountId]/[cid]";
 import { Requests } from "./requests";
+import { getRequest, getRequests } from "~/lib/server/requests";
 
 export default async function RequestsPage() {
   const queryClient = getQueryClient();

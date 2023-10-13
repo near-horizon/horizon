@@ -2,9 +2,8 @@ import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
-import { getContributors } from "~/pages/api/contributors";
-import { getContributor } from "~/pages/api/contributors/[accountId]";
 import { Contributors } from "./contributors";
+import { getContributor, getContributors } from "~/lib/server/contributors";
 
 export default async function ContributorsPage() {
   const queryClient = getQueryClient();

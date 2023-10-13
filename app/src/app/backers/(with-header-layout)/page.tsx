@@ -1,10 +1,9 @@
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
-import { getBacker } from "~/pages/api/backers/[accountId]";
 import { pageSize } from "~/lib/constants/pagination";
-import { getBackers } from "~/pages/api/backers";
 import { Backers } from "./backers";
+import { getBacker, getBackers } from "~/lib/server/backers";
 
 export default async function BackersPage() {
   const queryClient = getQueryClient();

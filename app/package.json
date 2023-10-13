@@ -55,6 +55,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "cookie": "^0.5.0",
     "date-fns": "^2.30.0",
     "deep-equal": "^2.2.2",
     "framer-motion": "^10.16.4",
@@ -78,6 +79,7 @@
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
     "@tanstack/eslint-plugin-query": "^4.36.1",
+    "@types/cookie": "^0.5.2",
     "@types/deep-equal": "^1.0.2",
     "@types/eslint": "^8.44.4",
     "@types/node": "^18.18.4",
