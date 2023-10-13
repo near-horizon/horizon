@@ -1,3 +1,5 @@
+"use client";
+
 import { type Perk } from "~/lib/validation/perks";
 import {
   Card,
@@ -6,14 +8,16 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import { Tags } from "./tags";
-import { CTA } from "./perk/cta";
-import ClipboardIcon from "./icons/copy-03.svg";
-import SquareIcon from "./icons/square.svg";
-import CheckSquare from "./icons/check-square.svg";
+} from "~/components/ui/card";
+import { Tags } from "~/components/tags";
+import { CTA } from "~/components/perk/cta";
+import ClipboardIcon from "~/components/icons/copy-03.svg";
+import SquareIcon from "~/components/icons/square.svg";
+import CheckSquare from "~/components/icons/check-square.svg";
 import { cn } from "~/lib/utils";
-import { Separator } from "./ui/separator";
+import { Separator } from "~/components/ui/separator";
+import { Skeleton } from "~/components/ui/skeleton";
+import Image from "next/image";
 
 const requirementMapping = {
   "profile-created": "Create Profile",
@@ -44,8 +48,14 @@ export function Perk(perk: Perk) {
       <CardHeader className="flex-grow-0">
         <CardTitle className="flex max-h-8 w-full flex-row items-center justify-between">
           <span>{name}</span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logo?.url} alt={name} className="h-12 object-contain" />
+          <div className="relative h-12 object-contain">
+            <Image
+              src={logo?.url ?? ""}
+              alt={name}
+              fill
+              loader={({ src }) => src}
+            />
+          </div>
         </CardTitle>
         <CardDescription>
           {description}
@@ -144,5 +154,44 @@ function Section({
       <h4 className="text-sm font-semibold text-ui-elements-dark">{title}</h4>
       {children}
     </div>
+  );
+}
+
+export function PerkSkeleton() {
+  return (
+    <Card className="flex h-full flex-col items-stretch justify-between">
+      <CardHeader className="flex-grow-0">
+        <CardTitle className="flex max-h-8 w-full flex-row items-center justify-between">
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-12 w-12 rounded-xl" />
+        </CardTitle>
+        <CardDescription>
+          <Skeleton className="mt-2 h-4 w-96 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-64 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-80 max-w-full" />
+          <Skeleton className="mt-4 h-4 w-24 max-w-full" />
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <div className="flex flex-col items-start justify-start gap-2 rounded-lg border border-dashed border-[#C0AB8B] bg-gradient-to-b from-[#FCFBE9] to-[rgba(252,251,233,0.00)] px-3 py-2">
+          <h4 className="text-sm font-semibold text-ui-elements-dark">
+            Benefit
+          </h4>
+          <Skeleton className="h-4 w-96 max-w-full" />
+        </div>
+        <Section title="Eligibility criteria">
+          <Skeleton className="h-4 w-96 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-64 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-80 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-96 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-64 max-w-full" />
+          <Skeleton className="mt-2 h-4 w-80 max-w-full" />
+        </Section>
+      </CardContent>
+      <Separator className="mb-3 h-px w-full bg-ui-elements-light" />
+      <CardFooter className="flex flex-grow-0 flex-row items-center justify-center">
+        <Skeleton className="h-10 w-56 rounded-full" />
+      </CardFooter>
+    </Card>
   );
 }
