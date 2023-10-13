@@ -17,11 +17,21 @@ import {
 } from "~/lib/credits";
 import { ExternalLink } from "~/components/external-link";
 import InboxIcon from "~/components/icons/inbox-01.svg";
-import { getRequestsForProject } from "~/pages/api/projects/[accountId]/requests";
 import PlusIcon from "~/components/icons/plus.svg";
-import { getProjectContracts } from "~/pages/api/projects/[accountId]/contracts";
+import { getUserFromSession } from "~/lib/session";
+import { redirect } from "next/navigation";
+import {
+  getProjectContracts,
+  getRequestsForProject,
+} from "~/lib/server/projects";
 
 export default async function Dashboard() {
+  const user = await getUserFromSession();
+
+  if (!user) {
+    return redirect("/login");
+  }
+
   const incentives = await viewCall<Incentives>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_incentive_data",
@@ -30,11 +40,11 @@ export default async function Dashboard() {
   const horizonProfile = await viewCall<HorizonProject>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_project",
-    { account_id: "nearhorizon.near" }
+    { account_id: user.accountId }
   );
-  const creditHistory = await getCreditHistory("nearhorizon.near");
-  const requests = await getRequestsForProject("nearhorizon.near");
-  const contracts = await getProjectContracts("nearhorizon.near");
+  const creditHistory = await getCreditHistory(user.accountId);
+  const requests = await getRequestsForProject(user.accountId);
+  const contracts = await getProjectContracts(user.accountId);
 
   const dashboardCards = [
     {

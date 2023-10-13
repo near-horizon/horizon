@@ -1,14 +1,13 @@
 import { Hydrate, type QueryClient, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
-import { getRequestsForProject } from "~/pages/api/projects/[accountId]/requests";
-import { getProject } from "~/pages/api/projects/[accountId]";
 import { removeEmpty } from "~/lib/utils";
-import { getRequest } from "~/pages/api/requests/[accountId]/[cid]";
 import { Header } from "~/components/project/header";
 import { CTAs } from "~/components/project/ctas";
 import ContentTabs from "~/components/ui/content-tabs";
 import { getUserFromSession } from "~/lib/session";
 import { hasBacker } from "~/lib/backers";
+import { getProject, getRequestsForProject } from "~/lib/server/projects";
+import { getRequest } from "~/lib/server/requests";
 
 export default async function ProjectPageLayout({
   params: { accountId },

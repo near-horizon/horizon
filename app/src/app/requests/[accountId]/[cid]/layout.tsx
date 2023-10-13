@@ -2,7 +2,6 @@ import { Hydrate, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import ContentTabs from "~/components/ui/content-tabs";
-import { getRequest } from "~/pages/api/requests/[accountId]/[cid]";
 import { type Request } from "~/lib/validation/requests";
 import { Availability } from "~/components/availability";
 import { CTAs } from "~/components/request/ctas";
@@ -10,6 +9,7 @@ import { getUserFromSession } from "~/lib/session";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import ArrowLeftIcon from "~/components/icons/arrow-left.svg";
+import { getRequest } from "~/lib/server/requests";
 
 export default async function RequestPageLayout({
   params: { accountId, cid },

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
+import { getRequests } from "~/lib/server/requests";
 import { type CID, type AccountId } from "~/lib/validation/common";
-import { getRequests } from "~/pages/api/requests";
 
 export default function RequestPage({
   params: { accountId, cid },

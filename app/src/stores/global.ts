@@ -115,7 +115,7 @@ export function useSignOut() {
       try {
         const wallet = await selector?.wallet();
         await wallet?.signOut();
-        await fetch("/api/auth/logout");
+        await fetch("/api/auth/logout", { method: "POST" });
       } catch (err) {
         console.error("Could not sign out:", err);
       }
