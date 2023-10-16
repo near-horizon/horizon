@@ -28,23 +28,22 @@ export function Backer({ accountId }: { accountId: AccountId }) {
   return (
     <Card className="h-full">
       <CardHeader className="flex flex-row items-start justify-start gap-3">
-        <Link className="h-20" href={`/backers/${accountId}`}>
-          <h3 className="flex flex-row items-start justify-start gap-4">
-            <div className="flex-shrink-0">
-              {data.image && "ipfs_cid" in data.image ? (
-                <IPFSImage
-                  cid={data.image.ipfs_cid}
-                  className="h-16 w-16 rounded-lg"
-                />
-              ) : (
-                <UserIcon className="h-16 w-16 rounded-lg" />
-              )}
-            </div>
-            <div>
-              <Handle accountId={accountId} />
-              {data.specialization && <span>{data.specialization}</span>}
-            </div>
-          </h3>
+        <Link
+          className="flex h-20 max-w-full flex-row items-start justify-start gap-4"
+          href={`/backers/${accountId}`}
+        >
+          {data.image && "ipfs_cid" in data.image ? (
+            <IPFSImage
+              cid={data.image.ipfs_cid}
+              className="h-16 w-16 flex-shrink-0 rounded-lg"
+            />
+          ) : (
+            <UserIcon className="h-16 w-16 flex-shrink-0 rounded-lg" />
+          )}
+          <div className="max-w-full overflow-hidden">
+            <Handle accountId={accountId} />
+            {data.specialization && <span>{data.specialization}</span>}
+          </div>
         </Link>
       </CardHeader>
       <CardFooter>

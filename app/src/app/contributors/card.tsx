@@ -44,25 +44,28 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
 
   return (
     <Card className="flex h-full flex-col items-start justify-start">
-      <CardHeader className="flex flex-row items-start justify-start gap-3">
-        <Link className="h-20" href={`/contributors/${accountId}`}>
-          <h3 className="flex flex-row items-start justify-start gap-4">
-            <div className="flex-shrink-0">
-              {data.image && "ipfs_cid" in data.image ? (
-                <IPFSImage
-                  cid={data.image.ipfs_cid}
-                  className="h-16 w-16 rounded-lg"
-                />
-              ) : (
-                <UserIcon className="h-16 w-16 rounded-lg" />
-              )}
-            </div>
-            <div>
+      <CardHeader className="flex max-w-full flex-row items-start justify-start gap-3">
+        <CardTitle className="max-w-full">
+          <Link
+            className="flex h-20 max-w-full flex-row items-start justify-start gap-4"
+            href={`/contributors/${accountId}`}
+          >
+            {data.image && "ipfs_cid" in data.image ? (
+              <IPFSImage
+                cid={data.image.ipfs_cid}
+                className="h-16 w-16 flex-shrink-0 rounded-lg"
+              />
+            ) : (
+              <UserIcon className="h-16 w-16 flex-shrink-0 rounded-lg" />
+            )}
+            <div className="flex max-w-full flex-col overflow-hidden">
               <Handle accountId={accountId} />
-              <span>{isOrganization ? "Organization" : "Individual"}</span>
+              <span className="text-sm font-normal">
+                {isOrganization ? "Organization" : "Individual"}
+              </span>
             </div>
-          </h3>
-        </Link>
+          </Link>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
         <CardDescription>
