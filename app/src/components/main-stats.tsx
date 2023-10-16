@@ -8,7 +8,7 @@ export function MainStats() {
   const { data } = useStats();
 
   return (
-    <div className="flex flex-row items-center justify-end gap-3">
+    <div className="flex flex-row flex-wrap items-center justify-center gap-3">
       <Stat count={data?.projects ?? 0} label="Projects" href="/projects" />
       <Stat count={data?.requests ?? 0} label="Requests" href="/requests" />
       <Stat
@@ -31,7 +31,7 @@ function Stat({
   href: string;
 }) {
   return (
-    <div className="flex w-[6.5rem] flex-col gap-2">
+    <div className="flex w-[calc((100%-0.75rem)/2)] max-w-[8rem] flex-col items-center gap-2 md:w-[calc((100%-1.5rem)/4)] md:items-start">
       <div className="text-xl font-bold">{count}</div>
       <Link className="text-blue-300" href={href}>
         {label}

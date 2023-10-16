@@ -55,22 +55,21 @@ export function Project({ accountId }: { accountId: AccountId }) {
 
   return (
     <Card className="flex h-full flex-col items-start justify-start">
-      <CardHeader className="flex flex-row items-start justify-start gap-3">
-        <CardTitle>
-          <Link className="h-20" href={`/projects/${accountId}`}>
-            <h3 className="flex flex-row items-start justify-start gap-4">
-              <div className="flex-shrink-0">
-                {data.image && "ipfs_cid" in data.image ? (
-                  <IPFSImage
-                    cid={data.image.ipfs_cid}
-                    className="h-16 w-16 rounded-xl"
-                  />
-                ) : (
-                  <UserIcon className="h-16 w-16 rounded-lg" />
-                )}
-              </div>
-              <Handle accountId={accountId} />
-            </h3>
+      <CardHeader className="flex max-w-full flex-row items-start justify-start gap-3">
+        <CardTitle className="max-w-full">
+          <Link
+            className="flex h-20 max-w-full flex-row items-start justify-start gap-4"
+            href={`/projects/${accountId}`}
+          >
+            {data.image && "ipfs_cid" in data.image ? (
+              <IPFSImage
+                cid={data.image.ipfs_cid}
+                className="h-16 w-16 flex-shrink-0 rounded-xl"
+              />
+            ) : (
+              <UserIcon className="h-16 w-16 flex-shrink-0 rounded-lg" />
+            )}
+            <Handle accountId={accountId} />
           </Link>
         </CardTitle>
       </CardHeader>

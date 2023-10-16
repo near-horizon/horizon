@@ -17,7 +17,7 @@ export function List<T extends string | [string, string]>({
   linkText?: string;
 }) {
   return (
-    <section className="flex w-full flex-col gap-8">
+    <section className="flex w-full max-w-full flex-col gap-8">
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center justify-start gap-4">
           <h2 className="text-2xl font-bold">{title}</h2>
