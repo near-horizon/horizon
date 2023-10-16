@@ -10,11 +10,16 @@ const SCHEDULE_LINK = "https://lu.ma/u/usr-5oZHY9dEDbDcaHY";
 export default function Events() {
   const { data: eventItems } = useHorizonEvents();
 
-  const time = new Date("2023-07-28T13:00:00.000Z").toLocaleString(undefined, {
-    weekday: "long",
-    hour: "numeric",
-    timeZoneName: "shortGeneric",
-  });
+  const timeSplit = new Date("2023-07-28T13:00:00.000Z")
+    .toLocaleString(undefined, {
+      weekday: "long",
+      hour: "numeric",
+      timeZoneName: "shortGeneric",
+    })
+    .split(" ");
+
+  const dateTime = timeSplit.slice(0, 3).join(" ");
+  const timeZone = timeSplit[3];
 
   return (
     <div className="flex flex-col gap-8">
@@ -31,7 +36,7 @@ export default function Events() {
         </ExternalLink>
       </div>
       <h2 className="text-center text-lg font-bold text-ui-elements-dark md:text-left">
-        Join one of our sessions every {time}
+        Join one of our sessions every {dateTime} ({timeZone})
       </h2>
       {eventItems.map((event) => (
         <Event event={event} key={event.title} />
