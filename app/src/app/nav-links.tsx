@@ -14,8 +14,16 @@ import LineChartIcon from "~/components/icons/line-chart-up-02.svg";
 import MagicWandIcon from "~/components/icons/magic-wand-02.svg";
 import CalendarIcon from "~/components/icons/calendar.svg";
 import LearnIcon from "~/components/icons/book-open-02.svg";
+import ChevronDownIcon from "~/components/icons/chevron-down.svg";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { type ReactNode } from "react";
+import { Separator } from "~/components/ui/separator";
 
 const routes = [
   {
@@ -115,5 +123,52 @@ export function NavLinks() {
         ))}
       </NavigationMenuList>
     </NavigationMenu>
+  );
+}
+
+export function MobileNavLinks() {
+  const section = usePathname()?.split("/")[1];
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
+        Explore
+        <ChevronDownIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-[100svw] origin-left p-0">
+        <NavigationMenu
+          orientation="vertical"
+          className="w-full max-w-screen-lg items-center justify-start rounded rounded-b-none border border-b-0 border-ui-elements-light bg-background-light p-4 [&>div]:w-full"
+        >
+          <NavigationMenuList className="flex w-full flex-col items-start gap-4">
+            {routes.reduce((list, route) => {
+              if (list.length > 0) {
+                list.push(
+                  <Separator className="h-px w-full bg-ui-elements-light" />
+                );
+              }
+
+              list.push(
+                <NavigationMenuItem key={route.href}>
+                  <NavigationMenuLink
+                    href={route.href}
+                    className={cn(
+                      "flex w-full flex-row items-center justify-start gap-2",
+                      {
+                        "text-text-link": `/${section}` === route.href,
+                      }
+                    )}
+                  >
+                    {route.name}
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              );
+
+              return list;
+            }, new Array<ReactNode>(0))}
+          </NavigationMenuList>
+        </NavigationMenu>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
