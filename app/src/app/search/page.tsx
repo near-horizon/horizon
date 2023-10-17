@@ -96,7 +96,7 @@ export default async function Page({
           q={q}
         >
           {projects.map((project) => (
-            <li key={project} className="w-[800px]">
+            <li key={project} className="w-full">
               <Project accountId={project} />
             </li>
           ))}
@@ -109,7 +109,7 @@ export default async function Page({
           q={q}
         >
           {requests.map(([id, cid]) => (
-            <li key={cid} className="w-[800px]">
+            <li key={cid} className="w-full">
               <Request accountId={id} cid={cid} />
             </li>
           ))}
@@ -122,7 +122,7 @@ export default async function Page({
           q={q}
         >
           {contributors.map((contributor) => (
-            <li key={contributor} className="w-[800px]">
+            <li key={contributor} className="w-full">
               <Contributor accountId={contributor} />
             </li>
           ))}
@@ -135,7 +135,7 @@ export default async function Page({
           q={q}
         >
           {backers.map((backer) => (
-            <li key={backer} className="w-[800px]">
+            <li key={backer} className="w-full">
               <Backer accountId={backer} />
             </li>
           ))}
@@ -148,7 +148,7 @@ export default async function Page({
           q={q}
         >
           {learningContent.map((content) => (
-            <li key={content.title} className="w-[800px]">
+            <li key={content.title} className="w-full">
               <LearnCard resource={content} />
             </li>
           ))}
@@ -182,7 +182,7 @@ function Section({
         <small className="font-normal text-ui-elements-gray">{count}</small>
       </h2>
       <ul
-        className={cn("flex flex-col items-start gap-4", {
+        className={cn("flex flex-col items-start gap-4 max-w-[800px] w-full", {
           "[&>li:nth-child(n+5)]:hidden": currentFilter === "all",
         })}
       >
