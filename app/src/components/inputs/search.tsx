@@ -9,12 +9,14 @@ export function SearchInput({
   setValue,
   className,
   inputClassName,
+  onEnter,
 }: {
   placeholder?: string;
   value: string;
   setValue: (value: string) => void;
   className?: string;
   inputClassName?: string;
+  onEnter?: () => void;
 }) {
   return (
     <div
@@ -35,6 +37,11 @@ export function SearchInput({
         )}
         value={value}
         onChange={({ target: { value } }) => setValue(value)}
+        onKeyDown={({ key }) => {
+          if (key === "Enter") {
+            onEnter && onEnter();
+          }
+        }}
       />
     </div>
   );
