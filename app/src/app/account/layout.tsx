@@ -1,21 +1,29 @@
 import { ProfileHeader } from "./profile-header";
 import { WelcomeBanner } from "./welcome-banner";
 import { ProfileNav } from "./profile-nav";
+import { getUserFromSession } from "~/lib/session";
+import { redirect } from "next/navigation";
 
-export default function ProfileLayout({
+export default async function ProfileLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getUserFromSession();
+
+  if (!user) {
+    return redirect("/login");
+  }
+
   return (
     <div className="flex h-full w-full flex-row items-start justify-start">
-      <div className="min-w-[240px] flex-grow-0">
+      <div className="hidden min-w-[240px] flex-grow-0 md:block">
         <ProfileNav />
       </div>
-      <div className="flex max-w-[calc(100%-240px)] flex-grow flex-col items-start justify-start gap-6">
+      <div className="flex max-w-full flex-grow flex-col items-start justify-start gap-6 md:max-w-[calc(100%-240px)]">
         <WelcomeBanner />
         <div className="w-full">
-          <ProfileHeader />
+          <ProfileHeader accountId={user.accountId} />
         </div>
         <div className="w-full flex-grow">{children}</div>
       </div>
