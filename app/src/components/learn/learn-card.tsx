@@ -14,10 +14,7 @@ import type { LearningResource } from "~/lib/validation/learn";
 
 export function LearnCard({ resource }: { resource: LearningResource }) {
   return (
-    <Card
-      key={resource.title}
-      className="flex w-full shadow-md md:w-[calc((100%-2rem)/2)] xl:w-[calc((100%-4rem)/3)] 2xl:w-[calc((100%-6rem)/4)]"
-    >
+    <Card key={resource.title} className="flex h-full w-full shadow-md">
       <CardContent className="flex flex-1 flex-col p-0 ">
         <CardHeader className="mb-3 flex-1 p-4">
           <CardTitle className="text-lg font-bold text-gray-900">
