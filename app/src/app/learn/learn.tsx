@@ -113,7 +113,12 @@ export function Learn() {
                 <h3 className="mb-8 text-2xl font-bold">{resource.title}</h3>
                 <div className="flex flex-row flex-wrap items-stretch justify-start gap-8">
                   {resource.items.map((resource) => (
-                    <LearnCard resource={resource} key={resource.title} />
+                    <div
+                      key={resource.title}
+                      className="md:w-[calc((100%-2rem)/2)] xl:w-[calc((100%-4rem)/3)] 2xl:w-[calc((100%-6rem)/4)]"
+                    >
+                      <LearnCard resource={resource} />
+                    </div>
                   ))}
                 </div>
               </div>
