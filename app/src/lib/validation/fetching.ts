@@ -79,7 +79,7 @@ export const paginationURLSchema = z.object({
 
 export const fetchManySchema = paginationSchema.extend({
   sort: sortSchema.optional(),
-  search: z.string().optional(),
+  q: z.string().optional(),
 });
 
 export type FetchMany = z.infer<typeof fetchManySchema>;

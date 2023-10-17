@@ -7,51 +7,70 @@ import { Button } from "~/components/ui/button";
 import { useChanges, useHasChanges } from "~/hooks/profile";
 import { useProject } from "~/hooks/projects";
 import { useSocialSet } from "~/hooks/social";
-import { useAccountId } from "~/stores/global";
+import { type AccountId } from "~/lib/validation/common";
 
-export function ProfileHeader() {
-  const accountId = useAccountId() ?? "";
+export function ProfileHeader({ accountId }: { accountId: AccountId }) {
   const { data } = useProject(accountId);
+
+  return (
+    <div className="flex flex-col items-start justify-between">
+      <div className="flex w-full flex-row items-start justify-between">
+        <div className="flex flex-row items-start justify-start gap-6">
+          <ProjectIcon
+            accountId={accountId}
+            loading={accountId === ""}
+            className="h-24 w-24"
+          />
+          <div className="flex flex-col items-start justify-start gap-1">
+            <Handle accountId={accountId} />
+            <div className="hidden lg:block">
+              <div className="truncate font-medium">{data?.tagline}</div>
+              <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
+            </div>
+            <div className="lg:hidden">
+              <ProfileHeaderActions accountId={accountId} />
+            </div>
+          </div>
+        </div>
+        <div className="hidden lg:block">
+          <ProfileHeaderActions accountId={accountId} />
+        </div>
+      </div>
+      <div className="lg:hidden">
+        <div className="truncate font-medium">{data?.tagline}</div>
+        <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
+      </div>
+    </div>
+  );
+}
+
+export function ProfileHeaderActions({ accountId }: { accountId: AccountId }) {
   const { data: profile } = useChanges();
   const hasChanges = useHasChanges(accountId);
   const [, socialSet] = useSocialSet();
 
   return (
-    <div className="flex flex-row items-start justify-between">
-      <div className="flex flex-row items-start justify-start gap-6">
-        <ProjectIcon
-          accountId={accountId}
-          loading={accountId === ""}
-          className="h-24 w-24"
-        />
-        <div className="flex flex-col items-start justify-start gap-1">
-          <Handle accountId={accountId} />
-          <div className="truncate font-medium">{data?.tagline}</div>
-          <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
-        </div>
-      </div>
-      <div className="flex flex-row items-start justify-end gap-4">
-        <Button variant="outline" type="button">
-          Edit
+    <div className="flex flex-row items-start justify-end gap-4">
+      <Button variant="outline" type="button">
+        Edit
+      </Button>
+      <Button variant="outline" type="button">
+        Share
+      </Button>
+      {hasChanges && profile && (
+        <Button
+          variant="outline"
+          type="button"
+          onClick={() => {
+            socialSet.mutate({
+              accountId,
+              profile,
+            });
+          }}
+        >
+          Export
         </Button>
-        <Button variant="outline" type="button">
-          Share
-        </Button>
-        {hasChanges && profile && (
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => {
-              socialSet.mutate({
-                accountId,
-                profile,
-              });
-            }}
-          >
-            Export
-          </Button>
-        )}
-      </div>
+      )}
     </div>
   );
 }
