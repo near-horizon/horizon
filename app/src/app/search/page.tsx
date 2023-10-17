@@ -214,9 +214,12 @@ function FilterButton({
 
   return (
     <Button
-      variant={filter === currentFilter ? "default" : "outline"}
+      variant="outline"
       disabled={filter === currentFilter}
-      className="flex flex-row items-center justify-center"
+      className={cn("flex flex-row items-center justify-center", {
+        "bg-background-black text-ui-elements-white disabled:opacity-100":
+          filter === currentFilter,
+      })}
     >
       <Link
         href={`/search?q=${q}&filter=${filter}`}
