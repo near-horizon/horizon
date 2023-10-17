@@ -74,11 +74,8 @@ export async function getKeyInfo(account_id: AccountId, public_key: string) {
       },
     }),
   });
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const result = await response.json();
-  console.log(result);
 
-  return validKeySchema.safeParse(result).success;
+  return validKeySchema.safeParse(await response.json()).success;
 }
 
 export async function getProfile(accountId: AccountId) {
