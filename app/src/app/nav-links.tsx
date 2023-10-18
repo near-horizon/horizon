@@ -144,7 +144,10 @@ export function MobileNavLinks() {
             {routes.reduce((list, route) => {
               if (list.length > 0) {
                 list.push(
-                  <Separator className="h-px w-full bg-ui-elements-light" />
+                  <Separator
+                    key={`${route.href}-${list.length}`}
+                    className="h-px w-full bg-ui-elements-light"
+                  />
                 );
               }
 
