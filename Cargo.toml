@@ -1,6 +1,13 @@
 [workspace]
-members = ["contract", "aggregator"]
-exclude = ["api", "indexer", "airtable-sync", "time-metrics"]
+members = [
+  "contract",
+  "aggregator",
+  "api",
+  "indexer",
+  "airtable-sync",
+  "time-metrics",
+  "db",
+]
 resolver = "2"
 
 [profile.release]
