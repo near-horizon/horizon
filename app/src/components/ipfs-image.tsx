@@ -16,7 +16,7 @@ export function IPFSImage({
         src={ipfsURL(cid)}
         alt={alt ?? "image"}
         className="h-full w-full object-cover"
-        loader={({ src }) => src}
+        unoptimized
         fill
       />
     </div>
