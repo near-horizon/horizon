@@ -1,12 +1,14 @@
 import { z } from "zod";
-import { accountIdSchema, cidSchema } from "./common";
 import { learningResourceSchema } from "./learn";
+import { profileSchema } from "./fetching";
+import { requestSchema } from "./requests";
+import { imageSchema } from "./common";
 
 export const searchResultSchema = z.object({
-  projects: z.array(accountIdSchema),
-  requests: z.array(z.tuple([accountIdSchema, cidSchema])),
-  contributors: z.array(accountIdSchema),
-  backers: z.array(accountIdSchema),
+  projects: z.array(z.tuple([z.string(), profileSchema])),
+  requests: z.array(requestSchema.extend({ image: imageSchema.optional() })),
+  contributors: z.array(z.tuple([z.string(), profileSchema])),
+  backers: z.array(z.tuple([z.string(), profileSchema])),
   learningContent: z.array(learningResourceSchema.extend({ id: z.string() })),
 });
 

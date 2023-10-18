@@ -95,7 +95,7 @@ export default async function Page({
           currentFilter={filter}
           q={q}
         >
-          {projects.map((project) => (
+          {projects.map(([project]) => (
             <li key={project} className="w-full">
               <Project accountId={project} />
             </li>
@@ -108,9 +108,9 @@ export default async function Page({
           currentFilter={filter}
           q={q}
         >
-          {requests.map(([id, cid]) => (
-            <li key={cid} className="w-full">
-              <Request accountId={id} cid={cid} />
+          {requests.map(({ project_id, cid }) => (
+            <li key={`${project_id}-${cid}`} className="w-full">
+              <Request accountId={project_id} cid={cid ?? ""} />
             </li>
           ))}
         </Section>
@@ -121,7 +121,7 @@ export default async function Page({
           currentFilter={filter}
           q={q}
         >
-          {contributors.map((contributor) => (
+          {contributors.map(([contributor]) => (
             <li key={contributor} className="w-full">
               <Contributor accountId={contributor} />
             </li>
@@ -134,7 +134,7 @@ export default async function Page({
           currentFilter={filter}
           q={q}
         >
-          {backers.map((backer) => (
+          {backers.map(([backer]) => (
             <li key={backer} className="w-full">
               <Backer accountId={backer} />
             </li>
@@ -182,7 +182,7 @@ function Section({
         <small className="font-normal text-ui-elements-gray">{count}</small>
       </h2>
       <ul
-        className={cn("flex flex-col items-start gap-4 max-w-[800px] w-full", {
+        className={cn("flex w-full max-w-[800px] flex-col items-start gap-4", {
           "[&>li:nth-child(n+5)]:hidden": currentFilter === "all",
         })}
       >
