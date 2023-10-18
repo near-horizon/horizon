@@ -35,12 +35,16 @@ export async function search(query: string): Promise<SearchResult> {
     getBackers({ q: lowerCaseQuery }),
   ]);
 
-  const data = await getImagesAndNames([
-    ...projects,
-    ...requests.map(([accountId]) => accountId),
-    ...contributors,
-    ...backers,
-  ]);
+  const data = await getImagesAndNames(
+    [
+      ...new Set<AccountId>([
+        ...projects.slice(0, 4),
+        ...requests.map(([accountId]) => accountId).slice(0, 4),
+        ...contributors.slice(0, 4),
+        ...backers.slice(0, 4),
+      ]),
+    ].slice()
+  );
 
   const requestsWithDetails = await Promise.all(
     requests.map(([accountId, cid]) => getRequest(accountId, cid))
