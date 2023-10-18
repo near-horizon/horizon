@@ -8,7 +8,7 @@ export function MainStats() {
   const { data } = useStats();
 
   return (
-    <div className="flex flex-row flex-wrap items-center justify-center gap-3">
+    <div className="flex w-full flex-row flex-wrap items-center justify-center gap-3 md:justify-start">
       <Stat count={data?.projects ?? 0} label="Projects" href="/projects" />
       <Stat count={data?.requests ?? 0} label="Requests" href="/requests" />
       <Stat
@@ -55,7 +55,7 @@ function StatSkeleton({ label, href }: { label: string; href: string }) {
 
 export function MainStatsSkeleton() {
   return (
-    <div className="flex flex-row items-center justify-end gap-3">
+    <div className="flex flex-row flex-wrap items-center justify-center gap-3 md:justify-start">
       <StatSkeleton label="Projects" href="/projects" />
       <StatSkeleton label="Requests" href="/requests" />
       <StatSkeleton label="Contributors" href="/contributors" />
