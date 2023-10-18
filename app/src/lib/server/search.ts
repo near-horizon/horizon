@@ -1,3 +1,6 @@
+import { viewCall } from "../fetching";
+import { type AccountId } from "../validation/common";
+import { type Profile } from "../validation/fetching";
 import {
   type LearningCategory,
   type LearningResource,
@@ -7,7 +10,21 @@ import { getBackers } from "./backers";
 import { getContributors } from "./contributors";
 import { learningResource } from "./learn";
 import { getProjects } from "./projects";
-import { getRequests } from "./requests";
+import { getRequest, getRequests } from "./requests";
+
+export async function getImagesAndNames(
+  accountIds: AccountId[]
+): Promise<Record<AccountId, { profile?: Profile }>> {
+  const data = await viewCall<Record<AccountId, { profile?: Profile }>>(
+    "social.near",
+    "get",
+    {
+      keys: accountIds.map((accountId) => `${accountId}/profile/**`),
+    }
+  );
+
+  return data;
+}
 
 export async function search(query: string): Promise<SearchResult> {
   const lowerCaseQuery = query.toLowerCase();
@@ -17,6 +34,17 @@ export async function search(query: string): Promise<SearchResult> {
     getContributors({ q: lowerCaseQuery }),
     getBackers({ q: lowerCaseQuery }),
   ]);
+
+  const data = await getImagesAndNames([
+    ...projects,
+    ...requests.map(([accountId]) => accountId),
+    ...contributors,
+    ...backers,
+  ]);
+
+  const requestsWithDetails = await Promise.all(
+    requests.map(([accountId, cid]) => getRequest(accountId, cid))
+  );
 
   const learningContent = learningResource.reduce((items, category) => {
     if (category.title.toLowerCase().includes(lowerCaseQuery)) {
@@ -39,10 +67,24 @@ export async function search(query: string): Promise<SearchResult> {
   }, new Array<LearningResource & Omit<LearningCategory, "items">>(0));
 
   return {
-    projects,
-    requests,
-    contributors,
-    backers,
-    learningContent,
+    projects: projects
+      ? projects.map((project) => [project, data[project]?.profile ?? {}])
+      : [],
+    requests: requests
+      ? requestsWithDetails.map((request) => ({
+          ...request,
+          image: data[request.project_id]?.profile?.image,
+        }))
+      : [],
+    contributors: contributors
+      ? contributors.map((contributor) => [
+          contributor,
+          data[contributor]?.profile ?? {},
+        ])
+      : [],
+    backers: backers
+      ? backers.map((backer) => [backer, data[backer]?.profile ?? {}])
+      : [],
+    learningContent: learningContent ?? [],
   };
 }
