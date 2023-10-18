@@ -1,7 +1,9 @@
 import { Input } from "../ui/input";
 
 import SearchIcon from "../icons/search-sm.svg";
+import XIcon from "../icons/x.svg";
 import { cn } from "~/lib/utils";
+import { Button } from "../ui/button";
 
 export function SearchInput({
   placeholder,
@@ -21,7 +23,7 @@ export function SearchInput({
   return (
     <div
       className={cn(
-        "flex flex-row items-center justify-start gap-1 rounded-3xl border border-text-gray",
+        "relative flex flex-row items-center justify-start gap-1 rounded-3xl border border-text-gray",
         "px-4 shadow-sm shadow-text-gray focus-within:ring-2",
         className
       )}
@@ -43,6 +45,17 @@ export function SearchInput({
           }
         }}
       />
+      {value && (
+        <Button
+          variant="outline"
+          className="absolute right-4 border-none p-0 hover:bg-transparent"
+        >
+          <XIcon
+            className="h-5 w-5 text-ui-elements-gray"
+            onClick={() => setValue("")}
+          />
+        </Button>
+      )}
     </div>
   );
 }
