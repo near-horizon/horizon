@@ -36,7 +36,7 @@ export function creditTxToText({
   };
   switch (method_name) {
     case "add_credits":
-      return `Recieved credits from ${signer_id}${note ? ` (${note})` : ""}`;
+      return `Received credits from ${signer_id}${note ? ` (${note})` : ""}`;
     case "remove_credits":
       return `Removed credits by ${signer_id}${note ? ` (${note})` : ""}`;
     case "spend_credits":
