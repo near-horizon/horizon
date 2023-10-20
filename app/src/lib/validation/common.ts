@@ -69,4 +69,3 @@ export const transactionSchema = z.object({
 export const transactionsSchema = z.array(transactionSchema);
 
 export type Transaction = z.infer<typeof transactionSchema>;
-
