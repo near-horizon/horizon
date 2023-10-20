@@ -1,7 +1,5 @@
-export default function Page({
-  params: { section },
-}: {
-  params: { section: string };
-}) {
-  return section;
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  return redirect(`/account/credits/activity`);
 }
