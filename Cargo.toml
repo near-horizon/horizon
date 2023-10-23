@@ -18,3 +18,22 @@ lto = true
 debug = false
 panic = "abort"
 overflow-checks = true
+
+[workspace.dependencies]
+anyhow = "1.0.75"
+itertools = "0.11.0"
+near-account-id = "0.17.0"
+near-crypto = "0.17.0"
+near-jsonrpc-client = "0.6.0"
+near-jsonrpc-primitives = "0.17.0"
+near-primitives = "0.17.0"
+serde = { version = "1.0.189", features = ["derive"] }
+serde_json = "1.0.107"
+sqlx = { version = "0.7.2", features = [
+  "runtime-tokio-native-tls",
+  "postgres",
+  "json",
+  "bigdecimal",
+] }
+tokio = { version = "1.28.0", features = ["full"] }
+thiserror = "1.0.49"

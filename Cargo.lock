@@ -231,14 +231,15 @@ version = "0.1.0"
 dependencies = [
  "axum",
  "base58",
- "borsh 0.10.3",
+ "borsh 1.1.0",
  "chrono",
+ "db",
  "dotenvy",
  "ed25519-dalek",
  "futures",
  "hex",
  "itertools 0.11.0",
- "near-account-id 0.16.1",
+ "near-account-id 0.17.0",
  "near-crypto 0.17.0",
  "near-jsonrpc-client",
  "near-jsonrpc-primitives",
@@ -248,7 +249,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sodiumoxide",
- "sqlx 0.6.3",
+ "sqlx 0.7.2",
  "tokio",
  "tower",
  "tower-http",
@@ -1329,6 +1330,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "borsh"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "acedd71cd81a2231f8c032b8330184e4e290374ca4e782aa95916b17e04b71b8"
+dependencies = [
+ "cfg_aliases",
+]
+
+[[package]]
 name = "borsh-derive"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1499,6 +1509,12 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "cfg_aliases"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
 
 [[package]]
 name = "chrono"
@@ -2998,16 +3014,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "71d258582a1878e6db67400b0504a5099db85718d22c2e07f747fe1706ae7150"
 dependencies = [
  "borsh 0.9.3",
- "serde",
-]
-
-[[package]]
-name = "near-account-id"
-version = "0.16.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12791d0f273e04609010d68deb6e1cd940659ad420edfa2e48238117154f1d5b"
-dependencies = [
- "borsh 0.10.3",
  "serde",
 ]
 
@@ -5568,9 +5574,9 @@ checksum = "b6bc1c9ce2b5135ac7f93c72918fc37feb872bdc6a5533a8b85eb4b86bfdae52"
 
 [[package]]
 name = "tracing"
-version = "0.1.39"
+version = "0.1.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee2ef2af84856a50c1d430afce2fdded0a4ec7eda868db86409b4543df0797f9"
+checksum = "c3523ab5a71916ccf420eebdf5521fcef02141234bbc0b8a49f2fdc4544364ef"
 dependencies = [
  "log",
  "pin-project-lite",
