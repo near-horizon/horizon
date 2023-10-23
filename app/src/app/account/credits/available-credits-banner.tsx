@@ -1,18 +1,17 @@
-import { env } from "~/env.mjs";
-import { getUserFromSession } from "~/lib/session";
+import { redirect } from "next/navigation";
 
 import { InfoTooltip } from "~/components/info-tooltip";
-import { viewCall } from "~/lib/fetching";
-import type { HorizonProject } from "~/lib/validation/projects";
+import { getProject } from "~/lib/server/projects";
+import { getUserFromSession } from "~/lib/session";
 
 export default async function AvailableCreditsBanner() {
   const user = await getUserFromSession();
 
-  const horizonProfile = await viewCall<HorizonProject>(
-    env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
-    "get_project",
-    { account_id: user?.accountId }
-  );
+  if (!user) {
+    return redirect("/login");
+  }
+
+  const horizonProject = await getProject(user?.accountId);
 
   return (
     <div className="rounded-lg bg-background-beige p-6">
@@ -22,9 +21,9 @@ export default async function AvailableCreditsBanner() {
           <InfoTooltip>lorem ipsum</InfoTooltip>
         </div>
         <div className="text-lg font-bold">
-          {horizonProfile.credit_balance} NHZN{" "}
+          {horizonProject.credit_balance} NHZN{" "}
           <span className="font-light text-ui-elements-gray">
-            (~${horizonProfile.credit_balance})
+            (~${horizonProject.credit_balance})
           </span>
         </div>
       </div>
