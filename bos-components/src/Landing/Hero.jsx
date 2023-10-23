@@ -147,11 +147,11 @@ return (
         </li>
         <li>
           {hero.contributors}
-          <b>Contributors</b> can offer services and and get hired
+          <b>Contributors</b> can offer services and get hired
         </li>
         <li>
           {hero.backers}
-          <b>Backers</b> can find discover promising projects to support
+          <b>Backers</b> can find and discover promising projects to support
         </li>
       </ul>
       <Widget src={`${ownerId}/widget/Buttons.CreateProfile`} />
