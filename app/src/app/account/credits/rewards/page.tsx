@@ -10,6 +10,7 @@ import { getIncentives } from "~/lib/incentives";
 
 export default async function Page() {
   const incentives = await getIncentives();
+
   return (
     <Table>
       <TableHeader className="bg-gray-50">
