@@ -6,28 +6,29 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = { version = "0.6.15", features = ["macros"] }
+axum = { version = "0.6.20", features = ["macros"] }
 base58 = "0.2.0"
-borsh = "0.10.3"
-chrono = "0.4.26"
+borsh = "1.1.0"
+chrono = "0.4.31"
+db = { version = "0.1.0", path = "../db" }
 dotenvy = "0.15.7"
 ed25519-dalek = "1.0.1"
 futures = "0.3.28"
 hex = "0.4.3"
-itertools = "0.11.0"
-near-account-id = "0.16.1"
-near-crypto = "0.17.0"
-near-jsonrpc-client = "0.6.0"
-near-jsonrpc-primitives = "0.17.0"
-near-primitives = "0.17.0"
-num-traits = "0.2.15"
-reqwest = { version = "0.11.16", features = ["json", "tokio-rustls"] }
-serde = { version = "1.0.160", features = ["derive"] }
-serde_json = "1.0.96"
+itertools = { workspace = true }
+near-account-id = { workspace = true }
+near-crypto = { workspace = true }
+near-jsonrpc-client = { workspace = true }
+near-jsonrpc-primitives = { workspace = true }
+near-primitives = { workspace = true }
+num-traits = "0.2.17"
+reqwest = { version = "0.11.22", features = ["json", "tokio-rustls"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
 sodiumoxide = "0.2.7"
-sqlx = { version = "0.6.3", features = ["runtime-tokio-native-tls", "postgres", "json", "bigdecimal"] }
-tokio = { version = "1.27.0", features = ["full"] }
+sqlx = { workspace = true }
+tokio = { workspace = true }
 tower = "0.4.13"
-tower-http = { version = "0.4.0", features = ["full"] }
-tracing = "0.1.37"
+tower-http = { version = "0.4.4", features = ["full"] }
+tracing = "0.1.40"
 tracing-subscriber = "0.3.17"
