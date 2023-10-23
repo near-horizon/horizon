@@ -11,7 +11,7 @@ export default async function AvailableCreditsBanner() {
     return redirect("/login");
   }
 
-  const horizonProject = await getProject(user?.accountId);
+  const horizonProject = await getProject(user.accountId);
 
   return (
     <div className="rounded-lg bg-background-beige p-6">
