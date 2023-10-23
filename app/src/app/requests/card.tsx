@@ -1,6 +1,6 @@
 "use client";
 
-import { type CID, type AccountId } from "~/lib/validation/common";
+import { type AccountId, type CID } from "~/lib/validation/common";
 import Link from "next/link";
 import {
   Card,
@@ -107,7 +107,8 @@ export function Request({
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
             <FileIcon className="h-5" />
-            {data?.request_type}
+            {data.request_type}
+            {["Short", "Long"].includes(data.request_type) && " Term"}
           </div>
         </div>
       </CardFooter>
