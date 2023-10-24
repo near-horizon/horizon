@@ -10,7 +10,7 @@ export default async function RequestCreatePage() {
     return redirect("/login");
   }
 
-  if (await hasProject(user.accountId)) {
+  if (!(await hasProject(user.accountId))) {
     return redirect("/projects/create");
   }
 
