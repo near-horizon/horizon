@@ -13,8 +13,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import Creatable from "react-select/creatable";
-import { components } from "react-select";
-import { Children } from "react";
 
 export function MultiSelectInput<
   TFieldValues extends FieldValues = FieldValues,
