@@ -1,8 +1,9 @@
 const ownerId = "nearhorizon.near";
 const scheduleLink = "https://lu.ma/u/usr-5oZHY9dEDbDcaHY";
-const time = new Date("2023-07-28T13:00:00.000Z").toLocaleString(undefined, {
+const time = new Date("2023-07-28T13:30:00.000Z").toLocaleString(undefined, {
   weekday: "long",
   hour: "numeric",
+  minute: "numeric",
   timeZoneName: "shortGeneric",
 });
 const banners = {
