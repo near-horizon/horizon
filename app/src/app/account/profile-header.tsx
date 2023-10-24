@@ -11,7 +11,7 @@ import { ProjectIcon } from "~/components/project/icon";
 import { Tags } from "~/components/tags";
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
-import { updateFields, useZodForm } from "~/hooks/form";
+import { useZodForm } from "~/hooks/form";
 import { useChanges, useHasChanges } from "~/hooks/profile";
 import { useProject } from "~/hooks/projects";
 import { useSocialSet } from "~/hooks/social";
