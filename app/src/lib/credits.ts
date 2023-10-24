@@ -1,8 +1,8 @@
 import { env } from "~/env.mjs";
 import {
   type AccountId,
-  transactionsSchema,
   type Transaction,
+  transactionsSchema,
 } from "./validation/common";
 import { type IncentiveType } from "./validation/incentives";
 
@@ -16,7 +16,12 @@ const CREDIT_METHODS = [
 export async function getCreditHistory(accountId: AccountId) {
   const response = await fetch(`${env.API_URL}/transactions/all`);
   const data = transactionsSchema.parse(await response.json());
-  return data.filter(({ args, method_name }) => {
+  const seen = new Set();
+  return data.filter(({ args, method_name, hash }) => {
+    if (seen.has(hash)) {
+      return false;
+    }
+    seen.add(hash);
     return (
       CREDIT_METHODS.includes(method_name) &&
       args.account_id === accountId &&
