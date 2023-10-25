@@ -6,8 +6,10 @@ import MarkerPinIcon from "~/components/icons/marker-pin-01.svg";
 import UsersIcon from "~/components/icons/users-01.svg";
 import GlobeIcon from "~/components/icons/globe-02.svg";
 import { ExternalLink } from "~/components/external-link";
-import { cleanURL } from "~/lib/utils";
+import { cleanURL, cn } from "~/lib/utils";
 import { Socials } from "~/components/socials";
+import { IPFSImage } from "~/components/ipfs-image";
+import { Linktree } from "~/lib/validation/fetching";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   const backersDigest = await getBackersDigest(accountId);
@@ -64,21 +66,50 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Pitch deck">
-        <div></div>
+        <ExternalLink href={cleanURL(backersDigest.pitch)}>
+          {backersDigest.pitch}
+        </ExternalLink>
       </Section>
       <Section title="Demo day pitch">
-        <div></div>
+        <ExternalLink href={cleanURL(backersDigest.demo)}>
+          {backersDigest.demo}
+        </ExternalLink>
       </Section>
       <Section title="Demo video">
-        <div></div>
+        <ExternalLink href={cleanURL(backersDigest.demo_video)}>
+          {backersDigest.demo_video}
+        </ExternalLink>
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Founders">
-        <div></div>
+        <div className="flex w-full flex-row flex-wrap items-stretch justify-start gap-5">
+          {(backersDigest.founders ?? []).map((founder) => (
+            <div
+              key={founder.first_name as string}
+              className={cn(
+                "flex flex-col items-center justify-start gap-4 rounded-2xl border border-accent-disabled bg-background-light p-6",
+                "md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
+              )}
+            >
+              <IPFSImage
+                className="h-16 w-16 rounded-full"
+                cid={founder.photo as string}
+              />
+              <b>
+                {founder.first_name as string} {founder.last_name as string}
+              </b>
+              <p>{founder.role as string}</p>
+              <p>{founder.account_id as string}</p>
+              <Socials links={founder.linktree as Linktree} />
+            </div>
+          ))}
+        </div>
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Media coverage">
-        <div></div>
+        <ExternalLink href={cleanURL(backersDigest.announcement)}>
+          {backersDigest.announcement}
+        </ExternalLink>
       </Section>
     </div>
   );
