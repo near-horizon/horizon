@@ -27,6 +27,7 @@ import { useEffect } from "react";
 import { Badge } from "~/components/ui/badge";
 import { ProgressDialog } from "~/components/progress-dialog";
 import { cn } from "~/lib/utils";
+import Link from "next/link";
 
 const schema = z.object({
   location: z.string().min(3).max(50).optional(),
@@ -130,16 +131,15 @@ export default function BackersDigestForm() {
       <Button
         variant="outline"
         type="button"
-        // onClick={() => {}}
         className="flex flex-row items-center justify-center gap-2"
       >
-        Preview
+        <Link href={`/projects/${user.accountId}/backers-digest`}>Preview</Link>
       </Button>
       <ProgressDialog
         progress={progress.value}
         title="Saving backers digest"
         description={progress.label}
-        disabled={!form.formState.isValid}
+        // disabled={!form.formState.isValid}
         triggerText="Save"
         ctaLink="#"
         ctaText="View"
@@ -169,6 +169,7 @@ export default function BackersDigestForm() {
             accountId: user.accountId,
             digest: {
               ...data,
+              published: backersDigest?.published ?? false,
               ...(traction
                 ? {
                   traction: Object.fromEntries(traction),
