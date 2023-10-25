@@ -75,21 +75,6 @@ export function Onoboarding() {
           ))}
         </div>
       </div>
-      <div className="flex flex-col items-center justify-start gap-4">
-        <h4 className="font-semibold text-ui-elements-black">
-          Become a partner
-        </h4>
-        <p className="max-w-xl text-center text-sm font-normal text-text-gray">
-          Take the next steps towards a successful launch with a vibrant
-          community of contributors, backers, and founders just like you!{" "}
-          <Link
-            href="#"
-            className="inline-flex flex-row items-center justify-between text-text-link"
-          >
-            Learn more <ArrowRight className="w-4" />
-          </Link>
-        </p>
-      </div>
     </div>
   );
 }
