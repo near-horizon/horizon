@@ -1,0 +1,20 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  icon: ImageMetadata;
+  boldText: string;
+  regularText: string;
+  iconAlt: string;
+}
+
+const { icon, boldText, regularText, iconAlt } = Astro.props;
+---
+
+<div class="flex items-center gap-2">
+  <Image src={icon} alt={iconAlt} class="w-6 h-6" />
+  <span class="text-black text-lg font-normal"
+    >{boldText && <span class="font-bold">{boldText} </span>}
+    {" "}{regularText}</span
+  >
+</div>
