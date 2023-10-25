@@ -4,7 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { ComboboxInput } from "~/components/inputs/combobox";
 import { EmailInput } from "~/components/inputs/email";
-import { FileInput } from "~/components/inputs/file";
+import { ImageInput } from "~/components/inputs/image";
 import { TextInput } from "~/components/inputs/text";
 import { TextAreaInput } from "~/components/inputs/text-area";
 import { ProgressDialog } from "~/components/progress-dialog";
@@ -121,7 +121,7 @@ export function BackersCreate({ accountId }: { accountId: AccountId }) {
             defaultValue=""
             disabled={false}
           />
-          <FileInput
+          <ImageInput
             name="image"
             control={form.control}
             label="Photo"
