@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { Handle } from "~/components/handle";
-import { FileInput } from "~/components/inputs/file";
+import { ImageInput } from "~/components/inputs/image";
 import { MultiSelectInput } from "~/components/inputs/multi-select";
 import { TextInput } from "~/components/inputs/text";
 import { ProjectIcon } from "~/components/project/icon";
@@ -96,7 +96,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
         })}
       >
         <div className="flex flex-grow flex-col items-start justify-start gap-1">
-          <FileInput
+          <ImageInput
             control={form.control}
             name="image"
             defaultValue={
