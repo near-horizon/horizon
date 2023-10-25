@@ -2,9 +2,11 @@ import { type AccountId } from "~/lib/validation/common";
 import { intoURLSearchParams } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
 import {
+  type BackersDigest,
+  backersDigestSchema,
+  type HorizonProject,
   projectSchema,
   type ProjectsQuery,
-  type HorizonProject,
 } from "./validation/projects";
 import { viewCall } from "./fetching";
 import { env } from "~/env.mjs";
@@ -50,4 +52,20 @@ export async function hasProject(accountId: AccountId) {
   } catch (e) {
     return false;
   }
+}
+
+export async function getProjectBackersDigest(accountId: AccountId) {
+  const result = await fetch(`/api/projects/${accountId}/backers-digest`);
+
+  return backersDigestSchema.parse(await result.json());
+}
+
+export async function updateProjectBackersDigest(
+  accountId: AccountId,
+  digest: BackersDigest
+) {
+  return fetch(`/api/projects/${accountId}/backers-digest`, {
+    method: "PUT",
+    body: JSON.stringify(digest),
+  });
 }

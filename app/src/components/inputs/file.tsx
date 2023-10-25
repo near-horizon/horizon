@@ -15,65 +15,68 @@ import { Input } from "../ui/input";
 import { type InputProps } from "~/lib/validation/inputs";
 import { Button } from "../ui/button";
 import UploadCloudIcon from "~/components/icons/upload-cloud-01.svg";
-import UserIcon from "~/components/icons/user-01.svg";
-import RefreshIcon from "~/components/icons/refresh-ccw-04.svg";
 import { useRef, useState } from "react";
-import { IPFSImage } from "../ipfs-image";
-import { generateImage, uploadImage } from "~/lib/utils";
+import { cn, uploadImage } from "~/lib/utils";
+import { getImageURL } from "~/lib/fetching";
+import { Tabs, TabsTrigger } from "../ui/tabs";
+import { TabsList } from "@radix-ui/react-tabs";
+import { Separator } from "../ui/separator";
 
 export function FileInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->(
-  props: UseControllerProps<TFieldValues, TName> &
-    InputProps & {
-      setCid: (cid: string) => void;
-      cid: string;
-      generateEnabled?: boolean;
-      generate?: boolean;
-    }
-) {
+>(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [tab, setTab] = useState<string>("upload");
 
   return (
     <FormField
       {...props}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className="capitalize">
-            {props.label ?? field.name}
-            {props.rules?.required && " *"}
-          </FormLabel>
-          <div className="flex flex-row items-center justify-start gap-5">
-            <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-ui-elements-gray bg-ui-elements-light shadow shadow-ui-elements-light">
-              {props.cid ? (
-                <>
-                  <IPFSImage cid={props.cid} alt={props.label} />
-                  {uploading && (
-                    <RefreshIcon className="absolute inset-0 animate-spin-counter" />
-                  )}
-                </>
-              ) : uploading ? (
-                <RefreshIcon className="h-10 w-10 animate-spin-counter" />
-              ) : (
-                <UserIcon className="h-10 w-10" />
-              )}
+          <div className="flex flex-col items-start justify-start gap-6">
+            <FormLabel className="font-bold">
+              {props.label ?? field.name}
+              {props.rules?.required && " *"}
+            </FormLabel>
+            <Tabs onValueChange={(tab) => setTab(tab)} value={tab} className="">
+              <TabsList className="flex flex-row items-center justify-start gap-4">
+                <TabsTrigger
+                  className="flex flex-row items-center justify-center !border-none px-0 data-[state=inactive]:text-text-link"
+                  value="upload"
+                >
+                  Upload a file
+                </TabsTrigger>
+                <Separator className="h-5 w-px" orientation="vertical" />
+                <TabsTrigger
+                  className="flex flex-row items-center justify-center !border-none px-0 data-[state=inactive]:text-text-link"
+                  value="paste"
+                >
+                  Paste a link
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div className="w-full">
+              <Input
+                {...field}
+                type="text"
+                value={uploading ? "Uploading..." : field.value}
+                disabled={tab === "upload"}
+              />
             </div>
             <FormControl>
               <>
                 <Input
-                  {...field}
                   ref={ref}
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onChange={async (e) => {
-                    field.onChange(e);
                     if (e.target.files) {
                       try {
                         setUploading(true);
                         const cid = await uploadImage(e.target.files[0]);
                         if (cid) {
-                          props.setCid(cid);
+                          field.onChange(getImageURL(cid));
                         }
                       } catch (_e) {
                         console.error(_e);
@@ -88,58 +91,34 @@ export function FileInput<
                   type="file"
                   className="hidden"
                 />
-                <Button
-                  className="flex flex-row items-center gap-2"
-                  variant="outline"
-                  type="button"
-                  onClick={() => {
-                    ref.current?.click();
-                  }}
-                  disabled={uploading}
-                >
-                  <UploadCloudIcon className="h-5 w-5" />
-                  {!props.cid ? "Upload file" : "Replace file"}
-                </Button>
-                {props.generate && (
+                <div className="flex flex-row items-center justify-start gap-4">
                   <Button
-                    className="flex flex-row items-center gap-2"
+                    className={cn("flex flex-row items-center gap-2", {
+                      hidden: tab === "paste",
+                    })}
                     variant="outline"
                     type="button"
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    onClick={async () => {
-                      try {
-                        setUploading(true);
-                        const cid = await generateImage();
-                        if (cid) {
-                          props.setCid(cid);
-                        }
-                      } catch (_e) {
-                        console.error(_e);
-                        props.control?.setError(field.name, {
-                          message: "Failed to generate image",
-                        });
-                      }
-                      setUploading(false);
-                    }}
-                    disabled={uploading || !props.generateEnabled}
-                  >
-                    <RefreshIcon className="h-5 w-5" />
-                    Generate image
-                  </Button>
-                )}
-                {!uploading && props.cid && field.value && (
-                  <Button
-                    className="flex flex-row items-center gap-2"
-                    variant="destructive"
-                    type="button"
                     onClick={() => {
-                      props.setCid("");
-                      field.onChange("");
+                      ref.current?.click();
                     }}
+                    disabled={uploading}
                   >
-                    Clear
+                    <UploadCloudIcon className="h-5 w-5" />
+                    {!field.value ? "Upload file" : "Replace file"}
                   </Button>
-                )}
+                  {!uploading && field.value && (
+                    <Button
+                      className="flex flex-row items-center gap-2"
+                      variant="destructive"
+                      type="button"
+                      onClick={() => {
+                        field.onChange("");
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
               </>
             </FormControl>
           </div>

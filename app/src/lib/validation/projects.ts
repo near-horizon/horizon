@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fetchManySchema, profileSchema } from "./fetching";
+import { fetchManySchema, linktreeSchema, profileSchema } from "./fetching";
 import {
   accountIdSchema,
   applicationSchema,
@@ -75,3 +75,25 @@ export const privateProjectSchema = z.object({
 });
 
 export type PrivateProject = z.infer<typeof privateProjectSchema>;
+
+export const backersDigestSchema = z.object({
+  location: z.string().optional(),
+  company_size: z.string().optional(),
+  website: z.string().optional(),
+  linkedin: z.string().optional(),
+  twitter: z.string().optional(),
+  email: z.string().optional(),
+  calendly_link: z.string().optional(),
+  linktree: linktreeSchema.nullable().optional(),
+  traction: z.record(z.string(), z.string()).optional().nullable(),
+  founders: z
+    .array(z.record(z.string(), z.string().or(linktreeSchema)))
+    .optional(),
+  pitch: z.string().optional(),
+  demo: z.string().optional(),
+  demo_video: z.string().optional(),
+  announcement: z.string().optional(),
+  published: z.boolean().optional(),
+});
+
+export type BackersDigest = z.infer<typeof backersDigestSchema>;
