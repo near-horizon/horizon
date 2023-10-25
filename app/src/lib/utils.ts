@@ -93,3 +93,9 @@ export async function generateImage(
   });
   return fileUploadSchema.parse(await response.json()).cid;
 }
+
+export function cleanURL(dirtyURL?: string) {
+  if (!dirtyURL) return "#";
+
+  return "https://" + dirtyURL.replaceAll(/https?:\/\//g, "");
+}
