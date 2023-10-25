@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { Handle } from "~/components/handle";
@@ -40,6 +41,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
   const [, socialSet] = useSocialSet();
   const viewRef = useRef<HTMLDivElement>(null);
   const editRef = useRef<HTMLDivElement>(null);
+  const section = usePathname().split("/")[2];
 
   useEffect(() => {
     if (data) {
@@ -158,7 +160,11 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
   );
 
   return (
-    <div className="flex flex-col items-start justify-between">
+    <div
+      className={cn("flex flex-col items-start justify-between", {
+        hidden: section === "backers-digest",
+      })}
+    >
       <div className="flex w-full flex-row items-start justify-between gap-3">
         <motion.div
           className={cn("relative w-full [transform-style:preserve-3d]")}

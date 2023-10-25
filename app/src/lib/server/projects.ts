@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { fetchManyURLSchema, profileSchema } from "../validation/fetching";
 import {
+  type BackersDigest,
+  backersDigestSchema,
   horizonSchema,
   projectSchema,
   type ProjectsQuery,
@@ -12,9 +14,9 @@ import { getTransactions } from "./transactions";
 import { type AccountId } from "../validation/common";
 import { projectRequestsSchema } from "../validation/requests";
 import {
-  type ContributorContracts,
-  contractsListSchema,
   type ContractId,
+  contractsListSchema,
+  type ContributorContracts,
 } from "../validation/contracts";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
@@ -110,4 +112,47 @@ export async function getProjectCompletedContracts(accountId: AccountId) {
   const parsedHistories = contractsListSchema.parse(contracts);
 
   return parsedHistories;
+}
+
+export async function getBackersDigest(accountId: AccountId) {
+  const response = await fetch(
+    `${env.API_URL}/data/projects/${accountId}/backers-digest`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+    }
+  );
+  return backersDigestSchema.parse(await response.json());
+}
+
+export async function hasBackersDigest(accountId: AccountId) {
+  const digest = await getBackersDigest(accountId);
+
+  return Object.entries(digest).some(([, value]) => {
+    if (typeof value === "string") {
+      return value.length > 0;
+    }
+
+    if (typeof value === "object") {
+      return value && Object.keys(value).length > 0;
+    }
+
+    return false;
+  });
+}
+
+export async function updateBackersDigest(
+  accountId: AccountId,
+  backersDigest: BackersDigest
+) {
+  return fetch(`${env.API_URL}/data/projects/${accountId}/backers-digest`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${env.API_KEY}`,
+    },
+    body: JSON.stringify(backersDigest),
+  });
 }

@@ -21,6 +21,7 @@ export function ProgressDialog({
   buttonVariant = "default",
   onClick,
   className,
+  disabled = false,
 }: {
   progress: number;
   title: string;
@@ -31,15 +32,17 @@ export function ProgressDialog({
   buttonVariant?: Parameters<typeof Button>[0]["variant"];
   onClick?: React.MouseEventHandler;
   className?: string;
+  disabled?: boolean;
 }) {
   return (
     <>
       <DialogTrigger asChild>
         <Button
           variant={buttonVariant}
-          type="submit"
+          type={onClick ? "button" : "submit"}
           onClick={onClick}
           className={className}
+          disabled={disabled}
         >
           {triggerText}
         </Button>

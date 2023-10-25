@@ -23,7 +23,7 @@ export function NavItem({
 }: {
   section: string;
   icon: React.ReactNode;
-  label: string;
+  label: React.ReactNode;
   subMenu?: { section: string; label: string; progress: number }[];
   count?: number;
 }) {
@@ -103,14 +103,14 @@ export function NavItem({
       >
         <div
           className={cn(
-            "flex flex-row items-center justify-start gap-3",
+            "flex w-full flex-row items-center justify-start gap-3",
             isSectionActive
               ? "[&>svg]:text-text-link"
               : "[&>svg]:text-text-gray"
           )}
         >
           {icon}
-          <span>{label}</span>
+          <span className="flex-grow">{label}</span>
         </div>
         {count}
       </NavigationMenuLink>
