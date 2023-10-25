@@ -13,15 +13,9 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type Linktree, socialsSchema } from "~/lib/validation/fetching";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { Button } from "../ui/button";
 import PlusIcon from "~/components/icons/plus.svg";
 import XIcon from "~/components/icons/x.svg";
@@ -31,9 +25,30 @@ export function SocialProfilesInput<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   const [socials, setSocials] = useState(
-    new Map(socialsSchema.options.map((value) => [value, value === "telegram"]))
+    new Map(
+      socialsSchema.options.map((value) => [
+        value,
+        props.defaultValue ? value in props.defaultValue : value === "telegram",
+      ])
+    )
   );
-  const [socialInputs, setSocialInputs] = useState<Linktree>({ telegram: "" });
+  const [socialInputs, setSocialInputs] = useState<Linktree>(
+    props.defaultValue ?? { telegram: "" }
+  );
+
+  useEffect(() => {
+    setSocialInputs(props.defaultValue ?? { telegram: "" });
+    setSocials(
+      new Map(
+        socialsSchema.options.map((value) => [
+          value,
+          props.defaultValue
+            ? value in props.defaultValue
+            : value === "telegram",
+        ])
+      )
+    );
+  }, [props.defaultValue]);
 
   return (
     <FormField
@@ -46,56 +61,54 @@ export function SocialProfilesInput<
           </FormLabel>
           <FormControl onBlur={field.onBlur}>
             <div className="flex w-full flex-col items-start justify-start gap-2">
-              {Object.entries(socialInputs).map(
-                ([social, socialValue], index) => (
-                  <SocialInput
-                    key={index}
-                    options={[
-                      social,
-                      ...[...socials.entries()]
-                        .filter(([, selected]) => !selected)
-                        .map(([value]) => value),
-                    ]}
-                    selectedOption={social}
-                    value={socialValue}
-                    onOptionChange={(option) => {
-                      setSocialInputs((prev) => {
-                        prev[option as keyof Linktree] =
-                          prev[social as keyof Linktree];
-                        delete prev[social as keyof Linktree];
-                        const newSocials = { ...prev };
-                        field.onChange(newSocials);
-                        return newSocials;
-                      });
-                      setSocials((prev) => {
-                        prev.set(option as keyof Linktree, true);
-                        prev.set(social as keyof Linktree, false);
-                        return new Map(prev);
-                      });
-                    }}
-                    onOptionRemove={() => {
-                      setSocialInputs((prev) => {
-                        delete prev[social as keyof Linktree];
-                        const newSocials = { ...prev };
-                        field.onChange(newSocials);
-                        return newSocials;
-                      });
-                      setSocials((prev) => {
-                        prev.set(social as keyof Linktree, false);
-                        return new Map(prev);
-                      });
-                    }}
-                    onValueChange={(value) => {
-                      setSocialInputs((prev) => {
-                        prev[social as keyof Linktree] = value;
-                        const newSocials = { ...prev };
-                        field.onChange(newSocials);
-                        return newSocials;
-                      });
-                    }}
-                  />
-                )
-              )}
+              {Object.entries(socialInputs).map(([social, socialValue]) => (
+                <SocialInput
+                  key={social}
+                  options={[
+                    social,
+                    ...[...socials.entries()]
+                      .filter(([, selected]) => !selected)
+                      .map(([value]) => value),
+                  ]}
+                  selectedOption={social}
+                  value={socialValue}
+                  onOptionChange={(option) => {
+                    setSocialInputs((prev) => {
+                      prev[option as keyof Linktree] =
+                        prev[social as keyof Linktree];
+                      delete prev[social as keyof Linktree];
+                      const newSocials = { ...prev };
+                      field.onChange(newSocials);
+                      return newSocials;
+                    });
+                    setSocials((prev) => {
+                      prev.set(option as keyof Linktree, true);
+                      prev.set(social as keyof Linktree, false);
+                      return new Map(prev);
+                    });
+                  }}
+                  onOptionRemove={() => {
+                    setSocialInputs((prev) => {
+                      delete prev[social as keyof Linktree];
+                      const newSocials = { ...prev };
+                      field.onChange(newSocials);
+                      return newSocials;
+                    });
+                    setSocials((prev) => {
+                      prev.set(social as keyof Linktree, false);
+                      return new Map(prev);
+                    });
+                  }}
+                  onValueChange={(value) => {
+                    setSocialInputs((prev) => {
+                      prev[social as keyof Linktree] = value;
+                      const newSocials = { ...prev };
+                      field.onChange(newSocials);
+                      return newSocials;
+                    });
+                  }}
+                />
+              ))}
               <Button
                 variant="outline"
                 type="button"
@@ -155,7 +168,7 @@ function SocialInput({
         value={selectedOption}
       >
         <SelectTrigger className="w-1/6 min-w-[calc(100%/6)] rounded-r-none bg-ui-elements-light capitalize">
-          <SelectValue placeholder={options[0]} />
+          {selectedOption}
         </SelectTrigger>
         <SelectContent>
           {options.map((value) => (

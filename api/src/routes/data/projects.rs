@@ -9,6 +9,7 @@ use axum::{
 };
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use sqlx::Row;
 
 use crate::{
@@ -641,6 +642,100 @@ async fn changes(
     .map(Json)
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BackersDigestData {
+    #[serde(default)]
+    pub published: bool,
+    #[serde(default)]
+    pub location: String,
+    #[serde(default)]
+    pub company_size: String,
+    #[serde(default)]
+    pub website: String,
+    #[serde(default)]
+    pub linkedin: String,
+    #[serde(default)]
+    pub twitter: String,
+    #[serde(default)]
+    pub email: String,
+    #[serde(default)]
+    pub calendly_link: String,
+    #[serde(default)]
+    pub linktree: Value,
+    #[serde(default)]
+    pub traction: Value,
+    #[serde(default)]
+    pub founders: Vec<Value>,
+    #[serde(default)]
+    pub pitch: String,
+    #[serde(default)]
+    pub demo: String,
+    #[serde(default)]
+    pub demo_video: String,
+    #[serde(default)]
+    pub announcement: String,
+}
+
+#[debug_handler(state = AppState)]
+async fn backers_digest_edit(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+    headers: HeaderMap,
+    Json(backers_digest): Json<BackersDigestData>,
+) -> ApiResult<Json<()>> {
+    authorize_bearer(&headers, &state).await?;
+    sqlx::query!(
+        r#"
+        UPDATE
+          projects
+        SET
+          backers_digest = $1
+        WHERE
+          id = $2
+        "#,
+        serde_json::to_value(backers_digest).unwrap(),
+        account_id
+    )
+    .execute(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to update project: {e}"),
+        )
+    })?;
+    Ok(Json(()))
+}
+
+#[debug_handler(state = AppState)]
+async fn backers_digest(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+    headers: HeaderMap,
+) -> ApiResult<Json<BackersDigestData>> {
+    authorize_bearer(&headers, &state).await?;
+    sqlx::query!(
+        r#"
+        SELECT
+          backers_digest
+        FROM
+          projects
+        WHERE
+          id = $1
+        "#,
+        account_id
+    )
+    .fetch_one(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get project: {e}"),
+        )
+    })
+    .map(|p| Json(serde_json::from_value(p.backers_digest).unwrap()))
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(all_projects))
@@ -648,4 +743,8 @@ pub fn create_router() -> Router<AppState> {
         .route("/:account_id/similar", get(get_similar_projects))
         .route("/:account_id", put(put_project))
         .route("/:account_id/changes", get(changes))
+        .route(
+            "/:account_id/backers-digest",
+            get(backers_digest).put(backers_digest_edit),
+        )
 }

@@ -1,28 +1,31 @@
 import {
-  type UseMutationResult,
   useInfiniteQuery,
   useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { imageSchema, type AccountId } from "~/lib/validation/common";
+import { type AccountId, imageSchema } from "~/lib/validation/common";
 import { pageSize } from "~/lib/constants/pagination";
 import { useAccountId, useSignTx } from "~/stores/global";
 import { useState } from "react";
 import deepEqual from "deep-equal";
 import {
+  type BackersDigest,
+  privateProjectSchema,
   type Project,
+  projectSchema,
   type ProjectsQuery,
   type Section,
-  privateProjectSchema,
-  projectSchema,
 } from "~/lib/validation/projects";
 import {
   getPaginatedProjects,
   getProject,
+  getProjectBackersDigest,
   getProjects,
   getSimilarProjects,
   hasProject,
+  updateProjectBackersDigest,
 } from "~/lib/projects";
 import { type Progress } from "~/lib/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
@@ -119,6 +122,106 @@ export function useHasProject(accountId: AccountId) {
     queryFn: () => hasProject(accountId),
     enabled: !!accountId,
   });
+}
+
+export function useBackersDigest(accountId: AccountId) {
+  return useQuery({
+    queryKey: ["backers-digest", accountId],
+    queryFn: () => getProjectBackersDigest(accountId),
+  });
+}
+
+export function useUpdateBackersDigest(): [
+  progress: Progress,
+  mutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      accountId: AccountId;
+      digest: BackersDigest;
+    },
+    unknown
+  >
+] {
+  const queryClient = useQueryClient();
+  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
+
+  return [
+    progress,
+    useMutation({
+      mutationFn: async ({
+        accountId,
+        digest,
+      }: {
+        accountId: AccountId;
+        digest: BackersDigest;
+      }) => {
+        try {
+          setProgress({ value: 50, label: "Updating digest..." });
+          await updateProjectBackersDigest(accountId, digest);
+        } catch (e) {
+          setProgress({
+            value: 50,
+            label: "Failed to update digest!",
+          });
+          throw new Error("Failed to update digest!");
+        }
+        setProgress({
+          value: 100,
+          label: "Succesfully updated backers digest!",
+        });
+      },
+      onSuccess: async (_, { accountId }) => {
+        await queryClient.invalidateQueries({
+          queryKey: ["backers-digest", accountId],
+        });
+      },
+    }),
+  ];
+}
+
+export function usePublishBackersDigest(): [
+  progress: Progress,
+  mutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      accountId: AccountId;
+    },
+    unknown
+  >
+] {
+  const queryClient = useQueryClient();
+  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
+
+  return [
+    progress,
+    useMutation({
+      mutationFn: async ({ accountId }: { accountId: AccountId }) => {
+        try {
+          setProgress({ value: 50, label: "Publishing digest..." });
+          const digest = await getProjectBackersDigest(accountId);
+          digest.published = true;
+          await updateProjectBackersDigest(accountId, digest);
+        } catch (e) {
+          setProgress({
+            value: 50,
+            label: "Failed to publish digest!",
+          });
+          throw new Error("Failed to publish digest!");
+        }
+        setProgress({
+          value: 100,
+          label: "Succesfully published backers digest!",
+        });
+      },
+      onSuccess: async (_, { accountId }) => {
+        await queryClient.invalidateQueries({
+          queryKey: ["backers-digest", accountId],
+        });
+      },
+    }),
+  ];
 }
 
 export function useCreateProject(): [

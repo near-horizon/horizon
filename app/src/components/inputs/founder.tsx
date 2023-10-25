@@ -5,7 +5,7 @@ import { updateFields, useZodForm } from "~/hooks/form";
 import { accountIdSchema, permissionSchema } from "~/lib/validation/common";
 import { linktreeSchema } from "~/lib/validation/fetching";
 import { Form } from "../ui/form";
-import { FileInput } from "./file";
+import { ImageInput } from "./image";
 import { useEffect, useState } from "react";
 import { TextInput } from "./text";
 import { CheckboxInput } from "./checkbox";
@@ -101,7 +101,7 @@ export function FounderInput() {
             animate={{ opacity: 1, left: 0 }}
             exit={{ opacity: 0, left: 40 }}
             transition={{ duration: 0.5 }}
-            className="relative w-full origin-top rounded-lg bg-background-light px-12 py-8"
+            className="relative w-full origin-top rounded-xl border border-ui-elements-light bg-background-white p-10 pt-8"
           >
             <Button
               variant="destructive"
@@ -111,7 +111,7 @@ export function FounderInput() {
             >
               Remove founder
             </Button>
-            <FileInput
+            <ImageInput
               name={`founders.${index}.image`}
               control={form.control}
               label="Photo"
