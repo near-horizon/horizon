@@ -1,4 +1,4 @@
-import { Hydrate, type QueryClient, dehydrate } from "@tanstack/react-query";
+import { dehydrate, Hydrate, type QueryClient } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { Header } from "~/components/project/header";
@@ -6,7 +6,11 @@ import { CTAs } from "~/components/project/ctas";
 import ContentTabs from "~/components/ui/content-tabs";
 import { getUserFromSession } from "~/lib/session";
 import { hasBacker } from "~/lib/backers";
-import { getProject, getRequestsForProject } from "~/lib/server/projects";
+import {
+  getBackersDigest,
+  getProject,
+  getRequestsForProject,
+} from "~/lib/server/projects";
 import { getRequest } from "~/lib/server/requests";
 
 export default async function ProjectPageLayout({
@@ -20,6 +24,11 @@ export default async function ProjectPageLayout({
   const queryClient = getQueryClient();
   await prefetch(accountId, queryClient);
   const isBacker = user?.accountId ? await hasBacker(user.accountId) : false;
+  const backersDigest = user?.accountId
+    ? await getBackersDigest(user.accountId)
+    : {};
+  const hasPermission =
+    (isBacker || user?.accountId === accountId) && backersDigest.published;
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
@@ -29,14 +38,14 @@ export default async function ProjectPageLayout({
           <CTAs /* accountId={accountId} */ />
           <ContentTabs
             tabs={[
-              ...(isBacker
+              ...(hasPermission
                 ? [
-                    {
-                      id: "backer-only",
-                      text: "Backer Only",
-                      href: `/projects/${accountId}/backer-only`,
-                    },
-                  ]
+                  {
+                    id: "backers-digest",
+                    text: "Backers Digest",
+                    href: `/projects/${accountId}/backers-digest`,
+                  },
+                ]
                 : []),
               {
                 id: "overview",
