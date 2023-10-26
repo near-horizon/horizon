@@ -23,6 +23,8 @@ State.init({
   problemError: "",
   success_position: "",
   success_positionError: "",
+  win: "",
+  winError: "",
   why: "",
   whyError: "",
   vision: "",
@@ -36,7 +38,7 @@ if (!state.profileIsFetched) {
     "get",
     { keys: [`${context.accountId}/profile/**`] },
     "final",
-    false,
+    false
   ).then((data) => {
     const profile = data[`${context.accountId}`]?.profile || {};
     State.update({
@@ -57,12 +59,13 @@ if (!state.projectIsFetched) {
     "get_project",
     { account_id: context.accountId },
     "final",
-    false,
+    false
   ).then((project) => {
     State.update({
       geo: project.geo,
       problem: project.problem,
       success_position: project.success_position,
+      win: project.win,
       why: project.why,
       vision: project.vision,
       projectIsFetched: true,
@@ -71,7 +74,7 @@ if (!state.projectIsFetched) {
 }
 
 let completed = 0;
-const total = 14;
+const total = 15;
 if (state.name) completed++;
 if (state.description) completed++;
 if (state.tagline) completed++;
@@ -84,6 +87,7 @@ if (state.company_size) completed++;
 if (state.geo) completed++;
 if (state.problem) completed++;
 if (state.success_position) completed++;
+if (state.win) completed++;
 if (state.why) completed++;
 if (state.vision) completed++;
 
@@ -324,10 +328,10 @@ const edit = (
           if (typeof data[key] === "object") {
             if (
               Object.keys(data[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               ) &&
               Object.keys(state[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               )
             ) {
               continue;
@@ -356,10 +360,10 @@ const edit = (
           if (typeof data[key] === "object") {
             if (
               Object.keys(data[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               ) &&
               Object.keys(state[key]).every(
-                (k) => data[key][k] === state[key][k],
+                (k) => data[key][k] === state[key][k]
               )
             ) {
               continue;
@@ -381,7 +385,7 @@ const edit = (
               onCommit: () => {
                 State.update({ ...profileData, edit: false });
               },
-            },
+            }
           );
           return;
         }
