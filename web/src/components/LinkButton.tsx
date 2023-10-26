@@ -1,14 +1,17 @@
 import { cn } from "../lib/utils";
 
+interface LinkButtonProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  label: string;
+  variant?: "primary" | "secondary";
+}
+
 export function LinkButton({
   label,
   variant = "primary",
   href,
-}: {
-  label: string;
-  variant?: "primary" | "secondary";
-  href: string;
-}) {
+  ...props
+}: LinkButtonProps) {
   return (
     <a
       className={cn(
@@ -16,6 +19,7 @@ export function LinkButton({
         variant === "secondary" ? "border-2 border-black" : "bg-primary"
       )}
       href={href}
+      {...props}
     >
       {label}
     </a>
