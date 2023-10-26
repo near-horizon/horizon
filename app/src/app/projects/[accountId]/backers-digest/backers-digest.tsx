@@ -14,6 +14,7 @@ import { type Linktree } from "~/lib/validation/fetching";
 import { NoData } from "~/components/empty";
 import { Button } from "~/components/ui/button";
 import { env } from "~/env.mjs";
+import { QRDialog } from "~/components/qr-dialog";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   const backersDigest = await getBackersDigest(accountId);
@@ -44,7 +45,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
             </Button>
           </a>
         )}
-        {/* <Button variant="outline">Share</Button> */}
+        <QRDialog url={`/projects/${accountId}`} />
       </div>
       <Section title="About">
         <div className="flex w-full flex-row items-start justify-start gap-8">
