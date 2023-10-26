@@ -133,7 +133,7 @@ export default function BackersDigestForm() {
         type="button"
         className="flex flex-row items-center justify-center gap-2"
       >
-        <Link href={`/projects/${user.accountId}/backers-digest`}>Preview</Link>
+        <Link href="/account/backers-digest">Preview</Link>
       </Button>
       <ProgressDialog
         progress={progress.value}
