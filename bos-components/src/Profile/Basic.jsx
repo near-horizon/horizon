@@ -23,6 +23,8 @@ State.init({
   problemError: "",
   success_position: "",
   success_positionError: "",
+  win: "",
+  winError: "",
   why: "",
   whyError: "",
   vision: "",
@@ -63,6 +65,7 @@ if (!state.projectIsFetched) {
       geo: project.geo,
       problem: project.problem,
       success_position: project.success_position,
+      win: project.win,
       why: project.why,
       vision: project.vision,
       projectIsFetched: true,
@@ -71,7 +74,7 @@ if (!state.projectIsFetched) {
 }
 
 let completed = 0;
-const total = 14;
+const total = 15;
 if (state.name) completed++;
 if (state.description) completed++;
 if (state.tagline) completed++;
@@ -84,6 +87,7 @@ if (state.company_size) completed++;
 if (state.geo) completed++;
 if (state.problem) completed++;
 if (state.success_position) completed++;
+if (state.win) completed++;
 if (state.why) completed++;
 if (state.vision) completed++;
 

@@ -157,7 +157,7 @@ const data = (
       props={{
         label: "What problem(s) are you solving?",
         placeholder: " ",
-        value: state.description,
+        value: state.problem,
         onChange: (problem) => State.update({ problem }),
         validate: () => {
           if (state.problem.length > 500) {
