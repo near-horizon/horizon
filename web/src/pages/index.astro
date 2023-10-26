@@ -2,13 +2,17 @@
 // import Layout from "../layouts/Layout.astro";
 // import Card from "../components/Card.astro";
 
-import IntroSection from "../components/landing-page/IntroSection.astro";
-import SupportedBySection from "../components/landing-page/SupportedBySection.astro";
+import IntroSection from "@components/landing-page/IntroSection.astro";
+import SupportedBySection from "@components/landing-page/SupportedBySection.astro";
+import AboutSection from "@components/landing-page/AboutSection.astro";
+import HorizonEvents from "@components/landing-page/HorizonEvents.astro";
 
-import "../styles/globals.css";
+import "@styles/globals.css";
 ---
 
 <main class="p-6 bg-background-white w-full flex-col flex gap-14">
   <IntroSection />
   <SupportedBySection />
+  <AboutSection />
+  <HorizonEvents />
 </main>
