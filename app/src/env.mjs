@@ -12,6 +12,16 @@ export const env = createEnv({
     API_KEY: z.string().min(32),
     SESSION_PASSWORD: z.string().min(32),
     OPENAI_API_KEY: z.string(),
+    REACHOUT_SUBJECT: z
+      .string()
+      .optional()
+      .default("Reaching out from Horizon"),
+    REACHOUT_BODY: z
+      .string()
+      .optional()
+      .default(
+        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work."
+      ),
   },
 
   /**
@@ -42,6 +52,8 @@ export const env = createEnv({
     SESSION_PASSWORD: process.env.SESSION_PASSWORD,
     NEXT_PUBLIC_IPFS_URL: process.env.NEXT_PUBLIC_IPFS_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    REACHOUT_SUBJECT: process.env.REACHOUT_SUBJECT,
+    REACHOUT_BODY: process.env.REACHOUT_BODY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

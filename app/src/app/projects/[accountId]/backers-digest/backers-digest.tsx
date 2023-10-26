@@ -5,11 +5,15 @@ import FlagIcon from "~/components/icons/flag-06.svg";
 import MarkerPinIcon from "~/components/icons/marker-pin-01.svg";
 import UsersIcon from "~/components/icons/users-01.svg";
 import GlobeIcon from "~/components/icons/globe-02.svg";
+import SendIcon from "~/components/icons/send-01.svg";
 import { ExternalLink } from "~/components/external-link";
 import { cleanURL, cn } from "~/lib/utils";
 import { Socials } from "~/components/socials";
 import { IPFSImage } from "~/components/ipfs-image";
-import { Linktree } from "~/lib/validation/fetching";
+import { type Linktree } from "~/lib/validation/fetching";
+import { NoData } from "~/components/empty";
+import { Button } from "~/components/ui/button";
+import { env } from "~/env.mjs";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   const backersDigest = await getBackersDigest(accountId);
@@ -17,6 +21,31 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
 
   return (
     <div className="flex w-full flex-col items-stretch justify-start gap-8">
+      <div className="flex flex-row items-center justify-start gap-3">
+        {!backersDigest.email || backersDigest.email === "" ? (
+          <Button
+            className="flex items-center justify-center gap-2"
+            variant="outline"
+            disabled
+          >
+            <SendIcon className="h-5 w-5 text-ui-elements-gray" />
+            Contact project
+          </Button>
+        ) : (
+          <a
+            href={`mailto:${backersDigest.email}?subject=${env.REACHOUT_SUBJECT}&body=${env.REACHOUT_BODY}`}
+          >
+            <Button
+              className="flex items-center justify-center gap-2"
+              variant="default"
+            >
+              <SendIcon className="h-5 w-5 text-ui-elements-gray" />
+              Contact project
+            </Button>
+          </a>
+        )}
+        {/* <Button variant="outline">Share</Button> */}
+      </div>
       <Section title="About">
         <div className="flex w-full flex-row items-start justify-start gap-8">
           <div className="flex-grow">
@@ -51,65 +80,92 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Traction metrics">
         <div className="flex w-full flex-row flex-wrap gap-6">
-          {Object.entries(backersDigest.traction ?? {}).map(([key, value]) => (
-            <div
-              key={key}
-              className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-ui-elements-light bg-background-light px-3 py-4 md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
-            >
-              <b className="text-2xl font-bold text-secondary-pressed">
-                {value}
-              </b>
-              <small className="text-sm font-semibold text-black">{key}</small>
-            </div>
-          ))}
+          {!backersDigest.traction ||
+            Object.keys(backersDigest.traction).length === 0 ? (
+            <NoData className="w-full" />
+          ) : (
+            Object.entries(backersDigest.traction).map(([key, value]) => (
+              <div
+                key={key}
+                className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-ui-elements-light bg-background-light px-3 py-4 md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+              >
+                <b className="text-2xl font-bold text-secondary-pressed">
+                  {value}
+                </b>
+                <small className="text-sm font-semibold text-black">
+                  {key}
+                </small>
+              </div>
+            ))
+          )}
         </div>
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Pitch deck">
-        <ExternalLink href={cleanURL(backersDigest.pitch)}>
-          {backersDigest.pitch}
-        </ExternalLink>
+        {!backersDigest.pitch || backersDigest.pitch === "" ? (
+          <NoData className="h-48" />
+        ) : (
+          <ExternalLink href={cleanURL(backersDigest.pitch)}>
+            {backersDigest.pitch}
+          </ExternalLink>
+        )}
       </Section>
       <Section title="Demo day pitch">
-        <ExternalLink href={cleanURL(backersDigest.demo)}>
-          {backersDigest.demo}
-        </ExternalLink>
+        {!backersDigest.demo || backersDigest.demo === "" ? (
+          <NoData className="h-48" />
+        ) : (
+          <ExternalLink href={cleanURL(backersDigest.demo)}>
+            {backersDigest.demo}
+          </ExternalLink>
+        )}
       </Section>
       <Section title="Demo video">
-        <ExternalLink href={cleanURL(backersDigest.demo_video)}>
-          {backersDigest.demo_video}
-        </ExternalLink>
+        {!backersDigest.demo_video || backersDigest.demo_video === "" ? (
+          <NoData className="h-48" />
+        ) : (
+          <ExternalLink href={cleanURL(backersDigest.demo_video)}>
+            {backersDigest.demo_video}
+          </ExternalLink>
+        )}
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Founders">
-        <div className="flex w-full flex-row flex-wrap items-stretch justify-start gap-5">
-          {(backersDigest.founders ?? []).map((founder) => (
-            <div
-              key={founder.first_name as string}
-              className={cn(
-                "flex flex-col items-center justify-start gap-4 rounded-2xl border border-accent-disabled bg-background-light p-6",
-                "md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
-              )}
-            >
-              <IPFSImage
-                className="h-16 w-16 rounded-full"
-                cid={founder.photo as string}
-              />
-              <b>
-                {founder.first_name as string} {founder.last_name as string}
-              </b>
-              <p>{founder.role as string}</p>
-              <p>{founder.account_id as string}</p>
-              <Socials links={founder.linktree as Linktree} />
-            </div>
-          ))}
-        </div>
+        {!backersDigest.founders || backersDigest.founders.length === 0 ? (
+          <NoData className="w-full" />
+        ) : (
+          <div className="flex w-full flex-row flex-wrap items-stretch justify-start gap-5">
+            {(backersDigest.founders ?? []).map((founder) => (
+              <div
+                key={founder.first_name as string}
+                className={cn(
+                  "flex flex-col items-center justify-start gap-4 rounded-2xl border border-accent-disabled bg-background-light p-6",
+                  "md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
+                )}
+              >
+                <IPFSImage
+                  className="h-16 w-16 rounded-full"
+                  cid={founder.photo as string}
+                />
+                <b>
+                  {founder.first_name as string} {founder.last_name as string}
+                </b>
+                <p>{founder.role as string}</p>
+                <p>{founder.account_id as string}</p>
+                <Socials links={founder.linktree as Linktree} />
+              </div>
+            ))}
+          </div>
+        )}
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Media coverage">
-        <ExternalLink href={cleanURL(backersDigest.announcement)}>
-          {backersDigest.announcement}
-        </ExternalLink>
+        {!backersDigest.announcement || backersDigest.announcement === "" ? (
+          <NoData className="h-48" />
+        ) : (
+          <ExternalLink href={cleanURL(backersDigest.announcement)}>
+            {backersDigest.announcement}
+          </ExternalLink>
+        )}
       </Section>
     </div>
   );
