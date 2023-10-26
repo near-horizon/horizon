@@ -2,14 +2,13 @@
 import { Image } from "astro:assets";
 
 import IconLineItem from "./IconLineItem.astro";
-import { LinkButton } from "../LinkButton";
+import { LinkButton } from "@components/LinkButton";
 
-import backersFounderContributorsImage from "../../assets/backers_founders_contributors-450x406.png";
-
-import rocketShipSvg from "../../assets/rocket-02.3.svg";
-import usersSvg from "../../assets/users-02.svg";
-import lineChartUpSvg from "../../assets/line-chart-up-02.svg";
-import horizonLogoSvg from "../../assets/horizon-group-logo.svg";
+import backersFounderContributorsImg from "@assets/backers_founders_contributors-450x406.png";
+import horizonLogoSvg from "@assets/horizon-group-logo.svg";
+import rocketShipSvg from "@assets/rocket-02.3.svg";
+import lineChartUpSvg from "@assets/line-chart-up-02.svg";
+import usersSvg from "@assets/users-02.svg";
 ---
 
 <div
@@ -17,7 +16,7 @@ import horizonLogoSvg from "../../assets/horizon-group-logo.svg";
 >
   <div>
     <Image
-      src={backersFounderContributorsImage}
+      src={backersFounderContributorsImg}
       alt="backers, founders and contributors working together"
     />
   </div>
