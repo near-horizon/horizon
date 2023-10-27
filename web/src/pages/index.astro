@@ -6,6 +6,7 @@ import IntroSection from "@components/landing-page/IntroSection.astro";
 import SupportedBySection from "@components/landing-page/SupportedBySection.astro";
 import AboutSection from "@components/landing-page/AboutSection.astro";
 import HorizonEvents from "@components/landing-page/HorizonEvents.astro";
+import BuildSection from "@components/landing-page/BuildSection";
 
 import "@styles/globals.css";
 ---
@@ -15,4 +16,5 @@ import "@styles/globals.css";
   <SupportedBySection />
   <AboutSection />
   <HorizonEvents />
+  <BuildSection client:load />
 </main>
