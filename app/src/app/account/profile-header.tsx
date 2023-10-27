@@ -161,55 +161,57 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
 
   return (
     <div
-      className={cn("flex flex-col items-start justify-between", {
+      className={cn("w-full", {
         hidden: section === "backers-digest",
       })}
     >
-      <div className="flex w-full flex-row items-start justify-between gap-3">
-        <motion.div
-          className={cn("relative w-full [transform-style:preserve-3d]")}
-          initial={false}
-          animate={edit ? "edit" : "view"}
-          variants={{
-            view: {
-              height: viewRef.current?.getBoundingClientRect().height ?? 0,
-            },
-            edit: {
-              height: editRef.current?.getBoundingClientRect().height ?? 0,
-            },
-          }}
-          transition={{
-            duration: 0.5,
-          }}
-        >
-          <div
-            ref={viewRef}
-            className={cn(
-              "absolute z-10 w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
-              !edit
-                ? "[transform:rotateX(0deg)]"
-                : "[transform:rotateX(180deg)]"
-            )}
+      <div className="flex flex-col items-start justify-between">
+        <div className="flex w-full flex-row items-start justify-between gap-3">
+          <motion.div
+            className={cn("relative w-full [transform-style:preserve-3d]")}
+            initial={false}
+            animate={edit ? "edit" : "view"}
+            variants={{
+              view: {
+                height: viewRef.current?.getBoundingClientRect().height ?? 0,
+              },
+              edit: {
+                height: editRef.current?.getBoundingClientRect().height ?? 0,
+              },
+            }}
+            transition={{
+              duration: 0.5,
+            }}
           >
-            {viewData}
-          </div>
-          <div
-            ref={editRef}
-            className={cn(
-              "absolute w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
-              !edit
-                ? "[transform:rotateX(-180deg)]"
-                : "[transform:rotateX(0deg)]"
-            )}
-          >
-            {editForm}
-          </div>
-        </motion.div>
-        <div className="hidden lg:block">{actions}</div>
-      </div>
-      <div className="lg:hidden">
-        <div className="truncate font-medium">{data?.tagline}</div>
-        <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
+            <div
+              ref={viewRef}
+              className={cn(
+                "absolute z-10 w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
+                !edit
+                  ? "[transform:rotateX(0deg)]"
+                  : "[transform:rotateX(180deg)]"
+              )}
+            >
+              {viewData}
+            </div>
+            <div
+              ref={editRef}
+              className={cn(
+                "absolute w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
+                !edit
+                  ? "[transform:rotateX(-180deg)]"
+                  : "[transform:rotateX(0deg)]"
+              )}
+            >
+              {editForm}
+            </div>
+          </motion.div>
+          <div className="hidden lg:block">{actions}</div>
+        </div>
+        <div className="lg:hidden">
+          <div className="truncate font-medium">{data?.tagline}</div>
+          <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
+        </div>
       </div>
     </div>
   );

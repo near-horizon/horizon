@@ -3,7 +3,7 @@ import { TwitterIcon, YoutubeIcon } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-ui-elements-light pb-4 pt-16 md:px-8">
+    <footer className="bg-ui-elements-white pb-4 pt-16 md:px-8">
       <div className="flex max-w-screen-2xl flex-col gap-4 md:gap-12 2xl:mx-auto">
         <div className="flex w-full flex-col items-center justify-start gap-2 md:flex-row md:items-start md:gap-6">
           <FooterSection
@@ -14,7 +14,7 @@ export function Footer() {
               </h3>
             }
           >
-            <p className="max-w-sm text-center">
+            <p className="max-w-sm text-center md:text-left">
               An early stage accelerator empowering Web3 founders to build,
               connect, and grow
             </p>
@@ -26,7 +26,7 @@ export function Footer() {
                 <YoutubeIcon
                   size={32}
                   fill="currentColor"
-                  stroke="var(--ui-elements--light)"
+                  stroke="var(--background--white)"
                 />
               </a>
             </div>
@@ -85,9 +85,6 @@ export function Footer() {
               </li>
             </ul>
           </FooterSection>
-          <FooterSection
-            header={<Link href="/onboarding">Create profile</Link>}
-          />
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-2 text-gray-600 md:flex-row md:gap-0">
           <span>© 2023</span>

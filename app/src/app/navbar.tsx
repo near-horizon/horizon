@@ -8,8 +8,8 @@ import { cn } from "~/lib/utils";
 
 export function Navbar() {
   return (
-    <header className="flex w-full flex-col items-start justify-start gap-4 pt-4">
-      <div className="flex w-full flex-row items-center justify-between">
+    <header className="flex w-full flex-col items-stretch justify-start gap-4 pt-4">
+      <div className="mx-auto flex w-full max-w-screen-xl flex-row items-center justify-between">
         <Link href="/" className="flex items-center justify-center">
           <Logo className="w-full" />
         </Link>
