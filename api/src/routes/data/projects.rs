@@ -191,6 +191,8 @@ pub struct Params {
     pub size: Option<HashSet<(u32, u32)>>,
     #[serde(default, deserialize_with = "set_deserialize")]
     pub distribution: Option<HashSet<String>>,
+    #[serde(default)]
+    pub fundraising: Option<bool>,
     pub from: Option<u32>,
     pub limit: Option<u32>,
     #[serde(rename = "q")]
@@ -200,7 +202,8 @@ pub struct Params {
 #[debug_handler(state = AppState)]
 pub async fn all_projects(
     Query(params): Query<Params>,
-    State(AppState { pool, .. }): State<AppState>,
+    headers: HeaderMap,
+    State(state): State<AppState>,
 ) -> ApiResult<Json<Vec<String>>> {
     let mut builder = sqlx::QueryBuilder::new(
         r#"
@@ -301,6 +304,18 @@ pub async fn all_projects(
         builder.push(") ");
     }
 
+    if let Some(fundraising) = params.fundraising {
+        authorize_bearer(&headers, &state).await?;
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push(" projects.backers_digest -> 'fundraising' = ");
+        builder.push_bind(fundraising);
+    }
+
     if let Some(search) = params.search {
         if has_where {
             builder.push(" AND ");
@@ -331,7 +346,7 @@ pub async fn all_projects(
         builder.push_bind(from as i32);
     }
 
-    let result = builder.build().fetch_all(&pool).await.map_err(|e| {
+    let result = builder.build().fetch_all(&state.pool).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Failed to get projects: {e}"),
