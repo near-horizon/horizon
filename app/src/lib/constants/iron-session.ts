@@ -7,5 +7,6 @@ export const ironSessionConfig: IronSessionOptions = {
   // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
   cookieOptions: {
     secure: env.NODE_ENV === "production",
+    path: "/",
   },
 };

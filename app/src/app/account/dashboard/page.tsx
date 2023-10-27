@@ -27,7 +27,6 @@ import {
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
-  console.log(user);
 
   if (!user) {
     return redirect("/login");
