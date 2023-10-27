@@ -312,8 +312,8 @@ pub async fn all_projects(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push(" projects.backers_digest -> 'fundraising' = ");
-        builder.push_bind(fundraising);
+        builder.push(" projects.backers_digest ->> 'fundraising' = ");
+        builder.push_bind(fundraising.to_string());
     }
 
     if let Some(search) = params.search {
