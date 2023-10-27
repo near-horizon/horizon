@@ -16,15 +16,13 @@ export default async function ProfileLayout({
   }
 
   return (
-    <div className="flex h-full w-full flex-row items-start justify-start">
+    <div className="flex h-full w-full flex-row items-stretch justify-start">
       <div className="hidden min-w-[240px] flex-grow-0 md:block">
         <ProfileNav />
       </div>
       <div className="flex max-w-full flex-grow flex-col items-start justify-start gap-6 md:max-w-[calc(100%-240px)]">
         <WelcomeBanner />
-        <div className="w-full">
-          <ProfileHeader accountId={user.accountId} />
-        </div>
+        <ProfileHeader accountId={user.accountId} />
         <div className="w-full flex-grow">{children}</div>
       </div>
     </div>

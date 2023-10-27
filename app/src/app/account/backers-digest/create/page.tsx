@@ -200,247 +200,239 @@ export default function BackersDigestForm() {
           </div>
           {buttons}
         </div>
-        <div className="flex flex-row items-start justify-start gap-4">
-          <div className="flex flex-grow flex-col gap-2 rounded-2xl border border-ui-elements-light p-10 pt-8">
-            <TextInput
-              control={form.control}
-              name="location"
-              defaultValue=""
-              label="Location"
-            />
-            <NumberInput
-              control={form.control}
-              name="company_size"
-              defaultValue=""
-              label="Compnany size"
-            />
-            <TextInput
-              control={form.control}
-              name="website"
-              defaultValue=""
-              label="Website"
-            />
-            <TextInput
-              control={form.control}
-              name="linkedin"
-              defaultValue=""
-              label="LinkedIn"
-            />
-            <TextInput
-              control={form.control}
-              name="twitter"
-              defaultValue=""
-              label="X (ex. Twitter)"
-            />
-            <TextInput
-              control={form.control}
-              name="email"
-              defaultValue=""
-              label="Contact email"
-            />
-            <TextInput
-              control={form.control}
-              name="calendly_link"
-              defaultValue=""
-              label="Calendly link"
-            />
-            <SocialProfilesInput
-              control={form.control}
-              name="linktree"
-              defaultValue={backersDigest?.linktree ?? data?.linktree ?? {}}
-              label="Social profiles"
-            />
-          </div>
-          <div className="flex w-1/5 flex-col gap-3">
-            <h4 className="text-xl font-bold">About</h4>
-            <h5 className="text-sm text-ui-elements-gray">
-              Completed: {aboutCompleted}
-            </h5>
-            <p className="tex-sm text-ui-elements-dark">
-              Add more info about your startup
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-row items-start justify-start gap-4">
-          <div className="flex flex-grow flex-col gap-2 rounded-2xl border border-ui-elements-light p-10 pt-8">
-            <div className="flex w-full flex-col items-start justify-start gap-6">
-              {founders.fields.map((field, index) => (
-                <div
-                  key={field.id}
-                  className="relative flex w-full flex-col items-stretch justify-start gap-3"
-                >
-                  <Button
-                    variant="destructive"
-                    type="button"
-                    className="absolute right-0 top-0 flex w-1/12 flex-row items-center justify-center border-none"
-                    onClick={() => founders.remove(index)}
-                  >
-                    <XIcon className="h-4 w-4" />
-                  </Button>
-                  <ImageInput
-                    control={form.control}
-                    name={`founders.${index}.image` as const}
-                    defaultValue=""
-                    label="Photo"
-                    setCid={(cid) =>
-                      form.setValue(`founders.${index}.image`, cid)
-                    }
-                    cid={
-                      form.watch(`founders.${index}.image` as const) as string
-                    }
-                  />
-                  <TextInput
-                    control={form.control}
-                    name={`founders.${index}.first_name` as const}
-                    defaultValue=""
-                    label="First name"
-                  />
-                  <TextInput
-                    control={form.control}
-                    name={`founders.${index}.last_name` as const}
-                    defaultValue=""
-                    label="Last name"
-                  />
-                  <TextInput
-                    control={form.control}
-                    name={`founders.${index}.account_id` as const}
-                    defaultValue=""
-                    label="Account ID"
-                  />
-                  <SocialProfilesInput
-                    control={form.control}
-                    name={`founders.${index}.socials` as const}
-                    defaultValue={{}}
-                    label="Social profiles"
-                  />
-                </div>
-              ))}
-              <div className="flex w-full flex-row items-start justify-end">
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={() => founders.append({}, { shouldFocus: true })}
-                  className="flex flex-row items-center justify-center gap-2"
-                >
-                  <PlusCircleIcon className="h-4 w-4" />
-                  Add founder
-                </Button>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-1/5 flex-col gap-3">
-            <h4 className="text-xl font-bold">Founders</h4>
-            <h5 className="text-sm text-ui-elements-gray"></h5>
-            <p className="text-sm text-ui-elements-dark">
-              Add at least one founder. Every project has to have an individual
-              face!
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-row items-start justify-start gap-4">
-          <div className="flex flex-grow flex-col gap-2 rounded-2xl border border-ui-elements-light p-10 pt-8">
-            <div className="flex flex-row items-center justify-between gap-2">
-              <h6 className="flex-grow text-sm font-bold">Metric name</h6>
-              <h6 className="w-1/3 text-sm font-bold">Value</h6>
-            </div>
-            {traction.fields.map((field, index) => (
+        <Section
+          header="About"
+          subheader={`Completed: ${aboutCompleted}`}
+          description="Add more info about your startup"
+        >
+          <TextInput
+            control={form.control}
+            name="location"
+            defaultValue=""
+            label="Location"
+          />
+          <NumberInput
+            control={form.control}
+            name="company_size"
+            defaultValue=""
+            label="Compnany size"
+          />
+          <TextInput
+            control={form.control}
+            name="website"
+            defaultValue=""
+            label="Website"
+          />
+          <TextInput
+            control={form.control}
+            name="linkedin"
+            defaultValue=""
+            label="LinkedIn"
+          />
+          <TextInput
+            control={form.control}
+            name="twitter"
+            defaultValue=""
+            label="X (ex. Twitter)"
+          />
+          <TextInput
+            control={form.control}
+            name="email"
+            defaultValue=""
+            label="Contact email"
+          />
+          <TextInput
+            control={form.control}
+            name="calendly_link"
+            defaultValue=""
+            label="Calendly link"
+          />
+          <SocialProfilesInput
+            control={form.control}
+            name="linktree"
+            defaultValue={backersDigest?.linktree ?? data?.linktree ?? {}}
+            label="Social profiles"
+          />
+        </Section>
+        <Section
+          header="Founders"
+          subheader="Add at least one founder"
+          description="Every project has to have an individual face!"
+        >
+          <div className="flex w-full flex-col items-start justify-start gap-6">
+            {founders.fields.map((field, index) => (
               <div
                 key={field.id}
-                className="flex flex-row items-center justify-between gap-2"
+                className="relative flex w-full flex-col items-stretch justify-start gap-3"
               >
-                <div className="flex-grow">
-                  <Input
-                    {...form.register(`traction.${index}.0` as const)}
-                    type="text"
-                  />
-                </div>
-                <div className="w-1/4">
-                  <Input
-                    {...form.register(`traction.${index}.1` as const)}
-                    type="text"
-                  />
-                </div>
                 <Button
                   variant="destructive"
                   type="button"
-                  className="flex w-1/12 flex-row items-center justify-center border-none"
-                  onClick={() => traction.remove(index)}
+                  className="absolute right-0 top-0 flex w-1/12 flex-row items-center justify-center border-none"
+                  onClick={() => founders.remove(index)}
                 >
                   <XIcon className="h-4 w-4" />
                 </Button>
+                <ImageInput
+                  control={form.control}
+                  name={`founders.${index}.image` as const}
+                  defaultValue=""
+                  label="Photo"
+                  setCid={(cid) =>
+                    form.setValue(`founders.${index}.image`, cid)
+                  }
+                  cid={form.watch(`founders.${index}.image` as const) as string}
+                />
+                <TextInput
+                  control={form.control}
+                  name={`founders.${index}.first_name` as const}
+                  defaultValue=""
+                  label="First name"
+                />
+                <TextInput
+                  control={form.control}
+                  name={`founders.${index}.last_name` as const}
+                  defaultValue=""
+                  label="Last name"
+                />
+                <TextInput
+                  control={form.control}
+                  name={`founders.${index}.account_id` as const}
+                  defaultValue=""
+                  label="Account ID"
+                />
+                <SocialProfilesInput
+                  control={form.control}
+                  name={`founders.${index}.socials` as const}
+                  defaultValue={{}}
+                  label="Social profiles"
+                />
               </div>
             ))}
             <div className="flex w-full flex-row items-start justify-end">
               <Button
                 variant="outline"
                 type="button"
-                onClick={() =>
-                  traction.append([["", ""]], { shouldFocus: true })
-                }
+                onClick={() => founders.append({}, { shouldFocus: true })}
                 className="flex flex-row items-center justify-center gap-2"
               >
                 <PlusCircleIcon className="h-4 w-4" />
-                Add metric
+                Add founder
               </Button>
             </div>
           </div>
-          <div className="flex w-1/5 flex-col gap-3">
-            <h4 className="text-xl font-bold">Traction metrics</h4>
-            <h5 className="text-sm text-ui-elements-gray"></h5>
+        </Section>
+        <Section
+          header="Traction"
+          subheader="Add at least one traction metric"
+          description="Add traction metrics to show your progress"
+        >
+          <div className="flex flex-row items-center justify-between gap-2">
+            <h6 className="flex-grow text-sm font-bold">Metric name</h6>
+            <h6 className="w-1/3 text-sm font-bold">Value</h6>
           </div>
-        </div>
-        <div className="flex flex-row items-start justify-start gap-4">
-          <div className="flex flex-grow flex-col gap-6 rounded-2xl border border-ui-elements-light p-10 pt-8">
-            <div className="rounded-xl border border-accent-disabled px-6 py-4">
-              <FileInput
-                control={form.control}
-                name="demo"
-                label="Demo day pitch"
-              />
+          {traction.fields.map((field, index) => (
+            <div
+              key={field.id}
+              className="flex flex-row items-center justify-between gap-2"
+            >
+              <div className="flex-grow">
+                <Input
+                  {...form.register(`traction.${index}.0` as const)}
+                  type="text"
+                />
+              </div>
+              <div className="w-1/4">
+                <Input
+                  {...form.register(`traction.${index}.1` as const)}
+                  type="text"
+                />
+              </div>
+              <Button
+                variant="destructive"
+                type="button"
+                className="flex w-1/12 flex-row items-center justify-center border-none"
+                onClick={() => traction.remove(index)}
+              >
+                <XIcon className="h-4 w-4" />
+              </Button>
             </div>
-            <div className="rounded-xl border border-accent-disabled px-6 py-4">
-              <FileInput
-                control={form.control}
-                name="pitch"
-                label="Pitch deck"
-              />
-            </div>
-            <div className="flex flex-col items-stretch justify-start gap-6 rounded-xl border border-accent-disabled px-6 py-4">
-              <h6 className="text-sm font-bold">Product demo video</h6>
-              <TextInput
-                control={form.control}
-                name="demo_video"
-                defaultValue=""
-                label="Paste a link"
-              />
-            </div>
+          ))}
+          <div className="flex w-full flex-row items-start justify-end">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => traction.append([["", ""]], { shouldFocus: true })}
+              className="flex flex-row items-center justify-center gap-2"
+            >
+              <PlusCircleIcon className="h-4 w-4" />
+              Add metric
+            </Button>
           </div>
-          <div className="flex w-1/5 flex-col gap-3">
-            <h4 className="text-xl font-bold">Presentation</h4>
-            <h5 className="text-sm text-ui-elements-gray">
-              Uploaded: {presentationCompleted}/3
-            </h5>
-          </div>
-        </div>
-        <div className="flex flex-row items-start justify-start gap-4">
-          <div className="flex flex-grow flex-col gap-6 rounded-2xl border border-ui-elements-light p-10 pt-8">
-            <TextInput
+        </Section>
+        <Section
+          header="Presentation"
+          subheader={`Uploaded: ${presentationCompleted}/3`}
+        >
+          <div className="rounded-xl border border-accent-disabled px-6 py-4">
+            <FileInput
               control={form.control}
-              name="announcement"
-              defaultValue=""
-              label="Public announcement link"
+              name="demo"
+              label="Demo day pitch"
             />
           </div>
-          <div className="flex w-1/5 flex-col gap-3">
-            <h4 className="text-xl font-bold">Media coverage</h4>
-            <h5 className="text-sm text-ui-elements-gray">(optional)</h5>
-            <p className="text-sm text-ui-elements-dark">
-              Add here any articles or press releases you have been apart of
-            </p>
+          <div className="rounded-xl border border-accent-disabled px-6 py-4">
+            <FileInput control={form.control} name="pitch" label="Pitch deck" />
           </div>
-        </div>
+          <div className="flex flex-col items-stretch justify-start gap-6 rounded-xl border border-accent-disabled px-6 py-4">
+            <h6 className="text-sm font-bold">Product demo video</h6>
+            <TextInput
+              control={form.control}
+              name="demo_video"
+              defaultValue=""
+              label="Paste a link"
+            />
+          </div>
+        </Section>
+        <Section
+          header="Announcement"
+          subheader="(optional)"
+          description="Add a link to your public announcement"
+        >
+          <TextInput
+            control={form.control}
+            name="announcement"
+            defaultValue=""
+            label="Public announcement link"
+          />
+        </Section>
         {buttons}
       </form>
     </Form>
+  );
+}
+
+function Section({
+  header,
+  subheader,
+  description,
+  children,
+}: {
+  header: React.ReactNode;
+  subheader?: React.ReactNode;
+  description?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-row items-start justify-start gap-4">
+      <div className="flex flex-grow flex-col gap-6 rounded-2xl border border-ui-elements-light bg-background-white p-10 pt-8 shadow">
+        {children}
+      </div>
+      <div className="flex w-1/5 flex-col gap-3">
+        <h4 className="text-xl font-bold">{header}</h4>
+        <h5 className="text-sm text-ui-elements-gray">{subheader}</h5>
+        <p className="text-sm text-ui-elements-dark">{description}</p>
+      </div>
+    </div>
   );
 }

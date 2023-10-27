@@ -106,22 +106,27 @@ export function NavLinks() {
   return (
     <NavigationMenu
       orientation="horizontal"
-      className="w-full max-w-[100%] justify-start rounded rounded-b-none border border-b-0 border-ui-elements-light bg-background-light p-4"
+      className="w-full max-w-full border border-x-0 border-ui-elements-light bg-background-white p-4"
     >
-      <NavigationMenuList className="flex flex-row gap-4">
-        {routes.map((route) => (
-          <NavigationMenuItem key={route.href}>
-            <NavigationMenuLink
-              href={route.href}
-              className={cn("flex flex-row items-center justify-start gap-2", {
-                "text-text-link": `/${section}` === route.href,
-              })}
-            >
-              {route.name}
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        ))}
-      </NavigationMenuList>
+      <div className="mx-auto flex w-full max-w-screen-xl flex-row items-center justify-start">
+        <NavigationMenuList className="flex w-full flex-row gap-6">
+          {routes.map((route) => (
+            <NavigationMenuItem key={route.href}>
+              <NavigationMenuLink
+                href={route.href}
+                className={cn(
+                  "flex flex-row items-center justify-start gap-2",
+                  {
+                    "text-text-link": `/${section}` === route.href,
+                  }
+                )}
+              >
+                {route.name}
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          ))}
+        </NavigationMenuList>
+      </div>
     </NavigationMenu>
   );
 }
