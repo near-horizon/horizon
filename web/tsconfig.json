@@ -3,17 +3,17 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "noUncheckedIndexedAccess": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@assets/*": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@layouts/*": ["layouts/*"],
-      "@lib/*": ["lib/*"],
-      "@pages/*": ["pages/*"],
-      "@styles/*": ["styles/*"]
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@lib/*": ["src/lib/*"],
+      "@pages/*": ["src/pages/*"],
+      "@styles/*": ["src/styles/*"]
 
     }
   }
