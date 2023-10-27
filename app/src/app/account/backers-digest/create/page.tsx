@@ -29,6 +29,7 @@ import { ProgressDialog } from "~/components/progress-dialog";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
 import { SelectInput } from "~/components/inputs/select";
+import { CheckboxInput } from "~/components/inputs/checkbox";
 
 const schema = z.object({
   location: z.string().min(3).max(50).optional(),
@@ -47,6 +48,7 @@ const schema = z.object({
   demo: z.string().optional(),
   demo_video: z.string().optional(),
   announcement: z.string().optional(),
+  fundraising: z.boolean().optional(),
 });
 
 export default function BackersDigestForm() {
@@ -102,6 +104,7 @@ export default function BackersDigestForm() {
         linktree: backersDigest?.linktree ?? data?.linktree ?? {},
         demo: backersDigest?.demo ?? data?.demo ?? "",
         pitch: backersDigest?.pitch ?? data?.deck ?? "",
+        fundraising: backersDigest?.fundraising ?? false,
         ...(backersDigest?.email ? { email: backersDigest.email } : {}),
         ...(backersDigest?.calendly_link
           ? { calendly_link: backersDigest.calendly_link }
@@ -253,6 +256,13 @@ export default function BackersDigestForm() {
             name="linktree"
             defaultValue={backersDigest?.linktree ?? data?.linktree ?? {}}
             label="Social profiles"
+          />
+          <CheckboxInput
+            name="fundraising"
+            control={form.control}
+            label="Fundraising"
+            description="Check this box if you are currently fundraising"
+            defaultValue={backersDigest?.fundraising ?? false}
           />
         </Section>
 

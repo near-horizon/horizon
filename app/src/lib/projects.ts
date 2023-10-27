@@ -29,6 +29,19 @@ export async function getPaginatedProjects(pageParam = 0) {
   };
 }
 
+export async function getBackerPaginatedProjects(pageParam = 0) {
+  const result = await fetch(
+    `/api/projects?fundraising=${true}&limit=${pageSize}&from=` +
+    pageParam * pageSize
+  );
+  const projects = (await result.json()) as string[];
+
+  return {
+    items: projects,
+    next: pageParam + 1,
+  };
+}
+
 export async function getSimilarProjects(accountId: AccountId) {
   const result = await fetch(`/api/projects/${accountId}/similar`);
   const projects = (await result.json()) as string[];

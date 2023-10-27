@@ -1,15 +1,15 @@
 import { dehydrate, Hydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
-import { Projects } from "./projects";
+import { BackerProjects } from "./projects";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
 import { getProject, getProjects } from "~/lib/server/projects";
 
-export default async function ProjectsPage() {
+export default async function BackersProjectsPage() {
   const queryClient = getQueryClient();
-  const projects = await getProjects({ limit: pageSize });
+  const projects = await getProjects({ limit: pageSize, fundraising: true });
 
-  queryClient.setQueryData(["projects-paginated"], {
+  queryClient.setQueryData(["backer-projects-paginated"], {
     pages: [{ items: projects, next: 1 }],
     pageParams: [0],
   });
@@ -27,7 +27,7 @@ export default async function ProjectsPage() {
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
-      <Projects />
+      <BackerProjects />
     </Hydrate>
   );
 }

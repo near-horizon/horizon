@@ -19,6 +19,7 @@ import {
   type Section,
 } from "~/lib/validation/projects";
 import {
+  getBackerPaginatedProjects,
   getPaginatedProjects,
   getProject,
   getProjectBackersDigest,
@@ -41,6 +42,15 @@ export function usePaginatedProjects() {
   return useInfiniteQuery({
     queryKey: ["projects-paginated"],
     queryFn: ({ pageParam }) => getPaginatedProjects(pageParam as number),
+    getNextPageParam: (lastPage, _pageParam) =>
+      lastPage.items.length < pageSize ? undefined : lastPage.next,
+  });
+}
+
+export function useBackerPaginatedProjects() {
+  return useInfiniteQuery({
+    queryKey: ["backer-projects-paginated"],
+    queryFn: ({ pageParam }) => getBackerPaginatedProjects(pageParam as number),
     getNextPageParam: (lastPage, _pageParam) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });

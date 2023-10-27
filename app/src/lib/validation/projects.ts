@@ -15,6 +15,7 @@ export const projectsQuerySchema = fetchManySchema.extend({
   stage: z.array(z.string()).optional(),
   size: z.array(z.tuple([z.number(), z.number()])).optional(),
   distribution: z.array(z.string()).optional(),
+  fundraising: z.boolean().optional(),
 });
 
 export type ProjectsQuery = z.infer<typeof projectsQuerySchema>;
@@ -94,6 +95,7 @@ export const backersDigestSchema = z.object({
   demo_video: z.string().optional(),
   announcement: z.string().optional(),
   published: z.boolean().optional(),
+  fundraising: z.boolean().optional(),
 });
 
 export type BackersDigest = z.infer<typeof backersDigestSchema>;
