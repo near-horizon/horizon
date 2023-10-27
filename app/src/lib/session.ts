@@ -8,6 +8,7 @@ export async function getUserFromSession() {
   const cookieStore = cookies();
 
   const session = cookieStore.get(ironSessionConfig.cookieName);
+  console.log(session);
 
   if (!session?.value) return null;
 
