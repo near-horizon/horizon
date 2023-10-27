@@ -28,6 +28,7 @@ import { Badge } from "~/components/ui/badge";
 import { ProgressDialog } from "~/components/progress-dialog";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
+import { SelectInput } from "~/components/inputs/select";
 
 const schema = z.object({
   location: z.string().min(3).max(50).optional(),
@@ -254,6 +255,7 @@ export default function BackersDigestForm() {
             label="Social profiles"
           />
         </Section>
+
         <Section
           header="Founders"
           subheader="Add at least one founder"
@@ -301,6 +303,18 @@ export default function BackersDigestForm() {
                   defaultValue=""
                   label="Account ID"
                 />
+                <SelectInput
+                  control={form.control}
+                  name={`founders.${index}.role`}
+                  options={[
+                    { text: "CEO", value: "ceo" },
+                    { text: "CTO", value: "cto" },
+                    { text: "CPO", value: "cpo" },
+                    { text: "CMO", value: "cmo" },
+                  ]}
+                  defaultValue="ceo"
+                  label="Role"
+                />
                 <SocialProfilesInput
                   control={form.control}
                   name={`founders.${index}.socials` as const}
@@ -322,6 +336,7 @@ export default function BackersDigestForm() {
             </div>
           </div>
         </Section>
+
         <Section
           header="Traction"
           subheader="Add at least one traction metric"
@@ -370,6 +385,7 @@ export default function BackersDigestForm() {
             </Button>
           </div>
         </Section>
+
         <Section
           header="Presentation"
           subheader={`Uploaded: ${presentationCompleted}/3`}
@@ -394,6 +410,7 @@ export default function BackersDigestForm() {
             />
           </div>
         </Section>
+
         <Section
           header="Announcement"
           subheader="(optional)"
