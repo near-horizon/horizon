@@ -73,45 +73,55 @@ pub fn process_outcome(
 ) -> Vec<store::Transaction> {
     let near_indexer_primitives::views::ReceiptEnumView::Action {
         signer_id, actions, ..
-    } = execution_outcome.receipt.receipt else {
+    } = execution_outcome.receipt.receipt
+    else {
         return vec![];
     };
     let logs = execution_outcome.execution_outcome.outcome.logs;
     let block_hash = block.header.hash;
     let timestamp = block.header.timestamp;
 
-    actions.into_iter().enumerate().filter_map(|(index, action)| {
-        let log = logs
-            .get(index)
-            .map(|log| log.as_str())
-            .unwrap_or("No logs for action");
-        let near_indexer_primitives::views::ActionView::FunctionCall { args, method_name, .. } = action else {
-            eprintln!("Not a function call");
-            return None;
-        };
-        let decoded_args = engine.decode(args.clone()).unwrap_or({
-            info!("Can't decode args, possibly already decoded");
-            args
-        });
-        let Ok(args_json) = serde_json::from_slice::<serde_json::Value>(&decoded_args) else {
-            eprintln!("Can't parse args");
-            return None;
-        };
-        let success = match execution_outcome.execution_outcome.outcome.status {
-            ExecutionStatusView::Unknown | ExecutionStatusView::Failure(_) => false,
-            ExecutionStatusView::SuccessValue(_) | ExecutionStatusView::SuccessReceiptId(_) => true,
-        };
-        Some(store::Transaction::new(
-            tx_hash,
-            signer_id.clone(),
-            method_name,
-            args_json,
-            log.to_string(),
-            block_hash,
-            timestamp,
-            success,
-        ))
-    }).collect()
+    actions
+        .into_iter()
+        .enumerate()
+        .filter_map(|(index, action)| {
+            let log = logs
+                .get(index)
+                .map(|log| log.as_str())
+                .unwrap_or("No logs for action");
+            let near_indexer_primitives::views::ActionView::FunctionCall {
+                args, method_name, ..
+            } = action
+            else {
+                eprintln!("Not a function call");
+                return None;
+            };
+            let decoded_args = engine.decode(args.to_vec()).unwrap_or({
+                info!("Can't decode args, possibly already decoded");
+                args.to_vec()
+            });
+            let Ok(args_json) = serde_json::from_slice::<serde_json::Value>(&decoded_args) else {
+                eprintln!("Can't parse args");
+                return None;
+            };
+            let success = match execution_outcome.execution_outcome.outcome.status {
+                ExecutionStatusView::Unknown | ExecutionStatusView::Failure(_) => false,
+                ExecutionStatusView::SuccessValue(_) | ExecutionStatusView::SuccessReceiptId(_) => {
+                    true
+                }
+            };
+            Some(store::Transaction::new(
+                tx_hash,
+                signer_id.clone(),
+                method_name,
+                args_json,
+                log.to_string(),
+                block_hash,
+                timestamp,
+                success,
+            ))
+        })
+        .collect()
 }
 
 pub fn is_tx_receiver_watched(
