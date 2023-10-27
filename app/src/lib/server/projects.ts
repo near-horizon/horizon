@@ -26,13 +26,19 @@ export const projectsURLQuerySchema = fetchManyURLSchema.extend({
   stage: z.array(z.string()).optional(),
   size: z.array(z.tuple([z.string(), z.string()])).optional(),
   distribution: z.array(z.string()).optional(),
+  fundraising: z.string().optional(),
 });
 
 export async function getProjects(
   query: z.infer<typeof projectsURLQuerySchema> | ProjectsQuery
 ): Promise<string[]> {
   const projects = await fetch(
-    env.API_URL + "/data/projects?" + intoURLSearchParams(query)
+    env.API_URL + "/data/projects?" + intoURLSearchParams(query),
+    {
+      headers: {
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+    }
   );
   return projects.json() as Promise<string[]>;
 }
