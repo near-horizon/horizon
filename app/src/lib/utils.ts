@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { env } from "~/env.mjs";
 import { fileUploadSchema } from "./validation/fetching";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -104,4 +105,11 @@ export function cleanURL(dirtyURL?: string) {
   if (!dirtyURL) return "#";
 
   return "https://" + dirtyURL.replaceAll(/https?:\/\//g, "");
+}
+
+export function constObjectKeysIntoZodEnum<T extends string>(
+  obj: Readonly<Record<T, unknown>>
+): z.ZodEnum<[T, ...T[]]> {
+  const [key, ...keys] = Object.keys(obj) as T[];
+  return z.enum([key!, ...keys]);
 }

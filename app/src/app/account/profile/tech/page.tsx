@@ -10,6 +10,7 @@ import { updateFields, useZodForm } from "~/hooks/form";
 import { NumberInput } from "~/components/inputs/number";
 import { SelectInput } from "~/components/inputs/select";
 import { RadioGroupInput } from "~/components/inputs/radio-group";
+import { devPhase, distribution, integration } from "~/lib/constants/filters";
 
 const formSchema = z
   .object({
@@ -23,41 +24,22 @@ const formSchema = z
   })
   .partial();
 
-const integrationSchema = {
-  native: "Native",
-  multichain: "Multichain",
-  interested: "Not yet but interested",
-  no: "No",
-};
-
-const integrationOptions = Object.entries(integrationSchema).map(
-  ([value, text]) => ({ value, text })
-);
-
-const devSchema = {
-  idea: "Idea stage",
-  testnet: "Testnet launched",
-  mainnet: "Mainnet launched",
-  scaling: "Scaling startup",
-  established: "Established business",
-};
-
-const devOptions = Object.entries(devSchema).map(([value, text]) => ({
+const integrationOptions = Object.entries(integration).map(([value, text]) => ({
   value,
   text,
 }));
 
-const distributionSchema = {
-  openSource: "Open source",
-  partial: "Partial",
-  proprietery: "Proprietery",
-};
+const devOptions = Object.entries(devPhase).map(([value, text]) => ({
+  value,
+  text,
+}));
 
-const distributionOptions = Object.entries(distributionSchema).map(
-  ([id, text]) => ({ id, text })
-);
+const distributionOptions = Object.entries(distribution).map(([id, text]) => ({
+  id,
+  text,
+}));
 
-export default function TechInfo({}) {
+export default function TechInfo({ }) {
   const accountId = useAccountId();
   const { data } = useProject(accountId ?? "");
   const { tech } = useProjectCompletion();
@@ -157,20 +139,18 @@ export default function TechInfo({}) {
           })}
         </LabeledData>
         <LabeledData label="Integration with NEAR">
-          {integrationSchema[
-            data?.integration as keyof typeof integrationSchema
-          ] ?? "No integration data"}
+          {integration[data?.integration as keyof typeof integration] ??
+            "No integration data"}
         </LabeledData>
         <LabeledData label="Development phase">
-          {devSchema[data?.dev as keyof typeof devSchema] ?? "No dev data"}
+          {devPhase[data?.dev as keyof typeof devPhase] ?? "No dev data"}
         </LabeledData>
         <LabeledData label="Have you already launched on mainnet?">
           {(data?.mainnet as string) ?? "No mainnet data"}
         </LabeledData>
         <LabeledData label="Is your project Open Source?">
-          {distributionSchema[
-            data?.distribution as keyof typeof distributionSchema
-          ] ?? "No distribution data"}
+          {distribution[data?.distribution as keyof typeof distribution] ??
+            "No distribution data"}
         </LabeledData>
         <LabeledData label="Do you plan to launch a token?">
           {(data?.token as string) ?? "No token data"}
