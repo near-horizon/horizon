@@ -191,12 +191,12 @@ const data = (
         ) : null,
       }}
     />
-    <Widget
-      src={`${ownerId}/widget/Inputs.LabeledData`}
-      props={{
-        label: "Point of contact",
-      }}
-    />
+    {/* <Widget */}
+    {/*   src={`${ownerId}/widget/Inputs.LabeledData`} */}
+    {/*   props={{ */}
+    {/*     label: "Point of contact", */}
+    {/*   }} */}
+    {/* /> */}
     <Widget
       src={`${ownerId}/widget/Inputs.LabeledData`}
       props={{

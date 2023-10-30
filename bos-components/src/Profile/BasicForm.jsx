@@ -103,12 +103,14 @@ const data = (
           onChange: (company_size) =>
             State.update({ company_size: `${company_size}` }),
           validate: () => {
-            if (state.team < 1) {
-              State.update({ teamError: "Team size must be at least 1" });
+            if (state.company_size < 1) {
+              State.update({
+                company_sizeError: "Team size must be at least 1",
+              });
               return;
             }
 
-            State.update({ teamError: "" });
+            State.update({ company_sizeError: "" });
           },
         }}
       />
