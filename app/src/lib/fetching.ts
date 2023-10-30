@@ -1,8 +1,8 @@
 import {
   type AccountId,
-  transactionsSchema,
-  type Transaction,
   placeholderImage,
+  type Transaction,
+  transactionsSchema,
 } from "./validation/common";
 import {
   type Profile,

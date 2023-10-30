@@ -32,7 +32,7 @@ export const profileSchema = z
     distribution: z.string(),
     dev: z.string(),
     product_type: z.record(z.string(), z.string()),
-    team: z.string(),
+    team: z.string().or(z.record(z.string(), z.string())),
     tags: z.record(z.string(), z.string()),
   })
   .partial()
