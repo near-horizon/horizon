@@ -1,9 +1,8 @@
-import { useDeferredValue, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import ChevronDown from "../icons/chevron-down.svg";
-import { Skeleton } from "../ui/skeleton";
 
 export function FilterDropdown({
   triggerText,
