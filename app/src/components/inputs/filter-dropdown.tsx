@@ -19,6 +19,8 @@ export function FilterDropdown({
 }) {
   const [selectedInner, setSelected] = useState<string[]>(selected);
   const [count, setCount] = useState(0);
+  const [availableOptions, setAvailableOptions] =
+    useState<{ value: string; label: string }[]>(options);
 
   useEffect(() => {
     setSelected(selected);
@@ -29,6 +31,16 @@ export function FilterDropdown({
       .then(setCount)
       .catch(console.error);
   }, [selectedInner, getFilteredCount]);
+
+  useEffect(() => {
+    Promise.all(options.map(({ value }) => getFilteredCount([value])))
+      .then((counts) => {
+        setAvailableOptions(
+          options.filter((_, i) => counts[i] && counts[i]! > 0)
+        );
+      })
+      .catch(console.error);
+  }, [options, getFilteredCount]);
 
   return (
     <Popover>
@@ -43,7 +55,7 @@ export function FilterDropdown({
       </PopoverTrigger>
       <PopoverContent className="flex w-96 flex-col gap-3 py-3">
         <div className="flex flex-row flex-wrap gap-2 px-3">
-          {options.map((option) => (
+          {availableOptions.map((option) => (
             <Button
               key={option.value}
               className="transition-colors duration-300 ease-in-out"
