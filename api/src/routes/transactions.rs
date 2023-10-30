@@ -79,11 +79,12 @@ where
                 .unwrap()
         });
 
-    let from = date.timestamp_nanos();
+    let from = date.timestamp_nanos_opt().unwrap();
     let to = date
         .checked_add_signed(chrono::Duration::days(1))
         .unwrap()
-        .timestamp_nanos();
+        .timestamp_nanos_opt()
+        .unwrap();
     Ok(Some((from, to)))
 }
 
@@ -124,11 +125,12 @@ async fn get_created_entity_count(
             .unwrap()
             .with_nanosecond(0)
             .unwrap();
-        let from = date.timestamp_nanos();
+        let from = date.timestamp_nanos_opt().unwrap();
         let to = date
             .checked_add_signed(chrono::Duration::days(1))
             .unwrap()
-            .timestamp_nanos();
+            .timestamp_nanos_opt()
+            .unwrap();
         (from, to)
     });
     sqlx::query_scalar!(
