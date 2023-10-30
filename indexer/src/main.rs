@@ -83,16 +83,18 @@ pub async fn listen_blocks(
             .collect_vec();
 
         for tx in txs {
-            tx.insert(pool)
-                .await
-                .expect("Failed to insert transaction");
+            tx.insert(pool).await.expect("Failed to insert transaction");
         }
 
         sqlx::query!(
             r#"
-            INSERT INTO last_visited (id, height)
-            VALUES ($1, $2)
-            ON CONFLICT (id) DO UPDATE SET height = $2
+            INSERT INTO
+              last_visited (id, height)
+            VALUES
+              ($1, $2) ON CONFLICT (id) DO
+            UPDATE
+            SET
+              height = $2
             "#,
             1,
             streamer_message.block.header.height as i64,
