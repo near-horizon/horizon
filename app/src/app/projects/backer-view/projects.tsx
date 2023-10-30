@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Project } from "../../card";
+import { Project } from "../card";
 import { Button } from "~/components/ui/button";
 import { useBackerPaginatedProjects } from "~/hooks/projects";
 import { NoData } from "~/components/empty";
@@ -13,9 +13,9 @@ export function BackerProjects() {
   return (
     <>
       {status === "success" &&
-        data.pages.length > 0 &&
-        data.pages[0] &&
-        data.pages[0].items.length > 0 ? (
+      data.pages.length > 0 &&
+      data.pages[0] &&
+      data.pages[0].items.length > 0 ? (
         <ul className="flex flex-row flex-wrap items-stretch justify-start gap-2">
           {data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
