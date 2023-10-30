@@ -20,10 +20,12 @@ export default async function ProfileLayout({
       <div className="hidden min-w-[240px] flex-grow-0 md:block">
         <ProfileNav />
       </div>
-      <div className="flex max-w-full flex-grow flex-col items-start justify-start gap-6 md:max-w-[calc(100%-240px)]">
+      <div className="flex max-w-full flex-grow flex-col items-start justify-start gap-6 bg-ui-elements-white md:max-w-[calc(100%-240px)]">
         <WelcomeBanner />
-        <ProfileHeader accountId={user.accountId} />
-        <div className="w-full flex-grow">{children}</div>
+        <div className="w-full flex-grow px-8 pb-12 pt-10">
+          <ProfileHeader accountId={user.accountId} />
+          <div className="mt-6">{children}</div>
+        </div>
       </div>
     </div>
   );

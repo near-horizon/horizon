@@ -21,7 +21,7 @@ export default async function RootLayout({
             <MobileNavbar />
           </div>
           <div className="w-full flex-grow bg-background-light">
-            <main className="mx-auto h-full w-full max-w-screen-xl flex-grow bg-background-light pb-[5.375rem] pt-8">
+            <main className="mx-auto h-full w-full max-w-screen-xl flex-grow bg-background-light pb-16 pt-8">
               {children}
             </main>
           </div>
