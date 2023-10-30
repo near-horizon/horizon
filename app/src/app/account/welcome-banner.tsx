@@ -103,7 +103,7 @@ export function WelcomeBanner() {
   return (
     <div
       className={cn(
-        "relative flex max-w-full flex-col items-center justify-center gap-8 rounded-xl border border-ui-elements-light bg-blue-100 py-8",
+        "relative flex max-w-full flex-col items-center justify-center gap-8 rounded-xl rounded-b-none border border-ui-elements-light bg-blue-100 py-8",
         {
           hidden: !isDashboard || dismissed,
         }
