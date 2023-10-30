@@ -6,44 +6,51 @@ import { LinkButton } from "@components/LinkButton";
 
 import backersFounderContributorsImg from "@assets/backers_founders_contributors-450x406.png";
 import horizonLogoSvg from "@assets/horizon-group-logo.svg";
-import rocketShipSvg from "@assets/rocket-02.3.svg";
+import rocketShipSvg from "@assets/rocket-ship.svg";
 import lineChartUpSvg from "@assets/line-chart-up-02.svg";
 import usersSvg from "@assets/users-02.svg";
+
+const MainContainer = "div";
+const HeaderImgContainer = "div";
+const LineItemsContainer = "div";
+const HeaderContainer = "div";
+const Header = "h2";
 ---
 
-<div
-  class="flex flex-col gap-9 md:flex-row-reverse items-center md:items-start"
->
-  <div>
+<MainContainer class="flex flex-col gap-9 md:flex-row-reverse items-center">
+  <HeaderImgContainer>
     <Image
       src={backersFounderContributorsImg}
       alt="backers, founders and contributors working together"
     />
-  </div>
-  <div class="flex flex-col flex-1 gap-5 items-center md:items-start">
+  </HeaderImgContainer>
+  <HeaderContainer
+    class="flex flex-col flex-1 gap-5 items-center md:items-start"
+  >
     <Image src={horizonLogoSvg} alt="horizon group logo" class="md:hidden" />
-    <h2 class="font-bold text-4xl text-black text-center md:text-left">
+    <Header class="font-bold text-4xl text-black text-center md:text-left">
       NEAR Horizon connects people building on NEAR
-    </h2>
-    <IconLineItem
-      icon={rocketShipSvg}
-      iconAlt="rocket ship"
-      boldText="Web3 Founders"
-      regularText="can find help and resources"
-    />
-    <IconLineItem
-      icon={usersSvg}
-      iconAlt="users"
-      boldText="Contributors"
-      regularText="can offer services and earn"
-    />
-    <IconLineItem
-      icon={lineChartUpSvg}
-      iconAlt="line chart going up"
-      boldText="Backers"
-      regularText="can find promising prospects"
-    />
-
-    <LinkButton label="Create profile" href="#" />
-  </div>
-</div>
+    </Header>
+    <LineItemsContainer class="flex flex-col gap-5">
+      <IconLineItem
+        icon={rocketShipSvg}
+        iconAlt="rocket ship"
+        boldText="Web3 Founders"
+        regularText="can find help and resources"
+      />
+      <IconLineItem
+        icon={usersSvg}
+        iconAlt="users"
+        boldText="Contributors"
+        regularText="can offer services and earn"
+      />
+      <IconLineItem
+        icon={lineChartUpSvg}
+        iconAlt="line chart going up"
+        boldText="Backers"
+        regularText="can find promising prospects"
+      />
+    </LineItemsContainer>
+    <LinkButton label="Create profile" href="https://app.hzn.xyz/onboarding" />
+  </HeaderContainer>
+</MainContainer>
