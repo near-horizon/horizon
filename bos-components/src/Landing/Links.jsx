@@ -741,10 +741,17 @@ const Card = styled.div`
   }
 `;
 
+const time = new Date("2023-07-28T13:30:00.000Z").toLocaleString(undefined, {
+  weekday: "long",
+  hour: "numeric",
+  minute: "numeric",
+  timeZoneName: "shortGeneric",
+});
+
 return (
   <Container>
     <h2>Get connected with Horizon</h2>
-    <h3>Join one of our sessions every Friday, 10 AM (PST)</h3>
+    <h3>Join one of our sessions every {time}</h3>
     <Row>
       <Card>
         {banners.demo}
