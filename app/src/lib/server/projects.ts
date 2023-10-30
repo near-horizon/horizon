@@ -65,7 +65,7 @@ export async function getProject(accountId: AccountId) {
   return projectSchema.parse({
     ...profile,
     ...horizon,
-    company_size,
+    company_size: typeof company_size === "string" ? company_size : "",
     account_id: accountId,
     creationTx,
   });
