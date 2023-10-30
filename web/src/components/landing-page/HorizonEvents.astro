@@ -1,60 +1,87 @@
 ---
 import { Image } from "astro:assets";
+
+import { LinkButton } from "@components/LinkButton";
+
 import productDemoDaySvg from "@assets/product-demo-day.svg";
 import officeHrsSvg from "@assets/office-hours.svg";
 import amaSessionsSvg from "@assets/ama-sessions.svg";
-import { LinkButton } from "@components/LinkButton";
+
+const MainContainer = "div";
+const Header = "h2";
+const SubHeader = "h3";
+const ItemsContainer = "div";
+const EventItem = "div";
+const EventTextContainer = "div";
+const EventTitle = "h3";
+const EventDescription = "p";
+const LinkButtonContainer = "div";
 ---
 
-<div class="flex flex-col gap-5">
-  <h2 class="font-bold text-4xl text-center">Get connected with Horizon</h2>
-  <h3 class="font-bold text-2xl text-center">
+<MainContainer class="flex flex-col gap-8">
+  <Header class="font-bold text-4xl text-center">
+    Get connected with Horizon
+  </Header>
+  <SubHeader class="font-bold text-2xl text-center">
     Join one of our sessions every Friday, 10 AM (PST)
-  </h3>
-  <div class="flex flex-col md:flex-row gap-11 md:gap-6">
-    <div class="flex flex-col items-center gap-3 md:items-start">
+  </SubHeader>
+  <ItemsContainer class="flex flex-col md:flex-row gap-11 md:gap-6 flex-wrap">
+    <EventItem class="flex flex-col items-center gap-3 md:items-start flex-1">
       <Image src={productDemoDaySvg} alt="product demo day" class="h-36" />
-      <h3
-        class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
-      >
-        Product Demo Day
-      </h3>
-      <p class="font-normal text-[16px] text-black text-center md:text-left">
-        Join if you are an entrepreneur, designer, engineer, or hacker working
-        on something cool that you'd like to share with fellow builders.
-      </p>
-    </div>
-    <div class="flex flex-col items-center gap-3 md:items-start">
+      <EventTextContainer class="px-3">
+        <EventTitle
+          class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
+        >
+          Product Demo Day
+        </EventTitle>
+        <EventDescription
+          class="font-normal text-[16px] text-black text-center md:text-left"
+        >
+          Join if you are an entrepreneur, designer, engineer, or hacker working
+          on something cool that you'd like to share with fellow builders.
+        </EventDescription>
+      </EventTextContainer>
+    </EventItem>
+    <EventItem class="flex flex-col items-center gap-3 md:items-start flex-1">
       <Image src={officeHrsSvg} alt="office hours" class="h-36" />
-      <h3
-        class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
-      >
-        Office hours
-      </h3>
-      <p class="font-normal text-[16px] text-black text-center md:text-left">
-        As an early user of NEAR Horizon, we are excited to invite you to join
-        our weekly Office Hours sessions with the Horizon team.
-      </p>
-    </div>
-    <div class="flex flex-col items-center gap-3 md:items-start">
+      <EventTextContainer class="px-3">
+        <EventTitle
+          class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
+        >
+          Office hours
+        </EventTitle>
+        <EventDescription
+          class="font-normal text-[16px] text-black text-center md:text-left"
+        >
+          As an early user of NEAR Horizon, we are excited to invite you to join
+          our weekly Office Hours sessions with the Horizon team.
+        </EventDescription>
+      </EventTextContainer>
+    </EventItem>
+    <EventItem class="flex flex-col items-center gap-3 md:items-start flex-1">
       <Image src={amaSessionsSvg} alt="AMA sessions" class="h-36" />
-      <h3
-        class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
-      >
-        AMA sessions
-      </h3>
-      <p class="font-normal text-[16px] text-black text-center md:text-left">
-        Join to know more about our Service Providers and Horizon Partner and
-        the various types of services they offer
-      </p>
-    </div>
-  </div>
-  <div class="flex justify-center">
+      <EventTextContainer class="px-3">
+        <EventTitle
+          class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
+        >
+          AMA sessions
+        </EventTitle>
+        <EventDescription
+          class="font-normal text-[16px] text-black text-center md:text-left"
+        >
+          Join to know more about our Service Providers and Horizon Partner and
+          the various types of services they offer
+        </EventDescription>
+      </EventTextContainer>
+    </EventItem>
+  </ItemsContainer>
+  <LinkButtonContainer class="flex justify-center">
     <LinkButton
       label="View schedule"
+      className="hover:bg-black hover:text-white transition-all ease-in-out delay-75"
       variant="secondary"
       href="https://lu.ma/u/usr-5oZHY9dEDbDcaHY"
       target="_blank"
     />
-  </div>
-</div>
+  </LinkButtonContainer>
+</MainContainer>

@@ -6,38 +6,51 @@ import { LinkButton } from "@components/LinkButton";
 import rocketWhiteSvg from "@assets/rocket-white.svg";
 import usersWhiteSvg from "@assets/users-white.svg";
 import lineChartUpWhiteSvg from "@assets/line-chart-up-white.svg";
+
+const MainContainer = "div";
+const AboutItemsContainer = "div";
+const AboutItem = "div";
+const ItemHeader = "h3";
+const ItemDescription = "p";
+const LinkButtonContainer = "div";
 ---
 
-<div
+<MainContainer
   class="flex flex-col bg-background-darker pb-12 pt-6 px-6 rounded-2xl gap-9"
 >
-  <div class="flex flex-col md:flex-row gap-8">
-    <div class="flex items-center flex-col text-center gap-2">
+  <AboutItemsContainer class="flex flex-col md:flex-row gap-8">
+    <AboutItem class="flex items-center flex-col text-center gap-2">
       <Image src={rocketWhiteSvg} alt="rocket ship" class="h-7" />
-      <h3 class="text-2xl font-bold text-ui-elements-white">Web3 Founders</h3>
-      <p class="text-[16px] font-normal text-ui-elements-white">
+      <ItemHeader class="text-2xl font-bold text-ui-elements-white">
+        Web3 Founders
+      </ItemHeader>
+      <ItemDescription class="text-[16px] font-normal text-ui-elements-white">
         WEB3 FOUNDERS create profiles to boost their projects: post tasks, hire
         experts, get financial support, or get investments
-      </p>
-    </div>
-    <div class="flex items-center flex-col text-center gap-2">
+      </ItemDescription>
+    </AboutItem>
+    <AboutItem class="flex items-center flex-col text-center gap-2">
       <Image src={usersWhiteSvg} alt="contributors" class="h-7" />
-      <h3 class="text-2xl font-bold text-ui-elements-white">Contributors</h3>
-      <p class="text-[16px] font-normal text-ui-elements-white">
+      <ItemHeader class="text-2xl font-bold text-ui-elements-white">
+        Contributors
+      </ItemHeader>
+      <ItemDescription class="text-[16px] font-normal text-ui-elements-white">
         CONTRIBUTORS create profiles to find projects that need help from
         experts like you. Offer your services, earn and grow your customers base
-      </p>
-    </div>
-    <div class="flex items-center flex-col text-center gap-2">
+      </ItemDescription>
+    </AboutItem>
+    <AboutItem class="flex items-center flex-col text-center gap-2">
       <Image src={lineChartUpWhiteSvg} alt="backers" class="h-7" />
-      <h3 class="text-2xl font-bold text-ui-elements-white">Backers</h3>
-      <p class="text-[16px] font-normal text-ui-elements-white">
+      <ItemHeader class="text-2xl font-bold text-ui-elements-white">
+        Backers
+      </ItemHeader>
+      <ItemDescription class="text-[16px] font-normal text-ui-elements-white">
         BACKERS create profiles to connect with NEAR Ecosystem projects that are
         looking for early investors.
-      </p>
-    </div>
-  </div>
-  <div class="flex justify-center">
-    <LinkButton label="Create profile" href="#" />
-  </div>
-</div>
+      </ItemDescription>
+    </AboutItem>
+  </AboutItemsContainer>
+  <LinkButtonContainer class="flex justify-center">
+    <LinkButton label="Create profile" href="https://app.hzn.xyz/onboarding" />
+  </LinkButtonContainer>
+</MainContainer>

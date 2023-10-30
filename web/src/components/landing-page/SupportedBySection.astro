@@ -5,20 +5,24 @@ import decasonicLogoSvg from "@assets/decasonic-logo.svg";
 import fabricLogoSvg from "@assets/fabric-logo.svg";
 import dlabLogoSvg from "@assets/dlab-logo.svg";
 import blockchangeLogoSvg from "@assets/blockchange-logo.svg";
+
+const MainContainer = "div";
+const Header = "h3";
+const LogosContainer = "div";
 ---
 
-<div>
-  <h3
+<MainContainer>
+  <Header
     class="text-[16px] font-semibold text-ui-elements-gray text-center mb-5 md:mb-2"
   >
     SUPPORTED BY
-  </h3>
-  <div
-    class="flex flex-col md:flex-row gap-11 items-center md:items-end justify-center"
+  </Header>
+  <LogosContainer
+    class="flex flex-col md:flex-row gap-11 items-center md:items-end justify-center flex-wrap"
   >
     <Image src={fabricLogoSvg} alt="fabric logo" class="h-4 md:h-6" />
     <Image src={decasonicLogoSvg} alt="decasonic logo" class="h-14 md:h-20" />
     <Image src={dlabLogoSvg} alt="dlab logo" class="h-8 md:h-11" />
     <Image src={blockchangeLogoSvg} alt="blockchange logo" class="h-4 md:h-6" />
-  </div>
-</div>
+  </LogosContainer>
+</MainContainer>
