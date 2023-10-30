@@ -17,9 +17,22 @@ export async function getProjects(query: ProjectsQuery) {
   return projects;
 }
 
-export async function getPaginatedProjects(pageParam = 0) {
+export async function getProjectsCount(query: ProjectsQuery) {
   const result = await fetch(
-    `/api/projects?limit=${pageSize}&from=` + pageParam * pageSize
+    "/api/projects/count?" + intoURLSearchParams(query)
+  );
+  const projects = (await result.json()) as number;
+  return projects;
+}
+
+export async function getPaginatedProjects(
+  pageParam = 0,
+  query?: ProjectsQuery
+) {
+  const result = await fetch(
+    `/api/projects?limit=${pageSize}&from=` +
+    pageParam * pageSize +
+    (query ? "&" + intoURLSearchParams(query) : "")
   );
   const projects = (await result.json()) as string[];
 

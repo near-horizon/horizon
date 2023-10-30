@@ -24,6 +24,7 @@ import {
   getProject,
   getProjectBackersDigest,
   getProjects,
+  getProjectsCount,
   getSimilarProjects,
   hasProject,
   updateProjectBackersDigest,
@@ -34,14 +35,23 @@ import { type Profile, profileSchema } from "~/lib/validation/fetching";
 export function useProjects(query: ProjectsQuery) {
   return useQuery({
     queryKey: ["projects", query],
-    queryFn: () => getProjects(query),
+    queryFn: ({ queryKey: [, query] }) => getProjects(query as ProjectsQuery),
   });
 }
 
-export function usePaginatedProjects() {
+export function useProjectsCount(query: ProjectsQuery) {
+  return useQuery({
+    queryKey: ["projects-count", query],
+    queryFn: ({ queryKey: [, query] }) =>
+      getProjectsCount(query as ProjectsQuery),
+  });
+}
+
+export function usePaginatedProjects(query?: ProjectsQuery) {
   return useInfiniteQuery({
-    queryKey: ["projects-paginated"],
-    queryFn: ({ pageParam }) => getPaginatedProjects(pageParam as number),
+    queryKey: ["projects-paginated", query],
+    queryFn: ({ pageParam, queryKey: [, query] }) =>
+      getPaginatedProjects(pageParam as number, query as ProjectsQuery),
     getNextPageParam: (lastPage, _pageParam) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });

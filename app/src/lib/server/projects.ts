@@ -20,12 +20,12 @@ import {
 } from "../validation/contracts";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
-  vertical: z.array(z.string()).optional(),
-  integration: z.array(z.string()).optional(),
-  dev: z.array(z.string()).optional(),
-  stage: z.array(z.string()).optional(),
+  vertical: z.array(z.string()).optional().or(z.string().optional()),
+  integration: z.array(z.string()).optional().or(z.string().optional()),
+  dev: z.array(z.string()).optional().or(z.string().optional()),
+  stage: z.array(z.string()).optional().or(z.string().optional()),
   size: z.array(z.tuple([z.string(), z.string()])).optional(),
-  distribution: z.array(z.string()).optional(),
+  distribution: z.array(z.string()).optional().or(z.string().optional()),
   fundraising: z.string().optional(),
 });
 
@@ -41,6 +41,20 @@ export async function getProjects(
     }
   );
   return projects.json() as Promise<string[]>;
+}
+
+export async function getProjectsCount(
+  query: z.infer<typeof projectsURLQuerySchema> | ProjectsQuery
+): Promise<number> {
+  const projects = await fetch(
+    env.API_URL + "/data/projects/count?" + intoURLSearchParams(query),
+    {
+      headers: {
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+    }
+  );
+  return projects.json() as Promise<number>;
 }
 
 export async function getProject(accountId: AccountId) {
