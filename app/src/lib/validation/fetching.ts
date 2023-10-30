@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { imageSchema } from "./common";
 import { env } from "~/env.mjs";
+import { sortBy } from "../constants/filters";
+import { constObjectKeysIntoZodEnum } from "../utils";
 
 export const socialsSchema = z.enum([
   "github",
@@ -58,14 +60,7 @@ export const validKeySchema = z.object({
   }),
 });
 
-export const sortSchema = z.enum([
-  "timeasc",
-  "timedesc",
-  "nameasc",
-  "namedesc",
-  "recentasc",
-  "recentdesc",
-]);
+export const sortSchema = constObjectKeysIntoZodEnum(sortBy);
 
 export const paginationSchema = z.object({
   from: z.number().optional(),

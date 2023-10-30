@@ -15,30 +15,14 @@ import { clearLocalSaveForm } from "~/lib/mutating";
 import { useCreateProject } from "~/hooks/projects";
 import { type AccountId } from "~/lib/validation/common";
 import { useLocalSaveForm } from "~/hooks/mutating";
-
-const verticals = [
-  { text: "DeSci", value: "desci" },
-  { text: "DeFi", value: "defi" },
-  { text: "Gaming", value: "gaming" },
-  { text: "Metaverse", value: "metaverse" },
-  { text: "Commercial", value: "commercial" },
-  {
-    text: "Sports and Entertainment",
-    value: "sports-and-entertainment",
-  },
-  { text: "Infrastructure", value: "infrastructure" },
-  { text: "Social", value: "social" },
-  { text: "Social Impact", value: "social-impact" },
-  { text: "Creative", value: "creative" },
-  { text: "Education", value: "education" },
-];
+import { verticals } from "~/lib/constants/filters";
 
 const formSchema = z.object({
   email: z.string().email(),
   "Project name": z.string().min(3).max(50),
   vertical: z
     .string()
-    .refine((val) => verticals.some(({ value }) => value === val), {
+    .refine((val) => Object.keys(verticals).some((value) => value === val), {
       message: "Please select a vertical",
     }),
   tagline: z.string().min(3).max(50),
@@ -93,7 +77,10 @@ export function ProjectCreate({ accountId }: { accountId: AccountId }) {
               rules={{ required: true }}
               defaultValue=""
               disabled={false}
-              options={verticals}
+              options={Object.entries(verticals).map(([key, value]) => ({
+                text: value,
+                value: key,
+              }))}
             />
           </div>
           <TextInput

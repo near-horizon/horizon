@@ -10,6 +10,7 @@ import { updateFields, useZodForm } from "~/hooks/form";
 import { NumberInput } from "~/components/inputs/number";
 import { SelectInput } from "~/components/inputs/select";
 import { RadioGroupInput } from "~/components/inputs/radio-group";
+import { stage } from "~/lib/constants/filters";
 
 const formSchema = z
   .object({
@@ -20,21 +21,12 @@ const formSchema = z
   })
   .partial();
 
-const stageSchema = {
-  "pre-seed": "Pre-seed",
-  seed: "Seed",
-  "series-a": "Series A",
-  "series-b": "Series B",
-  "series-c": "Series C",
-  "series-d": "Series D",
-};
-
-const stageOptions = Object.entries(stageSchema).map(([value, text]) => ({
+const stageOptions = Object.entries(stage).map(([value, text]) => ({
   value,
   text,
 }));
 
-export default function FundingInfo({}) {
+export default function FundingInfo({ }) {
   const accountId = useAccountId();
   const { data } = useProject(accountId ?? "");
   const { funding } = useProjectCompletion();
@@ -95,8 +87,7 @@ export default function FundingInfo({}) {
     >
       <div className="flex flex-col gap-4">
         <LabeledData label="Project stage">
-          {stageSchema[data?.stage as keyof typeof stageSchema] ??
-            "No stage data"}
+          {stage[data?.stage as keyof typeof stage] ?? "No stage data"}
         </LabeledData>
         <LabeledData label="Are you currently fundraising?">
           {data?.fundraising

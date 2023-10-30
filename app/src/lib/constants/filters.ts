@@ -43,3 +43,10 @@ export const sortBy = {
   recentasc: "Last updated oldest first",
   recentdesc: "Last updated newest first",
 } as const;
+
+export const integration = {
+  native: "Native",
+  multichain: "Multichain",
+  interested: "Not yet but interested",
+  no: "No",
+};
