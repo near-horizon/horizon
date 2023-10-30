@@ -31,7 +31,13 @@ export function intoURLSearchParams(obj: Record<string, unknown>) {
 
 export function makeIntoStrings(obj: Record<string, unknown>) {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [key, String(value)])
+    Object.entries(obj)
+      .filter(([, value]) => {
+        if (!value) return false;
+        if (Array.isArray(value) && !value.length) return false;
+        return true;
+      })
+      .map(([key, value]) => [key, String(value)])
   );
 }
 

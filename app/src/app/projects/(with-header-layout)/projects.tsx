@@ -1,25 +1,101 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Project } from "../card";
 import { Button } from "~/components/ui/button";
-import { usePaginatedProjects } from "~/hooks/projects";
+import { usePaginatedProjects, useProjectsCount } from "~/hooks/projects";
+import { type ProjectsQuery } from "~/lib/validation/projects";
+import { FilterDropdown } from "~/components/inputs/filter-dropdown";
+import {
+  devPhase,
+  distribution,
+  stage,
+  verticals,
+} from "~/lib/constants/filters";
+import { getProjectsCount } from "~/lib/projects";
+import { SortSelect } from "~/components/inputs/sort-select";
 
 export function Projects() {
+  const [query, setQuery] = useState<ProjectsQuery>({
+    sort: "recentdesc",
+    vertical: [],
+  });
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    usePaginatedProjects();
+    usePaginatedProjects(query);
+  const { data: count } = useProjectsCount(query);
 
   return (
     <>
-      <ul className="flex flex-row flex-wrap items-stretch justify-start gap-2">
+      <div className="flex w-full flex-row flex-wrap items-center justify-start gap-4">
+        <FilterDropdown
+          triggerText="Vertical"
+          options={Object.entries(verticals).map(([key, value]) => ({
+            label: value,
+            value: key,
+          }))}
+          onChange={(value) => {
+            setQuery((old) => ({ ...old, vertical: value }));
+          }}
+          selected={query.vertical ?? []}
+          getFilteredCount={(vertical) =>
+            getProjectsCount({ ...query, vertical })
+          }
+        />
+        <FilterDropdown
+          triggerText="Stage"
+          options={Object.entries(stage).map(([key, value]) => ({
+            label: value,
+            value: key,
+          }))}
+          onChange={(value) => {
+            setQuery((old) => ({ ...old, stage: value }));
+          }}
+          selected={query.stage ?? []}
+          getFilteredCount={(stage) => getProjectsCount({ ...query, stage })}
+        />
+        <FilterDropdown
+          triggerText="Distribution"
+          options={Object.entries(distribution).map(([key, value]) => ({
+            label: value,
+            value: key,
+          }))}
+          onChange={(value) => {
+            setQuery((old) => ({ ...old, distribution: value }));
+          }}
+          selected={query.distribution ?? []}
+          getFilteredCount={(distribution) =>
+            getProjectsCount({ ...query, distribution })
+          }
+        />
+        <FilterDropdown
+          triggerText="Phase"
+          options={Object.entries(devPhase).map(([key, value]) => ({
+            label: value,
+            value: key,
+          }))}
+          onChange={(value) => {
+            setQuery((old) => ({ ...old, dev: value }));
+          }}
+          selected={query.dev ?? []}
+          getFilteredCount={(dev) => getProjectsCount({ ...query, dev })}
+        />
+      </div>
+      <div className="flex w-full flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-start gap-2">
+          <b>{count}</b>
+          <span className="whitespace-nowrap text-text-gray">projects</span>
+        </div>
+        <SortSelect
+          sort={query.sort ?? "recentdesc"}
+          setSort={(sort) => setQuery((old) => ({ ...old, sort }))}
+        />
+      </div>
+      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {status === "success" &&
           data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
               {items.map((item) => (
-                <li
-                  key={item.toString()}
-                  className="w-full md:w-[calc((100%-.5rem)*.5)] lg:w-[calc((100%-1rem)*.33)] 2xl:w-[calc((100%-1.5rem)*.25)]"
-                >
+                <li key={item.toString()}>
                   <Project accountId={item} />
                 </li>
               ))}

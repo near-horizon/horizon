@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import ChevronDown from "../icons/chevron-down.svg";
+import { Skeleton } from "../ui/skeleton";
 
 export function FilterDropdown({
   triggerText,
@@ -15,13 +16,20 @@ export function FilterDropdown({
   options: { value: string; label: string }[];
   onChange: (value: string[]) => void;
   selected: string[];
-  getFilteredCount: (value: string[]) => number;
+  getFilteredCount: (value: string[]) => Promise<number> | number;
 }) {
   const [selectedInner, setSelected] = useState<string[]>(selected);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     setSelected(selected);
   }, [selected]);
+
+  useEffect(() => {
+    Promise.resolve(getFilteredCount(selectedInner))
+      .then(setCount)
+      .catch(console.error);
+  }, [selectedInner, getFilteredCount]);
 
   return (
     <Popover>
@@ -68,7 +76,7 @@ export function FilterDropdown({
             Clear filters
           </Button>
           <Button variant="default" onClick={() => onChange(selectedInner)}>
-            Show {getFilteredCount(selectedInner)} results
+            Show {count} results
           </Button>
         </div>
       </PopoverContent>
