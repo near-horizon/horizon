@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { imageSchema } from "./common";
 import { env } from "~/env.mjs";
-import { sortBy } from "../constants/filters";
-import { constObjectKeysIntoZodEnum } from "../utils";
+import { constObjectKeysIntoZodEnum, sortBy } from "../constants/filters";
 
 export const socialsSchema = z.enum([
   "github",

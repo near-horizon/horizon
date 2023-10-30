@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export const verticals = {
   desci: "DeSci",
   defi: "DeFi",
@@ -50,3 +52,10 @@ export const integration = {
   interested: "Not yet but interested",
   no: "No",
 };
+
+export function constObjectKeysIntoZodEnum<T extends string>(
+  obj: Readonly<Record<T, unknown>>
+): z.ZodEnum<[T, ...T[]]> {
+  const [key, ...keys] = Object.keys(obj) as T[];
+  return z.enum([key!, ...keys]);
+}
