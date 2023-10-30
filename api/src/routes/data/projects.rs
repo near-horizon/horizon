@@ -369,6 +369,152 @@ pub async fn all_projects(
 }
 
 #[debug_handler(state = AppState)]
+pub async fn projects_count(
+    Query(params): Query<Params>,
+    headers: HeaderMap,
+    State(state): State<AppState>,
+) -> ApiResult<Json<i64>> {
+    let mut builder = sqlx::QueryBuilder::new(
+        r#"
+        SELECT
+          COUNT(*)
+        FROM
+          projects
+        "#,
+    );
+
+    let mut has_where = false;
+
+    if let Some(verticals) = params.vertical {
+        let verticals = verticals.into_iter().collect::<Vec<_>>();
+        builder.push("WHERE projects.vertical ?| ");
+        builder.push_bind(verticals);
+        has_where = true;
+    }
+
+    if let Some(integration) = params.integration {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push("projects.integration = ANY (");
+        builder.push_bind(integration.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
+    }
+
+    if let Some(stage) = params.stage {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push("projects.stage = ANY (");
+        builder.push_bind(stage.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
+    }
+
+    if let Some(dev) = params.dev {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push("projects.dev = ANY (");
+        builder.push_bind(dev.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
+    }
+
+    if let Some(sizes) = params.size {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push(" ( ");
+        let statement = r#"
+        (
+          SELECT
+            COUNT(*)
+          FROM
+            jsonb_object_keys(projects.team)
+        ) + array_length(projects.founders, 1) BETWEEN
+        "#;
+
+        for (i, (from, to)) in sizes.into_iter().enumerate() {
+            if i > 0 {
+                builder.push(" OR ");
+            }
+            builder.push(statement);
+            builder.push_bind(from as i32);
+            builder.push(" AND ");
+            builder.push_bind(to as i32);
+        }
+        builder.push(" ) ");
+    }
+
+    if let Some(distribution) = params.distribution {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push("projects.distribution = ANY (");
+        builder.push_bind(distribution.into_iter().collect::<Vec<_>>());
+        builder.push(") ");
+    }
+
+    if let Some(fundraising) = params.fundraising {
+        authorize_bearer(&headers, &state).await?;
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push("WHERE ");
+            has_where = true;
+        }
+        builder.push(" projects.backers_digest ->> 'fundraising' = ");
+        builder.push_bind(fundraising.to_string());
+    }
+
+    if let Some(search) = params.search {
+        if has_where {
+            builder.push(" AND ");
+        } else {
+            builder.push(" WHERE ");
+        }
+        let search = format!("%{search}%");
+        builder.push(" (projects.name ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.id ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.tagline ILIKE ");
+        builder.push_bind(search.clone());
+        builder.push(" OR projects.description ILIKE ");
+        builder.push_bind(search);
+        builder.push(") ");
+    }
+
+    let result = builder
+        .build_query_scalar()
+        .fetch_one(&state.pool)
+        .await
+        .map_err(|e| {
+            println!("{}", e);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to get projects: {e}"),
+            )
+        })?;
+
+    Ok(Json(result))
+}
+
+#[debug_handler(state = AppState)]
 pub async fn get_similar_projects(
     Path(account_id): Path<String>,
     State(AppState { pool, .. }): State<AppState>,
@@ -754,6 +900,7 @@ async fn backers_digest(
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(all_projects))
+        .route("/count", get(projects_count))
         .route("/completion", get(get_completion))
         .route("/:account_id/similar", get(get_similar_projects))
         .route("/:account_id", put(put_project))
