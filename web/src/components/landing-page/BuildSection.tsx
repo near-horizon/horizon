@@ -10,11 +10,11 @@ import {
 
 import CustomAccordionTrigger from "@components/ui/custom/CustomAccordionTrigger";
 
-import orangeArrowSvgRef from "@assets/orange-arrow.svg";
-import soonPillSvgRef from "@assets/soon-pill.svg";
-import lightbulbSvgRef from "@assets/lightbulb.svg";
-import boxCheckSvgRef from "@assets/box-check.svg";
-import compassSvgRef from "@assets/compass.svg";
+import { Arrow } from "@components/svgs/Arrow";
+import { BoxCheck } from "@components/svgs/BoxCheck";
+import { SoonPill } from "@components/svgs/SoonPill";
+import { Lightbulb } from "@components/svgs/Lightbulb";
+import { Compass } from "@components/svgs/Compass";
 
 import { cn } from "@lib/utils";
 
@@ -54,11 +54,7 @@ export default function BuildSection() {
           <span className="text-background-dark font-bold text-3xl hidden md:block">
             Join Horizon
           </span>
-
-          <img
-            src={orangeArrowSvgRef.src}
-            className="w-9 h-3 hidden md:block"
-          />
+          <Arrow className="w-9 h-3 hidden md:block" />
           <span className="text-[#ff7966] font-bold text-3xl">Build</span>
         </h2>
         <Accordion
@@ -75,8 +71,8 @@ export default function BuildSection() {
                 "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
             )}
           >
-            <CustomAccordionTrigger className="hover:no-underline gap-2 justify-start">
-              <img src={boxCheckSvgRef.src} className="h-8 w-8" />
+            <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
+              <BoxCheck className="h-8 w-8 !rotate-0" />
               <h3 className="text-lg font-bold">
                 Hire ecosystem experts for your needs
               </h3>
@@ -95,10 +91,10 @@ export default function BuildSection() {
                 "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
             )}
           >
-            <CustomAccordionTrigger className="hover:no-underline gap-2 justify-start">
-              <img src={lightbulbSvgRef.src} className="h-9 w-9" />
+            <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
+              <Lightbulb className="h-9 w-9 !rotate-0" />
               <h3 className="text-lg font-bold">Validate your idea safely</h3>
-              <img src={soonPillSvgRef.src} className="w-11 h-3" />
+              <SoonPill className="w-11 h-4 !rotate-0" />
             </CustomAccordionTrigger>
             <AccordionContent className="text-sm font-normal text-black pl-11">
               Users are standing by to test your application and provide
@@ -113,10 +109,10 @@ export default function BuildSection() {
                 "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
             )}
           >
-            <CustomAccordionTrigger className="hover:no-underline gap-2 justify-start">
-              <img src={compassSvgRef.src} className="h-9 w-9" />
+            <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
+              <Compass className="h-9 w-9" />
               <h3 className="text-lg font-bold">Find a mentor or become one</h3>
-              <img src={soonPillSvgRef.src} className="w-11 h-3" />
+              <SoonPill className="w-11 h-4 !rotate-0" />
             </CustomAccordionTrigger>
             <AccordionContent className="text-sm font-normal text-black pl-11">
               Connect with industry veterans for advice on your GTM plan,

@@ -7,6 +7,12 @@ import SupportedBySection from "@components/landing-page/SupportedBySection.astr
 import AboutSection from "@components/landing-page/AboutSection.astro";
 import HorizonEvents from "@components/landing-page/HorizonEvents.astro";
 import BuildSection from "@components/landing-page/BuildSection";
+import ConnectSection from "@components/landing-page/ConnectSection";
+import GrowSection from "@components/landing-page/GrowSection";
+import Testimonial from "@components/landing-page/Testimonial.astro";
+import ContributorsSection from "@components/landing-page/ContributorsSection";
+import BackersSection from "@components/landing-page/BackersSection.tsx";
+import PartnersSection from "@components/landing-page/PartnersSection.tsx";
 
 import "@styles/globals.css";
 ---
@@ -17,4 +23,10 @@ import "@styles/globals.css";
   <AboutSection />
   <HorizonEvents />
   <BuildSection client:load />
+  <ConnectSection client:load />
+  <GrowSection client:load />
+  <Testimonial />
+  <ContributorsSection client:load />
+  <BackersSection client:load />
+  <PartnersSection client:load />
 </main>

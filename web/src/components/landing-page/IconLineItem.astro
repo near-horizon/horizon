@@ -9,12 +9,16 @@ interface Props {
 }
 
 const { icon, boldText, regularText, iconAlt } = Astro.props;
+
+const MainContainer = "div";
+const TextContainer = "span";
+const BoldText = "span";
 ---
 
-<div class="flex items-center gap-2">
+<MainContainer class="flex items-center gap-2">
   <Image src={icon} alt={iconAlt} class="w-6 h-6" />
-  <span class="text-black text-lg font-normal"
-    >{boldText && <span class="font-bold">{boldText} </span>}
-    {" "}{regularText}</span
-  >
-</div>
+  <TextContainer class="text-black text-lg font-normal">
+    {boldText && <BoldText class="font-bold">{boldText} </BoldText>}
+    {" "}{regularText}
+  </TextContainer>
+</MainContainer>

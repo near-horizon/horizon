@@ -1,9 +1,11 @@
+export const SoonPill = ({ className }: { className?: string }) => (
   <svg
     width="46"
     height="17"
     viewBox="0 0 46 17"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={className}
   >
     <rect width="46" height="17" rx="6" fill="#62EBE4" />
     <path
@@ -11,3 +13,4 @@
       fill="black"
     />
   </svg>
+);
