@@ -26,6 +26,7 @@ import {
 import { type ReactNode } from "react";
 import { Separator } from "~/components/ui/separator";
 import { useUser } from "~/stores/global";
+import { useHasBacker } from "~/hooks/backers";
 
 const routes = [
   {
@@ -103,8 +104,9 @@ const routes = [
 ];
 
 export function NavLinks() {
-  const section = usePathname()?.split("/")[1];
+  const [, section, sub] = usePathname()?.split("/");
   const user = useUser();
+  const { data: isBacker } = useHasBacker(user?.accountId);
 
   return (
     <NavigationMenu
@@ -128,6 +130,25 @@ export function NavLinks() {
               </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
+          {isBacker && (
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/projects/backer-view"
+                className={cn(
+                  "flex flex-row items-center justify-start gap-2",
+                  {
+                    "text-text-link":
+                      `/${section}/${sub}` === "/projects/backer-view",
+                  }
+                )}
+              >
+                <>
+                  <ProjectsIcon className="h-4 w-4" />
+                  Fundraisers
+                </>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          )}
           {user?.admin && (
             <NavigationMenuItem>
               <NavigationMenuLink
@@ -153,8 +174,9 @@ export function NavLinks() {
 }
 
 export function MobileNavLinks() {
-  const section = usePathname()?.split("/")[1];
+  const [, section, sub] = usePathname()?.split("/");
   const user = useUser();
+  const { data: isBacker } = useHasBacker(user?.accountId);
 
   return (
     <DropdownMenu>
@@ -196,6 +218,28 @@ export function MobileNavLinks() {
 
               return list;
             }, new Array<ReactNode>(0))}
+            {isBacker && (
+              <>
+                <Separator className="h-px w-full bg-ui-elements-light" />
+                <NavigationMenuItem>
+                  <NavigationMenuLink
+                    href="/projects/backer-view"
+                    className={cn(
+                      "flex flex-row items-center justify-start gap-2",
+                      {
+                        "text-text-link":
+                          `/${section}/${sub}` === "/projects/backer-view",
+                      }
+                    )}
+                  >
+                    <>
+                      <ProjectsIcon className="h-4 w-4" />
+                      Fundraisers
+                    </>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </>
+            )}
             {user?.admin && (
               <>
                 <Separator className="h-px w-full bg-ui-elements-light" />

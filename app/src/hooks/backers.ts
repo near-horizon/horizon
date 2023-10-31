@@ -1,7 +1,7 @@
 import {
-  type UseMutationResult,
   useInfiniteQuery,
   useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -13,7 +13,12 @@ import {
   type BackersQuery,
   horizonSchema,
 } from "~/lib/validation/backers";
-import { getBacker, getBackers, getPaginatedBackers } from "~/lib/backers";
+import {
+  getBacker,
+  getBackers,
+  getPaginatedBackers,
+  hasBacker,
+} from "~/lib/backers";
 import { pageSize } from "~/lib/constants/pagination";
 import { type Progress } from "~/lib/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
@@ -39,6 +44,15 @@ export function useBacker(accountId: AccountId) {
   return useQuery({
     queryKey: ["backer", accountId],
     queryFn: () => getBacker(accountId),
+    enabled: !!accountId,
+  });
+}
+
+export function useHasBacker(accountId?: AccountId) {
+  return useQuery({
+    queryKey: ["has-backer", accountId],
+    queryFn: ({ queryKey: [, accountId] }) =>
+      accountId ? hasBacker(accountId) : false,
     enabled: !!accountId,
   });
 }
