@@ -90,7 +90,7 @@ export function Projects() {
           setSort={(sort) => setQuery((old) => ({ ...old, sort }))}
         />
       </div>
-      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
         {status === "success" &&
           data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
