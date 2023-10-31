@@ -138,16 +138,18 @@ where
             let details_batch =
                 Self::get_batch(client, horizon_account, accounts, profiles_batch).await?;
 
-            profiles.extend(details_batch.into_iter().map(|(k, v)| {
-                (k.clone(), {
-                    let mut v = v;
-                    v.as_object_mut()
-                        .unwrap()
-                        .insert("id".to_string(), k.to_string().into());
-                    serde_json::from_value(v.clone()).unwrap_or_else(|_| {
-                        panic!("Failed to deserialize profile for account {:#?}", v)
-                    })
-                })
+            profiles.extend(details_batch.into_iter().filter_map(|(k, v)| {
+                let mut v = v;
+                v.as_object_mut()
+                    .unwrap()
+                    .insert("id".to_string(), k.to_string().into());
+                match serde_json::from_value(v.clone()) {
+                    Ok(profile) => Some((k.clone(), profile)),
+                    Err(e) => {
+                        eprintln!("Failed to deserialize profile for account {:#?}\n{e:#?}", v);
+                        None
+                    }
+                }
             }));
         }
 
@@ -187,8 +189,8 @@ pub async fn view_function_call(
         })
         .await?;
 
-    let QueryResponseKind::CallResult(CallResult{result, ..}) = kind else {
-      anyhow::bail!("Unexpected response kind");
+    let QueryResponseKind::CallResult(CallResult { result, .. }) = kind else {
+        anyhow::bail!("Unexpected response kind");
     };
 
     Ok(result)
