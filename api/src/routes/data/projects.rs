@@ -929,7 +929,9 @@ async fn add_backers_digest_token(
     })?;
 
     if let Some(existing_token) = existing_token {
-        return Ok(Json(existing_token));
+        if !existing_token.is_empty() {
+            return Ok(Json(existing_token));
+        }
     }
 
     let token = uuid::Uuid::new_v4().to_string();
