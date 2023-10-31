@@ -21,7 +21,7 @@ export default async function BackersDigestPage() {
 
   if (!hasDigest) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center rounded-xl bg-background-white shadow">
+      <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="mx-auto flex max-w-prose flex-col items-center justify-center gap-5">
           <TargetIcon className="h-10 w-10 text-error" />
           <h2 className="text-2xl font-bold text-text-dark">
