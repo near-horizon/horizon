@@ -837,7 +837,7 @@ pub struct BackersDigestData {
     pub announcement: String,
     #[serde(default)]
     pub fundraising: bool,
-    #[serde(default, skip_deserializing)]
+    #[serde(default)]
     pub token: String,
 }
 

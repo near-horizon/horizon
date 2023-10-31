@@ -13,15 +13,16 @@ export default async function BackersDigestPage({
   searchParams: { token?: string };
 }) {
   const user = await getUserFromSession();
+  const userOrToken = !!user || !!token;
 
-  if (!user && (!token || token === "")) {
+  if (!userOrToken) {
     return redirect(`/projects/${accountId}/overview`);
   }
 
   const isBacker = !!user && (await hasBacker(user.accountId));
   const backersDigest = await getBackersDigest(accountId);
   const isOwner = !!user && user.accountId === accountId;
-  const isPublished = backersDigest.published;
+  const isPublished = !!backersDigest.published;
   const hasToken = !!token && token !== "" && token === backersDigest.token;
   const hasPermission = isOwner || (isPublished && (isBacker || hasToken));
 
