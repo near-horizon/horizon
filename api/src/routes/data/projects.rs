@@ -312,7 +312,7 @@ pub async fn all_projects(
             builder.push("WHERE ");
             has_where = true;
         }
-        builder.push(" projects.backers_digest ->> 'fundraising' = ");
+        builder.push(" projects.backers_digest ->> 'published' = ");
         builder.push_bind(fundraising.to_string());
     }
 
