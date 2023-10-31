@@ -25,12 +25,12 @@ export function List<T extends string | [string, string]>({
         </div>
         <Link href={link}>{linkText}</Link>
       </div>
-      <div className="flex flex-row flex-wrap gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {items.length ? (
           items.map((id, index) => (
             <div
               key={id.toString() + index}
-              className="w-full md:w-[calc((100%-1rem)*.5)] xl:w-[calc((100%-2rem)*.33)] 2xl:w-[calc((100%-4rem)*.25)] md:[&:nth-child(n+7)]:hidden 2xl:[&:nth-child(n+7)]:block"
+              className="md:[&:nth-child(n+7)]:hidden 2xl:[&:nth-child(n+7)]:block"
             >
               {renderItem(id)}
             </div>

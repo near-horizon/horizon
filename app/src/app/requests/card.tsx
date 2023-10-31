@@ -78,6 +78,11 @@ export function Request({
     <Card className="flex h-full flex-col items-start justify-start">
       <CardHeader className="flex flex-col items-start justify-start gap-3">
         {projectSection}
+        <Availability
+          available={data.open}
+          availableText="Open to proposals"
+          unavailableText="Closed"
+        />
         <CardTitle>
           <Link
             href={`/requests/${accountId}/${cid}`}
@@ -87,13 +92,6 @@ export function Request({
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <Availability
-          available={data.open}
-          availableText="Open to proposals"
-          unavailableText="Closed"
-        />
-      </CardContent>
       <CardFooter className="flex flex-col items-start gap-2">
         <Tags tags={data.tags ?? {}} loading={false} />
         <div className="flex h-5 flex-row items-center justify-start gap-4">

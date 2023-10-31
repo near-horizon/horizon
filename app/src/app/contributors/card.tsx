@@ -68,13 +68,13 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
+        <Availability available={data?.active === "true"} />
         <CardDescription>
           <Description
             text={data.description ?? data.tagline ?? ""}
             loading={false}
           />
         </CardDescription>
-        <Availability available={data?.active === "true"} />
       </CardContent>
       <CardFooter>
         <Tags tags={data.tags ?? {}} loading={false} />

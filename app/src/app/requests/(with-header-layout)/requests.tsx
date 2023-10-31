@@ -11,15 +11,12 @@ export function Requests() {
 
   return (
     <>
-      <ul className="flex flex-row flex-wrap items-stretch justify-start gap-2">
+      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {status === "success" &&
           data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
               {items.map(([accountId, cid]) => (
-                <li
-                  key={accountId + cid}
-                  className="w-full md:w-[calc((100%-.5rem)*.5)] lg:w-[calc((100%-1rem)*.33)] 2xl:w-[calc((100%-1.5rem)*.25)]"
-                >
+                <li key={accountId + cid}>
                   <Request accountId={accountId} cid={cid} />
                 </li>
               ))}
