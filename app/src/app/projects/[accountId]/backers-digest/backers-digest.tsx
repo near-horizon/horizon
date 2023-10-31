@@ -28,10 +28,11 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
 
   let url = `/projects/${accountId}`;
   if (user && user.accountId === accountId) {
-    const token =
-      backersDigest.token && backersDigest.token !== ""
-        ? backersDigest.token
-        : await addBackersDigestToken(accountId);
+    let token = backersDigest.token;
+    if (!token) {
+      console.log("Adding token");
+      token = await addBackersDigestToken(accountId);
+    }
     url = `/projects/${accountId}/backers-digest?token=${token}`;
   }
 
