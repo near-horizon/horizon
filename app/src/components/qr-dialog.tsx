@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import XIcon from "~/components/icons/x.svg";
 import CopyIcon from "~/components/icons/copy-01.svg";
 import { motion } from "framer-motion";
+import { cleanURL } from "~/lib/utils";
 
 function useQRCodeStyling(
   options: ConstructorParameters<typeof QRCodeStyling>[0]
@@ -57,7 +58,7 @@ export function QRDialog({ url }: { url: string }) {
 
   useEffect(() => {
     qrCode?.update({
-      data: url,
+      data: cleanURL(`${window.location.host}${url}`),
     });
   }, [url, qrCode]);
 
