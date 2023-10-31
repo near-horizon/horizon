@@ -75,12 +75,16 @@ pub async fn listen_blocks(
     // Boilerplate code to listen the stream
     while let Some(streamer_message) = stream.recv().await {
         tx_receipt_ids.extend(collect_transactions(&streamer_message, &watching_list));
+        println!("TXs count before filter: {}", tx_receipt_ids.len());
+
         let txs = filter_outcomes(&streamer_message, &mut tx_receipt_ids)
             .into_iter()
             .flat_map(|(outcome, tx_hash)| {
                 process_outcome(outcome, tx_hash, &engine, &streamer_message.block)
             })
             .collect_vec();
+
+        println!("TXs count after filter: {}", tx_receipt_ids.len());
 
         for tx in txs {
             tx.insert(pool).await.expect("Failed to insert transaction");
