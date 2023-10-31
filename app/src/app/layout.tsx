@@ -2,6 +2,7 @@ import { Footer } from "~/components/footer";
 import { MobileNavbar, Navbar } from "./navbar";
 import { Providers } from "./providers";
 import { getUserFromSession } from "~/lib/session";
+import { type Metadata } from "next";
 
 export default async function RootLayout({
   children,
@@ -31,3 +32,11 @@ export default async function RootLayout({
     </html>
   );
 }
+
+export const metadata: Metadata = {
+  title: "NEAR Horizon",
+  description: "Explore NEAR Horizon",
+  category: "web3",
+  keywords: ["near", "horizon", "growth", "projects", "web3"],
+  applicationName: "NEAR Horizon",
+};
