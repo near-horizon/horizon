@@ -15,6 +15,7 @@ import MagicWandIcon from "~/components/icons/magic-wand-02.svg";
 import CalendarIcon from "~/components/icons/calendar.svg";
 import LearnIcon from "~/components/icons/book-open-02.svg";
 import ChevronDownIcon from "~/components/icons/chevron-down.svg";
+import ShieldIcon from "~/components/icons/shield-01.1.svg";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import {
@@ -24,6 +25,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { type ReactNode } from "react";
 import { Separator } from "~/components/ui/separator";
+import { useUser } from "~/stores/global";
 
 const routes = [
   {
@@ -102,6 +104,7 @@ const routes = [
 
 export function NavLinks() {
   const section = usePathname()?.split("/")[1];
+  const user = useUser();
 
   return (
     <NavigationMenu
@@ -125,6 +128,24 @@ export function NavLinks() {
               </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
+          {user?.admin && (
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/admin"
+                className={cn(
+                  "flex flex-row items-center justify-start gap-2",
+                  {
+                    "text-text-link": `/${section}` === "/admin",
+                  }
+                )}
+              >
+                <>
+                  <ShieldIcon className="h-4 w-4" />
+                  Admin
+                </>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          )}
         </NavigationMenuList>
       </div>
     </NavigationMenu>
@@ -133,6 +154,7 @@ export function NavLinks() {
 
 export function MobileNavLinks() {
   const section = usePathname()?.split("/")[1];
+  const user = useUser();
 
   return (
     <DropdownMenu>
@@ -174,6 +196,27 @@ export function MobileNavLinks() {
 
               return list;
             }, new Array<ReactNode>(0))}
+            {user?.admin && (
+              <>
+                <Separator className="h-px w-full bg-ui-elements-light" />
+                <NavigationMenuItem>
+                  <NavigationMenuLink
+                    href="/admin"
+                    className={cn(
+                      "flex flex-row items-center justify-start gap-2",
+                      {
+                        "text-text-link": `/${section}` === "/admin",
+                      }
+                    )}
+                  >
+                    <>
+                      <ShieldIcon className="h-4 w-4" />
+                      Admin
+                    </>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
       </DropdownMenuContent>
