@@ -14,7 +14,7 @@ export default function ContentTabs({
 
   return (
     <Tabs value={tab}>
-      <TabsList>
+      <TabsList className="flex-wrap">
         {tabs.map((props) => (
           <Tab key={props.id} {...props} />
         ))}
