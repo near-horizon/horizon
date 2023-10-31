@@ -1,13 +1,13 @@
 import {
-  type WalletSelector,
   setupWalletSelector,
   type Transaction,
+  type WalletSelector,
 } from "@near-wallet-selector/core";
 import { setupHereWallet } from "@near-wallet-selector/here-wallet";
 import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
 import {
-  type WalletSelectorModal,
   setupModal,
+  type WalletSelectorModal,
 } from "@near-wallet-selector/modal-ui";
 import { setupMyNearWallet } from "@near-wallet-selector/my-near-wallet";
 import { setupNearWallet } from "@near-wallet-selector/near-wallet";
@@ -116,6 +116,7 @@ export function useSignOut() {
         const wallet = await selector?.wallet();
         await wallet?.signOut();
         await fetch("/api/auth/logout", { method: "POST" });
+        useGlobalStore.setState({ user: undefined });
       } catch (err) {
         console.error("Could not sign out:", err);
       }

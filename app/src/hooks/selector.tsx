@@ -1,10 +1,10 @@
 import { type IronSession } from "iron-session";
 import { useEffect } from "react";
 import {
+  setupModalSelector,
   setUser,
   setWalletSelector,
   setWalletSelectorModal,
-  setupModalSelector,
   useGlobalStore,
 } from "~/stores/global";
 
@@ -24,8 +24,9 @@ export const useWalletSelectorEffect = () => {
 
               fetch("/api/auth/user")
                 .then(async (res) => {
-                  const user =
-                    (await res.json()) as unknown as IronSession["user"];
+                  const { user } = (await res.json()) as unknown as {
+                    user: IronSession["user"];
+                  };
 
                   if (user && user.accountId === account.accountId) {
                     setUser(user);
