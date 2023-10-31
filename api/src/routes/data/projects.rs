@@ -835,6 +835,10 @@ pub struct BackersDigestData {
     pub demo_video: String,
     #[serde(default)]
     pub announcement: String,
+    #[serde(default)]
+    pub fundraising: bool,
+    #[serde(default, skip_deserializing)]
+    pub token: String,
 }
 
 #[debug_handler(state = AppState)]
@@ -897,6 +901,81 @@ async fn backers_digest(
     .map(|p| Json(serde_json::from_value(p.backers_digest).unwrap()))
 }
 
+#[debug_handler(state = AppState)]
+async fn add_backers_digest_token(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+    headers: HeaderMap,
+) -> ApiResult<Json<String>> {
+    authorize_bearer(&headers, &state).await?;
+    let existing_token = sqlx::query_scalar!(
+        r#"
+        SELECT
+          backers_digest ->> 'token'
+        FROM
+          projects
+        WHERE
+          id = $1
+        "#,
+        account_id
+    )
+    .fetch_one(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to update project: {e}"),
+        )
+    })?;
+
+    if let Some(existing_token) = existing_token {
+        return Ok(Json(existing_token));
+    }
+
+    let token = uuid::Uuid::new_v4().to_string();
+    sqlx::query_scalar!(
+        r#"
+        UPDATE
+          projects
+        SET
+          backers_digest = jsonb_set(
+            backers_digest,
+            '{token}',
+            $1,
+            FALSE
+          )
+        WHERE
+          id = $2 RETURNING backers_digest ->> 'token'
+        "#,
+        serde_json::to_value(token.clone()).map_err(|e| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to update project: {e}"),
+            )
+        })?,
+        account_id
+    )
+    .fetch_one(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to update project: {e}"),
+        )
+    })
+    .map(|r| {
+        Json(
+            r.ok_or_else(|| {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Failed to update project"),
+                )
+            })
+            .unwrap(),
+        )
+    })
+}
+
 pub fn create_router() -> Router<AppState> {
     Router::new()
         .route("/", get(all_projects))
@@ -907,6 +986,8 @@ pub fn create_router() -> Router<AppState> {
         .route("/:account_id/changes", get(changes))
         .route(
             "/:account_id/backers-digest",
-            get(backers_digest).put(backers_digest_edit),
+            get(backers_digest)
+                .put(backers_digest_edit)
+                .post(add_backers_digest_token),
         )
 }
