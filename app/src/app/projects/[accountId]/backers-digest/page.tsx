@@ -20,9 +20,10 @@ export default async function BackersDigestPage({
 
   const isBacker = !!user && (await hasBacker(user.accountId));
   const backersDigest = await getBackersDigest(accountId);
-  const hasPermission =
-    ((isBacker || user?.accountId === accountId) && backersDigest.published) ??
-    token === backersDigest.token;
+  const isOwner = !!user && user.accountId === accountId;
+  const isPublished = backersDigest.published;
+  const hasToken = !!token && token !== "" && token === backersDigest.token;
+  const hasPermission = isOwner || (isPublished && (isBacker || hasToken));
 
   if (!hasPermission) {
     return redirect(`/projects/${accountId}/overview`);
