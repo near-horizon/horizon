@@ -13,17 +13,14 @@ export function BackerProjects() {
   return (
     <>
       {status === "success" &&
-      data.pages.length > 0 &&
-      data.pages[0] &&
-      data.pages[0].items.length > 0 ? (
-        <ul className="flex flex-row flex-wrap items-stretch justify-start gap-2">
+        data.pages.length > 0 &&
+        data.pages[0] &&
+        data.pages[0].items.length > 0 ? (
+        <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
           {data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
               {items.map((item) => (
-                <li
-                  key={item.toString()}
-                  className="w-full md:w-[calc((100%-.5rem)*.5)] lg:w-[calc((100%-1rem)*.33)] 2xl:w-[calc((100%-1.5rem)*.25)]"
-                >
+                <li key={item}>
                   <Project accountId={item} />
                 </li>
               ))}
