@@ -19,7 +19,7 @@ export function CTA({
   return (
     <button
       className={clsx(
-        "flex flex-row items-center justify-center gap-2 rounded-2xl border px-3 py-1 font-medium transition duration-300",
+        "flex flex-row items-center justify-center gap-2 whitespace-nowrap rounded-2xl border px-3 py-1 font-medium transition duration-300",
         color === "green"
           ? "border-green-400 bg-green-400 text-[#11181c]"
           : "border-gray-300 bg-neutral-200 text-[#006ADC] hover:bg-neutral-300"
@@ -138,7 +138,7 @@ export function CTAs(/* { accountId }: { accountId: AccountId } */) {
   );
 
   return (
-    <div className="flex flex-row items-center justify-start gap-3">
+    <div className="flex flex-row flex-wrap items-center justify-start gap-3">
       {signedInActions}
       <CTA
         color="gray"
