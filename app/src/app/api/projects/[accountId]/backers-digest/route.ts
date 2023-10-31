@@ -1,6 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { hasBacker } from "~/lib/backers";
-import { getBackersDigest, updateBackersDigest } from "~/lib/server/projects";
+import {
+  addBackersDigestToken,
+  getBackersDigest,
+  updateBackersDigest,
+} from "~/lib/server/projects";
 import { getUserFromRequest } from "~/lib/session";
 import { backersDigestSchema } from "~/lib/validation/projects";
 
@@ -44,6 +48,27 @@ export async function PUT(
       throw new Error("Failed to update backers digest");
     }
     return NextResponse.json({ message: "Digest updated!" });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to unlock perk!" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(
+  req: NextRequest,
+  { params: { accountId } }: { params: { accountId: string } }
+) {
+  const user = await getUserFromRequest(req);
+
+  if (!user?.accountId || user.accountId !== accountId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const token = await addBackersDigestToken(accountId);
+    return NextResponse.json({ token });
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to unlock perk!" },
