@@ -30,7 +30,6 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   if (user && user.accountId === accountId) {
     let token = backersDigest.token;
     if (!token) {
-      console.log("Adding token");
       token = await addBackersDigestToken(accountId);
     }
     url = `/projects/${accountId}/backers-digest?token=${token}`;
