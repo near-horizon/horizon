@@ -143,7 +143,7 @@ export default function BackersDigestForm() {
         progress={progress.value}
         title="Saving backers digest"
         description={progress.label}
-        // disabled={!form.formState.isValid}
+        disabled={!form.formState.isValid}
         triggerText="Save"
         ctaLink="#"
         ctaText="View"
