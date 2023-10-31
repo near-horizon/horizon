@@ -51,6 +51,7 @@ export function QRDialog({ url }: { url: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const qrCode = useQRCodeStyling(qrCodeOptions);
   const [show, setShow] = useState(false);
+  const [finalUrl, setFinalUrl] = useState(url);
 
   useEffect(() => {
     qrCode?.append(ref.current ?? undefined);
@@ -58,9 +59,14 @@ export function QRDialog({ url }: { url: string }) {
 
   useEffect(() => {
     qrCode?.update({
-      data: cleanURL(`${window.location.host}${url}`),
+      data: finalUrl,
     });
-  }, [url, qrCode]);
+  }, [finalUrl, qrCode]);
+
+  useEffect(() => {
+    const cleaned = cleanURL(`${window.location.host}${url}`);
+    setFinalUrl(cleaned);
+  }, [url]);
 
   return (
     <>
@@ -116,12 +122,12 @@ export function QRDialog({ url }: { url: string }) {
             </small>
             <div className="flex w-full flex-row items-center justify-between gap-4">
               <span className="flex flex-row items-center justify-start rounded border border-ui-elements-gray bg-white p-3 shadow">
-                {url}
+                {finalUrl.substring(8, finalUrl.indexOf("?"))}
               </span>
               <Button
                 variant="default"
                 onClick={() => {
-                  navigator.clipboard.writeText(url).catch(console.error);
+                  navigator.clipboard.writeText(finalUrl).catch(console.error);
                 }}
               >
                 <CopyIcon className="h-5 w-5" />

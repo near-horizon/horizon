@@ -176,3 +176,18 @@ export async function updateBackersDigest(
     body: JSON.stringify(backersDigest),
   });
 }
+
+export async function addBackersDigestToken(accountId: AccountId) {
+  const response = await fetch(
+    `${env.API_URL}/data/projects/${accountId}/backers-digest`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+    }
+  );
+
+  return (await response.json()) as string;
+}

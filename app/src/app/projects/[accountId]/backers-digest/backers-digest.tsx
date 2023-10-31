@@ -1,5 +1,9 @@
 import { Separator } from "~/components/ui/separator";
-import { getBackersDigest, getProject } from "~/lib/server/projects";
+import {
+  addBackersDigestToken,
+  getBackersDigest,
+  getProject,
+} from "~/lib/server/projects";
 import { type AccountId } from "~/lib/validation/common";
 import FlagIcon from "~/components/icons/flag-06.svg";
 import MarkerPinIcon from "~/components/icons/marker-pin-01.svg";
@@ -15,10 +19,21 @@ import { NoData } from "~/components/empty";
 import { Button } from "~/components/ui/button";
 import { env } from "~/env.mjs";
 import { QRDialog } from "~/components/qr-dialog";
+import { getUserFromSession } from "~/lib/session";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   const backersDigest = await getBackersDigest(accountId);
   const project = await getProject(accountId);
+  const user = await getUserFromSession();
+
+  let url = `/projects/${accountId}`;
+  if (user && user.accountId === accountId) {
+    const token =
+      backersDigest.token && backersDigest.token !== ""
+        ? backersDigest.token
+        : await addBackersDigestToken(accountId);
+    url = `/projects/${accountId}/backers-digest?token=${token}`;
+  }
 
   return (
     <div className="flex w-full flex-col items-stretch justify-start gap-8">
@@ -45,7 +60,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
             </Button>
           </a>
         )}
-        <QRDialog url={`/projects/${accountId}`} />
+        <QRDialog url={url} />
       </div>
       <Section title="About">
         <div className="flex w-full flex-row items-start justify-start gap-8">

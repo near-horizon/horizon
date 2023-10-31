@@ -96,6 +96,7 @@ export const backersDigestSchema = z.object({
   announcement: z.string().optional(),
   published: z.boolean().optional(),
   fundraising: z.boolean().optional(),
+  token: z.string().optional(),
 });
 
 export type BackersDigest = z.infer<typeof backersDigestSchema>;

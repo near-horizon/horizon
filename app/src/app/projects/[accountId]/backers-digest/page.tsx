@@ -7,8 +7,10 @@ import { BackersDigest } from "./backers-digest";
 
 export default async function BackersDigestPage({
   params: { accountId },
+  searchParams: { token },
 }: {
   params: { accountId: AccountId };
+  searchParams: { token?: string };
 }) {
   const user = await getUserFromSession();
 
@@ -19,7 +21,8 @@ export default async function BackersDigestPage({
   const isBacker = await hasBacker(user.accountId);
   const backersDigest = await getBackersDigest(user.accountId);
   const hasPermission =
-    (isBacker || user.accountId === accountId) && backersDigest.published;
+    ((isBacker || user.accountId === accountId) && backersDigest.published) ??
+    token === backersDigest.token;
 
   if (!hasPermission) {
     return redirect(`/projects/${accountId}/overview`);
