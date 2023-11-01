@@ -4,11 +4,7 @@ import CheckSquareIcon from "~/components/icons/check-square.svg";
 import SquareOutlineIcon from "~/components/icons/square.svg";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { env } from "~/env.mjs";
-import { viewCall } from "~/lib/fetching";
 import { cn, formatDate } from "~/lib/utils";
-import { type Incentives } from "~/lib/validation/incentives";
-import { type HorizonProject } from "~/lib/validation/projects";
 import CoinsIcon from "~/components/icons/coins-stacked-03.svg";
 import {
   creditTxToAmount,
@@ -21,30 +17,29 @@ import PlusIcon from "~/components/icons/plus.svg";
 import { getUserFromSession } from "~/lib/session";
 import { redirect } from "next/navigation";
 import {
+  getProject,
   getProjectContracts,
   getRequestsForProject,
 } from "~/lib/server/projects";
+import { hasProject } from "~/lib/projects";
+import { getIncentives } from "~/lib/incentives";
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
+  const hasProfile = user?.accountId ? await hasProject(user.accountId) : false;
 
-  if (!user) {
+  if (!user || !hasProfile) {
     return redirect("/login");
   }
 
-  const incentives = await viewCall<Incentives>(
-    env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
-    "get_incentive_data",
-    {}
-  );
-  const horizonProfile = await viewCall<HorizonProject>(
-    env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
-    "get_project",
-    { account_id: user.accountId }
-  );
-  const creditHistory = await getCreditHistory(user.accountId);
-  const requests = await getRequestsForProject(user.accountId);
-  const contracts = await getProjectContracts(user.accountId);
+  const [incentives, profile, creditHistory, requests, contracts] =
+    await Promise.all([
+      getIncentives(),
+      getProject(user.accountId),
+      getCreditHistory(user.accountId),
+      getRequestsForProject(user.accountId),
+      getProjectContracts(user.accountId),
+    ]);
 
   const dashboardCards = [
     {
@@ -70,7 +65,7 @@ export default async function Dashboard() {
         <span className="flex flex-row items-center justify-start gap-3">
           Credits balance
           <Badge className="bg-secondary-pressed text-ui-elements-white">
-            {horizonProfile.credit_balance} NHZN
+            {profile.credit_balance} NHZN
           </Badge>
         </span>
       ),
