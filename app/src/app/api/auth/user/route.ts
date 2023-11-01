@@ -15,9 +15,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const { user } = await unsealData<IronSession>(sessionCookie.value, {
-    ...ironSessionConfig,
-  });
+  const { user } = await unsealData<IronSession>(
+    sessionCookie.value,
+    ironSessionConfig
+  );
 
   if (!user) {
     return NextResponse.json(

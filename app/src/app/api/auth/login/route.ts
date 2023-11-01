@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   const { accountId, publicKey } = bodySchema.parse(await req.json());
   const user = await loginUser(accountId, publicKey);
 
-  const encryptedSession = await sealData({ user }, { ...ironSessionConfig });
+  const encryptedSession = await sealData({ user }, ironSessionConfig);
 
   return NextResponse.json(
     { ok: true },
