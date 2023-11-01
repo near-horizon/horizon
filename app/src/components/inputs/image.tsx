@@ -63,7 +63,9 @@ export function ImageInput<
             <FormControl>
               <>
                 <Input
-                  {...field}
+                  disabled={field.disabled}
+                  name={field.name}
+                  onBlur={field.onBlur}
                   ref={ref}
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onChange={async (e) => {
