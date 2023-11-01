@@ -15,9 +15,11 @@ import BackersSection from "@components/landing-page/BackersSection.tsx";
 import PartnersSection from "@components/landing-page/PartnersSection.tsx";
 
 import "@styles/globals.css";
+
+const MainContainer = "main";
 ---
 
-<main class="p-6 bg-background-white w-full flex-col flex gap-14">
+<MainContainer class="p-6 bg-background-white w-full flex-col flex gap-14">
   <IntroSection />
   <SupportedBySection />
   <AboutSection />
@@ -29,4 +31,4 @@ import "@styles/globals.css";
   <ContributorsSection client:load />
   <BackersSection client:load />
   <PartnersSection client:load />
-</main>
+</MainContainer>
