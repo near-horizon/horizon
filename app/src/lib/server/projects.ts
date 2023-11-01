@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { fetchManyURLSchema, profileSchema } from "../validation/fetching";
+import {
+  fetchManyURLSchema,
+  type Profile,
+  profileSchema,
+} from "../validation/fetching";
 import {
   type BackersDigest,
   backersDigestSchema,
@@ -57,9 +61,25 @@ export async function getProjectsCount(
   return projects.json() as Promise<number>;
 }
 
+export async function getChanges(accountId: AccountId) {
+  const response = await fetch(
+    `${env.API_URL}/data/projects/${accountId}/changes`,
+    {
+      method: "GET",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch changes");
+  }
+
+  return (await response.json()) as Profile;
+}
+
 export async function getProject(accountId: AccountId) {
-  const [response, horizonData, transactions] = await Promise.all([
+  const [response, changes, horizonData, transactions] = await Promise.all([
     getProfile(accountId),
+    getChanges(accountId),
     viewCall<z.infer<typeof horizonSchema>>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
       "get_project",
@@ -70,7 +90,10 @@ export async function getProject(accountId: AccountId) {
     getTransactions(),
   ]);
 
-  const { team: company_size, ...profile } = profileSchema.parse(response);
+  const { team: company_size, ...profile } = profileSchema.parse({
+    ...response,
+    ...changes,
+  });
   const horizon = horizonSchema.parse(horizonData);
   const creationTx = transactions.find((tx) => {
     return tx.method_name === "add_project" && tx.args.account_id === accountId;
