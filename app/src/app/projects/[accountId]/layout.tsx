@@ -32,7 +32,7 @@ export default async function ProjectPageLayout({
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
-      <div className="flex w-full flex-row">
+      <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-white px-8 py-6 shadow">
         <div className="flex w-full flex-col gap-6">
           <Header accountId={accountId} />
           <CTAs /* accountId={accountId} */ />
