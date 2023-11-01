@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/react": "^3.0.3",
     "@astrojs/tailwind": "^5.0.2",
+    "@astrojs/vercel": "^5.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/react": "^18.0.21",
