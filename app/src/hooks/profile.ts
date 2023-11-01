@@ -3,6 +3,7 @@ import { useProfile } from "./fetching";
 import deepEqual from "deep-equal";
 import { getChanges } from "~/lib/profile";
 import { type AccountId } from "~/lib/validation/common";
+import { removeEmpty } from "~/lib/utils";
 
 export function useChanges() {
   return useQuery({
@@ -17,5 +18,5 @@ export function useHasChanges(accountId: AccountId) {
   if (!changes || !profile) {
     return false;
   }
-  return !deepEqual(changes, profile);
+  return !deepEqual(removeEmpty(changes), profile);
 }
