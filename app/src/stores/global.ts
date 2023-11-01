@@ -118,7 +118,7 @@ export function useSignOut() {
         const wallet = await selector?.wallet();
         await wallet?.signOut();
         await fetch("/api/auth/logout", { method: "POST" });
-        useGlobalStore.setState({ user: undefined });
+        setUser(undefined);
         router.refresh();
       } catch (err) {
         console.error("Could not sign out:", err);
