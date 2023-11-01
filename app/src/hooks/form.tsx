@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type FieldValues,
-  useForm,
-  type UseFormReturn,
   type Path,
   type PathValue,
+  useForm,
+  type UseFormReturn,
 } from "react-hook-form";
 import { type z } from "zod";
 
@@ -17,6 +17,7 @@ export const useHookFormDefaultProps = {
   reValidateMode: "onChange",
   criteriaMode: "all",
   delayError: 300,
+  shouldFocusError: true,
 } satisfies UseZodFormParams<z.ZodObject<FieldValues>>;
 
 export function useZodForm<Schema extends z.ZodObject<FieldValues>>(
