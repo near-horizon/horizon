@@ -10,6 +10,7 @@ import { type IronSession } from "iron-session";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { useWalletSelectorEffect } from "~/hooks/selector";
 import { ProgressBar } from "./progress-bar";
+import { Toaster } from "~/components/ui/toaster";
 
 export function Providers({
   children,
@@ -28,6 +29,7 @@ export function Providers({
         <TooltipProvider>
           <Dialog>
             <ProgressBar>{children}</ProgressBar>
+            <Toaster />
           </Dialog>
         </TooltipProvider>
       </QueryClientProvider>

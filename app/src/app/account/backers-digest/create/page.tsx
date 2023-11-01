@@ -25,11 +25,11 @@ import TargetIcon from "~/components/icons/target-04.svg";
 import { ImageInput } from "~/components/inputs/image";
 import { useEffect } from "react";
 import { Badge } from "~/components/ui/badge";
-import { ProgressDialog } from "~/components/progress-dialog";
 import { cn } from "~/lib/utils";
 import Link from "next/link";
 import { SelectInput } from "~/components/inputs/select";
 import { CheckboxInput } from "~/components/inputs/checkbox";
+import { useToast } from "~/components/ui/use-toast";
 
 const schema = z.object({
   location: z.string().min(3).max(50).optional(),
@@ -88,6 +88,7 @@ export default function BackersDigestForm() {
     Number((form.watch("demo_video") ?? "") !== "");
   const [progress, saveBackerDigest] = useUpdateBackersDigest();
   const [publishProgress, publishBackerDigest] = usePublishBackersDigest();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (data ?? backersDigest) {
@@ -126,6 +127,24 @@ export default function BackersDigestForm() {
     }
   }, [form, data, backersDigest]);
 
+  useEffect(() => {
+    if (progress.value === 100) {
+      toast({
+        title: "Saved!",
+        description: "Your changes have been saved.",
+      });
+    }
+  }, [progress, toast]);
+
+  useEffect(() => {
+    if (publishProgress.value === 100) {
+      toast({
+        title: "Published!",
+        description: "Your backers digest has been published.",
+      });
+    }
+  }, [publishProgress, toast]);
+
   if (!user || (!data && status !== "loading")) {
     return redirect("/login");
   }
@@ -139,27 +158,23 @@ export default function BackersDigestForm() {
       >
         <Link href="/account/backers-digest">Preview</Link>
       </Button>
-      <ProgressDialog
-        progress={progress.value}
-        title="Saving backers digest"
-        description={progress.label}
-        disabled={!form.formState.isValid}
-        triggerText="Save"
-        ctaLink="#"
-        ctaText="View"
-      />
-      <ProgressDialog
-        progress={publishProgress.value}
-        title="Publishing backers digest"
-        description={publishProgress.label}
-        disabled={!form.formState.isValid}
-        triggerText="Publish"
-        ctaLink={`/projects/${user.accountId}/backers-digest`}
-        ctaText="View"
+      <Button
+        variant="default"
+        type="submit"
+        disabled={progress.value > 0 && progress.value < 100}
+      >
+        {progress.value > 0 && progress.value < 100 ? "Saving..." : "Save"}
+      </Button>
+      <Button
+        variant="secondary"
+        type="button"
         onClick={() => {
           publishBackerDigest.mutate({ accountId: user.accountId });
         }}
-      />
+        disabled={publishProgress.value > 0 && publishProgress.value < 100}
+      >
+        Publish
+      </Button>
     </div>
   );
 
