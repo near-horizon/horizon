@@ -898,7 +898,21 @@ async fn backers_digest(
             format!("Failed to get project: {e}"),
         )
     })
-    .map(|p| Json(serde_json::from_value(p.backers_digest).unwrap()))
+    .map(|mut p| {
+        p.backers_digest
+            .as_object_mut()
+            .unwrap()
+            .iter_mut()
+            .for_each(|(_, v)| {
+                if v.is_null() {
+                    *v = serde_json::Value::String("".to_string());
+                }
+                if v.is_number() {
+                    *v = serde_json::Value::String(v.as_i64().unwrap().to_string());
+                }
+            });
+        Json(serde_json::from_value(p.backers_digest).unwrap())
+    })
 }
 
 #[debug_handler(state = AppState)]
