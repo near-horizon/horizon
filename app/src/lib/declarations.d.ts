@@ -9,6 +9,7 @@ declare module "iron-session" {
       accountId: AccountId;
       publicKey: string;
       admin?: boolean;
+      hasProfile?: boolean;
     };
   }
 }
