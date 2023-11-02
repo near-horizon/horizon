@@ -48,10 +48,7 @@ export function Details({
                 value={
                   <Link
                     className="flex w-full items-center gap-2"
-                    href={{
-                      pathname: "/contributors/[accountId]",
-                      query: { accountId: contributorId },
-                    }}
+                    href={`/contributors/${contributorId}`}
                   >
                     <ProjectIcon
                       accountId={contributorId}
@@ -67,10 +64,7 @@ export function Details({
                 value={
                   <Link
                     className="flex w-full items-center gap-2"
-                    href={{
-                      pathname: "/projects/[accountId]",
-                      query: { accountId: projectId },
-                    }}
+                    href={`/projects/${projectId}`}
                   >
                     <ProjectIcon accountId={projectId} className="h-8 w-8" />
                     <Handle accountId={projectId} />
