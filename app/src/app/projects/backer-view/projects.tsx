@@ -6,22 +6,22 @@ import { Button } from "~/components/ui/button";
 import { useBackerPaginatedProjects } from "~/hooks/projects";
 import { NoData } from "~/components/empty";
 
-export function BackerProjects() {
+export function BackerProjects({ backerViewKey }: { backerViewKey: string }) {
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useBackerPaginatedProjects();
 
   return (
     <>
       {status === "success" &&
-        data.pages.length > 0 &&
-        data.pages[0] &&
-        data.pages[0].items.length > 0 ? (
+      data.pages.length > 0 &&
+      data.pages[0] &&
+      data.pages[0].items.length > 0 ? (
         <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
           {data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
               {items.map((item) => (
                 <li key={item}>
-                  <Project accountId={item} />
+                  <Project accountId={item} backerViewKey={backerViewKey} />
                 </li>
               ))}
             </React.Fragment>

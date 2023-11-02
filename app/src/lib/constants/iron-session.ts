@@ -8,5 +8,6 @@ export const ironSessionConfig: IronSessionOptions = {
   cookieOptions: {
     secure: env.NODE_ENV === "production",
     path: "/",
+    httpOnly: true,
   },
 };
