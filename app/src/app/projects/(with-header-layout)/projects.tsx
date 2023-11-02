@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Project } from "../card";
+import { Project, ProjectSkeleton } from "../card";
 import { Button } from "~/components/ui/button";
 import { usePaginatedProjects, useProjectsCount } from "~/hooks/projects";
 import { type ProjectsQuery } from "~/lib/validation/projects";
@@ -14,6 +14,7 @@ import {
 } from "~/lib/constants/filters";
 import { getProjectsCount } from "~/lib/projects";
 import { SortSelect } from "~/components/inputs/sort-select";
+import { pageSize } from "~/lib/constants/pagination";
 
 export function Projects() {
   const [query, setQuery] = useState<ProjectsQuery>({
@@ -91,7 +92,7 @@ export function Projects() {
         />
       </div>
       <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {status === "success" &&
+        {status === "success" ? (
           data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
               {items.map((item) => (
@@ -100,7 +101,18 @@ export function Projects() {
                 </li>
               ))}
             </React.Fragment>
-          ))}
+          ))
+        ) : status === "loading" ? (
+          <>
+            {[...Array(pageSize).keys()].map((item) => (
+              <li key={item}>
+                <ProjectSkeleton />
+              </li>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
       </ul>
       {isFetchingNextPage && <span className="animate-pulse">Loading</span>}
       {hasNextPage && (
