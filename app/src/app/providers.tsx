@@ -11,6 +11,7 @@ import { TooltipProvider } from "~/components/ui/tooltip";
 import { useWalletSelectorEffect } from "~/hooks/selector";
 import { ProgressBar } from "./progress-bar";
 import { Toaster } from "~/components/ui/toaster";
+import { redirect, usePathname } from "next/navigation";
 
 export function Providers({
   children,
@@ -22,6 +23,12 @@ export function Providers({
   const [queryClient] = useState(() => new QueryClient());
   useWalletSelectorEffect();
   setUser(user ? user : undefined);
+  const pathname = usePathname();
+  const isOnboarding = pathname.includes("/onboarding");
+
+  if (user && !isOnboarding && !user.hasProfile) {
+    return redirect("/onboarding");
+  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
