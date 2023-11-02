@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 
@@ -42,11 +42,39 @@ export default function ConnectSection() {
   const [currentView, setCurrentView] = useState<ViewOptions>(
     ViewOptions.CONNECT
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const onCurrentViewChange = (selectedView: ViewOptions) =>
     setCurrentView(selectedView);
 
   const mapImage = (src: string) => `https://ipfs.near.social/ipfs/${src}`;
+
+  useEffect(() => {
+    const preloadImages = async () => {
+      setIsLoading(true);
+      const imageUrls = [
+        connect[ViewOptions.CONNECT].desktop,
+        connect[ViewOptions.CONNECT].mobile,
+        connect[ViewOptions.SHARE].desktop,
+        connect[ViewOptions.SHARE].mobile,
+        connect[ViewOptions.TAP].desktop,
+        connect[ViewOptions.TAP].mobile,
+      ];
+
+      const promises = imageUrls.map((imageUrl) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = mapImage(imageUrl);
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+
+      await Promise.all(promises);
+      setIsLoading(false);
+    };
+    preloadImages();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row-reverse md:justify-between items-center gap-12">
@@ -135,47 +163,51 @@ export default function ConnectSection() {
         initial={ViewOptions.CONNECT}
         animate={currentView}
       >
-        {currentView === ViewOptions.CONNECT && (
-          <img
-            src={mapImage(connect[ViewOptions.CONNECT].desktop)}
-            alt="connect view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.CONNECT && (
-          <img
-            src={mapImage(connect[ViewOptions.CONNECT].mobile)}
-            alt="connect view"
-            className="md:hidden"
-          />
-        )}
-        {currentView === ViewOptions.SHARE && (
-          <img
-            src={mapImage(connect[ViewOptions.SHARE].desktop)}
-            alt="share view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.SHARE && (
-          <img
-            src={mapImage(connect[ViewOptions.SHARE].mobile)}
-            alt="share view"
-            className="md:hidden"
-          />
-        )}
-        {currentView === ViewOptions.TAP && (
-          <img
-            src={mapImage(connect[ViewOptions.TAP].desktop)}
-            alt="tap view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.TAP && (
-          <img
-            src={mapImage(connect[ViewOptions.TAP].mobile)}
-            alt="tap view"
-            className="md:hidden"
-          />
+        {!isLoading && (
+          <>
+            {currentView === ViewOptions.CONNECT && (
+              <img
+                src={mapImage(connect[ViewOptions.CONNECT].desktop)}
+                alt="connect view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.CONNECT && (
+              <img
+                src={mapImage(connect[ViewOptions.CONNECT].mobile)}
+                alt="connect view"
+                className="md:hidden"
+              />
+            )}
+            {currentView === ViewOptions.SHARE && (
+              <img
+                src={mapImage(connect[ViewOptions.SHARE].desktop)}
+                alt="share view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.SHARE && (
+              <img
+                src={mapImage(connect[ViewOptions.SHARE].mobile)}
+                alt="share view"
+                className="md:hidden"
+              />
+            )}
+            {currentView === ViewOptions.TAP && (
+              <img
+                src={mapImage(connect[ViewOptions.TAP].desktop)}
+                alt="tap view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.TAP && (
+              <img
+                src={mapImage(connect[ViewOptions.TAP].mobile)}
+                alt="tap view"
+                className="md:hidden"
+              />
+            )}
+          </>
         )}
       </motion.div>
     </div>

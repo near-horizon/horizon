@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 
@@ -41,11 +41,39 @@ const build = {
 
 export default function BuildSection() {
   const [currentView, setCurrentView] = useState<ViewOptions>(ViewOptions.HIRE);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onCurrentViewChange = (selectedView: ViewOptions) =>
     setCurrentView(selectedView);
 
   const mapImage = (src: string) => `https://ipfs.near.social/ipfs/${src}`;
+
+  useEffect(() => {
+    const preloadImages = async () => {
+      setIsLoading(true);
+      const imageUrls = [
+        build[ViewOptions.HIRE].desktop,
+        build[ViewOptions.HIRE].mobile,
+        build[ViewOptions.VALIDATE].desktop,
+        build[ViewOptions.VALIDATE].mobile,
+        build[ViewOptions.MENTOR].desktop,
+        build[ViewOptions.MENTOR].mobile,
+      ];
+
+      const promises = imageUrls.map((imageUrl) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = mapImage(imageUrl);
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+
+      await Promise.all(promises);
+      setIsLoading(false);
+    };
+    preloadImages();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between items-center gap-12">
@@ -134,47 +162,51 @@ export default function BuildSection() {
         initial={ViewOptions.HIRE}
         animate={currentView}
       >
-        {currentView === ViewOptions.HIRE && (
-          <img
-            src={mapImage(build[ViewOptions.HIRE].desktop)}
-            alt="hire view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.HIRE && (
-          <img
-            src={mapImage(build[ViewOptions.HIRE].mobile)}
-            alt="hire view"
-            className="md:hidden"
-          />
-        )}
-        {currentView === ViewOptions.VALIDATE && (
-          <img
-            src={mapImage(build[ViewOptions.VALIDATE].desktop)}
-            alt="validate view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.VALIDATE && (
-          <img
-            src={mapImage(build[ViewOptions.VALIDATE].mobile)}
-            alt="validate view"
-            className="md:hidden"
-          />
-        )}
-        {currentView === ViewOptions.MENTOR && (
-          <img
-            src={mapImage(build[ViewOptions.MENTOR].desktop)}
-            alt="mentor view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.MENTOR && (
-          <img
-            src={mapImage(build[ViewOptions.MENTOR].mobile)}
-            alt="mentor view"
-            className="md:hidden"
-          />
+        {!isLoading && (
+          <>
+            {currentView === ViewOptions.HIRE && (
+              <img
+                src={mapImage(build[ViewOptions.HIRE].desktop)}
+                alt="hire view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.HIRE && (
+              <img
+                src={mapImage(build[ViewOptions.HIRE].mobile)}
+                alt="hire view"
+                className="md:hidden"
+              />
+            )}
+            {currentView === ViewOptions.VALIDATE && (
+              <img
+                src={mapImage(build[ViewOptions.VALIDATE].desktop)}
+                alt="validate view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.VALIDATE && (
+              <img
+                src={mapImage(build[ViewOptions.VALIDATE].mobile)}
+                alt="validate view"
+                className="md:hidden"
+              />
+            )}
+            {currentView === ViewOptions.MENTOR && (
+              <img
+                src={mapImage(build[ViewOptions.MENTOR].desktop)}
+                alt="mentor view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.MENTOR && (
+              <img
+                src={mapImage(build[ViewOptions.MENTOR].mobile)}
+                alt="mentor view"
+                className="md:hidden"
+              />
+            )}
+          </>
         )}
       </motion.div>
     </div>
