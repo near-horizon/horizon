@@ -12,6 +12,8 @@ import {
   getRequestsForProject,
 } from "~/lib/server/projects";
 import { getRequest } from "~/lib/server/requests";
+import { headers } from "next/headers";
+import { backersViewFromKey } from "~/lib/constants/backers-digest";
 
 export default async function ProjectPageLayout({
   params: { accountId },
@@ -27,8 +29,14 @@ export default async function ProjectPageLayout({
   const backersDigest = user?.accountId
     ? await getBackersDigest(user.accountId)
     : {};
+  const headersMap = headers();
+  const referer = headersMap.get("referer");
+  const isFromBackerView =
+    !!referer &&
+    new URL(referer).searchParams.get("from") === backersViewFromKey;
   const hasPermission =
-    (isBacker || user?.accountId === accountId) && backersDigest.published;
+    (isBacker || isFromBackerView || user?.accountId === accountId) &&
+    backersDigest.published;
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
