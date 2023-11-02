@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Request } from "../card";
+import { Request, RequestSkeleton } from "../card";
 import { Button } from "~/components/ui/button";
 import { usePaginatedRequests } from "~/hooks/requests";
+import { pageSize } from "~/lib/constants/pagination";
 
 export function Requests() {
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
@@ -11,8 +12,8 @@ export function Requests() {
 
   return (
     <>
-      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {status === "success" &&
+      <ul className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {status === "success" ? (
           data.pages.map(({ items }, i) => (
             <React.Fragment key={i}>
               {items.map(([accountId, cid]) => (
@@ -21,7 +22,18 @@ export function Requests() {
                 </li>
               ))}
             </React.Fragment>
-          ))}
+          ))
+        ) : status === "loading" ? (
+          <>
+            {[...Array(pageSize).keys()].map((item) => (
+              <li key={item}>
+                <RequestSkeleton />
+              </li>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
       </ul>
       {isFetchingNextPage && <span className="animate-pulse">Loading</span>}
       {hasNextPage && (

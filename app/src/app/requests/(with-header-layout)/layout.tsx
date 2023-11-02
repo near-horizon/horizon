@@ -11,7 +11,7 @@ export default function RequestsLayout({
     <ListPageLayout
       title="Requests"
       fallback={
-        <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-3">
           {[...Array(pageSize).keys()].map((item) => (
             <li key={item}>
               <RequestSkeleton />
