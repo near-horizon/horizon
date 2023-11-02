@@ -6,7 +6,7 @@ import { SearchInput } from "~/components/inputs/search";
 import { Perk } from "~/components/perk";
 import { usePerkCategories, usePerks } from "~/hooks/perks";
 
-export function Perks() {
+export function Perks({ noButton = false }: { noButton?: boolean }) {
   const { data } = usePerks();
   const categories = usePerkCategories();
   const [selected, setSelected] = useState<string[]>([]);
@@ -66,7 +66,7 @@ export function Perks() {
             key={perk.id}
             className="w-full md:w-[calc((100%-.5rem)*.5)] lg:w-[calc((100%-1rem)*.33)] 2xl:w-[calc((100%-1.5rem)*.25)]"
           >
-            <Perk {...perk} />
+            <Perk {...perk} noButton={noButton} />
           </div>
         ))}
       </div>
