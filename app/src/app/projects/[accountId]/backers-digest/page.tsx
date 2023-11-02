@@ -14,6 +14,7 @@ export default async function BackersDigestPage({
   searchParams: { token?: string; from?: string };
 }) {
   const user = await getUserFromSession();
+  console.log("after user from session");
   const userOrTokenOrBackerView = !!user || !!token || !!from;
 
   if (!userOrTokenOrBackerView) {
@@ -21,7 +22,9 @@ export default async function BackersDigestPage({
   }
 
   const isBacker = !!user && (await hasBacker(user.accountId));
+  console.log("after backer check");
   const backersDigest = await getBackersDigest(accountId);
+  console.log("after backers digest");
   const isOwner = !!user && user.accountId === accountId;
   const isPublished = !!backersDigest.published;
   const hasToken = !!token && token === backersDigest.token;
