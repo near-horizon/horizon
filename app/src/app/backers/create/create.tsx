@@ -42,7 +42,7 @@ const formSchema = z.object({
       message: "Please select a vertical",
     }),
   tagline: z.string().min(3).max(50),
-  description: z.string().min(30).max(500),
+  description: z.string().min(30).max(500).optional(),
   image: z.string(),
 });
 
