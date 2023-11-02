@@ -9,6 +9,9 @@
     "format": "prettier --write .",
     "start": "next start"
   },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": "prettier --write --ignore-unknown"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "@near-wallet-selector/core": "^8.7.0",
@@ -61,6 +64,7 @@
     "deep-equal": "^2.2.2",
     "framer-motion": "^10.16.4",
     "iron-session": "^6.3.1",
+    "lint-staged": "^15.0.2",
     "lucide-react": "^0.265.0",
     "near-api-js": "^2.1.4",
     "next": "^14.0.1",
