@@ -191,8 +191,8 @@ export default function BackersDigestForm() {
               published: backersDigest?.published ?? false,
               ...(traction
                 ? {
-                  traction: Object.fromEntries(traction),
-                }
+                    traction: Object.fromEntries(traction),
+                  }
                 : {}),
             },
           });

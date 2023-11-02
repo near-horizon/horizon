@@ -16,8 +16,9 @@ export function Availability({
   return (
     <div className="flex flex-row items-center justify-start gap-2">
       <div
-        className={`h-3 w-3 rounded-full ${available ? "bg-green-500" : "bg-red-500"
-          }`}
+        className={`h-3 w-3 rounded-full ${
+          available ? "bg-green-500" : "bg-red-500"
+        }`}
       />
       <span
         className={cn(

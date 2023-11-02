@@ -1,3 +1,3 @@
-export default function FilesInfo({ }) {
+export default function FilesInfo({}) {
   return <div>Files</div>;
 }

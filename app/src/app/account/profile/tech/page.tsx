@@ -39,7 +39,7 @@ const distributionOptions = Object.entries(distribution).map(([id, text]) => ({
   text,
 }));
 
-export default function TechInfo({ }) {
+export default function TechInfo({}) {
   const accountId = useAccountId();
   const { data } = useProject(accountId ?? "");
   const { tech } = useProjectCompletion();
