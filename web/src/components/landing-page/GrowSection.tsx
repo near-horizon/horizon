@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 
@@ -42,11 +42,39 @@ export default function GrowSection() {
   const [currentView, setCurrentView] = useState<ViewOptions>(
     ViewOptions.CREDITS
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const onCurrentViewChange = (selectedView: ViewOptions) =>
     setCurrentView(selectedView);
 
   const mapImage = (src: string) => `https://ipfs.near.social/ipfs/${src}`;
+
+  useEffect(() => {
+    const preloadImages = async () => {
+      setIsLoading(true);
+      const imageUrls = [
+        growth[ViewOptions.BACKERS].desktop,
+        growth[ViewOptions.BACKERS].mobile,
+        growth[ViewOptions.CREDITS].desktop,
+        growth[ViewOptions.CREDITS].mobile,
+        growth[ViewOptions.JOIN].desktop,
+        growth[ViewOptions.JOIN].mobile,
+      ];
+
+      const promises = imageUrls.map((imageUrl) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = mapImage(imageUrl);
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+
+      await Promise.all(promises);
+      setIsLoading(false);
+    };
+    preloadImages();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row md:justify-between items-center gap-12">
@@ -135,47 +163,51 @@ export default function GrowSection() {
         initial={ViewOptions.CREDITS}
         animate={currentView}
       >
-        {currentView === ViewOptions.CREDITS && (
-          <img
-            src={mapImage(growth[ViewOptions.CREDITS].desktop)}
-            alt="credits view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.CREDITS && (
-          <img
-            src={mapImage(growth[ViewOptions.CREDITS].mobile)}
-            alt="credits view"
-            className="md:hidden"
-          />
-        )}
-        {currentView === ViewOptions.JOIN && (
-          <img
-            src={mapImage(growth[ViewOptions.JOIN].desktop)}
-            alt="join view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.JOIN && (
-          <img
-            src={mapImage(growth[ViewOptions.JOIN].mobile)}
-            alt="join view"
-            className="md:hidden"
-          />
-        )}
-        {currentView === ViewOptions.BACKERS && (
-          <img
-            src={mapImage(growth[ViewOptions.BACKERS].desktop)}
-            alt="backers view"
-            className="hidden md:block"
-          />
-        )}
-        {currentView === ViewOptions.BACKERS && (
-          <img
-            src={mapImage(growth[ViewOptions.BACKERS].mobile)}
-            alt="backers view"
-            className="md:hidden"
-          />
+        {!isLoading && (
+          <>
+            {currentView === ViewOptions.CREDITS && (
+              <img
+                src={mapImage(growth[ViewOptions.CREDITS].desktop)}
+                alt="credits view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.CREDITS && (
+              <img
+                src={mapImage(growth[ViewOptions.CREDITS].mobile)}
+                alt="credits view"
+                className="md:hidden"
+              />
+            )}
+            {currentView === ViewOptions.JOIN && (
+              <img
+                src={mapImage(growth[ViewOptions.JOIN].desktop)}
+                alt="join view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.JOIN && (
+              <img
+                src={mapImage(growth[ViewOptions.JOIN].mobile)}
+                alt="join view"
+                className="md:hidden"
+              />
+            )}
+            {currentView === ViewOptions.BACKERS && (
+              <img
+                src={mapImage(growth[ViewOptions.BACKERS].desktop)}
+                alt="backers view"
+                className="hidden md:block"
+              />
+            )}
+            {currentView === ViewOptions.BACKERS && (
+              <img
+                src={mapImage(growth[ViewOptions.BACKERS].mobile)}
+                alt="backers view"
+                className="md:hidden"
+              />
+            )}
+          </>
         )}
       </motion.div>
     </div>
