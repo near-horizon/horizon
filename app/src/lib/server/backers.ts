@@ -1,9 +1,9 @@
 import { z } from "zod";
 import {
-  horizonSchema,
-  type BackersQuery,
   backerProfileSchema,
   backerSchema,
+  type BackersQuery,
+  horizonSchema,
 } from "../validation/backers";
 import { fetchManyURLSchema } from "../validation/fetching";
 import { env } from "~/env.mjs";
@@ -46,6 +46,7 @@ export async function getBacker(accountId: AccountId) {
       (tx.method_name === "register_investor" &&
         tx.args.account_id === accountId) ||
       (tx.method_name === "add_investors" &&
+        typeof tx.args.investors === "object" &&
         accountId in (tx.args.investors as Record<string, unknown>))
     );
   });
