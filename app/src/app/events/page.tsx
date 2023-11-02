@@ -22,7 +22,7 @@ export default function Events() {
   const timeZone = timeSplit[3];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
       <div className="mb-6 flex flex-row items-center justify-between">
         <h1 className="text-3xl font-bold tracking-wide text-gray-900">
           Horizon Events
