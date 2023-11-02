@@ -26,9 +26,7 @@ export default async function ProjectPageLayout({
   const queryClient = getQueryClient();
   await prefetch(accountId, queryClient);
   const isBacker = user?.accountId ? await hasBacker(user.accountId) : false;
-  const backersDigest = user?.accountId
-    ? await getBackersDigest(user.accountId)
-    : {};
+  const backersDigest = await getBackersDigest(accountId);
   const headersMap = headers();
   const referer = headersMap.get("referer");
   const isFromBackerView =
@@ -48,12 +46,12 @@ export default async function ProjectPageLayout({
             tabs={[
               ...(hasPermission
                 ? [
-                    {
-                      id: "backers-digest",
-                      text: "Backers Digest",
-                      href: `/projects/${accountId}/backers-digest`,
-                    },
-                  ]
+                  {
+                    id: "backers-digest",
+                    text: "Backers Digest",
+                    href: `/projects/${accountId}/backers-digest`,
+                  },
+                ]
                 : []),
               {
                 id: "overview",
