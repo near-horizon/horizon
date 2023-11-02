@@ -31,8 +31,8 @@ export async function getPaginatedProjects(
 ) {
   const result = await fetch(
     `/api/projects?limit=${pageSize}&from=` +
-    pageParam * pageSize +
-    (query ? "&" + intoURLSearchParams(query) : "")
+      pageParam * pageSize +
+      (query ? "&" + intoURLSearchParams(query) : "")
   );
   const projects = (await result.json()) as string[];
 
@@ -45,7 +45,7 @@ export async function getPaginatedProjects(
 export async function getBackerPaginatedProjects(pageParam = 0) {
   const result = await fetch(
     `/api/projects?fundraising=${true}&limit=${pageSize}&from=` +
-    pageParam * pageSize
+      pageParam * pageSize
   );
   const projects = (await result.json()) as string[];
 

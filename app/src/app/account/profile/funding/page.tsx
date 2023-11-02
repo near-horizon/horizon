@@ -26,7 +26,7 @@ const stageOptions = Object.entries(stage).map(([value, text]) => ({
   text,
 }));
 
-export default function FundingInfo({ }) {
+export default function FundingInfo({}) {
   const accountId = useAccountId();
   const { data } = useProject(accountId ?? "");
   const { funding } = useProjectCompletion();

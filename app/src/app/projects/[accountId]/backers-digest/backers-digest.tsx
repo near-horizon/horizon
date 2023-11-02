@@ -97,7 +97,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
       <Section title="Traction metrics">
         <div className="flex w-full flex-row flex-wrap gap-6">
           {!backersDigest.traction ||
-            Object.keys(backersDigest.traction).length === 0 ? (
+          Object.keys(backersDigest.traction).length === 0 ? (
             <NoData className="w-full" />
           ) : (
             Object.entries(backersDigest.traction).map(([key, value]) => (

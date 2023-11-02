@@ -29,8 +29,8 @@ export function SelectInput<
   props: UseControllerProps<TFieldValues, TName> &
     InputProps & {
       options:
-      | { value: string; text: string }[]
-      | { group: string; options: { value: string; text: string }[] }[];
+        | { value: string; text: string }[]
+        | { group: string; options: { value: string; text: string }[] }[];
     }
 ) {
   const options = props.options.map((option) => {

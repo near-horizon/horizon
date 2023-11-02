@@ -40,10 +40,10 @@ export function CheckboxesInput<
                   return checked
                     ? field.onChange([...field.value, item.id])
                     : field.onChange(
-                      (field.value as string[]).filter(
-                        (value) => value !== item.id
-                      )
-                    );
+                        (field.value as string[]).filter(
+                          (value) => value !== item.id
+                        )
+                      );
                 }}
               />
             </FormControl>
