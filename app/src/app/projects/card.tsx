@@ -19,7 +19,13 @@ import RequestIcon from "~/components/icons/request.svg";
 import UserIcon from "~/components/icons/user-02.svg";
 import { Handle } from "~/components/handle";
 
-export function Project({ accountId }: { accountId: AccountId }) {
+export function Project({
+  accountId,
+  backerViewKey,
+}: {
+  accountId: AccountId;
+  backerViewKey?: string;
+}) {
   const { data, status } = useProject(accountId);
   const { data: requests, status: requestStatus } =
     useProjectRequests(accountId);
@@ -59,7 +65,9 @@ export function Project({ accountId }: { accountId: AccountId }) {
         <CardTitle className="max-w-full">
           <Link
             className="flex h-20 max-w-full flex-row items-start justify-start gap-4"
-            href={`/projects/${accountId}`}
+            href={`/projects/${accountId}${
+              backerViewKey ? "/backers-digest?from=" + backerViewKey : ""
+            }`}
           >
             {data.image && "ipfs_cid" in data.image ? (
               <IPFSImage

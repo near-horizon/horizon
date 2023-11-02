@@ -40,12 +40,12 @@ export default async function ProjectPageLayout({
             tabs={[
               ...(hasPermission
                 ? [
-                  {
-                    id: "backers-digest",
-                    text: "Backers Digest",
-                    href: `/projects/${accountId}/backers-digest`,
-                  },
-                ]
+                    {
+                      id: "backers-digest",
+                      text: "Backers Digest",
+                      href: `/projects/${accountId}/backers-digest`,
+                    },
+                  ]
                 : []),
               {
                 id: "overview",

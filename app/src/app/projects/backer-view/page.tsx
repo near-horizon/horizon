@@ -4,6 +4,7 @@ import { BackerProjects } from "./projects";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
 import { getProject, getProjects } from "~/lib/server/projects";
+import { env } from "~/env.mjs";
 
 export default async function BackersProjectsPage() {
   const queryClient = getQueryClient();
@@ -27,7 +28,7 @@ export default async function BackersProjectsPage() {
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
-      <BackerProjects />
+      <BackerProjects backerViewKey={env.SESSION_PASSWORD} />
     </Hydrate>
   );
 }
