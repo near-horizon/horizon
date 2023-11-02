@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useProposal } from "~/hooks/proposals";
-import { type CID, type AccountId } from "~/lib/validation/common";
+import { type AccountId, type CID } from "~/lib/validation/common";
 import { ProjectIcon } from "./project/icon";
 import { Handle } from "./handle";
 import { format } from "timeago.js";
@@ -28,10 +28,7 @@ export function Proposal({
       <div className="flex w-full flex-row items-center gap-2">
         <Link
           className="flex flex-row items-center gap-2"
-          href={{
-            pathname: "/contributors/[accountId]",
-            query: { accountId: contributorId },
-          }}
+          href={`/contributors/${contributorId}`}
         >
           <ProjectIcon accountId={contributorId} className="h-8 w-8" />
           <Handle accountId={contributorId} />

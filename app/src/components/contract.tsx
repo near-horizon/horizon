@@ -34,10 +34,7 @@ export function Contract({
       </span>
       <Link
         className="h-20"
-        href={{
-          pathname: "/contracts/[projectId]/[contributorId]/[cid]",
-          query: { projectId, contributorId, cid },
-        }}
+        href={`/contracts/${projectId}/${contributorId}/${cid}`}
       >
         {request?.title}
       </Link>
@@ -96,12 +93,8 @@ export function Contract({
           {contract?.price ? formatBudget(contract.price) : ""}
         </div>
         <Link
-          href={{
-            pathname: `/${
-              showContributor ? "contributors" : "projects"
-            }/[accountId]`,
-            query: { accountId: showContributor ? contributorId : projectId },
-          }}
+          href={`/${showContributor ? "contributors" : "projects"}/${showContributor ? contributorId : projectId
+            }`}
           className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400"
         >
           <ProjectIcon
