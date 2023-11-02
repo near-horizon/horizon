@@ -20,7 +20,7 @@ const requirementMapping = {
   "profile-completed": "Complete Profile Overview",
 };
 
-export function Perk(perk: Perk) {
+export function Perk(perk: Perk & { noButton?: boolean }) {
   const {
     fields: {
       name,
@@ -113,7 +113,7 @@ export function Perk(perk: Perk) {
                 >
                   {
                     requirementMapping[
-                      requirement as keyof typeof requirementMapping
+                    requirement as keyof typeof requirementMapping
                     ]
                   }
                 </span>
@@ -124,7 +124,7 @@ export function Perk(perk: Perk) {
       </CardContent>
       <Separator className="mb-3 h-px w-full bg-ui-elements-light" />
       <CardFooter className="flex-grow-0">
-        <CTA {...perk} />
+        {perk.noButton ? <></> : <CTA {...perk} />}
       </CardFooter>
     </Card>
   );
