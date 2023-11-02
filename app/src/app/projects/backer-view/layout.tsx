@@ -3,7 +3,6 @@ import { ProjectSkeleton } from "../card";
 import { pageSize } from "~/lib/constants/pagination";
 import ChevronDown from "~/components/icons/chevron-down.svg";
 import { Button } from "~/components/ui/button";
-import { SelectTrigger } from "~/components/ui/select";
 
 export default function BackerProjectsLayout({
   children,
