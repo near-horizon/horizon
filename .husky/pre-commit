@@ -2,3 +2,5 @@ cd bos-components;
 pnpx lint-staged;
 cd ../app;
 pnpx lint-staged;
+cd ../web;
+pnpx lint-staged;
