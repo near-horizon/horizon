@@ -10,9 +10,9 @@ export const Clock = ({ className }: { className?: string }) => (
     <path
       d="M29.3208 17.9375L26.7382 15.3542L24.1541 17.9375M27.125 16C27.125 22.4203 21.9203 27.625 15.5 27.625C9.07969 27.625 3.875 22.4203 3.875 16C3.875 9.57969 9.07969 4.375 15.5 4.375C19.765 4.375 23.4935 6.67176 25.5162 10.0959M15.5 9.54167V16L19.375 18.5833"
       stroke="currentColor"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
