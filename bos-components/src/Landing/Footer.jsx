@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const exploreLink = "https://app.hzn.xyz";
 
 const Footer = styled.div`
   width: 100%;
@@ -166,18 +167,20 @@ return (
           <h4>Explore</h4>
           <ul>
             <li>
-              <a href={`/${ownerId}/widget/Index?tab=projects`}>Projects</a>
+              <a href={`${exploreLink}/projects?utm=near.org`}>Projects</a>
             </li>
             <li>
-              <a href={`/${ownerId}/widget/Index?tab=requests`}>
+              <a href={`${exploreLink}/requests?utm=near.org`}>
                 Contribution requests
               </a>
             </li>
             <li>
-              <a href={`/${ownerId}/widget/Index?tab=vendors`}>Contributors</a>
+              <a href={`${exploreLink}/contributors?utm=near.org`}>
+                Contributors
+              </a>
             </li>
             <li>
-              <a href={`/${ownerId}/widget/Index?tab=investors`}>Backers</a>
+              <a href={`${exploreLink}/backers?utm=near.org`}>Backers</a>
             </li>
           </ul>
         </Column>
@@ -200,12 +203,12 @@ return (
           <h4>Get help</h4>
           <ul>
             <li>
-              <a href={`/${ownerId}/widget/Index?tab=learn`}>
+              <a href={`${exploreLink}/learn?utm=near.org`}>
                 Learning resources
               </a>
             </li>
             <li>
-              <a href={`/${ownerId}/widget/Index?tab=faq`}>FAQ</a>
+              <a href={`${exploreLink}/faq?utm=near.org`}>FAQ</a>
             </li>
           </ul>
         </Column>

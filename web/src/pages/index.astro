@@ -1,7 +1,4 @@
 ---
-// import Layout from "../layouts/Layout.astro";
-// import Card from "../components/Card.astro";
-
 import IntroSection from "@components/landing-page/IntroSection.astro";
 import SupportedBySection from "@components/landing-page/SupportedBySection.astro";
 import AboutSection from "@components/landing-page/AboutSection.astro";
@@ -13,22 +10,23 @@ import Testimonial from "@components/landing-page/Testimonial.astro";
 import ContributorsSection from "@components/landing-page/ContributorsSection";
 import BackersSection from "@components/landing-page/BackersSection.tsx";
 import PartnersSection from "@components/landing-page/PartnersSection.tsx";
-
-import "@styles/globals.css";
-
-const MainContainer = "main";
+import Layout from "@layouts/Layout.astro";
 ---
 
-<MainContainer class="p-6 bg-background-white w-full flex-col flex gap-14">
-  <IntroSection />
-  <SupportedBySection />
-  <AboutSection />
-  <HorizonEvents />
-  <BuildSection client:load />
-  <ConnectSection client:load />
-  <GrowSection client:load />
-  <Testimonial />
-  <ContributorsSection client:load />
-  <BackersSection client:load />
-  <PartnersSection client:load />
-</MainContainer>
+<Layout title="Horizon">
+  <main
+    class="p-6 bg-background-white w-full flex-col flex gap-14 max-w-screen-xl mx-auto"
+  >
+    <IntroSection />
+    <SupportedBySection />
+    <AboutSection />
+    <HorizonEvents />
+    <BuildSection client:visible />
+    <ConnectSection client:visible />
+    <GrowSection client:visible />
+    <Testimonial />
+    <ContributorsSection client:visible />
+    <BackersSection client:visible />
+    <PartnersSection client:visible />
+  </main>
+</Layout>

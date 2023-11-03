@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const exploreLink = "https://app.hzn.xyz/";
 
 const Container = styled.div`
   display: flex;
@@ -49,11 +50,11 @@ return (
       <Widget src={`${ownerId}/widget/Logo`} />
     </div>
     <Links>
-      <Link href={`/${ownerId}/widget/Index`}>Explore Horizon</Link>
+      <a href={`${exploreLink}?utm=near.org`}>Explore Horizon</a>
       <Widget src={`${ownerId}/widget/Buttons.CreateProfile`} />
     </Links>
     <Explore>
-      <Link href={`/${ownerId}/widget/Index`}>Explore Horizon</Link>
+      <a href={`${exploreLink}?utm=near.org`}>Explore Horizon</a>
     </Explore>
   </Container>
 );

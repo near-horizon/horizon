@@ -1,7 +1,6 @@
 const ownerId = "nearhorizon.near";
-const exploreLink = "https://app.hzn.xyz";
 
-const RegisterButton = styled.div`
+const Button = styled.div`
   & > a {
     display: flex;
     padding: 0.875rem 1rem;
@@ -9,12 +8,12 @@ const RegisterButton = styled.div`
     align-items: center;
     gap: 0.5rem;
     border-radius: 3.125rem;
-    background: var(--primary-primary-default, #00ec97);
-    color: var(--ui-elements-black, #000);
+    border: 1px solid var(--ui-elements-light, #eceef0);
+    background: var(--background-light, #fafafa);
+    cursor: pointer;
+    color: var(--text-text-primary, #101828);
     text-align: center;
-    leading-trim: both;
-    text-edge: cap;
-    font-family: "Mona Sans";
+    font-family: Inter;
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 600;
@@ -28,15 +27,13 @@ const RegisterButton = styled.div`
     &:hover,
     &:focus,
     &:active {
-      background: var(--primary-primary-hover, #00ec97);
-      color: var(--text-text-dark, #11181c);
       text-decoration: none;
     }
   }
 `;
 
 return (
-  <RegisterButton>
-    <a href={`${exploreLink}/onboarding?utm=near.org`}>Create profile</a>
-  </RegisterButton>
+  <Button>
+    <Link href={`/${ownerId}/widget/Index`}>Explore Horizon</Link>
+  </Button>
 );

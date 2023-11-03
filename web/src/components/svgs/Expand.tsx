@@ -10,9 +10,9 @@ export const Expand = ({ className }: { className?: string }) => (
     <path
       d="M18.0833 13.4167L27.125 4.375M27.125 4.375H19.375M27.125 4.375V12.125M12.9167 18.5833L3.875 27.625M3.875 27.625H11.625M3.875 27.625L3.875 19.875"
       stroke="currentColor"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );

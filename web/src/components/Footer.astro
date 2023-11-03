@@ -1,0 +1,100 @@
+---
+import { TwitterIcon, YoutubeIcon } from "lucide-react";
+import FooterSection from "./FooterSection.astro";
+import nearLogo from "@assets/near-logo.svg";
+import { Image } from "astro:assets";
+
+const appUrl = "https://app.hzn.xyz";
+---
+
+<footer class="bg-ui-elements-white pb-4 pt-16 md:px-8">
+  <div class="flex max-w-screen-xl flex-col gap-4 md:gap-12 2xl:mx-auto">
+    <div
+      class="flex w-full flex-col items-center justify-start gap-2 md:flex-row md:items-start md:gap-6"
+    >
+      <FooterSection>
+        <h3 class="text-xl font-semibold text-stone-900" slot="header">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.svg" alt="NEAR Horizon" />
+        </h3>
+        <p class="max-w-sm text-center md:text-left" slot="body">
+          An early stage accelerator empowering Web3 founders to build, connect,
+          and grow
+        </p>
+        <div class="flex flex-row items-center justify-center gap-4">
+          <a href="https://twitter.com/nearhorizon" target="_blank">
+            <TwitterIcon size={24} fill="currentColor" />
+          </a>
+          <a href="#">
+            <YoutubeIcon
+              size={32}
+              fill="currentColor"
+              stroke="var(--background--white)"
+            />
+          </a>
+        </div>
+      </FooterSection>
+      <FooterSection>
+        <h3 class="text-base font-semibold text-gray-900" slot="header">
+          Explore
+        </h3>
+        <ul class="flex flex-col items-center md:items-start" slot="body">
+          <li>
+            <a href={`${appUrl}/projects`}>Projects</a>
+          </li>
+          <li>
+            <a href={`${appUrl}/requests`}>Contribution requests</a>
+          </li>
+          <li>
+            <a href={`${appUrl}/contributors`}>Contributors</a>
+          </li>
+          <li>
+            <a href={`${appUrl}/backers`}>Backers</a>
+          </li>
+        </ul>
+      </FooterSection>
+      <FooterSection>
+        <h3 class="text-base font-semibold text-gray-900" slot="header">
+          Connect
+        </h3>
+        <ul class="flex flex-col items-center md:items-start" slot="body">
+          <li>
+            <a href="https://lu.ma/u/usr-5oZHY9dEDbDcaHY" target="_blank">
+              Events calendar
+            </a>
+          </li>
+          <li>
+            <a href="mailto:horizon@near.foundation">
+              Reach out to us directly
+            </a>
+          </li>
+        </ul>
+      </FooterSection>
+      <FooterSection>
+        <h3 class="text-base font-semibold text-gray-900" slot="header">
+          Get help
+        </h3>
+        <ul class="flex flex-col items-center md:items-start" slot="body">
+          <li>
+            <a href={`${appUrl}/learn`}>Learning resources</a>
+          </li>
+          <li>
+            <a href={`${appUrl}/faq`}>FAQ</a>
+          </li>
+        </ul>
+      </FooterSection>
+    </div>
+    <div
+      class="flex w-full flex-col items-center justify-between gap-2 text-gray-600 md:flex-row md:gap-0"
+    >
+      <span>© 2023</span>
+      <a href={`${appUrl}/terms`} class="md:translate-x-8">
+        Terms & conditions
+      </a>
+      <span class="flex flex-row items-center gap-2">
+        Built on
+        <Image src={nearLogo} alt="NEAR" />
+      </span>
+    </div>
+  </div>
+</footer>
