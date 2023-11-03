@@ -54,7 +54,7 @@ export default function ContributorsSection() {
             className={cn(
               "border-none px-6 pt-3 pb-4",
               currentAccordionValue === AccordionValues.ACCESS &&
-                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
+                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]",
             )}
           >
             <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
@@ -74,7 +74,7 @@ export default function ContributorsSection() {
             className={cn(
               "border-none px-6 pt-3 pb-4",
               currentAccordionValue === AccordionValues.SCALED &&
-                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
+                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]",
             )}
           >
             <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
@@ -92,7 +92,7 @@ export default function ContributorsSection() {
             className={cn(
               "border-none px-6 pt-3 pb-4",
               currentAccordionValue === AccordionValues.ADVANTAGE &&
-                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
+                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]",
             )}
           >
             <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">

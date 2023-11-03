@@ -19,7 +19,7 @@ export function LinkButton({
       className={cn(
         "px-7 py-3 rounded-full text-center text-text-dark font-semibold text-lg w-fit",
         variant === "secondary" ? "border-2 border-black" : "bg-primary",
-        className
+        className,
       )}
       href={href}
       {...props}

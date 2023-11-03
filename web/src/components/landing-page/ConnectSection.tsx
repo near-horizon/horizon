@@ -40,7 +40,7 @@ const connect = {
 
 export default function ConnectSection() {
   const [currentView, setCurrentView] = useState<ViewOptions>(
-    ViewOptions.CONNECT
+    ViewOptions.CONNECT,
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -97,7 +97,7 @@ export default function ConnectSection() {
             className={cn(
               "border-none px-6 pt-3 pb-4",
               currentView === ViewOptions.CONNECT &&
-                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
+                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]",
             )}
           >
             <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
@@ -117,7 +117,7 @@ export default function ConnectSection() {
             className={cn(
               "border-none px-6 pt-3 pb-4",
               currentView === ViewOptions.SHARE &&
-                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
+                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]",
             )}
           >
             <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
@@ -136,7 +136,7 @@ export default function ConnectSection() {
             className={cn(
               "border-none px-6 pt-3 pb-4",
               currentView === ViewOptions.TAP &&
-                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]"
+                "rounded-lg shadow-[-8px_40px_59px_-28px_rgba(16,24,40,0.14),-2px_2px_14px_-1px_rgba(0,0,0,0.13)]",
             )}
           >
             <CustomAccordionTrigger className="hover:no-underline hover:text-[#006adc] gap-2 justify-start transition-all ease-in-out delay-150">
