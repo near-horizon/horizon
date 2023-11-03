@@ -877,7 +877,7 @@ async fn backers_digest(
     Path(account_id): Path<String>,
     State(state): State<AppState>,
     headers: HeaderMap,
-) -> ApiResult<Json<BackersDigestData>> {
+) -> ApiResult<Json<Value>> {
     authorize_bearer(&headers, &state).await?;
     sqlx::query!(
         r#"
@@ -911,7 +911,7 @@ async fn backers_digest(
                     *v = serde_json::Value::String(v.as_i64().unwrap().to_string());
                 }
             });
-        Json(serde_json::from_value(p.backers_digest).unwrap())
+        Json(p.backers_digest)
     })
 }
 
