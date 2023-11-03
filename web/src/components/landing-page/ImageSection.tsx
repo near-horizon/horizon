@@ -8,7 +8,7 @@ import {
 import CustomAccordionTrigger from "@components/ui/custom/CustomAccordionTrigger";
 import { Arrow } from "@components/svgs/Arrow";
 import { SoonPill } from "@components/svgs/SoonPill";
-import { cn } from "@lib/utils";
+import { cn, mapImage } from "@lib/utils";
 
 enum ViewOptions {
   FIRST = "first",
@@ -71,8 +71,6 @@ export function ImageSection({
 
   const onCurrentViewChange = (selectedView: ViewOptions) =>
     setCurrentView(selectedView);
-
-  const mapImage = (src: string) => `https://ipfs.near.social/ipfs/${src}`;
 
   return (
     <div
