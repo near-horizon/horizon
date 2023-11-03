@@ -10,7 +10,7 @@
     "start": "next start"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": "prettier --write --ignore-unknown"
+    "**/*.{js,jsx,ts,tsx,astro,svg,html,md,mdx}": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
