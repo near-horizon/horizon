@@ -46,7 +46,7 @@ export function StaticImageSection({
   return (
     <div
       className={cn(
-        "flex flex-col items-center md:flex-row md:items-stretch gap-8 h-[39rem]",
+        "flex flex-col items-center md:flex-row md:items-stretch gap-8 h-[40rem]",
         {
           "md:flex-row-reverse": direction === "right",
         },

@@ -1,7 +1,4 @@
 ---
-// import Layout from "../layouts/Layout.astro";
-// import Card from "../components/Card.astro";
-
 import IntroSection from "@components/landing-page/IntroSection.astro";
 import SupportedBySection from "@components/landing-page/SupportedBySection.astro";
 import AboutSection from "@components/landing-page/AboutSection.astro";
@@ -24,11 +21,11 @@ import "@styles/globals.css";
   <SupportedBySection />
   <AboutSection />
   <HorizonEvents />
-  <BuildSection client:load />
-  <ConnectSection client:load />
-  <GrowSection client:load />
+  <BuildSection client:visible />
+  <ConnectSection client:visible />
+  <GrowSection client:visible />
   <Testimonial />
-  <ContributorsSection client:load />
-  <BackersSection client:load />
-  <PartnersSection client:load />
+  <ContributorsSection client:visible />
+  <BackersSection client:visible />
+  <PartnersSection client:visible />
 </main>
