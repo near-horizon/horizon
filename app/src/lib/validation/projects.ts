@@ -61,7 +61,7 @@ export type HorizonProject = z.infer<typeof horizonSchema>;
 export const projectSchema = horizonSchema
   .merge(
     profileSchema.omit({ team: true }).extend({
-      company_size: z.string().optional(),
+      company_size: z.coerce.string().optional(),
     })
   )
   .extend({
