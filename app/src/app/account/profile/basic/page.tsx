@@ -123,7 +123,7 @@ export default function BasicProfile() {
           {data?.geo ?? "No location provided"}
         </LabeledData>
         <LabeledData label="Social profiles">
-          <Socials links={data?.linktree} />
+          <Socials links={data?.linktree ?? {}} />
         </LabeledData>
         <LabeledData label="What problem(s) are you solving?">
           <Description
