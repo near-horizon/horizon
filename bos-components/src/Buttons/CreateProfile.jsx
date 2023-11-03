@@ -1,4 +1,5 @@
 const ownerId = "nearhorizon.near";
+const exploreLink = "https://app.hzn.xyz/";
 
 const RegisterButton = styled.div`
   & > a {
@@ -36,6 +37,6 @@ const RegisterButton = styled.div`
 
 return (
   <RegisterButton>
-    <Link href={`/${ownerId}/widget/Onboarding.Page`}>Create profile</Link>
+    <a href={`${exploreLink}/onboarding?utm=near.org`}>Create profile</a>
   </RegisterButton>
 );
