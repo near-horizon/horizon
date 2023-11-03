@@ -24,7 +24,7 @@ const requirementMapping = {
   "profile-completed": "Complete Profile Overview",
 };
 
-export function Perk(perk: Perk) {
+export function Perk(perk: Perk & { noButton?: boolean }) {
   const {
     fields: {
       name,
@@ -41,19 +41,22 @@ export function Perk(perk: Perk) {
   const completedCount = requirements?.filter(
     ({ completed }) => completed
   ).length;
-  const requirementsMet = completedCount === requirements?.length;
+  const requirementsMet =
+    completedCount === requirements?.length && !perk.noButton;
 
   return (
     <Card className="flex h-full flex-col items-stretch justify-between">
       <CardHeader className="flex-grow-0">
-        <CardTitle className="flex max-h-8 w-full flex-row items-center justify-between">
+        <CardTitle className="flex h-12 w-full flex-row items-center justify-between">
           <span>{name}</span>
-          <div className="relative h-12 object-contain">
+          <div className="relative h-full w-20 object-contain">
             <Image
               src={logo?.url ?? ""}
               alt={name}
               fill
-              loader={({ src }) => src}
+              unoptimized
+              objectFit="contain"
+              objectPosition="right"
             />
           </div>
         </CardTitle>
@@ -62,7 +65,7 @@ export function Perk(perk: Perk) {
           <Tags tags={category} loading={false} />
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent className="flex flex-grow flex-col gap-4">
         <div className="flex flex-col items-start justify-start gap-2 rounded-lg border border-dashed border-[#C0AB8B] bg-gradient-to-b from-[#FCFBE9] to-[rgba(252,251,233,0.00)] px-3 py-2">
           <h4 className="text-sm font-semibold text-ui-elements-dark">
             Benefit
@@ -134,7 +137,7 @@ export function Perk(perk: Perk) {
       </CardContent>
       <Separator className="mb-3 h-px w-full bg-ui-elements-light" />
       <CardFooter className="flex-grow-0">
-        <CTA {...perk} />
+        {!perk.noButton && <CTA {...perk} />}
       </CardFooter>
     </Card>
   );

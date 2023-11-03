@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { FilterDropdown } from "~/components/inputs/filter-dropdown";
 import { SearchInput } from "~/components/inputs/search";
-import { Perk } from "~/components/perk";
+import { Perk } from "./card";
 import { usePerkCategories, usePerks } from "~/hooks/perks";
 
 export function Perks({ noButton = false }: { noButton?: boolean }) {
