@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --12: linear-gradient(
@@ -98,10 +98,8 @@
 
     --radius: 0.5rem;
   }
- 
-
 }
- 
+
 @layer base {
   * {
     @apply border-border;
