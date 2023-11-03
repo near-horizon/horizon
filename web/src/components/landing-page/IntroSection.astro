@@ -22,12 +22,13 @@ const Header = "h2";
     <Image
       src={backersFounderContributorsImg}
       alt="backers, founders and contributors working together"
+      loading="eager"
     />
   </HeaderImgContainer>
   <HeaderContainer
     class="flex flex-col flex-1 gap-5 items-center md:items-start"
   >
-    <Image src={horizonLogoSvg} alt="horizon group logo" class="md:hidden" />
+    <Image src={horizonLogoSvg} alt="horizon group logo" class="md:hidden" loading="eager" />
     <Header class="font-bold text-4xl text-black text-center md:text-left">
       NEAR Horizon connects people building on NEAR
     </Header>
