@@ -36,7 +36,7 @@ export function Founder({
           <span>{accountId}</span>
         )}
       </a>
-      <Socials links={data?.linktree} loading={loading} />
+      <Socials links={data?.linktree ?? {}} loading={loading} />
     </div>
   );
 }

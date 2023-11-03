@@ -167,7 +167,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
                 </b>
                 <p>{founder.role as string}</p>
                 <p>{founder.account_id as string}</p>
-                <Socials links={founder.linktree as Linktree} />
+                <Socials links={(founder?.linktree as Linktree) ?? {}} />
               </div>
             ))}
           </div>

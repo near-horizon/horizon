@@ -36,7 +36,7 @@ export function Overview({ accountId }: { accountId: AccountId }) {
           />
           <Detail
             label="Social links"
-            value={<Socials links={data?.linktree} />}
+            value={<Socials links={data?.linktree ?? {}} />}
             loading={status === "loading"}
           />
           <Detail
