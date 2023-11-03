@@ -16,7 +16,6 @@ import { Skeleton } from "~/components/ui/skeleton";
 import UserIcon from "~/components/icons/user-02.svg";
 import { Handle } from "~/components/handle";
 import { useContributor } from "~/hooks/contributors";
-import { Availability } from "~/components/availability";
 import { Tags } from "~/components/tags";
 
 export function Contributor({ accountId }: { accountId: AccountId }) {
@@ -68,7 +67,6 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
-        <Availability available={data?.active === "true"} />
         <CardDescription>
           <Description
             text={data.description ?? data.tagline ?? ""}
