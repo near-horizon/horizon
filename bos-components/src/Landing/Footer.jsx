@@ -1,5 +1,5 @@
 const ownerId = "nearhorizon.near";
-const exploreLink = "https://app.hzn.xyz/";
+const exploreLink = "https://app.hzn.xyz";
 
 const Footer = styled.div`
   width: 100%;
