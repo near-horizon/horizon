@@ -1,0 +1,63 @@
+---
+import { LinkButton } from "@components/LinkButton";
+import { ByHorizonLogo } from "@components/svgs/ByHorizonLogo.tsx";
+
+const VIDEO_URL =
+  "https://s3.us-east-2.amazonaws.com/nearhorizon.assets/hzn-visual.mp4";
+
+const iframeCode = `
+  <html style="width: 100%; padding: 0; margin: 0; height: 100%; overflow: hidden;">
+    <body style="width: 100%; padding: 0; margin: 0; height: 100%; overflow: hidden;">
+      <video 
+        autoPlay 
+        loop 
+        muted 
+        playsInline 
+        src="${VIDEO_URL}" 
+        style="object-fit: cover; width: 100%; padding: 0; margin: 0; height: 100%; overflow: hidden;" 
+      />
+    </body>
+  </html>
+`;
+
+const MainContainer = "div";
+const HeroContainer = "div";
+const Title = "h1";
+const SubTitle = "p";
+const BoldText = "b";
+const ButtonContainer = "div";
+---
+
+<MainContainer
+  class="min-h-[600px] w-full flex rounded-3xl flex-col items-center self-stretch overflow-hidden relative"
+>
+  <iframe
+    srcdoc={iframeCode}
+    class="w-full h-full overflow-hidden absolute inset-0"></iframe>
+  <HeroContainer
+    class="flex flex-col justify-center items-center gap-6 w-full py-24 px-28 z-[1] inset-0"
+  >
+    <ByHorizonLogo />
+    <Title
+      class="text-white font-bold text-[2.625rem] text-center leading-normal tracking-wide"
+    >
+      Grounded cohort-based support program tailored for Web3 founders. All
+      equity-free.
+    </Title>
+    <SubTitle
+      class="text-center text-[#c3e2ffb8] text-2xl leading-9 max-w-3xl font-normal"
+    >
+      Next cohort, <BoldText class="text-white">HZN2</BoldText>, will be kicking
+      off in <BoldText class="text-white">January 2024</BoldText>, applications
+      are considered on a rolling basis.
+    </SubTitle>
+    <ButtonContainer class="flex flex-row items-center justify-center gap-3">
+      <LinkButton
+        className="font-medium"
+        label="Apply for HZN2"
+        href="https://airtable.com/appFoIqAoY0ikoVIb/shrst8Tt4PUtYTSvD"
+        target="_blank"
+      />
+    </ButtonContainer>
+  </HeroContainer>
+</MainContainer>
