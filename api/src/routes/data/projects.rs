@@ -958,7 +958,7 @@ async fn add_backers_digest_token(
             backers_digest,
             '{token}',
             $1,
-            FALSE
+            TRUE
           )
         WHERE
           id = $2 RETURNING backers_digest ->> 'token'
