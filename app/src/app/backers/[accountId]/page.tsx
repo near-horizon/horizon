@@ -9,7 +9,7 @@ export default function BackersPage({
   params: { accountId: AccountId };
 }) {
   return (
-    <div className="flex flex-row">
+    <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
       <div className="flex w-full flex-col gap-6">
         <Header accountId={accountId} />
 

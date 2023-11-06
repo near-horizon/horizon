@@ -1,4 +1,4 @@
-import { Hydrate, type QueryClient, dehydrate } from "@tanstack/react-query";
+import { dehydrate, Hydrate, type QueryClient } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import { Header } from "~/components/contributor/header";
@@ -22,7 +22,7 @@ export default async function ContributorPageLayout({
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
-      <div className="flex w-full flex-row">
+      <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
         <div className="flex w-full flex-col gap-6">
           <Header accountId={accountId} />
           <ContentTabs

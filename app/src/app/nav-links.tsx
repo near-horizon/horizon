@@ -113,7 +113,7 @@ export function NavLinks() {
       orientation="horizontal"
       className="w-full max-w-full border border-x-0 border-ui-elements-light bg-background-white p-4"
     >
-      <div className="mx-auto flex w-full max-w-screen-xl flex-row items-center justify-start">
+      <div className="mx-auto flex w-full max-w-screen-xl flex-row items-center justify-start px-4">
         <NavigationMenuList className="flex w-full flex-row gap-6">
           {routes.map((route) => (
             <NavigationMenuItem key={route.href}>
