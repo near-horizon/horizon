@@ -25,16 +25,20 @@ export default async function ProjectPageLayout({
   const user = await getUserFromSession();
   const queryClient = getQueryClient();
   await prefetch(accountId, queryClient);
-  const isBacker = user?.accountId ? await hasBacker(user.accountId) : false;
+
+  const isBacker = !!user && (await hasBacker(user.accountId));
   const backersDigest = await getBackersDigest(accountId);
-  const headersMap = headers();
-  const referer = headersMap.get("referer");
-  const isFromBackerView =
-    !!referer &&
-    new URL(referer).searchParams.get("from") === backersViewFromKey;
+  const isOwner = !!user && user.accountId === accountId;
+  const isPublished = !!backersDigest.published;
+  const list = headers();
+  const referer = list.get("referer");
+
+  const from = referer ? new URL(referer).searchParams.get("from") : null;
+  // const hasToken = !!token && token === backersDigest.token;
+  const isFromBackerView = !!from && from === backersViewFromKey;
   const hasPermission =
-    (isBacker || isFromBackerView || user?.accountId === accountId) &&
-    backersDigest.published;
+    isOwner ||
+    (isPublished && (isBacker || /* hasToken || */ isFromBackerView));
 
   return (
     <Hydrate state={dehydrate(queryClient)}>
