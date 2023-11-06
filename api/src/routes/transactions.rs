@@ -23,11 +23,75 @@ pub struct Transaction {
     pub success: bool,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "lowercase")]
+pub enum Type {
+    Projects,
+    Contributors,
+    Backers,
+    Requests,
+    Proposals,
+    Contributions,
+    Incentives,
+}
+
+impl Type {
+    pub fn to_filter(&self) -> String {
+        match self {
+            Type::Projects => "'add_project'".to_string(),
+            Type::Contributors => "'register_vendor'".to_string(),
+            Type::Backers => "ANY('add_investors', 'register_investor')".to_string(),
+            Type::Requests => "'add_request'".to_string(),
+            Type::Proposals => "'add_proposal'".to_string(),
+            Type::Contributions => "ANY('add_contribution','accept_contributon','reject_contribution','add_contribution_action','deliver_contribution','complete_contribution')".to_string(),
+            Type::Incentives => "'add_incentive'".to_string(),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct QueryParams {
+    #[serde(default)]
+    pub from: Option<i64>,
+    #[serde(default)]
+    pub limit: Option<i64>,
+    #[serde(default)]
+    pub entity_type: Option<Type>,
+}
+
 #[debug_handler(state = AppState)]
 pub async fn get_transactions(
+    Query(QueryParams {
+        from,
+        limit,
+        entity_type,
+    }): Query<QueryParams>,
     State(AppState { pool, .. }): State<AppState>,
 ) -> ApiResult<Json<Vec<Transaction>>> {
-    sqlx::query_as!(Transaction, "SELECT * FROM transactions ORDER BY id DESC")
+    let limit = limit.unwrap_or(10_000);
+    let offset = from.unwrap_or(0);
+    if let Some(entity_type) = entity_type {
+        let filter = entity_type.to_filter();
+        sqlx::query_as!(
+            Transaction,
+            r#"
+            SELECT
+              *
+            FROM
+              transactions
+            WHERE
+              method_name = $1
+            ORDER BY
+              id DESC
+            LIMIT
+              $2 
+            OFFSET
+              $3
+            "#,
+            filter,
+            limit,
+            offset,
+        )
         .fetch_all(&pool)
         .await
         .map_err(|e| {
@@ -37,6 +101,23 @@ pub async fn get_transactions(
             )
         })
         .map(Json)
+    } else {
+        sqlx::query_as!(
+            Transaction,
+            "SELECT * FROM transactions ORDER BY id DESC LIMIT $1 OFFSET $2",
+            limit,
+            offset
+        )
+        .fetch_all(&pool)
+        .await
+        .map_err(|e| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to get transactions: {e}"),
+            )
+        })
+        .map(Json)
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug)]
