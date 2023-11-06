@@ -25,8 +25,9 @@ export function Providers({
   setUser(user ? user : undefined);
   const pathname = usePathname();
   const isOnboarding = pathname.includes("/onboarding");
+  const isCreate = pathname.includes("/create");
 
-  if (user && !isOnboarding && !user.hasProfile) {
+  if (user && !(isOnboarding || isCreate) && !user.hasProfile) {
     return redirect("/onboarding");
   }
 
