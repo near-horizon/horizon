@@ -87,7 +87,7 @@ export async function getProject(accountId: AccountId) {
         account_id: accountId,
       }
     ),
-    getTransactions(),
+    getTransactions({ entity_type: "projects" }),
   ]);
 
   const { team: company_size, ...profile } = profileSchema.parse({

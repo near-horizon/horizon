@@ -15,7 +15,7 @@ export async function getProposal([[project_id, cid], vendor_id]: ProposalId) {
       vendor_id,
       cid,
     }),
-    getTransactions(),
+    getTransactions({ entity_type: "proposals" }),
   ]);
 
   const creationTx = transactions.find((tx) => {

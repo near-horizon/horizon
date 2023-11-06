@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { fetchManyURLSchema } from "../validation/fetching";
 import {
-  type RequestsQuery,
   paymentSourceSchema,
   paymentTypeSchema,
-  requestTypeSchema,
-  requestSchema,
   type Request,
+  requestSchema,
+  type RequestsQuery,
+  requestTypeSchema,
 } from "../validation/requests";
 import { env } from "~/env.mjs";
 import { intoURLSearchParams } from "../utils";
@@ -40,7 +40,7 @@ export async function getRequest(accountId: AccountId, cid: CID) {
       account_id: accountId,
       cid,
     }),
-    getTransactions(),
+    getTransactions({ entity_type: "requests" }),
   ]);
 
   const request = requestSchema.parse(response);

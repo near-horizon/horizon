@@ -69,3 +69,21 @@ export const transactionSchema = z.object({
 export const transactionsSchema = z.array(transactionSchema);
 
 export type Transaction = z.infer<typeof transactionSchema>;
+
+export const transactionQuerySchema = z.object({
+  from: z.number().optional(),
+  limit: z.number().optional(),
+  entity_type: z
+    .enum([
+      "projects",
+      "contributors",
+      "backers",
+      "requests",
+      "proposals",
+      "contributions",
+      "incentives",
+    ])
+    .optional(),
+});
+
+export type TransactionQuery = z.infer<typeof transactionQuerySchema>;

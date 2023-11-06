@@ -14,7 +14,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
       "get_contribution",
       { project_id, vendor_id, cid }
     ),
-    getTransactions(),
+    getTransactions({ entity_type: "contributions" }),
   ]);
 
   const creationTx = transactions.find((tx) => {

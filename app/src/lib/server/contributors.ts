@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import {
-  horizonSchema,
-  type ContributorsQuery,
   contributorProfileSchema,
   contributorSchema,
+  type ContributorsQuery,
+  horizonSchema,
 } from "../validation/contributors";
 import { intoURLSearchParams } from "../utils";
 import { fetchManyURLSchema } from "../validation/fetching";
@@ -13,9 +13,9 @@ import { getProfile, viewCall } from "../fetching";
 import { getTransactions } from "./transactions";
 import { type AccountId } from "../validation/common";
 import {
-  type ContributorContracts,
-  contractsListSchema,
   type ContractId,
+  contractsListSchema,
+  type ContributorContracts,
 } from "../validation/contracts";
 
 export const contributorsURLQuerySchema = fetchManyURLSchema.extend({
@@ -46,7 +46,7 @@ export async function getContributor(accountId: AccountId) {
         account_id: accountId,
       }
     ),
-    getTransactions(),
+    getTransactions({ entity_type: "contributors" }),
   ]);
 
   const { team: company_size, ...profile } =

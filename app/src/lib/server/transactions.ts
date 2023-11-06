@@ -1,9 +1,27 @@
 import { env } from "~/env.mjs";
-import type { AccountId, Transaction } from "../validation/common";
+import type {
+  AccountId,
+  Transaction,
+  TransactionQuery,
+} from "../validation/common";
 import { type Stats, statsSchema } from "../validation/fetching";
 
-export async function getTransactions(): Promise<Transaction[]> {
-  const projects = await fetch(env.API_URL + "/transactions/all");
+export async function getTransactions(
+  query: TransactionQuery = {}
+): Promise<Transaction[]> {
+  const params: Record<string, string> = {};
+  if (query.from) {
+    params.from = query.from.toString();
+  }
+  if (query.limit) {
+    params.limit = query.limit.toString();
+  }
+  if (query.entity_type) {
+    params.entity_type = query.entity_type;
+  }
+  const projects = await fetch(
+    env.API_URL + "/transactions/all?" + new URLSearchParams(params).toString()
+  );
   return projects.json() as Promise<Transaction[]>;
 }
 
@@ -15,7 +33,7 @@ export async function getStats(): Promise<Stats> {
 export async function getFilteredTransactions(
   accountId: AccountId
 ): Promise<Transaction[]> {
-  const allTransactions = await getTransactions();
+  const allTransactions = await getTransactions({ entity_type: "incentives" });
   const filteredResults = allTransactions
     .filter(
       (tx) =>

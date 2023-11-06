@@ -35,7 +35,7 @@ export async function getBacker(accountId: AccountId) {
         account_id: accountId,
       }
     ),
-    getTransactions(),
+    getTransactions({ entity_type: "backers" }),
   ]);
 
   const { team: company_size, ...profile } =
