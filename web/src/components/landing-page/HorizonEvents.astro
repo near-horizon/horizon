@@ -16,6 +16,13 @@ const EventTextContainer = "div";
 const EventTitle = "h3";
 const EventDescription = "p";
 const LinkButtonContainer = "div";
+
+const time = new Date("2023-07-28T13:30:00.000Z").toLocaleString(undefined, {
+  weekday: "long",
+  hour: "numeric",
+  minute: "numeric",
+  timeZoneName: "shortGeneric",
+});
 ---
 
 <MainContainer class="flex flex-col gap-8">
@@ -23,11 +30,16 @@ const LinkButtonContainer = "div";
     Get connected with Horizon
   </Header>
   <SubHeader class="font-bold text-2xl text-center">
-    Join one of our sessions every Friday, 10 AM (PST)
+    Join one of our sessions every {time}
   </SubHeader>
   <ItemsContainer class="flex flex-col md:flex-row gap-11 md:gap-6 flex-wrap">
     <EventItem class="flex flex-col items-center gap-3 md:items-start flex-1">
-      <Image src={productDemoDaySvg} alt="product demo day" class="h-36" loading="eager"/>
+      <Image
+        src={productDemoDaySvg}
+        alt="product demo day"
+        class="h-36"
+        loading="eager"
+      />
       <EventTextContainer class="px-3">
         <EventTitle
           class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
@@ -43,7 +55,12 @@ const LinkButtonContainer = "div";
       </EventTextContainer>
     </EventItem>
     <EventItem class="flex flex-col items-center gap-3 md:items-start flex-1">
-      <Image src={officeHrsSvg} alt="office hours" class="h-36" loading="eager"/>
+      <Image
+        src={officeHrsSvg}
+        alt="office hours"
+        class="h-36"
+        loading="eager"
+      />
       <EventTextContainer class="px-3">
         <EventTitle
           class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
@@ -59,7 +76,12 @@ const LinkButtonContainer = "div";
       </EventTextContainer>
     </EventItem>
     <EventItem class="flex flex-col items-center gap-3 md:items-start flex-1">
-      <Image src={amaSessionsSvg} alt="AMA sessions" class="h-36" loading="eager"/>
+      <Image
+        src={amaSessionsSvg}
+        alt="AMA sessions"
+        class="h-36"
+        loading="eager"
+      />
       <EventTextContainer class="px-3">
         <EventTitle
           class="font-bold text-xl text-ui-elements-dark text-center md:text-left"
