@@ -1,41 +1,26 @@
----
-import { Image } from "astro:assets";
-
-const MainContainer = "div";
-const TextContainer = "div";
-const Description = "p";
-const FounderName = "span";
-const FounderSubtitle = "small";
-const ImgContainer = "div";
----
-
-<MainContainer
+<div
   class="flex flex-col md:flex-row bg-ui-elements-dark rounded-3xl px-16 py-14 text-ui-elements-white items-center gap-14"
 >
-  <TextContainer
-    class="flex flex-col w-full md:w-3/4 items-start justify-start gap-7"
-  >
-    <Description class="font-bold text-2xl">
+  <div class="flex flex-col w-full md:w-3/4 items-start justify-start gap-7">
+    <p class="font-bold text-2xl">
       NEAR Horizon has strengthened awareness for the droplinked protocol while
       accelerating partnerships with both builders and backers. The team and I
       are excited to support the next phase of the ecosystems growth with the
       community.
-    </Description>
-    <FounderName class="font-bold text-[16px] uppercase flex flex-col gap-2">
+    </p>
+    <span class="font-bold text-[16px] uppercase flex flex-col gap-2">
       Ali S.
-      <FounderSubtitle class="font-normal text-sm normal-case">
+      <small class="font-normal text-sm normal-case">
         Founder, Droplinked
-      </FounderSubtitle>
-    </FounderName>
-  </TextContainer>
-  <ImgContainer
-    class="w-full md:w-3/12 h-full flex justify-center items-center"
-  >
-    <Image
+      </small>
+    </span>
+  </div>
+  <div class="w-full md:w-3/12 h-full flex justify-center items-center">
+    <img
       src={"https://ipfs.near.social/ipfs/bafkreiawuljv6qq66awmh5tyoehc34wsl74cktt4tr6jummuukzma7mnza"}
       alt="Ali S."
       width={218}
       height={215}
     />
-  </ImgContainer>
-</MainContainer>
+  </div>
+</div>
