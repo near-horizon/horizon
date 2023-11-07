@@ -7,7 +7,7 @@ function Section({ children }: { children: React.ReactNode }) {
 
 export default function FAQPage() {
   return (
-    <div className="flex flex-col items-stretch justify-start gap-6">
+    <div className="flex flex-col items-stretch justify-start gap-6 rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
       {/* <Widget */}
       {/*   src={"nearhorizon.near/widget/InfoSegment"} */}
       {/*   props={{ */}
