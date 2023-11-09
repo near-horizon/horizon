@@ -6,7 +6,7 @@ use near_sdk::{
     serde::{Deserialize, Serialize},
     AccountId, Timestamp,
 };
-use near_sdk_contract_tools::standard::nep297::Event;
+use near_sdk_contract_tools::{owner::Owner, standard::nep297::Event};
 
 use crate::{
     events::Events,
@@ -104,6 +104,17 @@ impl Contract {
                 *claim = VersionedClaim::V0(Claim::Rejected(near_sdk::env::block_timestamp()));
             });
         Events::RejectClaim {
+            project_id,
+            account_id,
+        }
+        .emit();
+    }
+
+    pub fn remove_claim(&mut self, project_id: AccountId, account_id: AccountId) {
+        self.assert_owner();
+        self.claims
+            .remove(&(project_id.clone(), account_id.clone()));
+        Events::RemoveClaim {
             project_id,
             account_id,
         }

@@ -186,4 +186,8 @@ pub enum Events {
         project_id: AccountId,
         account_id: AccountId,
     },
+    RemoveClaim {
+        project_id: AccountId,
+        account_id: AccountId,
+    },
 }
