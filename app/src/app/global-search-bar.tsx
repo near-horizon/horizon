@@ -59,7 +59,7 @@ export function GlobalSearchBar() {
           ) : (
             <ul className="flex flex-col items-start justify-start">
               {data.projects.slice(0, 4).map(([accountId, project]) => (
-                <li key={accountId}>
+                <li key={accountId} className="w-full">
                   <Link
                     href={`/projects/${accountId}`}
                     className="flex w-full flex-row items-center justify-start gap-3"
