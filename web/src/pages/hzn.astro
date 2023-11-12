@@ -1,13 +1,32 @@
 ---
-import "@styles/globals.css";
-
+import Layout from "@layouts/Layout.astro";
 import Hero from "@components/hzn/Hero.astro";
 import What from "@components/hzn/What.astro";
-
-const MainContainer = "div";
+import Benefits from "@components/hzn/Benefits.astro";
+import Who from "@components/hzn/Who.astro";
+import Testamonial from "@components/hzn/Testamonial.astro";
+import Journey from "@components/hzn/Journey.astro";
+import Structure from "@components/hzn/Structure.astro";
+import { Comprehensive } from "@components/hzn/Comprehensive.tsx";
+import Join from "@components/hzn/Join.astro";
+import FAQ from "@components/hzn/FAQ.astro";
+import Ask from "@components/hzn/Ask.astro";
 ---
 
-<MainContainer class="p-6 bg-background-white w-full flex-col flex gap-16">
-  <Hero />
-  <What />
-</MainContainer>
+<Layout title="HZN">
+  <main
+    class="p-6 bg-background-white w-full flex-col flex gap-14 max-w-screen-xl mx-auto"
+  >
+    <Hero />
+    <What />
+    <Benefits />
+    <Who />
+    <Testamonial />
+    <Journey />
+    <Structure />
+    <Comprehensive />
+    <Join />
+    <FAQ />
+    <Ask />
+  </main>
+</Layout>

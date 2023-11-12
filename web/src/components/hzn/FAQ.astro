@@ -1,0 +1,62 @@
+---
+const faqs = [
+  {
+    question: "What is NEAR Horizon?",
+    answer:
+      "NEAR Horizon is a startup support platform powered by NEAR Protocol. We focus on accelerating the growth and success of early-stage Web3 startups. Since our launch in April 2023, we have onboarded over 200 projects and attracted 50+ contributors. We provide a robust community, immersive learning experiences, mentorship, technical support, and more, all designed to facilitate the growth of your Web3 startup.",
+  },
+  {
+    question: "What all is included in HZN1?",
+    answer:
+      'HZN1 is a comprehensive program for founders that includes cohort-based learning, expert-led sessions, networking opportunities, product audits, a "Ready-to-Raise" bootcamp, Catalyst mentorship program, and more. All these components are designed to provide you with the knowledge, connections, and skills to scale your startup successfully in the Web3.',
+  },
+  {
+    question: "How long is HZN1?",
+    answer: "HZN1 runs for three months from September to Mid-December 2023",
+  },
+  {
+    question: "When does the cohort start?",
+    answer:
+      "The inaugural cohort of HZN1 will commence in September 2023. Register your interest now to stay updated with the latest announcements and preparations.",
+  },
+  {
+    question: "What is the time commitment?",
+    answer:
+      "Participation in HZN1 requires a time commitment of 2-4 hours per week. This includes attending sessions, engaging in discussions, working on challenges and projects, and participating in other program elements.",
+  },
+  {
+    question: "How much does HZN1 cost?",
+    answer:
+      "HZN1 is an equity-free program. We do not make an investment or take equity in participating startups. The program, designed to support and elevate early-stage Web3 founders, is completely free of charge for HZN1.",
+  },
+  {
+    question: "How does the admissions process work?",
+    answer:
+      "The admissions process for HZN1 begins with a registration of interest. Following this, there will be a thorough review of applications to ensure a mutual fit. More details on the admissions process will be provided upon registration. Upon acceptance, founders will be prompted to create a profile on Horizon and join our private Discord server.",
+  },
+];
+---
+
+<div class="flex flex-col items-center gap-7 w-full">
+  <h2 class="text-ui-elements-dark text-center font-bold text-4xl">
+    Frequently asked questions
+  </h2>
+  <div
+    class="flex flex-col gap-6 items-stretch justify-start flex-wrap md:gap-4 md:flex-row w-full"
+  >
+    {
+      faqs.map(({ question, answer }) => (
+        <div
+          class:list={[
+            "w-full md:w-[calc(50%-1rem)] pt-6 flex flex-col items-start gap-2 border-[#eaecf0]",
+            "[&:nth-child(n+2)]:border-t md:[&:nth-child(2)]:border-none",
+            "md:[&:nth-child(n+3)]:border-t",
+          ]}
+        >
+          <b class="text-ui-elements-dark text-lg font-bold">{question}</b>
+          <p class="p-0 m-0 text-background-dark">{answer}</p>
+        </div>
+      ))
+    }
+  </div>
+</div>

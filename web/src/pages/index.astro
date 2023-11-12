@@ -10,6 +10,7 @@ import Testimonial from "@components/landing-page/Testimonial.astro";
 import ContributorsSection from "@components/landing-page/ContributorsSection";
 import BackersSection from "@components/landing-page/BackersSection.tsx";
 import PartnersSection from "@components/landing-page/PartnersSection.tsx";
+import Nav from "@layouts/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 ---
 
@@ -17,6 +18,7 @@ import Layout from "@layouts/Layout.astro";
   <main
     class="p-6 bg-background-white w-full flex-col flex gap-14 max-w-screen-xl mx-auto"
   >
+    <Nav />
     <IntroSection />
     <SupportedBySection />
     <AboutSection />

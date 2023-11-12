@@ -1,0 +1,200 @@
+---
+import { Check } from "@components/svgs/Check.tsx";
+import { Separator } from "@components/ui/separator.tsx";
+
+const cards = [
+  {
+    heading: "Week 1",
+    items: [
+      "Cohort onboarding & welcome",
+      "Signature session / Fireside chat",
+      "Cohort social meetup",
+      "Mentorship kickoff & introductions",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 2",
+    items: [
+      "Designing an Organizational Culture as a Founder",
+      "Tech Tree walkthrough",
+      "Product Demo Day #1",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 3",
+    items: [
+      "Tech Tree walkthrough",
+      "Service Provider AMA",
+      "IRL Meetup 1",
+      "Fundraising Bootcamp Kickoff: Storytelling 101",
+      "Consumer Products 101 and Product Design in Web3",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 4",
+    items: [
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 5",
+    items: [
+      "Cohort onboarding & welcome",
+      "Signature session / Fireside chat",
+      "Cohort social meetup",
+      "Mentorship kickoff & introductions",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 6",
+    items: [
+      "Designing an Organizational Culture as a Founder",
+      "Tech Tree walkthrough",
+      "Product Demo Day #1",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 7",
+    items: [
+      "Tech Tree walkthrough",
+      "Service Provider AMA",
+      "IRL Meetup 1",
+      "Fundraising Bootcamp Kickoff: Storytelling 101",
+      "Consumer Products 101 and Product Design in Web3",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 8",
+    subheading: "Founder Retreat",
+    highlight: "blue",
+  },
+  {
+    heading: "Week 9",
+    items: [
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 10",
+    items: [
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 11",
+    items: [
+      "DISCOVERY Kickoff: How to Run Effective User Research",
+      "Co-working Day (Hybrid / New York City)",
+      "Fundraising Bootcamp: How to Run a Fundraising Process",
+      "Weekly product audit",
+    ],
+  },
+  {
+    heading: "Week 12",
+    subheading: "Final Demo Day & Celebration!",
+    highlight: "orange",
+  },
+] satisfies {
+  heading: string;
+  subheading?: string;
+  highlight?: string;
+  items?: string[];
+}[];
+---
+
+<div
+  class="flex flex-col items-center gap-7 w-full pt-20 pb-16 rounded-3xl bg-background-light"
+>
+  <h2 class="text-ui-elements-dark text-center font-bold text-4xl px-12">
+    HZN Cohort Structure
+  </h2>
+  <p class="text-background-dark text-center text-xl px-12">
+    In HZN1, the cohort experience is crafted to provide flexibility alongside
+    immersive learning. These sessions are designed to cover the spectrum of
+    project needs - from tech know-how to fundraising strategies, leadership
+    skills, and more. The schedule allows for a global participation,
+    accommodating different time zones and work schedules.
+  </p>
+  <div
+    class="w-full flex flex-col items-start gap-3 overflow-x-scroll [scrollbar-width:none]"
+  >
+    <div class="flex px-4 items-stretch justify-start gap-7">
+      {
+        cards.map(({ heading, items, subheading, highlight }) => (
+          <div
+            class:list={[
+              "flex w-[18.75rem] p-8 pt-6 flex-col items-center gap-8 rounded-2xl bg-white",
+              {
+                "bg-[linear-gradient(90deg,#0096ea_3.17%,#32ceff_90.93%)]":
+                  highlight === "blue",
+              },
+              {
+                "bg-[linear-gradient(90deg,#ff6c4a_3.17%,#ffa654_90.93%)]":
+                  highlight === "orange",
+              },
+            ]}
+          >
+            <div class="flex flex-col items-center gap-3 w-full h-full">
+              <h6
+                class:list={[
+                  "text-ui-elements-black text-center text-lg font-bold",
+                  {
+                    "text-ui-elements-white":
+                      highlight === "blue" || highlight === "orange",
+                  },
+                ]}
+              >
+                {heading}
+              </h6>
+              {items ? (
+                <ul class="flex flex-col items-start gap-3 p-3">
+                  {items.reduce((items, item) => {
+                    if (items.length === 0) {
+                      return [
+                        <li class="list-none flex items-center gap-4 w-full text-background-dark [&>svg]:w-6 [&>svg]:min-w-[1.5rem]">
+                          {<Check />}
+                          {item}
+                        </li>,
+                      ];
+                    }
+
+                    items.push(
+                      <Separator className="w-full h-px bg-ui-elements-gray" />,
+                    );
+                    items.push(
+                      <li class="list-none flex items-center gap-4 w-full text-background-dark [&>svg]:w-6 [&>svg]:min-w-[1.5rem]">
+                        {<Check />}
+                        {item}
+                      </li>,
+                    );
+
+                    return items;
+                  }, new Array(0))}
+                </ul>
+              ) : (
+                <div class="flex items-center justify-center text-ui-elements-white text-center text-5xl font-bold h-full">
+                  {subheading}
+                </div>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>

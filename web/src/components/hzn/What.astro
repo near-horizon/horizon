@@ -1,70 +1,57 @@
 ---
-import { Image } from "astro:assets";
+import { mapImage } from "@lib/utils";
+// import { Image } from "astro:assets";
 
-const LAURA_URL_IMG =
-  "https://ipfs.near.social/ipfs/bafkreid2l6w6e2kjalojd2ubtdur3pr2o63nnrm6vy4vl4m3pjufannxgq";
-const LAURA_SIGNATURE_IMG =
-  "https://ipfs.near.social/ipfs/bafkreie7o2qqjhispqowfn3bfci3zfcojkltwhptjmjjice5tafyxbz2au";
-const JARROD_URL_IMG =
-  "https://ipfs.near.social/ipfs/bafkreih3n2cagiefsg2d3coiekucdmpkrff7jzprsddwacycr3kt2mmh4m";
-const JARROD_SIGNATURE_IMG =
-  "https://ipfs.near.social/ipfs/bafkreighkjmwpjp2yh43a6xfbdzo5zl547lt56cqmzrppv4rhguxirpsra";
-
-const MainContainer = "div";
-const Title = "h2";
-const ColumnsContainer = "div";
-const ColumnContent = "div";
-const ColumnParagraph = "p";
-const Avatar = "div";
-const PersonnelInfoContainer = "div";
-const PersonnelName = "span";
-const PersonnelTitle = "small";
+const LAURA_URL_IMG = mapImage(
+  "bafkreid2l6w6e2kjalojd2ubtdur3pr2o63nnrm6vy4vl4m3pjufannxgq",
+);
+const LAURA_SIGNATURE_IMG = mapImage(
+  "bafkreie7o2qqjhispqowfn3bfci3zfcojkltwhptjmjjice5tafyxbz2au",
+);
+const JARROD_URL_IMG = mapImage(
+  "bafkreih3n2cagiefsg2d3coiekucdmpkrff7jzprsddwacycr3kt2mmh4m",
+);
+const JARROD_SIGNATURE_IMG = mapImage(
+  "bafkreighkjmwpjp2yh43a6xfbdzo5zl547lt56cqmzrppv4rhguxirpsra",
+);
 ---
 
-<MainContainer class="flex flex-col flex-1 w-full gap-7 items-center">
-  <Title
+<div class="flex flex-col flex-1 w-full gap-7 items-center">
+  <h2
     class="text-ui-elements-dark text-4xl text-center tracking-wide font-bold leading-10"
   >
     What is HZN
-  </Title>
-  <ColumnsContainer class="flex flex-col md:flex-row gap-6 md:gap-20">
-    <ColumnContent class="gap-4 flex items-start w-full flex-col">
-      <ColumnParagraph
-        class="p-0 m-0 text-background-dark text-lg font-normal leading-7"
-      >
+  </h2>
+  <div class="flex flex-col md:flex-row gap-6 md:gap-20">
+    <div class="gap-4 flex items-start w-full flex-col">
+      <p class="p-0 m-0 text-background-dark text-lg font-normal leading-7">
         Horizon Founders are building the future of the internet - the Open Web
         - in which people have control of their data, assets, identities and
         power of governance. We harness the power of blockchain to solve urgent
         problems in delightful ways and showcase the true value of Web3 through
         our products. We are a community of visionaries, and allies who believe
         we can make the world a better place.
-      </ColumnParagraph>
-      <ColumnParagraph
-        class="p-0 m-0 text-background-dark text-lg font-normal leading-7"
-      >
+      </p>
+      <p class="p-0 m-0 text-background-dark text-lg font-normal leading-7">
         At NEAR Horizon, we know firsthand the hurdles of building a web3
         startup. The ever-shifting landscape, the dizzying tech advancements,
         the challenge of securing funds, and the pressure to scale within a
         market that's just getting started. We've been there.
-      </ColumnParagraph>
-      <ColumnParagraph
-        class="p-0 m-0 text-background-dark text-lg font-normal leading-7"
-      >
+      </p>
+      <p class="p-0 m-0 text-background-dark text-lg font-normal leading-7">
         HZN1 is real, grounded support tailored specifically for you - all
         equity-free. We're all in on helping you grow without taking a slice of
         your hard work.
-      </ColumnParagraph>
-    </ColumnContent>
-    <ColumnContent class="gap-4 flex items-start w-full flex-col">
-      <ColumnParagraph
-        class="p-0 m-0 text-background-dark text-lg font-normal leading-7"
-      >
+      </p>
+    </div>
+    <div class="gap-4 flex items-start w-full flex-col">
+      <p class="p-0 m-0 text-background-dark text-lg font-normal leading-7">
         We're not just a program. We're a community of creators, pioneers, and
         friends who believe in making the world more open, one project at a
         time. Join us?
-      </ColumnParagraph>
-      <Avatar class="flex items-center gap-5 w-full">
-        <Image
+      </p>
+      <div class="flex items-center gap-5 w-full">
+        <img
           width={80}
           height={80}
           alt="Laura Cunningham Image"
@@ -72,19 +59,17 @@ const PersonnelTitle = "small";
           loading="eager"
           class="w-20 h-20 object-cover rounded-[6.25rem] items-center flex flex-col justify-center"
         />
-        <PersonnelInfoContainer class="flex flex-col w-44 items-start gap-1">
-          <PersonnelName
-            class="text-gray-900 text-center text-lg font-medium leading-7"
-          >
+        <div class="flex flex-col w-44 items-start gap-1">
+          <span class="text-gray-900 text-center text-lg font-medium leading-7">
             Laura Cunningham
-          </PersonnelName>
-          <PersonnelTitle
+          </span>
+          <small
             class="text-background-dark text-base font-normal leading-7 text-center"
           >
             General Manager
-          </PersonnelTitle>
-        </PersonnelInfoContainer>
-        <Image
+          </small>
+        </div>
+        <img
           width={80}
           height={80}
           alt="Laura Cunningham Signature"
@@ -92,9 +77,9 @@ const PersonnelTitle = "small";
           loading="eager"
           class="hidden md:block w-full max-w-[40%]"
         />
-      </Avatar>
-      <Avatar class="flex items-center gap-5 w-full">
-        <Image
+      </div>
+      <div class="flex items-center gap-5 w-full">
+        <img
           width={80}
           height={80}
           alt="Jarrod Barnes Image"
@@ -102,19 +87,17 @@ const PersonnelTitle = "small";
           loading="eager"
           class="w-20 h-20 object-cover rounded-[6.25rem] items-center flex flex-col justify-center"
         />
-        <PersonnelInfoContainer class="flex flex-col w-44 items-start gap-1">
-          <PersonnelName
-            class="text-gray-900 text-center text-lg font-medium leading-7"
-          >
+        <div class="flex flex-col w-44 items-start gap-1">
+          <span class="text-gray-900 text-center text-lg font-medium leading-7">
             Jarrod Barnes
-          </PersonnelName>
-          <PersonnelTitle
+          </span>
+          <small
             class="text-background-dark text-base font-normal leading-7 text-center"
           >
             Head of Ecosystem
-          </PersonnelTitle>
-        </PersonnelInfoContainer>
-        <Image
+          </small>
+        </div>
+        <img
           width={80}
           height={80}
           alt="Jarrod Barnes Signature"
@@ -122,7 +105,7 @@ const PersonnelTitle = "small";
           loading="eager"
           class="hidden md:block w-full max-w-[40%]"
         />
-      </Avatar>
-    </ColumnContent>
-  </ColumnsContainer>
-</MainContainer>
+      </div>
+    </div>
+  </div>
+</div>
