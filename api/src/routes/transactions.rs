@@ -36,15 +36,22 @@ pub enum Type {
 }
 
 impl Type {
-    pub fn to_filter(&self) -> String {
+    pub fn to_filter(&self) -> Vec<String> {
         match self {
-            Type::Projects => "'add_project'".to_string(),
-            Type::Contributors => "'register_vendor'".to_string(),
-            Type::Backers => "ANY('add_investors', 'register_investor')".to_string(),
-            Type::Requests => "'add_request'".to_string(),
-            Type::Proposals => "'add_proposal'".to_string(),
-            Type::Contributions => "ANY('add_contribution','accept_contributon','reject_contribution','add_contribution_action','deliver_contribution','complete_contribution')".to_string(),
-            Type::Incentives => "'add_incentive'".to_string(),
+            Type::Projects => vec!["add_project".to_string()],
+            Type::Contributors => vec!["register_vendor".to_string()],
+            Type::Backers => vec!["add_investors".to_string(), "register_investor".to_string()],
+            Type::Requests => vec!["add_request".to_string()],
+            Type::Proposals => vec!["add_proposal".to_string()],
+            Type::Contributions => vec![
+                "add_contribution".to_string(),
+                "accept_contributon".to_string(),
+                "reject_contribution".to_string(),
+                "add_contribution_action".to_string(),
+                "deliver_contribution".to_string(),
+                "complete_contribution".to_string(),
+            ],
+            Type::Incentives => vec!["add_incentive".to_string()],
         }
     }
 }
@@ -80,7 +87,7 @@ pub async fn get_transactions(
             FROM
               transactions
             WHERE
-              method_name = $1
+              method_name = ANY($1)
             ORDER BY
               id DESC
             LIMIT
@@ -88,7 +95,7 @@ pub async fn get_transactions(
             OFFSET
               $3
             "#,
-            filter,
+            &filter,
             limit,
             offset,
         )
