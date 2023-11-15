@@ -17,7 +17,7 @@ export function Onoboarding() {
       </div>
       <div className="flex w-full flex-col items-center justify-start gap-4">
         <h3 className="text-lg font-bold text-text-black">Choose your path:</h3>
-        <div className="flex w-full max-w-6xl flex-row flex-wrap items-stretch justify-center gap-7">
+        <div className="w-full max-w-6xl grid-cols-1 justify-center gap-7 md:grid-cols-2 lg:grid-cols-3">
           {[
             {
               icon: <Rocket02Svg className="w-8" />,

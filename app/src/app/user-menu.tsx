@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { IPFSImage } from "~/components/ipfs-image";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -18,8 +17,9 @@ import {
   useUser,
   useWalletSelector,
 } from "~/stores/global";
-import { ChevronDownSvg, User02Svg } from "~/icons";
+import { ChevronDownSvg } from "~/icons";
 import { ProfileNav } from "./account/profile-nav";
+import { Icon } from "~/components/icon";
 
 export function UserMenu() {
   const selector = useWalletSelector();
@@ -44,15 +44,11 @@ export function UserMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
           <div className="h-8 w-8 overflow-hidden rounded-full border border-gray-400">
-            {data?.image && "ipfs_cid" in data.image ? (
-              <IPFSImage
-                cid={data.image.ipfs_cid}
-                alt="Profile picture"
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <User02Svg className="h-8 w-8 rounded-lg" />
-            )}
+            <Icon
+              name={user?.accountId ?? ""}
+              image={data?.image}
+              className="h-8 w-8 rounded-lg"
+            />
           </div>
           My profile
         </DropdownMenuTrigger>
@@ -102,15 +98,11 @@ export function MobileUserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
         <div className="h-8 w-8 overflow-hidden rounded-full border border-gray-400">
-          {data?.image && "ipfs_cid" in data.image ? (
-            <IPFSImage
-              cid={data.image.ipfs_cid}
-              alt="Profile picture"
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <ChevronDownSvg className="h-8 w-8 rounded-lg" />
-          )}
+          <Icon
+            name={user?.accountId ?? ""}
+            image={data?.image}
+            className="h-8 w-8 rounded-lg"
+          />
         </div>
         My profile
         <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />

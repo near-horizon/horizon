@@ -174,9 +174,9 @@ export default async function Dashboard() {
   ];
 
   return (
-    <div className="flex flex-row flex-wrap items-stretch justify-start gap-6">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {dashboardCards.map((card, index) => (
-        <div className="w-full lg:w-[calc((100%-1.5rem)/2)]" key={index}>
+        <div key={index}>
           <DashboardCard {...card} />
         </div>
       ))}

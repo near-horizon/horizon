@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { useProposal } from "~/hooks/proposals";
 import { type AccountId, type CID } from "~/lib/validation/common";
-import { ProjectIcon } from "./project/icon";
+import { Icon } from "./icon";
 import { Handle } from "./handle";
 import { format } from "timeago.js";
 import { Description } from "./description";
 import { useCreateContract, useDeclineProposal } from "~/hooks/contracts";
 import { ProgressDialog } from "./progress-dialog";
+import { useContributor } from "~/hooks/contributors";
 
 export function Proposal({
   projectId,
@@ -20,6 +21,7 @@ export function Proposal({
   loading?: boolean;
 }) {
   const { data, status } = useProposal([[projectId, cid], contributorId]);
+  const { data: contributor } = useContributor(contributorId);
   const [acceptProgress, createContract] = useCreateContract();
   const [declineProgress, declineProposal] = useDeclineProposal();
 
@@ -30,7 +32,11 @@ export function Proposal({
           className="flex flex-row items-center gap-2"
           href={`/contributors/${contributorId}`}
         >
-          <ProjectIcon accountId={contributorId} className="h-8 w-8" />
+          <Icon
+            name={contributor?.name ?? ""}
+            image={contributor?.image}
+            className="h-8 w-8"
+          />
           <Handle accountId={contributorId} />
         </Link>
         <span className="text-stone-200">

@@ -8,21 +8,15 @@ export function Founders({ accountId }: { accountId: AccountId }) {
   const founders = data?.founders ?? [];
 
   return (
-    <div className="flex w-full flex-row flex-wrap items-stretch justify-start gap-6">
+    <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
       {status === "loading"
         ? ["", "", ""].map((_, i) => (
-            <div
-              key={i}
-              className="w-full md:w-[calc((100%-1.5rem)*.5)] xl:w-[calc((100%-3rem)*.33)]"
-            >
+            <div key={i}>
               <Founder accountId="nearhorizon.near" loading />
             </div>
           ))
         : founders.map((founder) => (
-            <div
-              key={founder}
-              className="w-full pl-1 md:w-[calc((100%-1.5rem)*.5)] xl:w-[calc((100%-3rem)*.33)]"
-            >
+            <div key={founder}>
               <Founder accountId={founder} />
             </div>
           ))}

@@ -13,10 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import { RequestSvg, User02Svg } from "~/icons";
+import { RequestSvg } from "~/icons";
 import { Handle } from "~/components/handle";
+import { Icon } from "~/components/icon";
 
 export function Project({
   accountId,
@@ -68,14 +68,11 @@ export function Project({
               backerViewKey ? "/backers-digest?from=" + backerViewKey : ""
             }`}
           >
-            {data.image && "ipfs_cid" in data.image ? (
-              <IPFSImage
-                cid={data.image.ipfs_cid}
-                className="h-16 w-16 flex-shrink-0 rounded-xl"
-              />
-            ) : (
-              <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
-            )}
+            <Icon
+              name={data?.name ?? ""}
+              image={data?.image}
+              className="h-16 w-16 flex-shrink-0 rounded-xl"
+            />
             <Handle accountId={accountId} />
           </Link>
         </CardTitle>

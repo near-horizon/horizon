@@ -8,7 +8,7 @@ import { ImageInput } from "~/components/inputs/image";
 import { MultiSelectInput } from "~/components/inputs/multi-select";
 import { TextInput } from "~/components/inputs/text";
 import { MotionDiv } from "~/components/motion";
-import { ProjectIcon } from "~/components/project/icon";
+import { Icon } from "~/components/icon";
 import { Tags } from "~/components/tags";
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
@@ -143,11 +143,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
   );
   const viewData = (
     <div className="flex flex-row items-start justify-start gap-6">
-      <ProjectIcon
-        accountId={accountId}
-        loading={accountId === ""}
-        className="h-24 w-24"
-      />
+      <Icon name={data?.name ?? ""} image={data?.image} className="h-24 w-24" />
       <div className="flex flex-col items-start justify-start gap-1">
         <Handle accountId={accountId} />
         <div className="hidden lg:block">

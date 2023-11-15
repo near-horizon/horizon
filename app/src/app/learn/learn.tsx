@@ -116,12 +116,9 @@ export function Learn() {
               return (
                 <div key={resource.id} className={`${i !== 0 ? "mt-14" : ""}`}>
                   <h3 className="mb-8 text-2xl font-bold">{resource.title}</h3>
-                  <div className="flex flex-row flex-wrap items-stretch justify-start gap-8">
+                  <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
                     {resource.items.map((resource) => (
-                      <div
-                        key={resource.title}
-                        className="md:w-[calc((100%-2rem)/2)] xl:w-[calc((100%-4rem)/3)] 2xl:w-[calc((100%-6rem)/4)]"
-                      >
+                      <div key={resource.title}>
                         <LearnCard resource={resource} />
                       </div>
                     ))}

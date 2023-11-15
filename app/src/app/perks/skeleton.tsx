@@ -37,12 +37,9 @@ export function PerksSkeleton() {
           />
         </div>
       </div>
-      <div className="flex w-full flex-row flex-wrap items-stretch gap-2">
+      <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {[...Array(9).keys()].map((key) => (
-          <div
-            key={key}
-            className="w-full md:w-[calc((100%-.5rem)*.5)] lg:w-[calc((100%-1rem)*.33)] 2xl:w-[calc((100%-1.5rem)*.25)]"
-          >
+          <div key={key}>
             <PerkSkeleton />
           </div>
         ))}

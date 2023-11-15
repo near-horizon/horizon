@@ -1,7 +1,7 @@
 "use client";
 
 import { type AccountId } from "~/lib/validation/common";
-import { Card, CardSkeleton } from "./card";
+import { Contract, ContractSkeleton } from "~/app/contracts/card";
 import { Separator } from "~/components/ui/separator";
 import { type ReactNode } from "react";
 import { useProjectContracts } from "~/hooks/contracts";
@@ -35,7 +35,11 @@ export function List({ accountId }: { accountId: AccountId }) {
         }
 
         list.push(
-          <Card projectId={projectId} cid={cid} contributorId={contributorId} />
+          <Contract
+            projectId={projectId}
+            cid={cid}
+            contributorId={contributorId}
+          />
         );
 
         return list;
@@ -52,7 +56,7 @@ export function Skeleton() {
           list.push(<Separator className="h-px w-full bg-background-light" />);
         }
 
-        list.push(<CardSkeleton />);
+        list.push(<ContractSkeleton />);
 
         return list;
       }, new Array<ReactNode>(0))}

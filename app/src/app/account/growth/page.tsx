@@ -14,7 +14,7 @@ export default function GrowthPrograms() {
         polkadot ICON BitTorrent. Crypto ipsum bitcoin ethereum dogecoin
         litecoin. Ethereum kadena polkadot ICON BitTorrent.
       </div>
-      <div className="mt-6 flex flex-row flex-wrap items-stretch justify-start gap-8">
+      <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2 2xl:grid-cols-3">
         {growthPrograms.map((growthProgram) => (
           <GrowthProgramCard program={growthProgram} key={growthProgram.name} />
         ))}

@@ -27,7 +27,7 @@ export default function GrowthProgramCard({
   program: GrowthProgram;
 }) {
   return (
-    <Card className="flex w-full shadow-md md:w-[calc((100%-2rem)/2)] 2xl:w-[calc((100%-4rem)/3)]">
+    <Card className="flex shadow-md">
       <CardContent className="flex flex-col px-0  pb-0">
         <CardHeader className="flex flex-row items-center px-6">
           <div className="relative mr-4 h-16 w-16">

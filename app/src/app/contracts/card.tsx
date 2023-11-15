@@ -14,15 +14,15 @@ import {
 import { useRequest } from "~/hooks/requests";
 import { formatBudget, formatDate } from "~/lib/utils";
 import { type AccountId, type CID } from "~/lib/validation/common";
-import { BankNote01Svg, Flag01Svg, User01Svg } from "~/icons";
+import { BankNote01Svg, Flag01Svg } from "~/icons";
 import Link from "next/link";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useContract } from "~/hooks/contracts";
 import { useProposal } from "~/hooks/proposals";
-import { IPFSImage } from "~/components/ipfs-image";
 import { useContributor } from "~/hooks/contributors";
+import { Icon } from "~/components/icon";
 
-export function Card({
+export function Contract({
   projectId,
   contributorId,
   cid,
@@ -49,7 +49,7 @@ export function Card({
     proposalStatus === "loading" ||
     contributorStatus === "loading"
   ) {
-    return <CardSkeleton />;
+    return <ContractSkeleton />;
   }
 
   if (
@@ -101,14 +101,11 @@ export function Card({
           href={`/contributors/${contributorId}`}
           className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400"
         >
-          {contributor.image && "ipfs_cid" in contributor.image ? (
-            <IPFSImage
-              cid={contributor.image.ipfs_cid}
-              className="h-5 w-5 rounded-full"
-            />
-          ) : (
-            <User01Svg className="h-5 w-5 border border-e-ui-elements-gray bg-background-light" />
-          )}
+          <Icon
+            name={contributor.name ?? ""}
+            image={contributor.image}
+            className="h-5 w-5 rounded-full"
+          />
           <b>{contributor.name}</b>
           <small>@{contributorId}</small>
         </Link>
@@ -117,7 +114,7 @@ export function Card({
   );
 }
 
-export function CardSkeleton() {
+export function ContractSkeleton() {
   return (
     <CardBase className="border-none shadow-none">
       <CardHeader>

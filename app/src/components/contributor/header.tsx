@@ -1,7 +1,7 @@
 "use client";
 
 import { type AccountId } from "~/lib/validation/common";
-import { ProjectIcon } from "../project/icon";
+import { Icon } from "../icon";
 import { Handle } from "../handle";
 import { useContributor } from "~/hooks/contributors";
 
@@ -10,7 +10,7 @@ export function Header({ accountId }: { accountId: AccountId }) {
 
   return (
     <div className="flex flex-row items-center justify-start gap-4">
-      <ProjectIcon accountId={accountId} />
+      <Icon name={data?.name ?? ""} image={data?.image} />
 
       <div className="flex flex-col items-start justify-start gap-3">
         <Handle accountId={accountId} />

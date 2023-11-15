@@ -9,14 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import { BankNote01Svg, File02Svg, Flag01Svg, User02Svg } from "~/icons";
+import { BankNote01Svg, File02Svg, Flag01Svg } from "~/icons";
 import { Tags } from "~/components/tags";
 import { useRequest } from "~/hooks/requests";
 import { useProject } from "~/hooks/projects";
 import { Availability } from "~/components/availability";
 import { formatBudget, formatDate } from "~/lib/utils";
+import { Icon } from "~/components/icon";
 
 export function Request({
   accountId,
@@ -60,11 +60,11 @@ export function Request({
     projectSection = (
       <Link href={`/projects/${accountId}`}>
         <h3 className="flex flex-row items-start justify-start gap-4">
-          {project.image && "ipfs_cid" in project.image ? (
-            <IPFSImage cid={project.image.ipfs_cid} className="h-7 w-7" />
-          ) : (
-            <User02Svg className="h-7 w-7" />
-          )}
+          <Icon
+            name={project.name ?? ""}
+            image={project.image}
+            className="h-7 w-7"
+          />
           <span className="text-lg font-medium">{project.name}</span>
         </h3>
       </Link>

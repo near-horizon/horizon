@@ -16,8 +16,8 @@ import { type InputProps } from "~/lib/validation/inputs";
 import { Button } from "../ui/button";
 import { RefreshCcw04Svg, UploadCloud01Svg, User01Svg } from "~/icons";
 import { useRef, useState } from "react";
-import { IPFSImage } from "../ipfs-image";
 import { generateImage, uploadImage } from "~/lib/utils";
+import { Icon } from "../icon";
 
 export function ImageInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -47,7 +47,11 @@ export function ImageInput<
             <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-ui-elements-gray bg-ui-elements-light shadow shadow-ui-elements-light">
               {props.cid ? (
                 <>
-                  <IPFSImage cid={props.cid} alt={props.label} />
+                  <Icon
+                    name={props.label ?? ""}
+                    image={{ ipfs_cid: props.cid }}
+                    className="h-10 w-10"
+                  />
                   {uploading && (
                     <RefreshCcw04Svg className="absolute inset-0 animate-spin-counter" />
                   )}

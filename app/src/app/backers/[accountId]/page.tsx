@@ -1,5 +1,7 @@
-import { Details } from "~/components/backer/details";
+import { General } from "~/components/backer/general";
 import { Header } from "~/components/backer/header";
+import { Description } from "~/components/description";
+import { Details } from "~/components/ui/details";
 import { getBackers } from "~/lib/server/backers";
 import { type AccountId } from "~/lib/validation/common";
 
@@ -14,7 +16,20 @@ export default function BackersPage({
         <Header accountId={accountId} />
 
         <div className="relative w-full">
-          <Details accountId={accountId} />
+          <Details
+            sections={[
+              {
+                title: "Details",
+                id: "details",
+                Content: <General accountId={accountId} />,
+              },
+              {
+                title: "About",
+                id: "about",
+                Content: <Description text={""} loading={false} full />,
+              },
+            ]}
+          />
         </div>
       </div>
     </div>

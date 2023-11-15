@@ -31,7 +31,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "group flex w-full flex-col items-center justify-between gap-8 px-8 py-6 md:w-[calc((100%-1.75rem)/2)] lg:w-[calc((100%-1.75rem*2)/3)]",
+        "group flex flex-col items-center justify-between gap-8 px-8 py-6",
         "rounded-xl border-ui-elements-light bg-background-white shadow shadow-ui-elements-light transition-all duration-500 hover:shadow-ui-elements-gray"
       )}
     >

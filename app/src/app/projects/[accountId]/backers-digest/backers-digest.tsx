@@ -13,15 +13,15 @@ import {
   Users01Svg,
 } from "~/icons";
 import { ExternalLink } from "~/components/external-link";
-import { cleanURL, cn } from "~/lib/utils";
+import { cleanURL } from "~/lib/utils";
 import { Socials } from "~/components/socials";
-import { IPFSImage } from "~/components/ipfs-image";
 import { type Linktree } from "~/lib/validation/fetching";
 import { NoData } from "~/components/empty";
 import { Button } from "~/components/ui/button";
 import { env } from "~/env.mjs";
 import { QRDialog } from "~/components/qr-dialog";
 import { getUserFromSession } from "~/lib/session";
+import { Icon } from "~/components/icon";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   const backersDigest = await getBackersDigest(accountId);
@@ -97,7 +97,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
       </Section>
       <Separator className="h-px w-full bg-ui-elements-light" />
       <Section title="Traction metrics">
-        <div className="flex w-full flex-row flex-wrap gap-6">
+        <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {!backersDigest.traction ||
           Object.keys(backersDigest.traction).length === 0 ? (
             <NoData className="w-full" />
@@ -105,7 +105,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
             Object.entries(backersDigest.traction).map(([key, value]) => (
               <div
                 key={key}
-                className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-ui-elements-light bg-background-light px-3 py-4 md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
+                className="flex flex-col items-center justify-center gap-2 rounded-lg border border-ui-elements-light bg-background-light px-3 py-4"
               >
                 <b className="text-2xl font-bold text-secondary-pressed">
                   {value}
@@ -151,18 +151,16 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
         {!backersDigest.founders || backersDigest.founders.length === 0 ? (
           <NoData className="w-full" />
         ) : (
-          <div className="flex w-full flex-row flex-wrap items-stretch justify-start gap-5">
+          <div className="grid w-full grid-cols-1 items-stretch justify-start gap-5 md:grid-cols-2 lg:grid-cols-3">
             {(backersDigest.founders ?? []).map((founder) => (
               <div
                 key={founder.first_name as string}
-                className={cn(
-                  "flex flex-col items-center justify-start gap-4 rounded-2xl border border-accent-disabled bg-background-light p-6",
-                  "md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
-                )}
+                className="flex flex-col items-center justify-start gap-4 rounded-2xl border border-accent-disabled bg-background-light p-6"
               >
-                <IPFSImage
-                  className="h-16 w-16 rounded-full"
-                  cid={founder.photo as string}
+                <Icon
+                  name={founder.first_name as string}
+                  image={{ ipfs_cid: founder.photo as string }}
+                  className="h-16 w-16 rounded-lg"
                 />
                 <b>
                   {founder.first_name as string} {founder.last_name as string}

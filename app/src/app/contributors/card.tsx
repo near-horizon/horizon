@@ -11,12 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import { User02Svg } from "~/icons";
 import { Handle } from "~/components/handle";
 import { useContributor } from "~/hooks/contributors";
 import { Tags } from "~/components/tags";
+import { Icon } from "~/components/icon";
 
 export function Contributor({ accountId }: { accountId: AccountId }) {
   const { data, status } = useContributor(accountId);
@@ -49,14 +48,11 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
             className="flex h-20 max-w-full flex-row items-start justify-start gap-4"
             href={`/contributors/${accountId}`}
           >
-            {data.image && "ipfs_cid" in data.image ? (
-              <IPFSImage
-                cid={data.image.ipfs_cid}
-                className="h-16 w-16 flex-shrink-0 rounded-lg"
-              />
-            ) : (
-              <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
-            )}
+            <Icon
+              name={data.name ?? ""}
+              image={data.image}
+              className="h-16 w-16 flex-shrink-0 rounded-lg"
+            />
             <div className="flex max-w-full flex-col overflow-hidden">
               <Handle accountId={accountId} />
               <span className="text-sm font-normal">

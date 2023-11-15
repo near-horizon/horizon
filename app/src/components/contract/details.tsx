@@ -5,7 +5,7 @@ import { Detail } from "../detail";
 import { formatBudget, formatDate } from "~/lib/utils";
 import { useContract } from "~/hooks/contracts";
 import Link from "next/link";
-import { ProjectIcon } from "../project/icon";
+import { Icon } from "../icon";
 import { Handle } from "../handle";
 import { useProposal } from "~/hooks/proposals";
 import { useContributor } from "~/hooks/contributors";
@@ -50,8 +50,9 @@ export function Details({
                     className="flex w-full items-center gap-2"
                     href={`/contributors/${contributorId}`}
                   >
-                    <ProjectIcon
-                      accountId={contributorId}
+                    <Icon
+                      name={contributor?.name ?? ""}
+                      image={contributor?.image}
                       className="h-8 w-8"
                     />
                     <Handle accountId={contributorId} />
@@ -66,7 +67,11 @@ export function Details({
                     className="flex w-full items-center gap-2"
                     href={`/projects/${projectId}`}
                   >
-                    <ProjectIcon accountId={projectId} className="h-8 w-8" />
+                    <Icon
+                      name={project?.name ?? ""}
+                      image={project?.image}
+                      className="h-8 w-8"
+                    />
                     <Handle accountId={projectId} />
                   </Link>
                 }

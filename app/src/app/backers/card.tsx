@@ -3,12 +3,11 @@
 import { type AccountId } from "~/lib/validation/common";
 import Link from "next/link";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import { User02Svg } from "~/icons";
 import { Handle } from "~/components/handle";
 import { Tags } from "~/components/tags";
 import { useBacker } from "~/hooks/backers";
+import { Icon } from "~/components/icon";
 
 export function Backer({ accountId }: { accountId: AccountId }) {
   const { data, status } = useBacker(accountId);
@@ -32,14 +31,11 @@ export function Backer({ accountId }: { accountId: AccountId }) {
           className="flex h-20 max-w-full flex-row items-start justify-start gap-4"
           href={`/backers/${accountId}`}
         >
-          {data.image && "ipfs_cid" in data.image ? (
-            <IPFSImage
-              cid={data.image.ipfs_cid}
-              className="h-16 w-16 flex-shrink-0 rounded-lg"
-            />
-          ) : (
-            <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
-          )}
+          <Icon
+            name={data.name ?? ""}
+            image={data.image}
+            className="h-16 w-16 flex-shrink-0 rounded-lg"
+          />
           <div className="max-w-full overflow-hidden">
             <Handle accountId={accountId} />
             {data.specialization && <span>{data.specialization}</span>}

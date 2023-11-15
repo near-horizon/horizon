@@ -2,7 +2,7 @@
 
 import { useProjectRequests } from "~/hooks/requests";
 import { type AccountId } from "~/lib/validation/common";
-import { Request } from "../request";
+import { Request, RequestSkeleton } from "~/app/requests/card";
 
 export function Requests({ accountId }: { accountId: AccountId }) {
   const { data, status } = useProjectRequests(accountId);
@@ -11,10 +11,10 @@ export function Requests({ accountId }: { accountId: AccountId }) {
     <div className="flex w-full max-w-full flex-col items-start justify-start gap-8">
       {status === "loading" ? (
         <>
-          <Request accountId={accountId} cid="" loading />
-          <Request accountId={accountId} cid="" loading />
-          <Request accountId={accountId} cid="" loading />
-          <Request accountId={accountId} cid="" loading />
+          <RequestSkeleton />
+          <RequestSkeleton />
+          <RequestSkeleton />
+          <RequestSkeleton />
         </>
       ) : !!data?.length ? (
         data.map(([, cid]) => (

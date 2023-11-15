@@ -7,11 +7,11 @@ import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useSearch } from "~/hooks/search";
 import { cn } from "~/lib/utils";
-import { BookOpen02Svg, SearchSmSvg, User02Svg } from "~/icons";
+import { BookOpen02Svg, SearchSmSvg } from "~/icons";
 import Link from "next/link";
-import { IPFSImage } from "~/components/ipfs-image";
 import { ExternalLink } from "~/components/external-link";
 import Image from "next/image";
+import { Icon } from "~/components/icon";
 
 export function GlobalSearchBar() {
   const searchParams = useSearchParams();
@@ -63,14 +63,11 @@ export function GlobalSearchBar() {
                     className="flex w-full flex-row items-center justify-start gap-3"
                   >
                     <SearchSmSvg className="h-4 w-4" />
-                    {project.image && "ipfs_cid" in project.image ? (
-                      <IPFSImage
-                        cid={project.image.ipfs_cid}
-                        className="h-4 w-4 flex-shrink-0 rounded-lg"
-                      />
-                    ) : (
-                      <User02Svg className="h-4 w-4 flex-shrink-0 rounded-lg" />
-                    )}
+                    <Icon
+                      name={project.name ?? ""}
+                      image={project.image}
+                      className="h-4 w-4 flex-shrink-0 rounded-lg"
+                    />
                     <b className="max-w-[30ch] truncate">
                       {project.name ?? accountId}
                     </b>
@@ -87,14 +84,11 @@ export function GlobalSearchBar() {
                       className="flex w-full flex-row items-center justify-start gap-3"
                     >
                       <SearchSmSvg className="h-4 w-4" />
-                      {image && "ipfs_cid" in image ? (
-                        <IPFSImage
-                          cid={image.ipfs_cid}
-                          className="h-4 w-4 flex-shrink-0 rounded-lg"
-                        />
-                      ) : (
-                        <User02Svg className="h-4 w-4 flex-shrink-0 rounded-lg" />
-                      )}
+                      <Icon
+                        name={title}
+                        image={image}
+                        className="h-4 w-4 flex-shrink-0 rounded-lg"
+                      />
                       <b className="max-w-[30ch] truncate">{title}</b>
                       <small>Request</small>
                     </Link>
@@ -107,14 +101,11 @@ export function GlobalSearchBar() {
                     className="flex w-full flex-row items-center justify-start gap-3"
                   >
                     <SearchSmSvg className="h-4 w-4" />
-                    {contributor.image && "ipfs_cid" in contributor.image ? (
-                      <IPFSImage
-                        cid={contributor.image.ipfs_cid}
-                        className="h-4 w-4 flex-shrink-0 rounded-lg"
-                      />
-                    ) : (
-                      <User02Svg className="h-4 w-4 flex-shrink-0 rounded-lg" />
-                    )}
+                    <Icon
+                      name={contributor.name ?? ""}
+                      image={contributor.image}
+                      className="h-4 w-4 flex-shrink-0 rounded-lg"
+                    />
                     <b className="max-w-[30ch] truncate">
                       {contributor.name ?? accountId}
                     </b>
@@ -129,14 +120,11 @@ export function GlobalSearchBar() {
                     className="flex w-full flex-row items-center justify-start gap-3"
                   >
                     <SearchSmSvg className="h-4 w-4" />
-                    {backer.image && "ipfs_cid" in backer.image ? (
-                      <IPFSImage
-                        cid={backer.image.ipfs_cid}
-                        className="h-4 w-4 flex-shrink-0 rounded-lg"
-                      />
-                    ) : (
-                      <SearchSmSvg className="h-4 w-4 flex-shrink-0 rounded-lg" />
-                    )}
+                    <Icon
+                      name={backer.name ?? ""}
+                      image={backer.image}
+                      className="h-4 w-4 flex-shrink-0 rounded-lg"
+                    />
                     <b className="max-w-[30ch] truncate">
                       {backer.name ?? accountId}
                     </b>

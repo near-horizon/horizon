@@ -1,7 +1,7 @@
 "use client";
 
 import { useRequestProposals } from "~/hooks/proposals";
-import { type CID, type AccountId } from "~/lib/validation/common";
+import { type AccountId, type CID } from "~/lib/validation/common";
 import { Proposal } from "../proposal";
 
 export function Proposals({

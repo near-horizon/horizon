@@ -2,7 +2,7 @@
 
 import { useContributorCompletedContracts } from "~/hooks/contracts";
 import { type AccountId } from "~/lib/validation/common";
-import { Contract } from "../contract";
+import { Contract } from "~/app/contracts/card";
 
 export function History({ accountId }: { accountId: AccountId }) {
   const { data, status } = useContributorCompletedContracts(accountId);
@@ -11,9 +11,13 @@ export function History({ accountId }: { accountId: AccountId }) {
     <div className="flex flex-col gap-3">
       {status === "loading"
         ? "Loading..."
-        : data?.map((contractId) => (
-            <div key={contractId.toString()}>
-              <Contract contractId={contractId} showContributor={false} />
+        : data?.map(([[projectId, cid], contributorId]) => (
+            <div key={cid}>
+              <Contract
+                projectId={projectId}
+                cid={cid}
+                contributorId={contributorId}
+              />
             </div>
           ))}
     </div>
