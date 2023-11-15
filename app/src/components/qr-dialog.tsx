@@ -4,8 +4,8 @@ import type QRCodeStyling from "qr-code-styling";
 import { Button } from "./ui/button";
 import { useEffect, useRef, useState } from "react";
 import { Copy01Svg, XSvg } from "~/icons";
-import { motion } from "framer-motion";
 import { cleanURL } from "~/lib/utils";
+import { MotionDiv } from "./motion";
 
 function useQRCodeStyling(
   options: ConstructorParameters<typeof QRCodeStyling>[0]
@@ -72,7 +72,7 @@ export function QRDialog({ url }: { url: string }) {
       <Button variant="outline" onClick={() => setShow(true)}>
         Share
       </Button>
-      <motion.div
+      <MotionDiv
         className="fixed inset-0 z-50 hidden flex-col items-center justify-center"
         variants={{
           hidden: { display: "none" },
@@ -83,7 +83,7 @@ export function QRDialog({ url }: { url: string }) {
         initial="hidden"
         animate={show ? "flex" : "hidden"}
       >
-        <motion.div
+        <MotionDiv
           className="fixed -inset-full bg-black"
           variants={{
             hidden: { opacity: 0 },
@@ -92,7 +92,7 @@ export function QRDialog({ url }: { url: string }) {
             },
           }}
         />
-        <motion.div
+        <MotionDiv
           className="relative flex flex-col items-center justify-center gap-6 rounded-xl bg-ui-elements-light p-8"
           variants={{
             hidden: { scale: 0.9 },
@@ -133,8 +133,8 @@ export function QRDialog({ url }: { url: string }) {
               </Button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </MotionDiv>
+      </MotionDiv>
     </>
   );
 }

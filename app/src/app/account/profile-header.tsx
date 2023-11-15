@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
@@ -8,6 +7,7 @@ import { Handle } from "~/components/handle";
 import { ImageInput } from "~/components/inputs/image";
 import { MultiSelectInput } from "~/components/inputs/multi-select";
 import { TextInput } from "~/components/inputs/text";
+import { MotionDiv } from "~/components/motion";
 import { ProjectIcon } from "~/components/project/icon";
 import { Tags } from "~/components/tags";
 import { Button } from "~/components/ui/button";
@@ -167,7 +167,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
     >
       <div className="flex flex-col items-start justify-between">
         <div className="flex w-full flex-row items-start justify-between gap-3">
-          <motion.div
+          <MotionDiv
             className={cn("relative w-full [transform-style:preserve-3d]")}
             initial={false}
             animate={edit ? "edit" : "view"}
@@ -205,7 +205,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
             >
               {editForm}
             </div>
-          </motion.div>
+          </MotionDiv>
           <div className="hidden lg:block">{actions}</div>
         </div>
         <div className="lg:hidden">

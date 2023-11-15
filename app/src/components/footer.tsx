@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 export function Footer() {
   return (
     <footer className="bg-ui-elements-white pb-4 pt-16 md:px-8">
-      <div className="flex max-w-screen-xl flex-col gap-4 md:gap-12 2xl:mx-auto">
+      <div className="mx-auto flex max-w-screen-xl flex-col gap-4 md:gap-12">
         <div className="flex w-full flex-col items-center justify-start gap-2 md:flex-row md:items-start md:gap-6">
           <FooterSection
             header={

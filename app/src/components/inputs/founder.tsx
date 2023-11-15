@@ -12,11 +12,11 @@ import { CheckboxInput } from "./checkbox";
 import { SocialProfilesInput } from "./socials";
 import { useFieldArray } from "react-hook-form";
 import { Button } from "../ui/button";
-import { motion } from "framer-motion";
 import { SelectInput } from "./select";
 import { ProgressDialog } from "../progress-dialog";
 import { useProject, useUpdateProject } from "~/hooks/projects";
 import { useAccountId } from "~/stores/global";
+import { MotionDiv } from "../motion";
 
 const formSchema = z.object({
   founders: z.array(
@@ -95,7 +95,7 @@ export function FounderInput() {
         className="flex w-full flex-col items-start justify-start gap-8"
       >
         {array.fields.map((field, index) => (
-          <motion.div
+          <MotionDiv
             key={field.id}
             initial={{ opacity: 0, left: 40 }}
             animate={{ opacity: 1, left: 0 }}
@@ -177,7 +177,7 @@ export function FounderInput() {
                 label="Social Profiles"
               />
             </div>
-          </motion.div>
+          </MotionDiv>
         ))}
         <Button
           variant="outline"

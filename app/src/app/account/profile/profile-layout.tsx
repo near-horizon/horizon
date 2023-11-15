@@ -3,14 +3,14 @@
 import { Button } from "~/components/ui/button";
 import { CheckSvg, Edit03Svg } from "~/icons";
 import { cn } from "~/lib/utils";
-import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type FieldValues, type UseFormReturn } from "react-hook-form";
 import { useUpdateProject } from "~/hooks/projects";
 import { useUser } from "~/stores/global";
 import { ProgressDialog } from "~/components/progress-dialog";
 import { Form } from "~/components/ui/form";
 import { type z } from "zod";
+import { MotionDiv } from "~/components/motion";
 
 interface ToggleEditParam {
   toggleEdit: () => void;
@@ -36,6 +36,14 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   const [progressUpdate, updateProject] = useUpdateProject();
   const viewRef = useRef<HTMLDivElement>(null);
   const editRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+  useEffect(() => {
+    setHeight(
+      (edit
+        ? editRef.current?.getBoundingClientRect().height
+        : viewRef.current?.getBoundingClientRect().height) ?? 0
+    );
+  }, [edit, editRef, viewRef]);
   const handleSubmit = form.handleSubmit((project) => {
     updateProject.mutate({
       accountId: user?.accountId ?? "",
@@ -46,7 +54,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   });
 
   return (
-    <motion.div
+    <MotionDiv
       className="flex flex-col items-stretch justify-start gap-5"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -97,11 +105,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
       <div
         className={cn("relative [transform-style:preserve-3d]")}
         style={{
-          height: `${
-            !edit
-              ? viewRef.current?.getBoundingClientRect().height ?? 0
-              : editRef.current?.getBoundingClientRect().height ?? 0
-          }px`,
+          height: `${height}px`,
         }}
       >
         <div
@@ -148,6 +152,6 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
           </Form>
         </div>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }
