@@ -2,7 +2,6 @@ import { useProject } from "~/hooks/projects";
 import { formatTimestamp } from "~/lib/utils";
 import { Description } from "../description";
 import { Detail } from "../detail";
-import { PointOfContact } from "../point-of-contact";
 import { Socials } from "../socials";
 import { type AccountId } from "~/lib/validation/common";
 
@@ -22,11 +21,11 @@ export function General({ accountId }: { accountId: AccountId }) {
           value={data?.company_size ?? ""}
           loading={status === "loading"}
         />
-        <Detail
-          label="Point of contact"
-          value={<PointOfContact telegram={data?.linktree?.telegram} />}
-          loading={status === "loading"}
-        />
+        {/* <Detail */}
+        {/*   label="Point of contact" */}
+        {/*   value={<PointOfContact telegram={data?.linktree?.telegram} />} */}
+        {/*   loading={status === "loading"} */}
+        {/* /> */}
         <Detail
           label="Social links"
           value={<Socials links={data?.linktree ?? {}} />}

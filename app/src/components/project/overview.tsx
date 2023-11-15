@@ -6,7 +6,6 @@ import { Requests } from "./requests";
 import { Description } from "../description";
 import { Detail } from "../detail";
 import { Socials } from "../socials";
-import { PointOfContact } from "../point-of-contact";
 import { type AccountId } from "~/lib/validation/common";
 
 export function Overview({ accountId }: { accountId: AccountId }) {
@@ -29,11 +28,11 @@ export function Overview({ accountId }: { accountId: AccountId }) {
             value={data?.company_size ?? ""}
             loading={status === "loading"}
           />
-          <Detail
-            label="Point of contact"
-            value={<PointOfContact telegram={data?.linktree?.telegram} />}
-            loading={status === "loading"}
-          />
+          {/* <Detail */}
+          {/*   label="Point of contact" */}
+          {/*   value={<PointOfContact telegram={data?.linktree?.telegram} />} */}
+          {/*   loading={status === "loading"} */}
+          {/* /> */}
           <Detail
             label="Social links"
             value={<Socials links={data?.linktree ?? {}} />}
