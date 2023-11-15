@@ -20,7 +20,7 @@ export const env = createEnv({
       .string()
       .optional()
       .default(
-        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work."
+        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work.",
       ),
   },
 
@@ -37,6 +37,7 @@ export const env = createEnv({
       .max(64)
       .regex(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/),
     NEXT_PUBLIC_IPFS_URL: z.string().url(),
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),
   },
 
   /**
@@ -54,6 +55,7 @@ export const env = createEnv({
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     REACHOUT_SUBJECT: process.env.REACHOUT_SUBJECT,
     REACHOUT_BODY: process.env.REACHOUT_BODY,
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
