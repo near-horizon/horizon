@@ -1,8 +1,9 @@
 "use client";
-import { setUser } from "~/stores/global";
-import { ThemeProvider } from "~/components/theme-provider";
+
 import "~/styles/globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
+import { setUser } from "~/stores/global";
+import { ThemeProvider } from "~/components/theme-provider";
 import { Dialog } from "~/components/ui/dialog";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
@@ -13,6 +14,7 @@ import { ProgressBar } from "./progress-bar";
 import { Toaster } from "~/components/ui/toaster";
 import { usePathname } from "next/navigation";
 import { redirectOnboarding } from "~/lib/auth";
+import { GTagScripts } from "./gtag";
 
 export function Providers({
   children,
@@ -39,6 +41,7 @@ export function Providers({
           <Dialog>
             <ProgressBar>{children}</ProgressBar>
             <Toaster />
+            <GTagScripts />
           </Dialog>
         </TooltipProvider>
       </QueryClientProvider>
