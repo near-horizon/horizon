@@ -1,14 +1,7 @@
-import {
-  type AccountId,
-  placeholderImage,
-  type Transaction,
-  type TransactionQuery,
-  transactionsSchema,
-} from "./validation/common";
+import { type AccountId, placeholderImage } from "./validation/common";
 import {
   type Profile,
   profileSchema,
-  statsSchema,
   validKeySchema,
 } from "./validation/fetching";
 
@@ -110,31 +103,4 @@ export async function getProfile(accountId: AccountId) {
 
 export function getImageURL(src: string) {
   return `https://ipfs.near.social/ipfs/${src}`;
-}
-
-export async function getTransactions(
-  query: TransactionQuery = {}
-): Promise<Transaction[]> {
-  const params: Record<string, string> = {};
-  if (query.from) {
-    params.from = query.from.toString();
-  }
-  if (query.limit) {
-    params.limit = query.limit.toString();
-  }
-  if (query.entity_type) {
-    params.entity_type = query.entity_type;
-  }
-  const result = await fetch(
-    "/api/transactions/all?" + new URLSearchParams(params).toString()
-  );
-  const transactions = transactionsSchema.parseAsync(await result.json());
-  return transactions;
-}
-
-export async function getStats() {
-  const result = await fetch("/api/transactions/stats");
-  const stats = statsSchema.parseAsync(await result.json());
-
-  return stats;
 }

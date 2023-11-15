@@ -28,8 +28,8 @@ import {
   getSimilarProjects,
   hasProject,
   updateProjectBackersDigest,
-} from "~/lib/projects";
-import { type Progress } from "~/lib/mutating";
+} from "~/lib/client/projects";
+import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
 
 export function useProjects(query: ProjectsQuery) {

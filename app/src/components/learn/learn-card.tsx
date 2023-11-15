@@ -2,11 +2,11 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "~/components/ui/card";
-import ExternalLinkIcon from "~/components/icons/link-external-02.1.svg";
+import { LinkExternal021Svg } from "~/icons";
 import { Separator } from "../ui/separator";
 import { ExternalLink } from "../external-link";
 
@@ -30,10 +30,7 @@ export function LearnCard({ resource }: { resource: LearningResource }) {
           <ExternalLink href={resource.link} className="w-full">
             <div className="flex items-center justify-center rounded-full border border-ui-elements-light bg-background-light px-4 py-2">
               <span className="text-md mr-2 font-semibold">Learn more</span>
-              <ExternalLinkIcon
-                className="mt-[2px] h-4 w-4"
-                viewBox="0 0 24 24"
-              />
+              <LinkExternal021Svg className="mt-[2px] h-4 w-4" />
             </div>
           </ExternalLink>
         </CardFooter>

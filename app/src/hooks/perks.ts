@@ -1,12 +1,12 @@
 import {
-  type UseMutationResult,
   useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useState } from "react";
-import { type Progress } from "~/lib/mutating";
-import { getPerks } from "~/lib/perks";
+import { type Progress } from "~/lib/client/mutating";
+import { getPerks } from "~/lib/client/perks";
 
 export function usePerks() {
   return useQuery({

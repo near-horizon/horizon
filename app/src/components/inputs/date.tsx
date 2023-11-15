@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import CalendarIcon from "../icons/calendar.svg";
+import { CalendarSvg } from "~/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
@@ -52,7 +52,7 @@ export function DateInput<
                   ) : (
                     <span>Pick a date</span>
                   )}
-                  <CalendarIcon className="ml-auto h-6 w-6 opacity-50" />
+                  <CalendarSvg className="ml-auto h-6 w-6 opacity-50" />
                 </Button>
               </FormControl>
             </PopoverTrigger>

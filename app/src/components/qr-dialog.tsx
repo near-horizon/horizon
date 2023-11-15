@@ -3,8 +3,7 @@
 import type QRCodeStyling from "qr-code-styling";
 import { Button } from "./ui/button";
 import { useEffect, useRef, useState } from "react";
-import XIcon from "~/components/icons/x.svg";
-import CopyIcon from "~/components/icons/copy-01.svg";
+import { Copy01Svg, XSvg } from "~/icons";
 import { motion } from "framer-motion";
 import { cleanURL } from "~/lib/utils";
 
@@ -105,7 +104,7 @@ export function QRDialog({ url }: { url: string }) {
             onClick={() => setShow(false)}
             className="absolute right-4 top-4 !bg-transparent"
           >
-            <XIcon className="h-5 w-5" />
+            <XSvg className="h-5 w-5" />
           </Button>
           <div className="flex flex-col items-center justify-center gap-4">
             <h4 className="text-2xl font-bold">Scan QR Code</h4>
@@ -130,7 +129,7 @@ export function QRDialog({ url }: { url: string }) {
                   navigator.clipboard.writeText(finalUrl).catch(console.error);
                 }}
               >
-                <CopyIcon className="h-5 w-5" />
+                <Copy01Svg className="h-5 w-5" />
               </Button>
             </div>
           </div>

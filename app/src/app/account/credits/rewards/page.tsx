@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { getIncentives } from "~/lib/incentives";
+import { getIncentives } from "~/lib/client/incentives";
 
 export default async function Page() {
   const incentives = await getIncentives();

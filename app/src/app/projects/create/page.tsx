@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { hasProject } from "~/lib/projects";
+import { hasProject } from "~/lib/client/projects";
 import { getUserFromSession } from "~/lib/session";
 import { ProjectCreate } from "./create";
 

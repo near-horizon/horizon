@@ -11,7 +11,8 @@ import { TooltipProvider } from "~/components/ui/tooltip";
 import { useWalletSelectorEffect } from "~/hooks/selector";
 import { ProgressBar } from "./progress-bar";
 import { Toaster } from "~/components/ui/toaster";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { redirectOnboarding } from "~/lib/auth";
 
 export function Providers({
   children,
@@ -28,7 +29,7 @@ export function Providers({
   const isCreate = pathname.includes("/create");
 
   if (user && !(isOnboarding || isCreate) && !user.hasProfile) {
-    return redirect("/onboarding");
+    return redirectOnboarding();
   }
 
   return (

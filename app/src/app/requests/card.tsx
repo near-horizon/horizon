@@ -11,10 +11,7 @@ import {
 } from "~/components/ui/card";
 import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import UserIcon from "~/components/icons/user-02.svg";
-import FlagIcon from "~/components/icons/flag-01.svg";
-import MoneyIcon from "~/components/icons/bank-note-01.svg";
-import FileIcon from "~/components/icons/file-02.svg";
+import { BankNote01Svg, File02Svg, Flag01Svg, User02Svg } from "~/icons";
 import { Tags } from "~/components/tags";
 import { useRequest } from "~/hooks/requests";
 import { useProject } from "~/hooks/projects";
@@ -66,7 +63,7 @@ export function Request({
           {project.image && "ipfs_cid" in project.image ? (
             <IPFSImage cid={project.image.ipfs_cid} className="h-7 w-7" />
           ) : (
-            <UserIcon className="h-7 w-7" />
+            <User02Svg className="h-7 w-7" />
           )}
           <span className="text-lg font-medium">{project.name}</span>
         </h3>
@@ -96,15 +93,15 @@ export function Request({
         <Tags tags={data.tags ?? {}} loading={false} />
         <div className="flex h-5 flex-row items-center justify-start gap-4">
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
-            <FlagIcon className="h-5" />
+            <Flag01Svg className="h-5" />
             {formatDate(Number(data.deadline))}
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
-            <MoneyIcon className="h-5" />
+            <BankNote01Svg className="h-5" />
             {formatBudget(data.budget)}
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
-            <FileIcon className="h-5" />
+            <File02Svg className="h-5" />
             {data.request_type}
             {["Short", "Long"].includes(data.request_type) && " Term"}
           </div>
@@ -137,15 +134,15 @@ export function RequestSkeleton() {
         </div>
         <div className="flex h-5 flex-row items-center justify-start gap-4">
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
-            <FlagIcon className="h-5" />
+            <Flag01Svg className="h-5" />
             <Skeleton className="h-4 w-10" />
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
-            <MoneyIcon className="h-5" />
+            <BankNote01Svg className="h-5" />
             <Skeleton className="h-4 w-10" />
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
-            <FileIcon className="h-5" />
+            <File02Svg className="h-5" />
             <Skeleton className="h-4 w-10" />
           </div>
         </div>

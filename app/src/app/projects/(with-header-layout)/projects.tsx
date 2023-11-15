@@ -12,7 +12,7 @@ import {
   stage,
   verticals,
 } from "~/lib/constants/filters";
-import { getProjectsCount } from "~/lib/projects";
+import { getProjectsCount } from "~/lib/client/projects";
 import { SortSelect } from "~/components/inputs/sort-select";
 import { pageSize } from "~/lib/constants/pagination";
 

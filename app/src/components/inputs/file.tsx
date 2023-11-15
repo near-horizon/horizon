@@ -14,10 +14,10 @@ import {
 import { Input } from "../ui/input";
 import { type InputProps } from "~/lib/validation/inputs";
 import { Button } from "../ui/button";
-import UploadCloudIcon from "~/components/icons/upload-cloud-01.svg";
+import { UploadCloud01Svg } from "~/icons";
 import { useRef, useState } from "react";
 import { cn, uploadImage } from "~/lib/utils";
-import { getImageURL } from "~/lib/fetching";
+import { getImageURL } from "~/lib/client/fetching";
 import { Tabs, TabsTrigger } from "../ui/tabs";
 import { TabsList } from "@radix-ui/react-tabs";
 import { Separator } from "../ui/separator";
@@ -103,7 +103,7 @@ export function FileInput<
                     }}
                     disabled={uploading}
                   >
-                    <UploadCloudIcon className="h-5 w-5" />
+                    <UploadCloud01Svg className="h-5 w-5" />
                     {!field.value ? "Upload file" : "Replace file"}
                   </Button>
                   {!uploading && field.value && (

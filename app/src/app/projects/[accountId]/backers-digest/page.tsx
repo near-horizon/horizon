@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { hasBacker } from "~/lib/backers";
+import { hasBacker } from "~/lib/client/backers";
 import { getBackersDigest } from "~/lib/server/projects";
 import { getUserFromSession } from "~/lib/session";
 import { type AccountId } from "~/lib/validation/common";

@@ -2,14 +2,14 @@
 
 import { useRequest } from "~/hooks/requests";
 import {
-  accountIdSchema,
   type AccountId,
+  accountIdSchema,
   type CID,
 } from "~/lib/validation/common";
 import { Form } from "../ui/form";
 import { useZodForm } from "~/hooks/form";
 import { useUser } from "~/stores/global";
-import { clearLocalSaveForm } from "~/lib/mutating";
+import { clearLocalSaveForm } from "~/lib/client/mutating";
 import { TextInput } from "../inputs/text";
 import { TextAreaInput } from "../inputs/text-area";
 import { Button } from "../ui/button";
@@ -25,7 +25,7 @@ import {
 } from "~/lib/validation/requests";
 import { Progress } from "../ui/progress";
 import Link from "next/link";
-import Send from "../icons/send-01.svg";
+import { Send01Svg } from "~/icons";
 import { useLocalSaveForm } from "~/hooks/mutating";
 
 const formSchema = z.object({
@@ -193,7 +193,7 @@ export function ProposalForm({
               disabled={!form.formState.isValid}
               className="inline-flex flex-row items-center justify-between gap-2"
             >
-              <Send className="w-5" />
+              <Send01Svg className="w-5" />
               Send proposal
             </Button>
           </div>

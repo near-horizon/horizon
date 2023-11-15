@@ -7,8 +7,9 @@ import {
   setWalletSelectorModal,
   useGlobalStore,
 } from "~/stores/global";
+import { redirectOnboarding } from "~/lib/auth";
 
-export const useWalletSelectorEffect = () => {
+export function useWalletSelectorEffect() {
   useEffect(() => {
     import("../stores/global")
       .then(async ({ setupSelector }) => {
@@ -51,6 +52,9 @@ export const useWalletSelectorEffect = () => {
               user: IronSession["user"];
             };
             setUser(newUser);
+            if (!newUser?.hasProfile) {
+              redirectOnboarding();
+            }
           }
         });
 
@@ -72,6 +76,9 @@ export const useWalletSelectorEffect = () => {
                 user: IronSession["user"];
               };
               setUser(user);
+              if (!user?.hasProfile) {
+                redirectOnboarding();
+              }
             } catch (e) {
               console.error(e);
             }
@@ -100,4 +107,4 @@ export const useWalletSelectorEffect = () => {
       useGlobalStore.getState().selector?.off("signedOut", console.log);
     };
   }, []);
-};
+}

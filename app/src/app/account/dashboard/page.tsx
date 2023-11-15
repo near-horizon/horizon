@@ -1,19 +1,21 @@
 import Link from "next/link";
 import { DashboardCard } from "./card";
-import CheckSquareIcon from "~/components/icons/check-square.svg";
-import SquareOutlineIcon from "~/components/icons/square.svg";
+import {
+  CheckSquareSvg,
+  CoinsStacked03Svg,
+  Inbox01Svg,
+  PlusSvg,
+  SquareSvg,
+} from "~/icons";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { cn, formatDate } from "~/lib/utils";
-import CoinsIcon from "~/components/icons/coins-stacked-03.svg";
 import {
   creditTxToAmount,
   creditTxToText,
   getCreditHistory,
-} from "~/lib/credits";
+} from "~/lib/client/credits";
 import { ExternalLink } from "~/components/external-link";
-import InboxIcon from "~/components/icons/inbox-01.svg";
-import PlusIcon from "~/components/icons/plus.svg";
 import { getUserFromSession } from "~/lib/session";
 import { redirect } from "next/navigation";
 import {
@@ -21,8 +23,8 @@ import {
   getProjectContracts,
   getRequestsForProject,
 } from "~/lib/server/projects";
-import { hasProject } from "~/lib/projects";
-import { getIncentives } from "~/lib/incentives";
+import { hasProject } from "~/lib/client/projects";
+import { getIncentives } from "~/lib/client/incentives";
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
@@ -106,7 +108,7 @@ export default async function Dashboard() {
               href="/account/credits/how"
               className="flex h-full w-full flex-row items-center justify-between gap-2"
             >
-              <CoinsIcon className="h-5 w-5" />
+              <CoinsStacked03Svg className="h-5 w-5" />
               How credits work?
             </Link>
           </Button>
@@ -118,7 +120,7 @@ export default async function Dashboard() {
       help: "This is your inbox with messages from contributors",
       children: (
         <div className="flex h-full flex-col items-center justify-center gap-2">
-          <InboxIcon className="h-6 w-6 text-ui-elements-gray" />
+          <Inbox01Svg className="h-6 w-6 text-ui-elements-gray" />
           <b>You don&apos;t have any updates yet</b>
           <p className="text-center">
             You will be notified about meaningful activities like new proposals
@@ -147,7 +149,7 @@ export default async function Dashboard() {
               href="/requests/create"
               className="flex h-full w-full flex-row items-center justify-center gap-2"
             >
-              <PlusIcon className="h-5 w-5" />
+              <PlusSvg className="h-5 w-5" />
               Create a request
             </Link>
           </Button>
@@ -195,9 +197,9 @@ function CompletionItem({
     <li className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center justify-start gap-2">
         {completed ? (
-          <CheckSquareIcon className="h-5 w-5 text-primary" />
+          <CheckSquareSvg className="h-5 w-5 text-primary" />
         ) : (
-          <SquareOutlineIcon className="h-5 w-5 text-ui-elements-gray" />
+          <SquareSvg className="h-5 w-5 text-ui-elements-gray" />
         )}
         <span
           className={cn("text-text-link", {

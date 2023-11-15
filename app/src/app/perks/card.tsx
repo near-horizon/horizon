@@ -11,9 +11,7 @@ import {
 } from "~/components/ui/card";
 import { Tags } from "~/components/tags";
 import { CTA } from "~/components/perk/cta";
-import ClipboardIcon from "~/components/icons/copy-03.svg";
-import SquareIcon from "~/components/icons/square.svg";
-import CheckSquare from "~/components/icons/check-square.svg";
+import { CheckSquareSvg, Copy03Svg, SquareSvg } from "~/icons";
 import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -93,7 +91,7 @@ export function Perk(perk: Perk & { noButton?: boolean }) {
                       <span className="inline-block rounded-md bg-[#EAECF5] px-1 text-sm font-medium text-ui-elements-dark">
                         {code}
                       </span>
-                      <ClipboardIcon className="ml-2 h-4 w-4 text-text-link" />
+                      <Copy03Svg className="ml-2 h-4 w-4 text-text-link" />
                     </button>
                   </li>
                 ) : (
@@ -114,9 +112,9 @@ export function Perk(perk: Perk & { noButton?: boolean }) {
             {requirements?.map(({ requirement, completed }, index) => (
               <div key={requirement}>
                 {!completed ? (
-                  <SquareIcon className="h-4 w-4 text-[#A8ACB3]" />
+                  <SquareSvg className="h-4 w-4 text-[#A8ACB3]" />
                 ) : (
-                  <CheckSquare className="h-4 w-4 text-primary-pressed" />
+                  <CheckSquareSvg className="h-4 w-4 text-primary-pressed" />
                 )}
                 <span
                   className={cn("text-sm font-normal text-ui-elements-gray", {

@@ -1,26 +1,25 @@
 import Image from "next/image";
-
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "~/components/ui/card";
-
-import SendIcon from "~/components/icons/send-01.1.svg";
 import { Tags } from "~/components/tags";
 import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import { ExternalLink } from "~/components/external-link";
 import { Button } from "~/components/ui/button";
 import type { GrowthProgram } from "~/lib/validation/growth-programs";
-
-import ClockFastFowardIcon from "~/components/icons/clock-fast-forward.svg";
-import ContrastIcon from "~/components/icons/contrast-01.svg";
-import CubeIcon from "~/components/icons/cube-01.2.svg";
-import MarkerPinIcon from "~/components/icons/marker-pin-01.3.svg";
+import {
+  ClockFastForwardSvg,
+  Contrast01Svg,
+  Cube012Svg,
+  MarkerPin013Svg,
+  Send011Svg,
+} from "~/icons";
 
 export default function GrowthProgramCard({
   program,
@@ -73,21 +72,21 @@ export default function GrowthProgramCard({
           <Tags tags={program.tags} loading={false} />
           <div className="mt-3 flex flex-wrap gap-6">
             <div className="flex items-center gap-1">
-              <ClockFastFowardIcon className="h-5 w-5" />
+              <ClockFastForwardSvg className="h-5 w-5" />
               <span>{program.duration}</span>
             </div>
             {program.equity && (
               <div className="flex items-center gap-1">
-                <ContrastIcon className="h-5 w-5" />
+                <Contrast01Svg className="h-5 w-5" />
                 <span>{program.equity}</span>
               </div>
             )}
             <div className="flex items-center gap-1">
-              <CubeIcon className="h-5 w-5" />
+              <Cube012Svg className="h-5 w-5" />
               <span>{program.chain}</span>
             </div>
             <div className="flex items-center gap-1">
-              <MarkerPinIcon className="h-5 w-5" />
+              <MarkerPin013Svg className="h-5 w-5" />
               <span>{program.location}</span>
             </div>
           </div>
@@ -108,7 +107,7 @@ export default function GrowthProgramCard({
               href={program.href}
               className="text-md flex items-center justify-center gap-1 font-semibold text-text-primary"
             >
-              <SendIcon className="h-4 w-4" viewBox="0 0 24 24" />
+              <Send011Svg className="h-4 w-4" />
               <span>Apply</span>
             </ExternalLink>
           </Button>

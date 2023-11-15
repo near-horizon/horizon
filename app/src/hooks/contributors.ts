@@ -1,9 +1,9 @@
 import {
-  type UseMutationResult,
   useInfiniteQuery,
+  useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
-  useMutation,
 } from "@tanstack/react-query";
 import { type AccountId } from "~/lib/validation/common";
 import { useSignTx } from "~/stores/global";
@@ -11,14 +11,14 @@ import {
   getContributor,
   getContributors,
   getPaginatedContributors,
-} from "~/lib/contributors";
+} from "~/lib/client/contributors";
 import { pageSize } from "~/lib/constants/pagination";
 import {
   type Contributor,
   type ContributorsQuery,
   horizonSchema,
 } from "~/lib/validation/contributors";
-import { type Progress } from "~/lib/mutating";
+import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
 import { useState } from "react";
 import { privateProjectSchema } from "~/lib/validation/projects";

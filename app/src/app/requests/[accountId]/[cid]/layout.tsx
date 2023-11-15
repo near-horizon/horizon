@@ -1,4 +1,4 @@
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import { dehydrate, Hydrate } from "@tanstack/react-query";
 import getQueryClient from "~/app/query-client";
 import { removeEmpty } from "~/lib/utils";
 import ContentTabs from "~/components/ui/content-tabs";
@@ -8,7 +8,7 @@ import { CTAs } from "~/components/request/ctas";
 import { getUserFromSession } from "~/lib/session";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import ArrowLeftIcon from "~/components/icons/arrow-left.svg";
+import { ArrowLeftSvg } from "~/icons";
 import { getRequest } from "~/lib/server/requests";
 
 export default async function RequestPageLayout({
@@ -46,7 +46,7 @@ export default async function RequestPageLayout({
                   href="/account/requests"
                   className="flex h-full w-full flex-row items-center justify-center gap-2"
                 >
-                  <ArrowLeftIcon className="h-4" />
+                  <ArrowLeftSvg className="h-4" />
                   Back
                 </Link>
               </Button>

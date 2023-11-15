@@ -6,16 +6,18 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import HomeIcon from "~/components/icons/home-line.svg";
-import ProjectsIcon from "~/components/icons/projects.svg";
-import RequestsIcon from "~/components/icons/request.svg";
-import ContributorsIcon from "~/components/icons/users-02.svg";
-import LineChartIcon from "~/components/icons/line-chart-up-02.svg";
-import MagicWandIcon from "~/components/icons/magic-wand-02.svg";
-import CalendarIcon from "~/components/icons/calendar.svg";
-import LearnIcon from "~/components/icons/book-open-02.svg";
-import ChevronDownIcon from "~/components/icons/chevron-down.svg";
-import ShieldIcon from "~/components/icons/shield-01.1.svg";
+import {
+  BookOpen02Svg,
+  CalendarSvg,
+  ChevronDownSvg,
+  HomeLineSvg,
+  LineChartUp02Svg,
+  MagicWand02Svg,
+  ProjectsSvg,
+  RequestSvg,
+  Shield011Svg,
+  Users02Svg,
+} from "~/icons";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import {
@@ -32,7 +34,7 @@ const routes = [
   {
     name: (
       <>
-        <HomeIcon className="h-4 w-4" />
+        <HomeLineSvg className="h-4 w-4" />
         Home
       </>
     ),
@@ -41,7 +43,7 @@ const routes = [
   {
     name: (
       <>
-        <ProjectsIcon className="h-4 w-4" />
+        <ProjectsSvg className="h-4 w-4" />
         Projects
       </>
     ),
@@ -50,7 +52,7 @@ const routes = [
   {
     name: (
       <>
-        <RequestsIcon className="h-4 w-4" />
+        <RequestSvg className="h-4 w-4" />
         Requests
       </>
     ),
@@ -59,7 +61,7 @@ const routes = [
   {
     name: (
       <>
-        <ContributorsIcon className="h-4 w-4" />
+        <Users02Svg className="h-4 w-4" />
         Contributors
       </>
     ),
@@ -68,7 +70,7 @@ const routes = [
   {
     name: (
       <>
-        <LineChartIcon className="h-4 w-4" />
+        <LineChartUp02Svg className="h-4 w-4" />
         Backers
       </>
     ),
@@ -77,7 +79,7 @@ const routes = [
   {
     name: (
       <>
-        <MagicWandIcon className="h-4 w-4" />
+        <MagicWand02Svg className="h-4 w-4" />
         Perks
       </>
     ),
@@ -86,7 +88,7 @@ const routes = [
   {
     name: (
       <>
-        <CalendarIcon className="h-4 w-4" />
+        <CalendarSvg className="h-4 w-4" />
         Events
       </>
     ),
@@ -95,7 +97,7 @@ const routes = [
   {
     name: (
       <>
-        <LearnIcon className="h-4 w-4" />
+        <BookOpen02Svg className="h-4 w-4" />
         Learn
       </>
     ),
@@ -143,7 +145,7 @@ export function NavLinks() {
                 )}
               >
                 <>
-                  <ProjectsIcon className="h-4 w-4" />
+                  <ProjectsSvg className="h-4 w-4" />
                   Fundraisers
                 </>
               </NavigationMenuLink>
@@ -161,7 +163,7 @@ export function NavLinks() {
                 )}
               >
                 <>
-                  <ShieldIcon className="h-4 w-4" />
+                  <Shield011Svg className="h-4 w-4" />
                   Admin
                 </>
               </NavigationMenuLink>
@@ -182,7 +184,7 @@ export function MobileNavLinks() {
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
         Explore
-        <ChevronDownIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
+        <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[100svw] origin-left p-0">
         <NavigationMenu
@@ -233,7 +235,7 @@ export function MobileNavLinks() {
                     )}
                   >
                     <>
-                      <ProjectsIcon className="h-4 w-4" />
+                      <ProjectsSvg className="h-4 w-4" />
                       Fundraisers
                     </>
                   </NavigationMenuLink>
@@ -254,7 +256,7 @@ export function MobileNavLinks() {
                     )}
                   >
                     <>
-                      <ShieldIcon className="h-4 w-4" />
+                      <Shield011Svg className="h-4 w-4" />
                       Admin
                     </>
                   </NavigationMenuLink>

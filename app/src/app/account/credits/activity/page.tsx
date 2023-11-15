@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-import { getIncentives } from "~/lib/incentives";
+import { getIncentives } from "~/lib/client/incentives";
 import { getFilteredTransactions } from "~/lib/server/transactions";
 import { getUserFromSession } from "~/lib/session";
 import { formatDate } from "~/lib/utils";

@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "~/components/ui/button";
-import EditIcon from "~/components/icons/edit-03.svg";
-import CheckIcon from "~/components/icons/check.svg";
+import { CheckSvg, Edit03Svg } from "~/icons";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
@@ -74,7 +73,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
               "Cancel"
             ) : (
               <>
-                <EditIcon className="mr-1 h-5 w-5" />
+                <Edit03Svg className="mr-1 h-5 w-5" />
                 Edit
               </>
             )}
@@ -89,7 +88,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
                 edit ? "translate-x-0" : "translate-x-full"
               )}
             >
-              <CheckIcon className="mr-1 h-5 w-5" />
+              <CheckSvg className="mr-1 h-5 w-5" />
               Update section
             </Button>
           </div>

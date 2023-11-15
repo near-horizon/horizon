@@ -18,8 +18,7 @@ import {
   useUser,
   useWalletSelector,
 } from "~/stores/global";
-import UserIcon from "~/components/icons/user-02.svg";
-import ChevronDownIcon from "~/components/icons/chevron-down.svg";
+import { ChevronDownSvg, User02Svg } from "~/icons";
 import { ProfileNav } from "./account/profile-nav";
 
 export function UserMenu() {
@@ -52,7 +51,7 @@ export function UserMenu() {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <UserIcon className="h-8 w-8 rounded-lg" />
+              <User02Svg className="h-8 w-8 rounded-lg" />
             )}
           </div>
           My profile
@@ -110,11 +109,11 @@ export function MobileUserMenu() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <UserIcon className="h-8 w-8 rounded-lg" />
+            <ChevronDownSvg className="h-8 w-8 rounded-lg" />
           )}
         </div>
         My profile
-        <ChevronDownIcon className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
+        <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="flex w-[100svw] flex-col items-stretch justify-start pt-6">
         {user?.hasProfile && <ProfileNav />}

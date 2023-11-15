@@ -1,5 +1,5 @@
 import { env } from "~/env.mjs";
-import { viewCall } from "../fetching";
+import { viewCall } from "../client/fetching";
 import {
   type Contract,
   type ContractId,

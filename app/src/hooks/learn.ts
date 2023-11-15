@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { formatCategoryLabel, getLearningResources } from "~/lib/learn";
+import { formatCategoryLabel, getLearningResources } from "~/lib/client/learn";
 
 export function useLearningResources() {
   return useQuery({

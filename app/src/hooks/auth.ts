@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { hasBacker } from "~/lib/backers";
-import { hasContributor } from "~/lib/contributors";
-import { hasProject } from "~/lib/projects";
+import { hasBacker } from "~/lib/client/backers";
+import { hasContributor } from "~/lib/client/contributors";
+import { hasProject } from "~/lib/client/projects";
 import { type AccountId } from "~/lib/validation/common";
 
 export function useHasProfile(accountId?: AccountId) {

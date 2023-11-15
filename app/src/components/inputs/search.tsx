@@ -1,7 +1,6 @@
 import { Input } from "../ui/input";
 
-import SearchIcon from "../icons/search-sm.svg";
-import XIcon from "../icons/x.svg";
+import { SearchSmSvg, XSvg } from "~/icons";
 import { cn } from "~/lib/utils";
 import { Button } from "../ui/button";
 
@@ -28,7 +27,7 @@ export function SearchInput({
         className
       )}
     >
-      <SearchIcon className="h-5 w-5 text-ui-elements-gray" />
+      <SearchSmSvg className="h-5 w-5 text-ui-elements-gray" />
       <Input
         placeholder={placeholder}
         type="search"
@@ -49,11 +48,9 @@ export function SearchInput({
         <Button
           variant="outline"
           className="absolute right-4 border-none p-0 hover:bg-transparent"
+          onClick={() => setValue("")}
         >
-          <XIcon
-            className="h-5 w-5 text-ui-elements-gray"
-            onClick={() => setValue("")}
-          />
+          <XSvg className="h-5 w-5 text-ui-elements-gray" />
         </Button>
       )}
     </div>

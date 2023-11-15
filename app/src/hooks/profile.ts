@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useProfile } from "./fetching";
 import deepEqual from "deep-equal";
-import { getChanges } from "~/lib/profile";
+import { getChanges } from "~/lib/client/profile";
 import { type AccountId } from "~/lib/validation/common";
 import { removeEmpty } from "~/lib/utils";
 

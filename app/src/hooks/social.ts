@@ -1,14 +1,14 @@
 import { useSignTxs } from "~/stores/global";
 import { type Profile } from "~/lib/validation/fetching";
 import {
-  type UseMutationResult,
   useMutation,
+  type UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
 import { type AccountId } from "~/lib/validation/common";
-import { type Progress } from "~/lib/mutating";
+import { type Progress } from "~/lib/client/mutating";
 import { useState } from "react";
-import { calculateDeposit, createSocialUpdate } from "~/lib/social";
+import { calculateDeposit, createSocialUpdate } from "~/lib/client/social";
 
 export function useSocialSet(): [
   progress: Progress,

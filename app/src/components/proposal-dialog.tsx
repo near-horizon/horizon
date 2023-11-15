@@ -6,7 +6,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { type ReactNode } from "react";
-import PersonUp from "./icons/user-up-02.svg";
+import { UserUp02Svg } from "~/icons";
 import { ProposalForm } from "./proposal/form";
 import { type AccountId, type CID } from "~/lib/validation/common";
 
@@ -15,7 +15,7 @@ export function ProposalDialog({
   cid,
   triggerText = (
     <span className="inline-flex flex-row items-center justify-between gap-2">
-      <PersonUp className="w-5" />
+      <UserUp02Svg className="w-5" />
       Propose contribution
     </span>
   ),

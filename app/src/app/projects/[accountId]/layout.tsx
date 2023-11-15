@@ -5,7 +5,7 @@ import { Header } from "~/components/project/header";
 import { CTAs } from "~/components/project/ctas";
 import ContentTabs from "~/components/ui/content-tabs";
 import { getUserFromSession } from "~/lib/session";
-import { hasBacker } from "~/lib/backers";
+import { hasBacker } from "~/lib/client/backers";
 import {
   getBackersDigest,
   getProject,

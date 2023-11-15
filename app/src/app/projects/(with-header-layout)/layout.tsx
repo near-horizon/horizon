@@ -2,7 +2,7 @@ import { ListPageLayout } from "~/app/list-page-layout";
 import { ProjectSkeleton } from "../card";
 import { pageSize } from "~/lib/constants/pagination";
 import { Button } from "~/components/ui/button";
-import ChevronDown from "~/components/icons/chevron-down.svg";
+import { ChevronDownSvg } from "~/icons";
 
 export default function ProjectsLayout({
   children,
@@ -17,28 +17,28 @@ export default function ProjectsLayout({
           <div className="flex w-full flex-row flex-wrap items-center justify-start gap-4">
             <Button variant="outline" className="group">
               Vertical
-              <ChevronDown
+              <ChevronDownSvg
                 className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
                 aria-hidden="true"
               />
             </Button>
             <Button variant="outline" className="group">
               Stage
-              <ChevronDown
+              <ChevronDownSvg
                 className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
                 aria-hidden="true"
               />
             </Button>
             <Button variant="outline" className="group">
               Distribution
-              <ChevronDown
+              <ChevronDownSvg
                 className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
                 aria-hidden="true"
               />
             </Button>
             <Button variant="outline" className="group">
               Phase
-              <ChevronDown
+              <ChevronDownSvg
                 className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
                 aria-hidden="true"
               />

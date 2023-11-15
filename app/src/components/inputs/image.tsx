@@ -14,9 +14,7 @@ import {
 import { Input } from "../ui/input";
 import { type InputProps } from "~/lib/validation/inputs";
 import { Button } from "../ui/button";
-import UploadCloudIcon from "~/components/icons/upload-cloud-01.svg";
-import UserIcon from "~/components/icons/user-01.svg";
-import RefreshIcon from "~/components/icons/refresh-ccw-04.svg";
+import { RefreshCcw04Svg, UploadCloud01Svg, User01Svg } from "~/icons";
 import { useRef, useState } from "react";
 import { IPFSImage } from "../ipfs-image";
 import { generateImage, uploadImage } from "~/lib/utils";
@@ -51,13 +49,13 @@ export function ImageInput<
                 <>
                   <IPFSImage cid={props.cid} alt={props.label} />
                   {uploading && (
-                    <RefreshIcon className="absolute inset-0 animate-spin-counter" />
+                    <RefreshCcw04Svg className="absolute inset-0 animate-spin-counter" />
                   )}
                 </>
               ) : uploading ? (
-                <RefreshIcon className="h-10 w-10 animate-spin-counter" />
+                <RefreshCcw04Svg className="h-10 w-10 animate-spin-counter" />
               ) : (
-                <UserIcon className="h-10 w-10" />
+                <User01Svg className="h-10 w-10" />
               )}
             </div>
             <FormControl>
@@ -99,7 +97,7 @@ export function ImageInput<
                   }}
                   disabled={uploading}
                 >
-                  <UploadCloudIcon className="h-5 w-5" />
+                  <UploadCloud01Svg className="h-5 w-5" />
                   {!props.cid ? "Upload file" : "Replace file"}
                 </Button>
                 {props.generate && (
@@ -125,7 +123,7 @@ export function ImageInput<
                     }}
                     disabled={uploading || !props.generateEnabled}
                   >
-                    <RefreshIcon className="h-5 w-5" />
+                    <RefreshCcw04Svg className="h-5 w-5" />
                     Generate image
                   </Button>
                 )}

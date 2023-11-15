@@ -18,9 +18,9 @@ import {
   getBackers,
   getPaginatedBackers,
   hasBacker,
-} from "~/lib/backers";
+} from "~/lib/client/backers";
 import { pageSize } from "~/lib/constants/pagination";
-import { type Progress } from "~/lib/mutating";
+import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
 import { privateProjectSchema } from "~/lib/validation/projects";
 

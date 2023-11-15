@@ -1,9 +1,9 @@
 import {
-  type UseMutationResult,
   useInfiniteQuery,
+  useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
-  useMutation,
 } from "@tanstack/react-query";
 import { useSignTx } from "~/stores/global";
 import { useState } from "react";
@@ -12,11 +12,11 @@ import {
   getRequest,
   getRequests,
   getRequestsForProject,
-} from "~/lib/requests";
+} from "~/lib/client/requests";
 import { type Request, type RequestsQuery } from "~/lib/validation/requests";
 import { pageSize } from "~/lib/constants/pagination";
 import { type AccountId, type CID } from "~/lib/validation/common";
-import { type Progress } from "~/lib/mutating";
+import { type Progress } from "~/lib/client/mutating";
 
 export function useRequests(query: RequestsQuery) {
   return useQuery({

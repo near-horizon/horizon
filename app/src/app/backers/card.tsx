@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Card, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import UserIcon from "~/components/icons/user-02.svg";
+import { User02Svg } from "~/icons";
 import { Handle } from "~/components/handle";
 import { Tags } from "~/components/tags";
 import { useBacker } from "~/hooks/backers";
@@ -38,7 +38,7 @@ export function Backer({ accountId }: { accountId: AccountId }) {
               className="h-16 w-16 flex-shrink-0 rounded-lg"
             />
           ) : (
-            <UserIcon className="h-16 w-16 flex-shrink-0 rounded-lg" />
+            <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
           )}
           <div className="max-w-full overflow-hidden">
             <Handle accountId={accountId} />

@@ -1,10 +1,11 @@
 import { type IronSession } from "iron-session";
-import { /* getKeyInfo, */ viewCall } from "./fetching";
+import { /* getKeyInfo, */ viewCall } from "./client/fetching";
 import { env } from "~/env.mjs";
 import { type AccountId } from "./validation/common";
-import { hasBacker } from "./backers";
-import { hasContributor } from "./contributors";
-import { hasProject } from "./projects";
+import { hasBacker } from "./client/backers";
+import { hasContributor } from "./client/contributors";
+import { hasProject } from "./client/projects";
+import { redirect, RedirectType } from "next/navigation";
 
 export async function loginUser(
   accountId: AccountId,
@@ -33,4 +34,8 @@ export async function loginUser(
     admin,
     hasProfile: hasProfile.some(Boolean),
   };
+}
+
+export function redirectOnboarding(): never {
+  redirect("/onboarding", RedirectType.push);
 }

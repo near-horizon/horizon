@@ -14,9 +14,7 @@ import {
 import { useRequest } from "~/hooks/requests";
 import { formatBudget, formatDate } from "~/lib/utils";
 import { type AccountId, type CID } from "~/lib/validation/common";
-import FlagIcon from "~/components/icons/flag-01.svg";
-import MoneyIcon from "~/components/icons/bank-note-01.svg";
-import UserIcon from "~/components/icons/user-01.svg";
+import { BankNote01Svg, Flag01Svg, User01Svg } from "~/icons";
 import Link from "next/link";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useContract } from "~/hooks/contracts";
@@ -92,11 +90,11 @@ export function Card({
       </CardContent>
       <CardFooter className="gap-3">
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <FlagIcon className="h-4" />
+          <Flag01Svg className="h-4" />
           {formatDate(Number(proposal.end_date))}
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <MoneyIcon className="h-4" />
+          <BankNote01Svg className="h-4" />
           {formatBudget(contract.price)}
         </div>
         <Link
@@ -109,7 +107,7 @@ export function Card({
               className="h-5 w-5 rounded-full"
             />
           ) : (
-            <UserIcon className="h-5 w-5 border border-e-ui-elements-gray bg-background-light" />
+            <User01Svg className="h-5 w-5 border border-e-ui-elements-gray bg-background-light" />
           )}
           <b>{contributor.name}</b>
           <small>@{contributorId}</small>
@@ -141,11 +139,11 @@ export function CardSkeleton() {
       </CardContent>
       <CardFooter className="gap-3">
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <FlagIcon className="h-4" />
+          <Flag01Svg className="h-4" />
           <Skeleton className="h-4 w-10" />
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <MoneyIcon className="h-4" />
+          <BankNote01Svg className="h-4" />
           <Skeleton className="h-4 w-10" />
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">

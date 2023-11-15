@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import ChevronDown from "../icons/chevron-down.svg";
+import { ChevronDownSvg } from "~/icons";
 
 export function FilterDropdown({
   triggerText,
@@ -47,7 +47,7 @@ export function FilterDropdown({
       <PopoverTrigger asChild>
         <Button variant="outline" className="group">
           {triggerText}
-          <ChevronDown
+          <ChevronDownSvg
             className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
             aria-hidden="true"
           />

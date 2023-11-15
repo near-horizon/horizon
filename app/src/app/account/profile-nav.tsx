@@ -6,23 +6,25 @@ import {
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
 import { NavItem } from "./nav-item";
-import DotsGridIcon from "~/components/icons/dots-grid.svg";
-import InboxIcon from "~/components/icons/inbox-01.svg";
-import PersonIcon from "~/components/icons/user-01.svg";
-import RequestIcon from "~/components/icons/request.svg";
-import FlagIcon from "~/components/icons/flag-06.svg";
-import WalletIcon from "~/components/icons/wallet-02.svg";
-import RocketIcon from "~/components/icons/rocket-02.svg";
-import UsersIcon from "~/components/icons/users-02.svg";
-import SettingsIcon from "~/components/icons/settings-04.svg";
-import TargetIcon from "~/components/icons/target-04.svg";
+import {
+  DotsGridSvg,
+  Flag06Svg,
+  Inbox01Svg,
+  RequestSvg,
+  Rocket02Svg,
+  Settings04Svg,
+  Target04Svg,
+  User01Svg,
+  Users02Svg,
+  Wallet02Svg,
+} from "~/icons";
 import { Separator } from "~/components/ui/separator";
 
 const navigation = [
   {
     section: "dashboard",
     label: "Dashboard",
-    icon: <DotsGridIcon className="h-5 w-5" />,
+    icon: <DotsGridSvg className="h-5 w-5" />,
   },
   {
     section: "backers-digest",
@@ -44,19 +46,19 @@ const navigation = [
         </svg>
       </span>
     ),
-    icon: <TargetIcon className="h-5 w-5" />,
+    icon: <Target04Svg className="h-5 w-5" />,
     hasSeparator: true,
   },
   {
     section: "inbox",
     label: "Inbox",
-    icon: <InboxIcon className="h-5 w-5" />,
+    icon: <Inbox01Svg className="h-5 w-5" />,
     hasSeparator: true,
   },
   {
     section: "profile",
     label: "Profile",
-    icon: <PersonIcon className="h-5 w-5" />,
+    icon: <User01Svg className="h-5 w-5" />,
     subMenu: [
       { section: "basic", label: "Basic information", progress: 0.1 },
       { section: "tech", label: "Marketing & tech", progress: 0.1 },
@@ -69,35 +71,35 @@ const navigation = [
   {
     section: "requests",
     label: "Your requests",
-    icon: <RequestIcon className="h-5 w-5" />,
+    icon: <RequestSvg className="h-5 w-5" />,
   },
   {
     section: "contracts",
     label: "Your contracts",
-    icon: <FlagIcon className="h-5 w-5" />,
+    icon: <Flag06Svg className="h-5 w-5" />,
   },
   {
     section: "credits",
     label: "Credit balance",
-    icon: <WalletIcon className="h-5 w-5" />,
+    icon: <Wallet02Svg className="h-5 w-5" />,
     hasSeparator: true,
   },
   {
     section: "growth",
     label: "Growth programs",
-    icon: <RocketIcon className="h-5 w-5" />,
+    icon: <Rocket02Svg className="h-5 w-5" />,
     hasSeparator: true,
   },
   {
     section: "permissions",
     label: "Permissions",
-    icon: <UsersIcon className="h-5 w-5" />,
+    icon: <Users02Svg className="h-5 w-5" />,
     hasSeparator: true,
   },
   {
     section: "settings",
     label: "Settings",
-    icon: <SettingsIcon className="h-5 w-5" />,
+    icon: <Settings04Svg className="h-5 w-5" />,
   },
 ] satisfies (Omit<
   Parameters<typeof NavItem>[0],

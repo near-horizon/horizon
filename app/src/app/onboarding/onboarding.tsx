@@ -1,10 +1,4 @@
-import { Button } from "~/components/ui/button";
-import Icon from "../../../public/icon.svg";
-import Link from "next/link";
-import ArrowRight from "~/components/icons/arrow-right.svg";
-import Rocket from "~/components/icons/rocket-02.svg";
-import Users from "~/components/icons/users-02.svg";
-import LineChart from "~/components/icons/line-chart-up-02.svg";
+import { IconSvg, LineChartUp02Svg, Rocket02Svg, Users02Svg } from "~/icons";
 import { Card } from "./card";
 
 export function Onoboarding() {
@@ -13,17 +7,8 @@ export function Onoboarding() {
       <div className="flex w-full flex-col items-center justify-start gap-5">
         <div className="relative w-full">
           <h1 className="flex flex-row items-center justify-center text-4xl font-bold text-text-black">
-            <Icon className="w-11" /> Welcome to Horizon!
+            <IconSvg className="w-11" /> Welcome to Horizon!
           </h1>
-          <Button variant="destructive" className="absolute right-0 top-0 mr-4">
-            <Link
-              href="/"
-              className="flex flex-row items-center justify-between"
-            >
-              Skip
-              <ArrowRight className="w-4" />
-            </Link>
-          </Button>
         </div>
         <h2 className="max-w-xl text-center text-sm font-normal text-text-gray">
           Take the next steps towards a successful launch with a vibrant
@@ -35,7 +20,7 @@ export function Onoboarding() {
         <div className="flex w-full max-w-6xl flex-row flex-wrap items-stretch justify-center gap-7">
           {[
             {
-              icon: <Rocket className="w-8" />,
+              icon: <Rocket02Svg className="w-8" />,
               title: "Web3 Founder",
               bullets: [
                 "Hire ecosystem experts",
@@ -49,7 +34,7 @@ export function Onoboarding() {
               focus: true,
             },
             {
-              icon: <Users className="w-8" />,
+              icon: <Users02Svg className="w-8" />,
               title: "Contributor",
               bullets: [
                 "Offer your services to projects",
@@ -60,7 +45,7 @@ export function Onoboarding() {
               linkText: "Create contributor profile",
             },
             {
-              icon: <LineChart className="w-8" />,
+              icon: <LineChartUp02Svg className="w-8" />,
               title: "Backer",
               bullets: [
                 "Find promising projects on early stages",

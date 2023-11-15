@@ -5,11 +5,13 @@ import {
   getProject,
 } from "~/lib/server/projects";
 import { type AccountId } from "~/lib/validation/common";
-import FlagIcon from "~/components/icons/flag-06.svg";
-import MarkerPinIcon from "~/components/icons/marker-pin-01.svg";
-import UsersIcon from "~/components/icons/users-01.svg";
-import GlobeIcon from "~/components/icons/globe-02.svg";
-import SendIcon from "~/components/icons/send-01.svg";
+import {
+  Flag06Svg,
+  Globe02Svg,
+  MarkerPin01Svg,
+  Send01Svg,
+  Users01Svg,
+} from "~/icons";
 import { ExternalLink } from "~/components/external-link";
 import { cleanURL, cn } from "~/lib/utils";
 import { Socials } from "~/components/socials";
@@ -44,7 +46,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
             variant="outline"
             disabled
           >
-            <SendIcon className="h-5 w-5 text-ui-elements-gray" />
+            <Send01Svg className="h-5 w-5 text-ui-elements-gray" />
             Contact project
           </Button>
         ) : (
@@ -55,7 +57,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
               className="flex items-center justify-center gap-2"
               variant="default"
             >
-              <SendIcon className="h-5 w-5 text-ui-elements-gray" />
+              <Send01Svg className="h-5 w-5 text-ui-elements-gray" />
               Contact project
             </Button>
           </a>
@@ -69,22 +71,22 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
           </div>
           <div className="flex w-1/4 flex-col items-start justify-start gap-3">
             <div className="flex flex-row items-center justify-start gap-4 text-ui-elements-dark">
-              <FlagIcon className="h-5 w-5 text-ui-elements-gray" />
+              <Flag06Svg className="h-5 w-5 text-ui-elements-gray" />
               Joined{" "}
               {new Date(
                 Number(`${project.creationTx?.timestamp}`.substring(0, 13))
               ).toLocaleDateString()}
             </div>
             <div className="flex flex-row items-center justify-start gap-4 text-ui-elements-dark">
-              <MarkerPinIcon className="h-5 w-5 text-ui-elements-gray" />
+              <MarkerPin01Svg className="h-5 w-5 text-ui-elements-gray" />
               {backersDigest.location}
             </div>
             <div className="flex flex-row items-center justify-start gap-4 text-ui-elements-dark">
-              <UsersIcon className="h-5 w-5 text-ui-elements-gray" />
+              <Users01Svg className="h-5 w-5 text-ui-elements-gray" />
               {backersDigest.company_size}
             </div>
             <div className="flex flex-row items-center justify-start gap-4 text-ui-elements-dark">
-              <GlobeIcon className="h-5 w-5 text-ui-elements-gray" />
+              <Globe02Svg className="h-5 w-5 text-ui-elements-gray" />
               <ExternalLink href={cleanURL(backersDigest.website)}>
                 {backersDigest.website}
               </ExternalLink>

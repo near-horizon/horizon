@@ -15,8 +15,7 @@ import {
 } from "~/components/ui/card";
 import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import RequestIcon from "~/components/icons/request.svg";
-import UserIcon from "~/components/icons/user-02.svg";
+import { RequestSvg, User02Svg } from "~/icons";
 import { Handle } from "~/components/handle";
 
 export function Project({
@@ -75,7 +74,7 @@ export function Project({
                 className="h-16 w-16 flex-shrink-0 rounded-xl"
               />
             ) : (
-              <UserIcon className="h-16 w-16 flex-shrink-0 rounded-lg" />
+              <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
             )}
             <Handle accountId={accountId} />
           </Link>
@@ -92,7 +91,7 @@ export function Project({
           className="flex h-5 flex-row items-center justify-start gap-3 text-gray-400"
           href={`/projects/${accountId}/requests`}
         >
-          <RequestIcon className="h-4" />
+          <RequestSvg className="h-4" />
           {requestsSection}
         </Link>
       </CardFooter>
@@ -119,7 +118,7 @@ export function ProjectSkeleton() {
         </CardDescription>
       </CardContent>
       <CardFooter className="gap-2">
-        <RequestIcon className="h-5 text-ui-elements-gray" />
+        <RequestSvg className="h-5 text-ui-elements-gray" />
         <Skeleton className="h-4 w-32" />
       </CardFooter>
     </Card>

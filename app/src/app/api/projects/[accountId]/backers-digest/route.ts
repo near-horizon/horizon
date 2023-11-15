@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { hasBacker } from "~/lib/backers";
+import { hasBacker } from "~/lib/client/backers";
 import {
   addBackersDigestToken,
   getBackersDigest,

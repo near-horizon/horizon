@@ -1,6 +1,6 @@
 import {
-  type UseMutationResult,
   useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -13,9 +13,9 @@ import {
   getContributorContracts,
   getProjectCompletedContracts,
   getProjectContracts,
-} from "~/lib/contracts";
+} from "~/lib/client/contracts";
 import { type ContractId } from "~/lib/validation/contracts";
-import { type Progress } from "~/lib/mutating";
+import { type Progress } from "~/lib/client/mutating";
 import { type ProposalId } from "~/lib/validation/proposals";
 
 export function useContributorContracts(accountId: AccountId) {

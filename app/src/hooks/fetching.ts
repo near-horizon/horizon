@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProfile, getStats } from "~/lib/fetching";
+import { getProfile, getStats } from "~/lib/client/fetching";
 import { type AccountId } from "~/lib/validation/common";
 
 export function useProfile(accountId?: AccountId, enabled = true) {

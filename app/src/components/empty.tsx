@@ -1,5 +1,5 @@
 import { cn } from "~/lib/utils";
-import FolderIcon from "./icons/folder-x.svg";
+import { FolderXSvg } from "~/icons";
 
 export function NoData({
   description = "It looks like there is no data provided",
@@ -15,7 +15,7 @@ export function NoData({
         className
       )}
     >
-      <FolderIcon className="h-10 text-primary-disabled" />
+      <FolderXSvg className="h-10 text-primary-disabled" />
       <b className="font-semibold text-ui-elements-dark">Oops, nothing here</b>
       <small className="text-sm text-ui-elements-gray">{description}</small>
     </div>

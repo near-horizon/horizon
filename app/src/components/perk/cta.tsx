@@ -1,6 +1,6 @@
 import { type Perk } from "~/lib/validation/perks";
 import { Button } from "../ui/button";
-import LockIcon from "../icons/lock-01.svg";
+import { Lock01Svg } from "~/icons";
 import { ProgressDialog } from "../progress-dialog";
 import { useUnlockPerk } from "~/hooks/perks";
 
@@ -40,7 +40,7 @@ export function CTA({
         ctaLink="#"
         triggerText={
           <>
-            <LockIcon className="mr-2 h-4 w-4" />
+            <Lock01Svg className="mr-2 h-4 w-4" />
             Unock perk
             {price > 0 && (
               <>

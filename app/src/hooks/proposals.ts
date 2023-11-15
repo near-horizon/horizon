@@ -1,15 +1,15 @@
 import {
-  type UseMutationResult,
   useMutation,
+  type UseMutationResult,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useSignTx } from "~/stores/global";
 import { useState } from "react";
-import { getProposal, getRequestProposals } from "~/lib/proposals";
+import { getProposal, getRequestProposals } from "~/lib/client/proposals";
 import { type Proposal, type ProposalId } from "~/lib/validation/proposals";
 import { type AccountId } from "~/lib/validation/common";
-import { type Progress } from "~/lib/mutating";
+import { type Progress } from "~/lib/client/mutating";
 
 export function useProposal(id: ProposalId) {
   return useQuery({

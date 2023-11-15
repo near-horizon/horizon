@@ -19,9 +19,7 @@ import {
 } from "~/hooks/projects";
 import { linktreeSchema } from "~/lib/validation/fetching";
 import { useUser } from "~/stores/global";
-import XIcon from "~/components/icons/x.svg";
-import PlusCircleIcon from "~/components/icons/plus-circle.svg";
-import TargetIcon from "~/components/icons/target-04.svg";
+import { PlusCircleSvg, Target04Svg, XSvg } from "~/icons";
 import { ImageInput } from "~/components/inputs/image";
 import { useEffect } from "react";
 import { Badge } from "~/components/ui/badge";
@@ -201,7 +199,7 @@ export default function BackersDigestForm() {
         <div className="flex flex-row items-start justify-start gap-4">
           <div className="flex flex-grow flex-col gap-2">
             <div className="flex flex-row items-center justify-start gap-2">
-              <TargetIcon className="h-10 w-10 text-error" />
+              <Target04Svg className="h-10 w-10 text-error" />
               <h1 className="text-2xl font-bold">Backers digest</h1>
               <Badge
                 variant="outline"
@@ -298,7 +296,7 @@ export default function BackersDigestForm() {
                   className="absolute right-0 top-0 flex w-1/12 flex-row items-center justify-center border-none"
                   onClick={() => founders.remove(index)}
                 >
-                  <XIcon className="h-4 w-4" />
+                  <XSvg className="h-4 w-4" />
                 </Button>
                 <ImageInput
                   control={form.control}
@@ -355,7 +353,7 @@ export default function BackersDigestForm() {
                 onClick={() => founders.append({}, { shouldFocus: true })}
                 className="flex flex-row items-center justify-center gap-2"
               >
-                <PlusCircleIcon className="h-4 w-4" />
+                <PlusCircleSvg className="h-4 w-4" />
                 Add founder
               </Button>
             </div>
@@ -394,7 +392,7 @@ export default function BackersDigestForm() {
                 className="flex w-1/12 flex-row items-center justify-center border-none"
                 onClick={() => traction.remove(index)}
               >
-                <XIcon className="h-4 w-4" />
+                <XSvg className="h-4 w-4" />
               </Button>
             </div>
           ))}
@@ -405,7 +403,7 @@ export default function BackersDigestForm() {
               onClick={() => traction.append([["", ""]], { shouldFocus: true })}
               className="flex flex-row items-center justify-center gap-2"
             >
-              <PlusCircleIcon className="h-4 w-4" />
+              <PlusCircleSvg className="h-4 w-4" />
               Add metric
             </Button>
           </div>

@@ -9,7 +9,7 @@ import {
 import { intoURLSearchParams } from "../utils";
 import { fetchManyURLSchema } from "../validation/fetching";
 import { paymentTypeSchema } from "../validation/requests";
-import { getProfile, viewCall } from "../fetching";
+import { getProfile, viewCall } from "../client/fetching";
 import { getTransactions } from "./transactions";
 import { type AccountId } from "../validation/common";
 import {

@@ -1,5 +1,4 @@
-import Logo from "../../public/logo.svg";
-import Icon from "../../public/icon.svg";
+import { IconSvg, LogoSvg } from "~/icons";
 import { GlobalSearchBar } from "./global-search-bar";
 import { MobileNavLinks, NavLinks } from "./nav-links";
 import { MobileUserMenu, UserMenu } from "./user-menu";
@@ -11,7 +10,7 @@ export function Navbar() {
     <header className="flex w-full flex-col items-stretch justify-start gap-4 pt-4">
       <div className="mx-auto flex w-full max-w-screen-xl flex-row items-center justify-between px-4">
         <Link href="/" className="flex items-center justify-center">
-          <Logo className="w-full" />
+          <LogoSvg className="w-full" />
         </Link>
         <GlobalSearchBar />
         <UserMenu />
@@ -32,7 +31,7 @@ export function MobileNavbar() {
       <div className="flex w-full flex-row items-center justify-between px-8">
         <div className="flex flex-row items-center justify-start">
           <Link href="/" className="flex items-center justify-center">
-            <Icon className="h-8 w-full" />
+            <IconSvg className="h-8 w-full" />
           </Link>
           <MobileNavLinks />
         </div>

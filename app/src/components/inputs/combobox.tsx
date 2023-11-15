@@ -16,8 +16,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { cn } from "~/lib/utils";
-import ArrowDown from "../icons/arrow-down.svg";
-import Check from "../icons/check.svg";
+import { ArrowDownSvg, CheckSvg } from "~/icons";
 import {
   Command,
   CommandEmpty,
@@ -64,7 +63,7 @@ export function ComboboxInput<
                     ? props.options.find((item) => item.value === field.value)
                         ?.text
                     : "Select option"}
-                  <ArrowDown className="h-6 w-6 shrink-0 opacity-50" />
+                  <ArrowDownSvg className="h-6 w-6 shrink-0 opacity-50" />
                 </Button>
               </FormControl>
             </PopoverTrigger>
@@ -84,7 +83,7 @@ export function ComboboxInput<
                         field.onChange({ target: { value: item.value } });
                       }}
                     >
-                      <Check
+                      <CheckSvg
                         className={cn(
                           "mr-2 h-6 w-6",
                           item.value === field.value

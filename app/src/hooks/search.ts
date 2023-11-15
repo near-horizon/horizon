@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { search } from "~/lib/search";
+import { search } from "~/lib/client/search";
 
 export function useSearch(q: string) {
   return useQuery({

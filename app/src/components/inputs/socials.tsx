@@ -17,8 +17,7 @@ import { useEffect, useState } from "react";
 import { type Linktree, socialsSchema } from "~/lib/validation/fetching";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { Button } from "../ui/button";
-import PlusIcon from "~/components/icons/plus.svg";
-import XIcon from "~/components/icons/x.svg";
+import { PlusSvg, XSvg } from "~/icons";
 
 export function SocialProfilesInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -131,7 +130,7 @@ export function SocialProfilesInput<
                   ([, selected]) => selected
                 )}
               >
-                <PlusIcon className="h-5 w-5" />
+                <PlusSvg className="h-5 w-5" />
               </Button>
             </div>
           </FormControl>
@@ -193,7 +192,7 @@ function SocialInput({
         onClick={onOptionRemove}
         className="ml-4"
       >
-        <XIcon className="h-5 w-5" />
+        <XSvg className="h-5 w-5" />
       </Button>
     </div>
   );

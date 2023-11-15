@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { getBackersDigest, hasBackersDigest } from "~/lib/server/projects";
 import { getUserFromSession } from "~/lib/session";
-import TargetIcon from "~/components/icons/target-04.svg";
-import EditIcon from "~/components/icons/edit-03.svg";
+import { Edit03Svg, Target04Svg } from "~/icons";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { BackersDigest } from "~/app/projects/[accountId]/backers-digest/backers-digest";
@@ -23,7 +22,7 @@ export default async function BackersDigestPage() {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="mx-auto flex max-w-prose flex-col items-center justify-center gap-5">
-          <TargetIcon className="h-10 w-10 text-error" />
+          <Target04Svg className="h-10 w-10 text-error" />
           <h2 className="text-2xl font-bold text-text-dark">
             Straight to the point with backers digest
           </h2>
@@ -45,7 +44,7 @@ export default async function BackersDigestPage() {
                 variant="default"
                 className="flex flex-row items-center justify-center gap-2 font-medium text-ui-elements-dark"
               >
-                <TargetIcon className="h-5 w-5" />
+                <Target04Svg className="h-5 w-5" />
                 Create backers digest
               </Button>
             </Link>
@@ -60,7 +59,7 @@ export default async function BackersDigestPage() {
       <div className="flex flex-row items-start justify-start gap-4">
         <div className="flex flex-grow flex-col gap-2">
           <div className="flex flex-row items-center justify-start gap-2">
-            <TargetIcon className="h-10 w-10 text-error" />
+            <Target04Svg className="h-10 w-10 text-error" />
             <h1 className="text-2xl font-bold">Backers digest</h1>
             <Badge
               variant="outline"
@@ -82,7 +81,7 @@ export default async function BackersDigestPage() {
               variant="outline"
               className="flex flex-row items-center justify-center gap-2"
             >
-              <EditIcon className="h-5 w-5" />
+              <Edit03Svg className="h-5 w-5" />
               Edit
             </Button>
           </Link>

@@ -14,9 +14,7 @@ import {
 import { useRequest } from "~/hooks/requests";
 import { formatBudget, formatDate } from "~/lib/utils";
 import { type AccountId, type CID } from "~/lib/validation/common";
-import FlagIcon from "~/components/icons/flag-01.svg";
-import MoneyIcon from "~/components/icons/bank-note-01.svg";
-import Mail from "~/components/icons/mail-01.svg";
+import { BankNote01Svg, Flag01Svg, Mail01Svg } from "~/icons";
 import Link from "next/link";
 import { Skeleton } from "~/components/ui/skeleton";
 
@@ -52,15 +50,15 @@ export function Card({ accountId, cid }: { accountId: AccountId; cid: CID }) {
       </CardContent>
       <CardFooter className="gap-3">
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <FlagIcon className="h-4" />
+          <Flag01Svg className="h-4" />
           {formatDate(Number(request.deadline))}
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <MoneyIcon className="h-4" />
+          <BankNote01Svg className="h-4" />
           {formatBudget(request.budget)}
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <Mail className="h-4" />
+          <Mail01Svg className="h-4" />
           {request.request_type}
         </div>
       </CardFooter>
@@ -88,15 +86,15 @@ export function CardSkeleton() {
       </CardContent>
       <CardFooter className="gap-3">
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <FlagIcon className="h-4" />
+          <Flag01Svg className="h-4" />
           <Skeleton className="h-4 w-10" />
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <MoneyIcon className="h-4" />
+          <BankNote01Svg className="h-4" />
           <Skeleton className="h-4 w-10" />
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
-          <Mail className="h-4" />
+          <Mail01Svg className="h-4" />
           <Skeleton className="h-4 w-10" />
         </div>
       </CardFooter>

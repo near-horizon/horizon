@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/card";
 import { IPFSImage } from "~/components/ipfs-image";
 import { Skeleton } from "~/components/ui/skeleton";
-import UserIcon from "~/components/icons/user-02.svg";
+import { User02Svg } from "~/icons";
 import { Handle } from "~/components/handle";
 import { useContributor } from "~/hooks/contributors";
 import { Tags } from "~/components/tags";
@@ -55,7 +55,7 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
                 className="h-16 w-16 flex-shrink-0 rounded-lg"
               />
             ) : (
-              <UserIcon className="h-16 w-16 flex-shrink-0 rounded-lg" />
+              <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
             )}
             <div className="flex max-w-full flex-col overflow-hidden">
               <Handle accountId={accountId} />
