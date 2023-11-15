@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TwitterIcon, YoutubeIcon } from "lucide-react";
+import { Button } from "./ui/button";
 
 export function Footer() {
   return (
@@ -85,6 +86,9 @@ export function Footer() {
               </li>
             </ul>
           </FooterSection>
+          <Link href="/onboarding">
+            <Button variant="default">Create profile</Button>
+          </Link>
         </div>
         <div className="flex w-full flex-col items-center justify-between gap-2 text-gray-600 md:flex-row md:gap-0">
           <span>© 2023</span>
