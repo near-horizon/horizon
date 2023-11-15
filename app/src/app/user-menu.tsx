@@ -43,13 +43,11 @@ export function UserMenu() {
     <div className="flex flex-row items-center justify-end">
       <DropdownMenu>
         <DropdownMenuTrigger className="flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
-          <div className="h-8 w-8 overflow-hidden rounded-full border border-gray-400">
-            <Icon
-              name={user?.accountId ?? ""}
-              image={data?.image}
-              className="h-8 w-8 rounded-lg"
-            />
-          </div>
+          <Icon
+            name={user?.accountId ?? ""}
+            image={data?.image}
+            className="h-8 w-8 rounded-full"
+          />
           My profile
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -97,13 +95,11 @@ export function MobileUserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
-        <div className="h-8 w-8 overflow-hidden rounded-full border border-gray-400">
-          <Icon
-            name={user?.accountId ?? ""}
-            image={data?.image}
-            className="h-8 w-8 rounded-lg"
-          />
-        </div>
+        <Icon
+          name={user?.accountId ?? ""}
+          image={data?.image}
+          className="h-8 w-8 rounded-full"
+        />
         My profile
         <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
       </DropdownMenuTrigger>

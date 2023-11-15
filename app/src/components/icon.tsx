@@ -34,12 +34,12 @@ export function Icon({
         <NextImage
           alt={name}
           src={url}
-          className="h-full w-full object-contain"
+          className="h-full w-full object-cover"
           fill
           unoptimized
         />
       ) : (
-        <User02Svg className="h-16 w-16 flex-shrink-0 rounded-lg" />
+        <User02Svg />
       )}
     </div>
   );
