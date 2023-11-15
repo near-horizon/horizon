@@ -103,7 +103,7 @@ export function GlobalSearchBar() {
               {data.contributors.slice(0, 4).map(([accountId, contributor]) => (
                 <li key={accountId}>
                   <Link
-                    href={`/contributor/${accountId}`}
+                    href={`/contributors/${accountId}`}
                     className="flex w-full flex-row items-center justify-start gap-3"
                   >
                     <SearchSmSvg className="h-4 w-4" />
