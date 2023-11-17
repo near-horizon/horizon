@@ -69,18 +69,18 @@ export function Project({
             }`}
           >
             <Icon
-              name={data?.name ?? ""}
-              image={data?.image}
+              name={data.name ?? ""}
+              image={data.image}
               className="h-16 w-16 flex-shrink-0 rounded-xl"
             />
-            <Handle accountId={accountId} />
+            <Handle name={data.name} accountId={accountId} />
           </Link>
         </CardTitle>
       </CardHeader>
       <CardContent className="max-w-full flex-grow">
         <div className="truncate font-medium">{data?.tagline}</div>
         <CardDescription>
-          <Description text={data?.description ?? ""} />
+          <Description text={data.description ?? ""} />
         </CardDescription>
       </CardContent>
       <CardFooter>

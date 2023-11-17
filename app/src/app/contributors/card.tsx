@@ -54,7 +54,7 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
               className="h-16 w-16 flex-shrink-0 rounded-lg"
             />
             <div className="flex max-w-full flex-col overflow-hidden">
-              <Handle accountId={accountId} />
+              <Handle name={data.name} accountId={accountId} />
               <span className="text-sm font-normal">
                 {isOrganization ? "Organization" : "Individual"}
               </span>

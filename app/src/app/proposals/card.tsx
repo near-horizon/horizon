@@ -46,7 +46,7 @@ export function Proposal({
               image={contributor?.image}
               className="h-8 w-8"
             />
-            <Handle accountId={contributorId} />
+            <Handle name={contributor?.name} accountId={contributorId} />
           </Link>
           <span className="text-sm font-normal text-stone-200">
             {format(data?.creationTx?.timestamp ?? "", "en_US")}

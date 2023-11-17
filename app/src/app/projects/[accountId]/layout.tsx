@@ -79,16 +79,16 @@ async function Header({ accountId }: { accountId: AccountId }) {
 
   return (
     <div className="flex flex-row items-center justify-start gap-4">
-      <Icon name={data?.name ?? ""} image={data?.image} />
+      <Icon name={data.name ?? ""} image={data?.image} />
 
       <div className="flex flex-col items-start justify-start gap-3">
-        <Handle accountId={accountId} />
+        <Handle name={data.name} accountId={accountId} />
 
         <p className="text-[14px] font-normal leading-[140%] text-[#101828]">
           {data.tagline}
         </p>
 
-        <Tags tags={data?.product_type ?? {}} />
+        <Tags tags={data.product_type ?? {}} />
       </div>
     </div>
   );

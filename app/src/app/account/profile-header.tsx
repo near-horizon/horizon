@@ -145,7 +145,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
     <div className="flex flex-row items-start justify-start gap-6">
       <Icon name={data?.name ?? ""} image={data?.image} className="h-24 w-24" />
       <div className="flex flex-col items-start justify-start gap-1">
-        <Handle accountId={accountId} />
+        <Handle name={data?.name} accountId={accountId} />
         <div className="hidden lg:block">
           <div className="truncate font-medium">{data?.tagline}</div>
           <Tags tags={data?.tags ?? {}} />

@@ -41,11 +41,11 @@ export default async function ContractDetails({
                   href={`/contributors/${contributorId}`}
                 >
                   <Icon
-                    name={contributor?.name ?? ""}
-                    image={contributor?.image}
+                    name={contributor.name ?? ""}
+                    image={contributor.image}
                     className="h-8 w-8"
                   />
-                  <Handle accountId={contributorId} />
+                  <Handle name={contributor.name} accountId={contributorId} />
                 </Link>
               </Detail>
               <Detail label="Project">
@@ -54,23 +54,19 @@ export default async function ContractDetails({
                   href={`/projects/${projectId}`}
                 >
                   <Icon
-                    name={project?.name ?? ""}
-                    image={project?.image}
+                    name={project.name ?? ""}
+                    image={project.image}
                     className="h-8 w-8"
                   />
-                  <Handle accountId={projectId} />
+                  <Handle name={project.name} accountId={projectId} />
                 </Link>
               </Detail>
-              <Detail label="Price">
-                {formatBudget(contract?.price ?? 0)}
-              </Detail>
-              <Detail label="Payment method">{proposal?.payment_source}</Detail>
-              <Detail label="Payment type">{proposal?.payment_type}</Detail>
-              <Detail label="Request type">{proposal?.proposal_type}</Detail>
+              <Detail label="Price">{formatBudget(contract.price ?? 0)}</Detail>
+              <Detail label="Payment method">{proposal.payment_source}</Detail>
+              <Detail label="Payment type">{proposal.payment_type}</Detail>
+              <Detail label="Request type">{proposal.proposal_type}</Detail>
               <Detail label="Deadline">
-                {formatDate(
-                  Number((proposal?.end_date ?? "").substring(0, 13))
-                )}
+                {formatDate(Number((proposal.end_date ?? "").substring(0, 13)))}
               </Detail>
             </div>
           ),
@@ -81,9 +77,9 @@ export default async function ContractDetails({
           Content: (
             <>
               <h2 className="text-2xl font-bold">
-                Message from <b>{contributor?.name}</b>
+                Message from <b>{contributor.name}</b>
               </h2>
-              <Description text={proposal?.description ?? ""} full />
+              <Description text={proposal.description ?? ""} full />
             </>
           ),
         },
@@ -93,9 +89,9 @@ export default async function ContractDetails({
           Content: (
             <>
               <h2 className="text-2xl font-bold">
-                Description by <b>{project?.name}</b>
+                Description by <b>{project.name}</b>
               </h2>
-              <Description text={request?.description ?? ""} full />
+              <Description text={request.description ?? ""} full />
             </>
           ),
         },

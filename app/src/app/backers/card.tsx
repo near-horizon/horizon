@@ -37,7 +37,7 @@ export function Backer({ accountId }: { accountId: AccountId }) {
             className="h-16 w-16 flex-shrink-0 rounded-lg"
           />
           <div className="max-w-full overflow-hidden">
-            <Handle accountId={accountId} />
+            <Handle name={data.name} accountId={accountId} />
             {data.specialization && <span>{data.specialization}</span>}
           </div>
         </Link>
