@@ -13,6 +13,7 @@ import {
 } from "~/components/ui/accordion";
 import { useProjectCompletion } from "~/hooks/projects";
 import { useParams, usePathname } from "next/navigation";
+import { useUser } from "~/stores/global";
 
 export function NavItem({
   section,
@@ -27,7 +28,8 @@ export function NavItem({
   subMenu?: { section: string; label: string; progress: number }[];
   count?: number;
 }) {
-  const completion = useProjectCompletion();
+  const user = useUser();
+  const { data: completion } = useProjectCompletion(user?.accountId ?? "");
   const { section: activeSection, subSection: activeSubSection } = useParams()!;
   const pathname = usePathname();
   const [sectionPart, subSectionPart] = (pathname ?? "").split("/").slice(2);
@@ -61,28 +63,29 @@ export function NavItem({
             </AccordionTrigger>
             <AccordionContent>
               <div className="flex w-full flex-col items-start justify-start gap-3 pl-8 pt-2">
-                {subMenu.map(({ section: subSection, label }) => (
-                  <NavigationMenuLink
-                    key={subSection}
-                    href={`/account/${section}/${subSection}`}
-                    className={cn(
-                      "flex w-full flex-row items-center justify-between",
-                      {
-                        "text-text-link":
-                          isSectionActive &&
-                          (activeSubSection === subSection ||
-                            subSectionPart === subSection),
-                      }
-                    )}
-                  >
-                    <span>{label}</span>
-                    <small>
-                      {completion[
-                        subSection as keyof typeof completion
-                      ].toLocaleString("en-US", { style: "percent" })}
-                    </small>
-                  </NavigationMenuLink>
-                ))}
+                {completion &&
+                  subMenu.map(({ section: subSection, label }) => (
+                    <NavigationMenuLink
+                      key={subSection}
+                      href={`/account/${section}/${subSection}`}
+                      className={cn(
+                        "flex w-full flex-row items-center justify-between",
+                        {
+                          "text-text-link":
+                            isSectionActive &&
+                            (activeSubSection === subSection ||
+                              subSectionPart === subSection),
+                        }
+                      )}
+                    >
+                      <span>{label}</span>
+                      <small>
+                        {completion[
+                          subSection as keyof typeof completion
+                        ].toLocaleString("en-US", { style: "percent" })}
+                      </small>
+                    </NavigationMenuLink>
+                  ))}
               </div>
             </AccordionContent>
           </AccordionItem>

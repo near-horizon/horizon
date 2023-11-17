@@ -42,8 +42,10 @@ export function TextAreaInput<
             </span>
             {props.maxLength && (
               <span className="ml-3 text-text-gray">
-                {props.maxLength - (field.value as string).length} characters
-                left
+                {props.maxLength -
+                  (typeof field.value === "string" ? field.value : "")
+                    .length}{" "}
+                characters left
               </span>
             )}
           </div>

@@ -64,14 +64,11 @@ export function Contributor({ accountId }: { accountId: AccountId }) {
       </CardHeader>
       <CardContent className="flex-grow">
         <CardDescription>
-          <Description
-            text={data.description ?? data.tagline ?? ""}
-            loading={false}
-          />
+          <Description text={data.description ?? data.tagline ?? ""} />
         </CardDescription>
       </CardContent>
       <CardFooter>
-        <Tags tags={data.tags ?? {}} loading={false} />
+        <Tags tags={data.tags ?? {}} />
       </CardFooter>
     </Card>
   );

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import { Proposals } from "~/components/request/proposals";
+import { Proposal } from "~/app/proposals/card";
+import { getRequestProposals } from "~/lib/server/requests";
 import { getUserFromSession } from "~/lib/session";
 import { type AccountId, type CID } from "~/lib/validation/common";
 
@@ -15,5 +16,19 @@ export default async function RequestProposals({
     return redirect(`/requests/${accountId}/${cid}/overview`);
   }
 
-  return <Proposals accountId={accountId} cid={cid} />;
+  const proposals = await getRequestProposals(accountId, cid);
+
+  return (
+    <div>
+      {proposals.map(([[projectId, cid], contributorId]) => (
+        <div key={projectId + cid + contributorId}>
+          <Proposal
+            projectId={projectId}
+            cid={cid}
+            contributorId={contributorId}
+          />
+        </div>
+      ))}
+    </div>
+  );
 }

@@ -67,6 +67,15 @@ export async function getContributor(accountId: AccountId) {
   });
 }
 
+export async function hasContributor(accountId: AccountId) {
+  try {
+    await getContributor(accountId);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export async function getContributorContracts(accountId: AccountId) {
   const contracts = await viewCall<ContributorContracts>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,

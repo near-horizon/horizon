@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,32 +7,41 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useProfile } from "~/hooks/fetching";
-import {
-  useSignIn,
-  useSignOut,
-  useUser,
-  useWalletSelector,
-} from "~/stores/global";
 import { ChevronDownSvg } from "~/icons";
 import { ProfileNav } from "./account/profile-nav";
 import { Icon } from "~/components/icon";
+import { SignIn } from "./sign-in";
+import { SignOut } from "./sign-out";
+import { getUserFromSession } from "~/lib/session";
+import { getProfile } from "~/lib/fetching";
 
-export function UserMenu() {
-  const selector = useWalletSelector();
-  const signIn = useSignIn();
-  const signOut = useSignOut();
-  const isSignedIn = selector?.isSignedIn();
-  const user = useUser();
-  const { data } = useProfile(user?.accountId, isSignedIn && !!user);
+export async function UserMenu({ mobile = false }: { mobile?: boolean }) {
+  const user = await getUserFromSession();
 
-  if (!isSignedIn) {
+  if (!user) {
+    return <SignIn />;
+  }
+
+  const profile = await getProfile(user.accountId);
+
+  if (mobile) {
     return (
-      <div>
-        <Button onClick={signIn} variant="outline">
-          Sign In
-        </Button>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
+          <Icon
+            name={user.accountId}
+            image={profile.image}
+            className="h-8 w-8 rounded-full"
+          />
+          My profile
+          <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="flex w-[100svw] flex-col items-stretch justify-start pt-6">
+          {user.hasProfile && <ProfileNav />}
+          <DropdownMenuSeparator />
+          <SignOut mobile />
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
@@ -44,8 +50,8 @@ export function UserMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger className="flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
           <Icon
-            name={user?.accountId ?? ""}
-            image={data?.image}
+            name={user.accountId}
+            image={profile.image}
             className="h-8 w-8 rounded-full"
           />
           My profile
@@ -53,67 +59,22 @@ export function UserMenu() {
         <DropdownMenuContent>
           <DropdownMenuLabel>My profile</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem disabled={!user?.hasProfile}>
+          <DropdownMenuItem disabled={!user.hasProfile}>
             <Link href="/account/dashboard">Profile</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={!user?.hasProfile}>
+          <DropdownMenuItem disabled={!user.hasProfile}>
             <Link href="/account/requests">Requests</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={!user?.hasProfile}>
+          <DropdownMenuItem disabled={!user.hasProfile}>
             <Link href="/account/contracts">Contracts</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={!user?.hasProfile}>
+          <DropdownMenuItem disabled={!user.hasProfile}>
             <Link href="/account/settings">Settings</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {/* eslint-disable-next-line @typescript-eslint/no-misused-promises  */}
-          <DropdownMenuItem onClick={signOut}>Sign out</DropdownMenuItem>
+          <SignOut />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
-}
-
-export function MobileUserMenu() {
-  const selector = useWalletSelector();
-  const signIn = useSignIn();
-  const signOut = useSignOut();
-  const isSignedIn = selector?.isSignedIn();
-  const user = useUser();
-  const { data } = useProfile(user?.accountId, isSignedIn && !!user);
-
-  if (!isSignedIn) {
-    return (
-      <div>
-        <Button onClick={signIn} variant="outline">
-          Sign In
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
-        <Icon
-          name={user?.accountId ?? ""}
-          image={data?.image}
-          className="h-8 w-8 rounded-full"
-        />
-        My profile
-        <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex w-[100svw] flex-col items-stretch justify-start pt-6">
-        {user?.hasProfile && <ProfileNav />}
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onClick={signOut}
-          className="flex flex-row items-center justify-center"
-        >
-          <b className="text-center">Sign out</b>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }

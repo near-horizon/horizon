@@ -1,16 +1,8 @@
-import { cn } from "~/lib/utils";
 import { Badge } from "./ui/badge";
+import { Skeleton } from "./ui/skeleton";
 
-export function Tags({
-  tags,
-  loading,
-}: {
-  tags: Record<string, string> | string[];
-  loading: boolean;
-}) {
-  const [items] = (
-    loading ? ["", "", ""] : Array.isArray(tags) ? tags : Object.keys(tags)
-  ).reduce(
+export function Tags({ tags }: { tags: Record<string, string> | string[] }) {
+  const [items] = (Array.isArray(tags) ? tags : Object.keys(tags)).reduce(
     ([tags, length], tag) => {
       if (length > 39) {
         return [tags, length];
@@ -28,12 +20,26 @@ export function Tags({
       {items.slice(0, 4).map((tag, i) => (
         <Badge
           key={tag + i}
-          className={cn("mr-2 rounded-lg font-normal text-ui-elements-gray", {
-            "w-20 animate-pulse bg-gray-200": loading,
-          })}
+          className="mr-2 rounded-lg font-normal text-ui-elements-gray"
           variant="outline"
         >
           {tag}
+        </Badge>
+      ))}
+    </span>
+  );
+}
+
+export function TagsSkeleton() {
+  return (
+    <span className="mt-2 inline-flex flex-row flex-wrap items-center justify-start">
+      {[...Array(4).keys()].map((i) => (
+        <Badge
+          key={i}
+          className="mr-2 rounded-lg font-normal text-ui-elements-gray"
+          variant="outline"
+        >
+          <Skeleton className="w-20" />
         </Badge>
       ))}
     </span>

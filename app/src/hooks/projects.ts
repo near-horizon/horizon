@@ -5,27 +5,25 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { type AccountId, imageSchema } from "~/lib/validation/common";
+import { type AccountId } from "~/lib/validation/common";
 import { pageSize } from "~/lib/constants/pagination";
-import { useAccountId, useSignTx } from "~/stores/global";
+import { useSignTx } from "~/stores/global";
 import { useState } from "react";
-import deepEqual from "deep-equal";
 import {
   type BackersDigest,
   privateProjectSchema,
   type Project,
   projectSchema,
   type ProjectsQuery,
-  type Section,
 } from "~/lib/validation/projects";
 import {
   getBackerPaginatedProjects,
   getPaginatedProjects,
   getProject,
   getProjectBackersDigest,
+  getProjectCompletion,
   getProjects,
   getProjectsCount,
-  getSimilarProjects,
   hasProject,
   updateProjectBackersDigest,
 } from "~/lib/client/projects";
@@ -66,80 +64,26 @@ export function useBackerPaginatedProjects() {
   });
 }
 
-export function useSimilarProjects(accountId: AccountId) {
-  return useQuery({
-    queryKey: ["similar-projects", accountId],
-    queryFn: () => getSimilarProjects(accountId),
-    enabled: !!accountId,
-  });
-}
-
 export function useProject(accountId: AccountId) {
   return useQuery({
     queryKey: ["project", accountId],
-    queryFn: () => getProject(accountId),
+    queryFn: ({ queryKey: [, accountId] }) => getProject(accountId!),
     enabled: !!accountId,
   });
 }
 
-export function useProjectCompletion(): Record<Section, number> {
-  const accountId = useAccountId();
-  const { data: project } = useProject(accountId ?? "");
-
-  const basicData = [
-    project?.image && deepEqual(project.image, imageSchema.parse(undefined)),
-    project?.name && project.name.length > 0,
-    project?.tagline && project.tagline.length > 0,
-    project?.description && project.description.length > 0,
-    project?.website && project.website.length > 0,
-    project?.linktree && Object.keys(project.linktree).length > 0,
-    project?.verticals && Object.keys(project.verticals).length > 0,
-    project?.product_type && Object.keys(project.product_type).length > 0,
-    project?.company_size && project.company_size.length > 0,
-    project?.geo && project.geo.length > 0,
-    project?.problem && project.problem.length > 0,
-    project?.success_position && project.success_position.length > 0,
-    project?.why && project.why.length > 0,
-    project?.vision && project.vision.length > 0,
-  ];
-  const techData = [
-    project?.userbase && project.userbase.length > 0,
-    project?.tam && project.tam.length > 0,
-    project?.dev && project.dev.length > 0,
-    project?.distribution && project.distribution.length > 0,
-    project?.integration && project.integration.length > 0,
-    project?.contracts && project.contracts.length > 0,
-  ];
-  const fundingData = [
-    project?.stage && project.stage.length > 0,
-    project?.fundraising && (project.fundraising as string).length > 0,
-    project?.raise && (project.raise as string).length > 0,
-    project?.investment && (project.investment as string).length > 0,
-  ];
-  const foundersData = [
-    project?.founders && project.founders.length > 0,
-    project?.team && Object.keys(project.team).length > 0,
-  ];
-  const filesData = [
-    project?.deck && project.deck.length > 0,
-    project?.white_paper && project.white_paper.length > 0,
-    project?.roadmap && project.roadmap.length > 0,
-    project?.team_deck && (project.team_deck as string).length > 0,
-    project?.demo && project.demo.length > 0,
-  ];
-  return {
-    basic: basicData.filter(Boolean).length / basicData.length,
-    tech: techData.filter(Boolean).length / techData.length,
-    funding: fundingData.filter(Boolean).length / fundingData.length,
-    founders: foundersData.filter(Boolean).length / foundersData.length,
-    files: filesData.filter(Boolean).length / filesData.length,
-  };
+export function useProjectCompletion(accountId: AccountId) {
+  return useQuery({
+    queryKey: ["project-completion", accountId],
+    queryFn: ({ queryKey: [, accountId] }) => getProjectCompletion(accountId!),
+    enabled: !!accountId,
+  });
 }
 
 export function useHasProject(accountId: AccountId) {
   return useQuery({
     queryKey: ["has-project", accountId],
-    queryFn: () => hasProject(accountId),
+    queryFn: ({ queryKey: [, accountId] }) => hasProject(accountId!),
     enabled: !!accountId,
   });
 }
@@ -147,7 +91,8 @@ export function useHasProject(accountId: AccountId) {
 export function useBackersDigest(accountId: AccountId) {
   return useQuery({
     queryKey: ["backers-digest", accountId],
-    queryFn: () => getProjectBackersDigest(accountId),
+    queryFn: ({ queryKey: [, accountId] }) =>
+      getProjectBackersDigest(accountId!),
   });
 }
 

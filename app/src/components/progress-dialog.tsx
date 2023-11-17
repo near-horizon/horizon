@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -35,7 +36,7 @@ export function ProgressDialog({
   disabled?: boolean;
 }) {
   return (
-    <>
+    <Dialog>
       <DialogTrigger asChild>
         <Button
           variant={buttonVariant}
@@ -63,6 +64,6 @@ export function ProgressDialog({
           )}
         </DialogFooter>
       </DialogContent>
-    </>
+    </Dialog>
   );
 }

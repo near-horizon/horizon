@@ -69,7 +69,7 @@ export default function GrowthProgramCard({
             {program.tagLine}
           </div>
 
-          <Tags tags={program.tags} loading={false} />
+          <Tags tags={program.tags} />
           <div className="mt-3 flex flex-wrap gap-6">
             <div className="flex items-center gap-1">
               <ClockFastForwardSvg className="h-5 w-5" />

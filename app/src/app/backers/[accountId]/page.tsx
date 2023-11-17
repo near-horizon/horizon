@@ -1,38 +1,62 @@
-import { General } from "~/components/backer/general";
-import { Header } from "~/components/backer/header";
 import { Description } from "~/components/description";
 import { Details } from "~/components/ui/details";
-import { getBackers } from "~/lib/server/backers";
+import { Detail } from "~/components/detail";
+import { getBacker, getBackers } from "~/lib/server/backers";
 import { type AccountId } from "~/lib/validation/common";
+import { Socials } from "~/components/socials";
+import { Tags } from "~/components/tags";
+import { formatTimestamp } from "~/lib/utils";
 
-export default function BackersPage({
+export default async function BackersPage({
   params: { accountId },
 }: {
   params: { accountId: AccountId };
 }) {
-  return (
-    <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
-      <div className="flex w-full flex-col gap-6">
-        <Header accountId={accountId} />
+  const backer = await getBacker(accountId);
 
-        <div className="relative w-full">
-          <Details
-            sections={[
-              {
-                title: "Details",
-                id: "details",
-                Content: <General accountId={accountId} />,
-              },
-              {
-                title: "About",
-                id: "about",
-                Content: <Description text={""} loading={false} full />,
-              },
-            ]}
-          />
-        </div>
-      </div>
-    </div>
+  return (
+    <Details
+      sections={[
+        {
+          title: "Details",
+          id: "details",
+          Content: (
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
+              <Detail label="Website">
+                <a href={`https://${backer.website}`} target="_blank">
+                  {backer.website ?? ""}
+                </a>
+              </Detail>
+              <Detail label="Social links">
+                <Socials links={backer.linktree ?? {}} />
+              </Detail>
+              <Detail label="Specialization">
+                {backer.specialization ?? ""}
+              </Detail>
+              <Detail label="Verticals">
+                <Tags tags={backer.vertical ?? {}} />
+              </Detail>
+              <Detail label="Joined">
+                <a
+                  href={`https://nearblocks.io/txns/${backer.creationTx?.hash}`}
+                  target="_blank"
+                  referrerPolicy="origin"
+                  className="text-blue-500 hover:underline"
+                >
+                  {formatTimestamp(backer.creationTx?.timestamp)}
+                </a>
+              </Detail>
+              <Detail label="Location">{backer.location ?? ""}</Detail>
+            </div>
+          ),
+        },
+        {
+          title: "About",
+          id: "about",
+          Content: <Description text={backer.description ?? ""} full />,
+        },
+      ]}
+    />
   );
 }
 

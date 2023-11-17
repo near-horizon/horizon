@@ -148,7 +148,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
         <Handle accountId={accountId} />
         <div className="hidden lg:block">
           <div className="truncate font-medium">{data?.tagline}</div>
-          <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
+          <Tags tags={data?.tags ?? {}} />
         </div>
         <div className="lg:hidden">{actions}</div>
       </div>
@@ -206,7 +206,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
         </div>
         <div className="lg:hidden">
           <div className="truncate font-medium">{data?.tagline}</div>
-          <Tags tags={data?.tags ?? {}} loading={accountId === ""} />
+          <Tags tags={data?.tags ?? {}} />
         </div>
       </div>
     </div>

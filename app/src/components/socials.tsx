@@ -181,3 +181,22 @@ export function Socials({
     </ul>
   );
 }
+
+export function SocialsSkeleton() {
+  return (
+    <ul className="flex list-none flex-row items-center justify-between gap-1">
+      {supportedLinks.slice(0, 4).map(({ name, icon }) => (
+        <li className="p-1" key={name}>
+          <a
+            className="animate-pulse"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {icon}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}

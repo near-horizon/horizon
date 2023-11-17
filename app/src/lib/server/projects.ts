@@ -15,13 +15,18 @@ import { env } from "~/env.mjs";
 import { intoURLSearchParams } from "../utils";
 import { getProfile, viewCall } from "../fetching";
 import { getTransactions } from "./transactions";
-import { type AccountId } from "../validation/common";
+import { type AccountId, imageSchema } from "../validation/common";
 import { projectRequestsSchema } from "../validation/requests";
 import {
   type ContractId,
   contractsListSchema,
   type ContributorContracts,
 } from "../validation/contracts";
+import deepEqual from "deep-equal";
+import { type IronSession } from "iron-session";
+import { hasBacker } from "./backers";
+import { headers } from "next/headers";
+import { backersViewFromKey } from "../constants/backers-digest";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
   vertical: z.array(z.string()).optional().or(z.string().optional()),
@@ -106,6 +111,68 @@ export async function getProject(accountId: AccountId) {
     account_id: accountId,
     creationTx,
   });
+}
+
+export async function hasProject(accountId: AccountId) {
+  try {
+    await getProject(accountId);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+export async function getProjectCompletion(accountId: AccountId) {
+  const project = await getProject(accountId);
+
+  const basicData = [
+    project?.image && deepEqual(project.image, imageSchema.parse(undefined)),
+    project?.name && project.name.length > 0,
+    project?.tagline && project.tagline.length > 0,
+    project?.description && project.description.length > 0,
+    project?.website && project.website.length > 0,
+    project?.linktree && Object.keys(project.linktree).length > 0,
+    project?.verticals && Object.keys(project.verticals).length > 0,
+    project?.product_type && Object.keys(project.product_type).length > 0,
+    project?.company_size && project.company_size.length > 0,
+    project?.geo && project.geo.length > 0,
+    project?.problem && project.problem.length > 0,
+    project?.success_position && project.success_position.length > 0,
+    project?.why && project.why.length > 0,
+    project?.vision && project.vision.length > 0,
+  ];
+  const techData = [
+    project?.userbase && project.userbase.length > 0,
+    project?.tam && project.tam.length > 0,
+    project?.dev && project.dev.length > 0,
+    project?.distribution && project.distribution.length > 0,
+    project?.integration && project.integration.length > 0,
+    project?.contracts && project.contracts.length > 0,
+  ];
+  const fundingData = [
+    project?.stage && project.stage.length > 0,
+    project?.fundraising && (project.fundraising as string).length > 0,
+    project?.raise && (project.raise as string).length > 0,
+    project?.investment && (project.investment as string).length > 0,
+  ];
+  const foundersData = [
+    project?.founders && project.founders.length > 0,
+    project?.team && Object.keys(project.team).length > 0,
+  ];
+  const filesData = [
+    project?.deck && project.deck.length > 0,
+    project?.white_paper && project.white_paper.length > 0,
+    project?.roadmap && project.roadmap.length > 0,
+    project?.team_deck && (project.team_deck as string).length > 0,
+    project?.demo && project.demo.length > 0,
+  ];
+  return {
+    basic: basicData.filter(Boolean).length / basicData.length,
+    tech: techData.filter(Boolean).length / techData.length,
+    funding: fundingData.filter(Boolean).length / fundingData.length,
+    founders: foundersData.filter(Boolean).length / foundersData.length,
+    files: filesData.filter(Boolean).length / filesData.length,
+  };
 }
 
 export async function getRequestsForProject(accountId: AccountId) {
@@ -213,4 +280,24 @@ export async function addBackersDigestToken(accountId: AccountId) {
   );
 
   return (await response.json()) as string;
+}
+
+export async function checkBackersDigestPermission(
+  accountId: AccountId,
+  user?: IronSession["user"] | null
+) {
+  const isBacker = !!user && (await hasBacker(user.accountId));
+  const backersDigest = await getBackersDigest(accountId);
+  const isOwner = !!user && user.accountId === accountId;
+  const isPublished = !!backersDigest.published;
+  const list = headers();
+  const referer = list.get("referer");
+
+  const from = referer ? new URL(referer).searchParams.get("from") : null;
+  // const hasToken = !!token && token === backersDigest.token;
+  const isFromBackerView = !!from && from === backersViewFromKey;
+
+  return (
+    isOwner || (isPublished && (isBacker || /* hasToken || */ isFromBackerView))
+  );
 }

@@ -4,7 +4,6 @@ import "~/styles/globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 import { setUser } from "~/stores/global";
 import { ThemeProvider } from "~/components/theme-provider";
-import { Dialog } from "~/components/ui/dialog";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { type IronSession } from "iron-session";
@@ -38,11 +37,9 @@ export function Providers({
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Dialog>
-            <ProgressBar>{children}</ProgressBar>
-            <Toaster />
-            <GTagScripts />
-          </Dialog>
+          <ProgressBar>{children}</ProgressBar>
+          <Toaster />
+          <GTagScripts />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>

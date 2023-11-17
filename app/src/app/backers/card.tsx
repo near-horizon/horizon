@@ -43,7 +43,7 @@ export function Backer({ accountId }: { accountId: AccountId }) {
         </Link>
       </CardHeader>
       <CardFooter>
-        <Tags tags={data.tags ?? {}} loading={false} />
+        <Tags tags={data.tags ?? {}} />
       </CardFooter>
     </Card>
   );

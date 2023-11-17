@@ -1,4 +1,5 @@
 import { cn } from "~/lib/utils";
+import { Skeleton } from "./ui/skeleton";
 
 export function Availability({
   available,
@@ -27,6 +28,17 @@ export function Availability({
         )}
       >
         {available ? availableText : unavailableText}
+      </span>
+    </div>
+  );
+}
+
+export function AvailabilitySkeleton() {
+  return (
+    <div className="flex flex-row items-center justify-start gap-2">
+      <Skeleton className="h-3 w-3 rounded-full" />
+      <span className="h-3 w-24 rounded-full">
+        <Skeleton className="h-3 w-12" />
       </span>
     </div>
   );

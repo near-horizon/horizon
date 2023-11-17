@@ -80,7 +80,7 @@ export function Project({
       <CardContent className="max-w-full flex-grow">
         <div className="truncate font-medium">{data?.tagline}</div>
         <CardDescription>
-          <Description text={data?.description ?? ""} loading={false} />
+          <Description text={data?.description ?? ""} />
         </CardDescription>
       </CardContent>
       <CardFooter>

@@ -1,84 +1,80 @@
-import { dehydrate, Hydrate, type QueryClient } from "@tanstack/react-query";
-import getQueryClient from "~/app/query-client";
-import { removeEmpty } from "~/lib/utils";
-import { Header } from "~/components/contributor/header";
 import ContentTabs from "~/components/ui/content-tabs";
-import {
-  getContributor,
-  getContributorCompletedContracts,
-  getContributorContracts,
-} from "~/lib/server/contributors";
-import { getContract } from "~/lib/server/contracts";
+import { type AccountId } from "~/lib/validation/common";
+import { Icon } from "~/components/icon";
+import { Handle, HandleSkeleton } from "~/components/handle";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Suspense } from "react";
+import { getContributor } from "~/lib/server/contributors";
 
-export default async function ContributorPageLayout({
+export default function ContributorPageLayout({
   params: { accountId },
   children,
 }: {
   params: { accountId: string };
   children: React.ReactNode;
 }) {
-  const queryClient = getQueryClient();
-  await prefetch(accountId, queryClient);
-
   return (
-    <Hydrate state={dehydrate(queryClient)}>
-      <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
-        <div className="flex w-full flex-col gap-6">
+    <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
+      <div className="flex w-full flex-col gap-6">
+        <Suspense fallback={<HeaderSkeleton accountId={accountId} />}>
           <Header accountId={accountId} />
-          <ContentTabs
-            tabs={[
-              {
-                id: "overview",
-                text: "Overview",
-                href: `/contributors/${accountId}/overview`,
-              },
-              {
-                id: "contracts",
-                text: "Contracts",
-                href: `/contributors/${accountId}/contracts`,
-              },
-              {
-                id: "history",
-                text: "Work History",
-                href: `/contributors/${accountId}/history`,
-              },
-            ]}
-          />
-          {children}
-        </div>
+        </Suspense>
+
+        <ContentTabs
+          tabs={[
+            {
+              id: "overview",
+              text: "Overview",
+              href: `/contributors/${accountId}/overview`,
+            },
+            {
+              id: "contracts",
+              text: "Contracts",
+              href: `/contributors/${accountId}/contracts`,
+            },
+            {
+              id: "history",
+              text: "Work History",
+              href: `/contributors/${accountId}/history`,
+            },
+          ]}
+        />
+        {children}
       </div>
-    </Hydrate>
+    </div>
   );
 }
 
-async function prefetch(accountId: string, queryClient: QueryClient) {
-  const contracts = await getContributorContracts(accountId);
+async function Header({ accountId }: { accountId: AccountId }) {
+  const data = await getContributor(accountId);
 
-  queryClient.setQueryData(["contracts", "contributor", accountId], contracts);
+  return (
+    <div className="flex flex-row items-center justify-start gap-4">
+      <Icon name={data.name ?? ""} image={data.image} />
 
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: ["contributor", accountId],
-      queryFn: async () => {
-        const c = await getContributor(accountId);
-        return removeEmpty(c);
-      },
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["contracts", "contributor", accountId, "completed"],
-      queryFn: async () => {
-        const c = await getContributorCompletedContracts(accountId);
-        return removeEmpty(c);
-      },
-    }),
-    ...contracts.map((contractId) =>
-      queryClient.prefetchQuery({
-        queryKey: ["contract", contractId],
-        queryFn: async () => {
-          const c = await getContract(contractId);
-          return removeEmpty(c);
-        },
-      })
-    ),
-  ]);
+      <div className="flex flex-col items-start justify-start gap-3">
+        <Handle accountId={accountId} name={data.name} />
+
+        <p className="text-[14px] font-normal leading-[140%] text-[#101828]">
+          {data.tagline}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function HeaderSkeleton({ accountId }: { accountId: AccountId }) {
+  return (
+    <div className="flex flex-row items-center justify-start gap-4">
+      <Icon name={accountId} />
+
+      <div className="flex flex-col items-start justify-start gap-3">
+        <HandleSkeleton accountId={accountId} />
+
+        <p className="text-[14px] font-normal leading-[140%] text-[#101828]">
+          <Skeleton className="h-4 w-48" />
+        </p>
+      </div>
+    </div>
+  );
 }

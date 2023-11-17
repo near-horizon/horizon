@@ -59,3 +59,12 @@ export async function getBacker(accountId: AccountId) {
     creationTx,
   });
 }
+
+export async function hasBacker(accountId: AccountId) {
+  try {
+    await getBacker(accountId);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}

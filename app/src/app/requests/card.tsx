@@ -90,7 +90,7 @@ export function Request({
         </CardTitle>
       </CardHeader>
       <CardFooter className="flex flex-col items-start gap-2">
-        <Tags tags={data.tags ?? {}} loading={false} />
+        <Tags tags={data.tags ?? {}} />
         <div className="flex h-5 flex-row items-center justify-start gap-4">
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
             <Flag01Svg className="h-5" />

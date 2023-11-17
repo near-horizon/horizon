@@ -21,12 +21,8 @@ export function useProposal(id: ProposalId) {
 export function useRequestProposals(accountId: AccountId, cid: string) {
   return useQuery({
     queryKey: ["proposals", accountId, cid],
-    queryFn: () => getRequestProposals(accountId, cid),
-    initialData: [
-      [["", ""], ""],
-      [["", ""], ""],
-      [["", ""], ""],
-    ] as ProposalId[],
+    queryFn: ({ queryKey: [, accountId, cid] }) =>
+      getRequestProposals(accountId!, cid!),
   });
 }
 

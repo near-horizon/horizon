@@ -60,7 +60,7 @@ export function Perk(perk: Perk & { noButton?: boolean }) {
         </CardTitle>
         <CardDescription>
           {description}
-          <Tags tags={category} loading={false} />
+          <Tags tags={category} />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-grow flex-col gap-4">

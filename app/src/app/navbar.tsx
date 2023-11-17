@@ -1,7 +1,7 @@
 import { IconSvg, LogoSvg } from "~/icons";
 import { GlobalSearchBar } from "./global-search-bar";
 import { MobileNavLinks, NavLinks } from "./nav-links";
-import { MobileUserMenu, UserMenu } from "./user-menu";
+import { UserMenu } from "./user-menu";
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 
@@ -35,7 +35,7 @@ export function MobileNavbar() {
           </Link>
           <MobileNavLinks />
         </div>
-        <MobileUserMenu />
+        <UserMenu mobile />
       </div>
       <GlobalSearchBar />
     </header>

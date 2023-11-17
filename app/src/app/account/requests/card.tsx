@@ -46,7 +46,7 @@ export function Card({ accountId, cid }: { accountId: AccountId; cid: CID }) {
       </CardHeader>
       <CardContent>
         <CardDescription>{request.description}</CardDescription>
-        <Tags tags={request.tags} loading={false} />
+        <Tags tags={request.tags} />
       </CardContent>
       <CardFooter className="gap-3">
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">

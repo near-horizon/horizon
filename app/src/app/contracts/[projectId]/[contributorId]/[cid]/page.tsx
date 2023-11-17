@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { type CID, type AccountId } from "~/lib/validation/common";
+import { type AccountId, type CID } from "~/lib/validation/common";
 
 export default function ContractsPage({
   params: { projectId, cid, contributorId },
