@@ -45,7 +45,7 @@ export async function getRequest(accountId: AccountId, cid: CID) {
 
   const request = requestSchema.parse(response);
   request.cid = cid;
-  request.creationTx = transactions.find((tx) => {
+  request.creationTx = transactions.findLast((tx) => {
     if (!tx.log.startsWith("EVENT_JSON:")) return false;
 
     const logData = JSON.parse(tx.log.substring("EVENT_JSON:".length)) as {

@@ -100,7 +100,7 @@ export async function getProject(accountId: AccountId) {
     ...changes,
   });
   const horizon = horizonSchema.parse(horizonData);
-  const creationTx = transactions.find((tx) => {
+  const creationTx = transactions.findLast((tx) => {
     return tx.method_name === "add_project" && tx.args.account_id === accountId;
   });
 

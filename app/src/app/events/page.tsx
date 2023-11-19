@@ -10,7 +10,7 @@ const SCHEDULE_LINK = "https://lu.ma/u/usr-5oZHY9dEDbDcaHY";
 export default function Events() {
   const { data: eventItems } = useHorizonEvents();
 
-  const timeSplit = new Date("2023-07-28T13:00:00.000Z")
+  const timeSplit = new Date("2023-07-28T13:30:00.000Z")
     .toLocaleString(undefined, {
       weekday: "long",
       hour: "numeric",

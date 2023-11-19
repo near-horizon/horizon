@@ -67,7 +67,9 @@ export function Contract({
     <CardBase className="border-none shadow-none">
       <CardHeader>
         <small className="text-xs text-text-gray">
-          {format(contract.creationTx?.timestamp ?? new Date())}
+          {format(
+            Number(String(contract.creationTx?.timestamp).substring(0, 13))
+          )}
         </small>
         <CardTitle className="font-semibold">
           <Link href={`/contracts/${projectId}/${contributorId}/${cid}`}>

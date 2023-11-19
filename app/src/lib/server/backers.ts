@@ -41,7 +41,7 @@ export async function getBacker(accountId: AccountId) {
   const { team: company_size, ...profile } =
     backerProfileSchema.parse(response);
   const horizon = horizonSchema.parse(horizonData);
-  const creationTx = transactions.find((tx) => {
+  const creationTx = transactions.findLast((tx) => {
     return (
       (tx.method_name === "register_investor" &&
         tx.args.account_id === accountId) ||

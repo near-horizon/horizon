@@ -52,7 +52,7 @@ export async function getContributor(accountId: AccountId) {
   const { team: company_size, ...profile } =
     contributorProfileSchema.parse(response);
   const horizon = horizonSchema.parse(horizonData);
-  const creationTx = transactions.find((tx) => {
+  const creationTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "register_vendor" && tx.args.account_id === accountId
     );

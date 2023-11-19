@@ -14,7 +14,7 @@ import { type Progress } from "~/lib/client/mutating";
 export function useProposal(id: ProposalId) {
   return useQuery({
     queryKey: ["proposal", id],
-    queryFn: () => getProposal(id),
+    queryFn: ({ queryKey: [, id] }) => getProposal(id! as ProposalId),
   });
 }
 

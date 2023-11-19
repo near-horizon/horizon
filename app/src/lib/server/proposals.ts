@@ -18,7 +18,7 @@ export async function getProposal([[project_id, cid], vendor_id]: ProposalId) {
     getTransactions({ entity_type: "proposals" }),
   ]);
 
-  const creationTx = transactions.find((tx) => {
+  const creationTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "add_proposal" &&
       (tx.args.proposal as Proposal).request_id[0] === project_id &&

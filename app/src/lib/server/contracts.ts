@@ -17,7 +17,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
     getTransactions({ entity_type: "contributions" }),
   ]);
 
-  const creationTx = transactions.find((tx) => {
+  const creationTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "add_contribution" &&
       tx.args.project_id === project_id &&
@@ -25,7 +25,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
       tx.args.vendor_id === vendor_id
     );
   });
-  const acceptanceTx = transactions.find((tx) => {
+  const acceptanceTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "accept_contribution" &&
       tx.args.project_id === project_id &&
@@ -33,7 +33,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
       tx.args.vendor_id === vendor_id
     );
   });
-  const rejectionTx = transactions.find((tx) => {
+  const rejectionTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "reject_contribution" &&
       tx.args.project_id === project_id &&
@@ -49,7 +49,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
       tx.args.vendor_id === vendor_id
     );
   });
-  const completionTx = transactions.find((tx) => {
+  const completionTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "complete_contribution" &&
       tx.args.project_id === project_id &&
@@ -57,7 +57,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
       tx.args.vendor_id === vendor_id
     );
   });
-  const deliveryTx = transactions.find((tx) => {
+  const deliveryTx = transactions.findLast((tx) => {
     return (
       tx.method_name === "deliver_contribution" &&
       tx.args.project_id === project_id &&
