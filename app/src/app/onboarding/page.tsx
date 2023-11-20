@@ -41,7 +41,7 @@ export default function Onoboarding() {
   }
 
   return (
-    <div className="flex h-full w-full flex-grow flex-col items-center justify-start gap-8 bg-background-light py-16">
+    <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-8 rounded-xl bg-background-white py-16 shadow">
       <div className="flex w-full flex-col items-center justify-start gap-5">
         <div className="relative w-full">
           <h1 className="flex flex-row items-center justify-center gap-3 text-4xl font-bold text-text-black">
