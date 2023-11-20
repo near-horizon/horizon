@@ -37,7 +37,7 @@ export async function hasContributor(accountId: AccountId) {
   try {
     await viewCall<HorizonContributor>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
-      "get_contributor",
+      "get_vendor",
       { account_id: accountId }
     );
     return true;

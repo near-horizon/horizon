@@ -37,7 +37,7 @@ export async function hasBacker(accountId: AccountId) {
   try {
     await viewCall<HorizonBacker>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
-      "get_contributor",
+      "get_investor",
       { account_id: accountId }
     );
     return true;
