@@ -60,8 +60,12 @@ export const setupSelector = () => {
   return setupWalletSelector({
     network: "mainnet",
     modules: [
-      setupNearWallet(),
-      setupMyNearWallet(),
+      setupNearWallet({
+        successUrl: `${window.location.protocol}//${window.location.host}/onboarding`,
+      }),
+      setupMyNearWallet({
+        successUrl: `${window.location.protocol}//${window.location.host}/onboarding`,
+      }),
       setupSender(),
       setupHereWallet(),
       setupMeteorWallet(),

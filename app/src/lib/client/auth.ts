@@ -69,7 +69,7 @@ export async function getUser() {
   const response = await fetch("/api/auth/user");
 
   if (!response.ok) {
-    throw new Error("Failed to get user");
+    return undefined;
   }
 
   const session = (await response.json()) as IronSession;
