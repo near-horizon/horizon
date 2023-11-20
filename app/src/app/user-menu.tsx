@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -12,17 +14,16 @@ import { ProfileNav } from "./account/profile-nav";
 import { Icon } from "~/components/icon";
 import { SignIn } from "./sign-in";
 import { SignOut } from "./sign-out";
-import { getUserFromSession } from "~/lib/session";
-import { getProfile } from "~/lib/fetching";
+import { useUser } from "~/stores/global";
+import { useProfile } from "~/hooks/fetching";
 
-export async function UserMenu({ mobile = false }: { mobile?: boolean }) {
-  const user = await getUserFromSession();
+export function UserMenu({ mobile = false }: { mobile?: boolean }) {
+  const user = useUser();
+  const { data: profile } = useProfile(user?.accountId);
 
   if (!user) {
     return <SignIn />;
   }
-
-  const profile = await getProfile(user.accountId);
 
   if (mobile) {
     return (
@@ -30,7 +31,7 @@ export async function UserMenu({ mobile = false }: { mobile?: boolean }) {
         <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
           <Icon
             name={user.accountId}
-            image={profile.image}
+            image={profile?.image}
             className="h-8 w-8 rounded-full"
           />
           My profile
@@ -51,7 +52,7 @@ export async function UserMenu({ mobile = false }: { mobile?: boolean }) {
         <DropdownMenuTrigger className="flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
           <Icon
             name={user.accountId}
-            image={profile.image}
+            image={profile?.image}
             className="h-8 w-8 rounded-full"
           />
           My profile
