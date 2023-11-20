@@ -5,6 +5,7 @@ export const OFFICE_HOURS_TIME = new Date(
 ).toLocaleString(undefined, {
   weekday: "long",
   hour: "numeric",
+  minute: "numeric",
   timeZoneName: "shortGeneric",
 });
 
