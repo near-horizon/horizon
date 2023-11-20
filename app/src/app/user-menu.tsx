@@ -60,22 +60,46 @@ export function UserMenu({ mobile = false }: { mobile?: boolean }) {
         <DropdownMenuContent>
           <DropdownMenuLabel>My profile</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem disabled={!user.hasProfile}>
-            <Link href="/account/dashboard">Profile</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled={!user.hasProfile}>
-            <Link href="/account/requests">Requests</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled={!user.hasProfile}>
-            <Link href="/account/contracts">Contracts</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled={!user.hasProfile}>
-            <Link href="/account/settings">Settings</Link>
-          </DropdownMenuItem>
+          <UserMenuItem
+            href="/account/dashboard"
+            text="Profile"
+            disabled={!user.hasProfile}
+          />
+          <UserMenuItem
+            href="/account/requests"
+            text="Requests"
+            disabled={!user.hasProfile}
+          />
+          <UserMenuItem
+            href="/account/contracts"
+            text="Contracts"
+            disabled={!user.hasProfile}
+          />
+          <UserMenuItem
+            href="/account/settings"
+            text="Settings"
+            disabled={!user.hasProfile}
+          />
           <DropdownMenuSeparator />
           <SignOut />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+  );
+}
+
+function UserMenuItem({
+  href,
+  text,
+  disabled = false,
+}: {
+  href: string;
+  text: string;
+  disabled: boolean;
+}) {
+  return (
+    <DropdownMenuItem disabled={disabled}>
+      <Link href={href}>{text}</Link>
+    </DropdownMenuItem>
   );
 }
