@@ -28,6 +28,7 @@ import Link from "next/link";
 import { SelectInput } from "~/components/inputs/select";
 import { CheckboxInput } from "~/components/inputs/checkbox";
 import { useToast } from "~/components/ui/use-toast";
+import { NUMBER } from "~/lib/format";
 
 const schema = z.object({
   location: z.string().min(3).max(50).optional(),
@@ -67,7 +68,7 @@ export default function BackersDigestForm() {
     control: form.control,
     name: "founders",
   });
-  const aboutCompleted = (
+  const aboutCompleted = NUMBER.percentage(
     (Number(form.watch("location") !== "") +
       Number(form.watch("company_size") !== "") +
       Number(form.watch("website") !== "") +
@@ -76,10 +77,8 @@ export default function BackersDigestForm() {
       Number(form.watch("email") !== "") +
       Number(form.watch("calendly_link") !== "") +
       Number(Object.keys(form.watch("linktree") ?? {}).length > 0)) /
-    8.0
-  ).toLocaleString("en", {
-    style: "percent",
-  });
+      8.0
+  );
   const presentationCompleted =
     Number((form.watch("demo") ?? "") !== "") +
     Number((form.watch("pitch") ?? "") !== "") +

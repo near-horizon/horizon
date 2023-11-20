@@ -9,7 +9,7 @@ import {
 } from "~/icons";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { cn, formatDate } from "~/lib/utils";
+import { cn } from "~/lib/utils";
 import {
   creditTxToAmount,
   creditTxToText,
@@ -25,6 +25,7 @@ import {
 } from "~/lib/server/projects";
 import { hasProject } from "~/lib/client/projects";
 import { getIncentives } from "~/lib/client/incentives";
+import { DATE } from "~/lib/format";
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
@@ -81,9 +82,7 @@ export default async function Dashboard() {
                   href={`https://nearblocks.io/txns/${tx.hash}`}
                   className="flex w-full flex-col text-text-dark"
                 >
-                  <small>
-                    {formatDate(Number(String(tx.timestamp).substring(0, 13)))}
-                  </small>
+                  <small>{DATE.date(tx.timestamp)}</small>
                   <div className="flex flex-row items-center justify-between">
                     <span>{creditTxToText(tx)}</span>
                     <span

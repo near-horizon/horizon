@@ -7,20 +7,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatTimestamp(timestamp = 0) {
-  return new Date(timestamp / 1000000).toLocaleString("en-GB", {});
-}
-
-export function formatDate(timestamp: string | number) {
-  return new Date(timestamp).toLocaleDateString("en-GB");
-}
-
-export function formatBudget(budget: number) {
-  return budget.toLocaleString("en-US", {
-    notation: "compact",
-  });
-}
-
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

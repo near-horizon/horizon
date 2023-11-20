@@ -14,10 +14,10 @@ import {
 import { CalendarSvg } from "~/icons";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
-import { format } from "date-fns";
 import { Calendar } from "../ui/calendar";
 import { cn } from "~/lib/utils";
 import { type InputProps } from "~/lib/validation/inputs";
+import { DATE } from "~/lib/format";
 
 export function DateInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -48,7 +48,7 @@ export function DateInput<
                   )}
                 >
                   {field.value ? (
-                    format(new Date(field.value), "PPP")
+                    DATE.input(field.value)
                   ) : (
                     <span>Pick a date</span>
                   )}

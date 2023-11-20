@@ -5,7 +5,7 @@ import { getBacker, getBackers } from "~/lib/server/backers";
 import { type AccountId } from "~/lib/validation/common";
 import { Socials } from "~/components/socials";
 import { Tags } from "~/components/tags";
-import { formatTimestamp } from "~/lib/utils";
+import { DATE } from "~/lib/format";
 
 export default async function BackersPage({
   params: { accountId },
@@ -43,7 +43,7 @@ export default async function BackersPage({
                   referrerPolicy="origin"
                   className="text-blue-500 hover:underline"
                 >
-                  {formatTimestamp(backer.creationTx?.timestamp)}
+                  {DATE.timestamp(backer.creationTx?.timestamp)}
                 </a>
               </Detail>
               <Detail label="Location">{backer.location ?? ""}</Detail>

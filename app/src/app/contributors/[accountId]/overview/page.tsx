@@ -3,8 +3,8 @@ import { Detail } from "~/components/detail";
 import { Socials } from "~/components/socials";
 import { Tags } from "~/components/tags";
 import { Details } from "~/components/ui/details";
+import { DATE } from "~/lib/format";
 import { getContributor } from "~/lib/server/contributors";
-import { formatTimestamp } from "~/lib/utils";
 import { type AccountId } from "~/lib/validation/common";
 
 export default async function ContributorOverview({
@@ -47,7 +47,7 @@ export default async function ContributorOverview({
                   referrerPolicy="origin"
                   className="text-blue-500 hover:underline"
                 >
-                  {formatTimestamp(contributor?.creationTx?.timestamp)}
+                  {DATE.timestamp(contributor?.creationTx?.timestamp)}
                 </a>
               </Detail>
               <Detail label="Location">{contributor?.location ?? ""}</Detail>

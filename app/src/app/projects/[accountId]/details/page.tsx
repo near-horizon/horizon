@@ -3,11 +3,11 @@ import { Detail } from "~/components/detail";
 import { Socials } from "~/components/socials";
 import { Details } from "~/components/ui/details";
 import { getProject } from "~/lib/server/projects";
-import { formatTimestamp } from "~/lib/utils";
 import { type AccountId } from "~/lib/validation/common";
 import { type Project } from "~/lib/validation/projects";
 import { Stats } from "./stats";
 import { Founder } from "./founder";
+import { DATE } from "~/lib/format";
 
 export default async function ProjectDetails({
   params: { accountId },
@@ -77,7 +77,7 @@ function General({ project }: { project: Project }) {
             referrerPolicy="origin"
             className="text-blue-500 hover:underline"
           >
-            {formatTimestamp(project.creationTx?.timestamp)}
+            {DATE.timestamp(project.creationTx?.timestamp)}
           </a>
         </Detail>
         <Detail label="Location">{project.geo ?? ""}</Detail>

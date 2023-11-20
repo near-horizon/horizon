@@ -1,13 +1,13 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { format } from "timeago.js";
 import { Skeleton } from "~/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { DATE } from "~/lib/format";
 
 export function Action({
   description,
@@ -39,14 +39,10 @@ export function Action({
       <Tooltip>
         <TooltipTrigger asChild>
           <span className="text-sm font-normal text-gray-400">
-            {format(time, "en_US")}
+            {DATE.timeago(time)}
           </span>
         </TooltipTrigger>
-        <TooltipContent side="right">
-          {new Date(
-            typeof time === "string" ? Number(time) : time
-          ).toLocaleString()}
-        </TooltipContent>
+        <TooltipContent side="right">{DATE.time(time)}</TooltipContent>
       </Tooltip>
       {transactionHash ? (
         <small>

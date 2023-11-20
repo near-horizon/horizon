@@ -6,11 +6,10 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-
 import { getIncentives } from "~/lib/client/incentives";
+import { DATE } from "~/lib/format";
 import { getFilteredTransactions } from "~/lib/server/transactions";
 import { getUserFromSession } from "~/lib/session";
-import { formatDate } from "~/lib/utils";
 import type { Incentives } from "~/lib/validation/incentives";
 
 export default async function Page() {
@@ -32,9 +31,7 @@ export default async function Page() {
         {transactions.map((tx) => (
           <TableRow key={tx.id}>
             <TableCell className=" text-xs font-normal text-text-dark">
-              {formatDate(
-                Number(String(tx.timestamp).substring(0, 13))
-              ).replace(/\//g, ".")}
+              {DATE.date(tx.timestamp).replace(/\//g, ".")}
             </TableCell>
             <TableCell className="text-sm font-semibold text-gray-900">
               {tx.args.incentive as string}

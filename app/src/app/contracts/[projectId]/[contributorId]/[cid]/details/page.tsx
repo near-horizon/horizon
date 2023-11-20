@@ -4,12 +4,12 @@ import { Detail } from "~/components/detail";
 import { Handle } from "~/components/handle";
 import { Icon } from "~/components/icon";
 import { Details } from "~/components/ui/details";
+import { DATE, NUMBER } from "~/lib/format";
 import { getContract } from "~/lib/server/contracts";
 import { getContributor } from "~/lib/server/contributors";
 import { getProject } from "~/lib/server/projects";
 import { getProposal } from "~/lib/server/proposals";
 import { getRequest } from "~/lib/server/requests";
-import { formatBudget, formatDate } from "~/lib/utils";
 import { type AccountId, type CID } from "~/lib/validation/common";
 
 export default async function ContractDetails({
@@ -61,13 +61,11 @@ export default async function ContractDetails({
                   <Handle name={project.name} accountId={projectId} />
                 </Link>
               </Detail>
-              <Detail label="Price">{formatBudget(contract.price ?? 0)}</Detail>
+              <Detail label="Price">{NUMBER.compact(contract.price)}</Detail>
               <Detail label="Payment method">{proposal.payment_source}</Detail>
               <Detail label="Payment type">{proposal.payment_type}</Detail>
               <Detail label="Request type">{proposal.proposal_type}</Detail>
-              <Detail label="Deadline">
-                {formatDate(Number((proposal.end_date ?? "").substring(0, 13)))}
-              </Detail>
+              <Detail label="Deadline">{DATE.date(proposal.end_date)}</Detail>
             </div>
           ),
         },

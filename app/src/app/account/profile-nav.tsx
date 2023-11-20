@@ -16,9 +16,9 @@ import { useUser } from "~/stores/global";
 
 export function ProfileNav() {
   let items: NavItemPropsWithSeparator[] = [...USER_MENU];
-  const user = useUser();
+  const user = useUser()!;
 
-  if (user) {
+  if (user.hasProfile && user.profileType === "project") {
     items = [
       items[0]!,
       {

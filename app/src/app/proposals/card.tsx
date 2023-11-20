@@ -5,7 +5,6 @@ import { useProposal } from "~/hooks/proposals";
 import { type AccountId, type CID } from "~/lib/validation/common";
 import { Icon } from "~/components/icon";
 import { Handle } from "~/components/handle";
-import { format } from "timeago.js";
 import { Description, DescriptionSkeleton } from "~/components/description";
 import { useCreateContract, useDeclineProposal } from "~/hooks/contracts";
 import { ProgressDialog } from "~/components/progress-dialog";
@@ -18,6 +17,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
+import { DATE } from "~/lib/format";
 
 export function Proposal({
   projectId,
@@ -49,7 +49,7 @@ export function Proposal({
             <Handle name={contributor?.name} accountId={contributorId} />
           </Link>
           <span className="text-sm font-normal text-stone-200">
-            {format(data?.creationTx?.timestamp ?? "", "en_US")}
+            {DATE.timeago(data?.creationTx?.timestamp)}
           </span>
         </CardTitle>
       </CardHeader>

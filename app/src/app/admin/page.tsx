@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { env } from "~/env.mjs";
+import { NUMBER } from "~/lib/format";
 import { getStats } from "~/lib/server/transactions";
 import { getUserFromSession } from "~/lib/session";
 
@@ -60,10 +61,7 @@ export default async function AdminPage() {
         <TableRow>
           <TableCell>Avarage completion</TableCell>
           <TableCell className="text-right">
-            {Number(avg).toLocaleString("en-US", {
-              style: "percent",
-              maximumFractionDigits: 2,
-            })}
+            {NUMBER.percentage(Number(avg))}
           </TableCell>
         </TableRow>
         <TableRow>
@@ -89,25 +87,19 @@ export default async function AdminPage() {
         <TableRow>
           <TableCell>Avarage number of transactions per project</TableCell>
           <TableCell className="text-right">
-            {Number(avgTx).toLocaleString("en-US", {
-              maximumFractionDigits: 2,
-            })}
+            {NUMBER.percentage(Number(avgTx))}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell>Avarage number of requests per project</TableCell>
           <TableCell className="text-right">
-            {Number(avgReq).toLocaleString("en-US", {
-              maximumFractionDigits: 2,
-            })}
+            {NUMBER.percentage(Number(avgReq))}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell>Avarage MAU per project</TableCell>
           <TableCell className="text-right">
-            {Number(average).toLocaleString("en-US", {
-              maximumFractionDigits: 2,
-            })}
+            {NUMBER.percentage(Number(average))}
           </TableCell>
         </TableRow>
       </TableBody>

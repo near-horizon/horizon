@@ -3,8 +3,7 @@ import { Detail } from "~/components/detail";
 import { Tags } from "~/components/tags";
 import { getRequest } from "~/lib/server/requests";
 import { type AccountId, type CID } from "~/lib/validation/common";
-import { format } from "timeago.js";
-import { formatBudget, formatDate, formatTimestamp } from "~/lib/utils";
+import { DATE, NUMBER } from "~/lib/format";
 
 export default async function RequestOverview({
   params: { accountId, cid },
@@ -22,7 +21,7 @@ export default async function RequestOverview({
           </Detail>
           <Detail label="Payment method">{request.source}</Detail>
           <Detail label="Service terms">{request.request_type}</Detail>
-          <Detail label="Budget">{formatBudget(request.budget)}</Detail>
+          <Detail label="Budget">{NUMBER.compact(request.budget)}</Detail>
           <Detail label="Created">
             <a
               href={`https://nearblocks.io/txns/${request.creationTx?.hash}`}
@@ -30,13 +29,13 @@ export default async function RequestOverview({
               referrerPolicy="origin"
               className="text-blue-500 hover:underline"
             >
-              {formatTimestamp(request.creationTx?.timestamp)}
+              {DATE.timestamp(request.creationTx?.timestamp)}
             </a>
           </Detail>
           <Detail label="Deadline">
             <span>
-              {formatDate(Number(request.deadline.substring(0, 13)))}{" "}
-              <span>({format(request.deadline, "en_US")})</span>
+              {DATE.date(request.deadline)}{" "}
+              <span>({DATE.timeago(request.deadline)})</span>
             </span>
           </Detail>
         </div>
