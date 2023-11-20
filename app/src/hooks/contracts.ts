@@ -21,35 +21,38 @@ import { type ProposalId } from "~/lib/validation/proposals";
 export function useContributorContracts(accountId: AccountId) {
   return useQuery({
     queryKey: ["contracts", "contributor", accountId],
-    queryFn: () => getContributorContracts(accountId),
+    queryFn: ({ queryKey: [, , accountId] }) =>
+      getContributorContracts(accountId!),
   });
 }
 
 export function useProjectContracts(accountId: AccountId) {
   return useQuery({
     queryKey: ["contracts", "project", accountId],
-    queryFn: () => getProjectContracts(accountId),
+    queryFn: ({ queryKey: [, , accountId] }) => getProjectContracts(accountId!),
   });
 }
 
 export function useContributorCompletedContracts(accountId: AccountId) {
   return useQuery({
     queryKey: ["contracts", "contributor", accountId, "completed"],
-    queryFn: () => getContributorCompletedContracts(accountId),
+    queryFn: ({ queryKey: [, , accountId] }) =>
+      getContributorCompletedContracts(accountId!),
   });
 }
 
 export function useProjectCompletedContracts(accountId: AccountId) {
   return useQuery({
     queryKey: ["contracts", "project", accountId, "completed"],
-    queryFn: () => getProjectCompletedContracts(accountId),
+    queryFn: ({ queryKey: [, , accountId] }) =>
+      getProjectCompletedContracts(accountId!),
   });
 }
 
 export function useContract(id: ContractId) {
   return useQuery({
     queryKey: ["contract", id],
-    queryFn: () => getContract(id),
+    queryFn: ({ queryKey: [, id] }) => getContract(id as ContractId),
   });
 }
 

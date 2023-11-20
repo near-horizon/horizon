@@ -27,7 +27,7 @@ import { privateProjectSchema } from "~/lib/validation/projects";
 export function useBackers(query: BackersQuery) {
   return useQuery({
     queryKey: ["backers", query],
-    queryFn: () => getBackers(query),
+    queryFn: ({ queryKey: [, query] }) => getBackers(query as BackersQuery),
   });
 }
 
@@ -43,7 +43,7 @@ export function usePaginatedBackers() {
 export function useBacker(accountId: AccountId) {
   return useQuery({
     queryKey: ["backer", accountId],
-    queryFn: () => getBacker(accountId),
+    queryFn: ({ queryKey: [, accountId] }) => getBacker(accountId!),
     enabled: !!accountId,
   });
 }

@@ -37,7 +37,7 @@ export function usePaginatedRequests() {
 export function useProjectRequests(accountId: AccountId) {
   return useQuery({
     queryKey: ["project-requests", accountId],
-    queryFn: () => getRequestsForProject(accountId),
+    queryFn: ({ queryKey: [, accountId] }) => getRequestsForProject(accountId!),
     enabled: !!accountId,
   });
 }
@@ -45,7 +45,7 @@ export function useProjectRequests(accountId: AccountId) {
 export function useRequest(accountId: AccountId, cid: CID, enabled = true) {
   return useQuery({
     queryKey: ["request", accountId, cid],
-    queryFn: () => getRequest(accountId, cid),
+    queryFn: ({ queryKey: [, accountId, cid] }) => getRequest(accountId!, cid!),
     enabled,
   });
 }

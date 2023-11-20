@@ -26,7 +26,8 @@ import { privateProjectSchema } from "~/lib/validation/projects";
 export function useContributors(query: ContributorsQuery) {
   return useQuery({
     queryKey: ["contributors", query],
-    queryFn: () => getContributors(query),
+    queryFn: ({ queryKey: [, query] }) =>
+      getContributors(query as ContributorsQuery),
   });
 }
 
@@ -42,7 +43,7 @@ export function usePaginatedContributors() {
 export function useContributor(accountId: AccountId) {
   return useQuery({
     queryKey: ["contributor", accountId],
-    queryFn: () => getContributor(accountId),
+    queryFn: ({ queryKey: [, accountId] }) => getContributor(accountId!),
     enabled: !!accountId,
   });
 }
