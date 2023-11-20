@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "timeago.js";
 import { Availability } from "~/components/availability";
 import { Tags } from "~/components/tags";
 import {
@@ -12,7 +11,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { useRequest } from "~/hooks/requests";
-import { formatBudget, formatDate } from "~/lib/utils";
 import { type AccountId, type CID } from "~/lib/validation/common";
 import { BankNote01Svg, Flag01Svg } from "~/icons";
 import Link from "next/link";
@@ -21,6 +19,7 @@ import { useContract } from "~/hooks/contracts";
 import { useProposal } from "~/hooks/proposals";
 import { useContributor } from "~/hooks/contributors";
 import { Icon } from "~/components/icon";
+import { DATE, NUMBER } from "~/lib/format";
 
 export function Contract({
   projectId,
@@ -67,9 +66,7 @@ export function Contract({
     <CardBase className="border-none shadow-none">
       <CardHeader>
         <small className="text-xs text-text-gray">
-          {format(
-            Number(String(contract.creationTx?.timestamp).substring(0, 13))
-          )}
+          {DATE.timeago(contract.creationTx?.timestamp)}
         </small>
         <CardTitle className="font-semibold">
           <Link href={`/contracts/${projectId}/${contributorId}/${cid}`}>
@@ -93,11 +90,11 @@ export function Contract({
       <CardFooter className="gap-3">
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
           <Flag01Svg className="h-4" />
-          {formatDate(Number(proposal.end_date))}
+          {DATE.date(proposal.end_date)}
         </div>
         <div className="flex flex-row items-center justify-start gap-1 text-sm text-gray-400">
           <BankNote01Svg className="h-4" />
-          {formatBudget(contract.price)}
+          {NUMBER.compact(contract.price)}
         </div>
         <Link
           href={`/contributors/${contributorId}`}

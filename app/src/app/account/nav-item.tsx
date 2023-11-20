@@ -15,6 +15,7 @@ import { useProjectCompletion } from "~/hooks/projects";
 import { usePathname } from "next/navigation";
 import { useUser } from "~/stores/global";
 import { type NavItemProps } from "~/lib/constants/navigation/user";
+import { NUMBER } from "~/lib/format";
 
 export function NavItem({
   section,
@@ -139,7 +140,7 @@ function SubMenuItem({
       })}
     >
       <span>{label}</span>
-      <small>{completion.toLocaleString("en-US", { style: "percent" })}</small>
+      <small>{NUMBER.percentage(completion)}</small>
     </NavigationMenuLink>
   );
 }

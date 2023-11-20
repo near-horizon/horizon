@@ -15,8 +15,8 @@ import { Tags } from "~/components/tags";
 import { useRequest } from "~/hooks/requests";
 import { useProject } from "~/hooks/projects";
 import { Availability } from "~/components/availability";
-import { formatBudget, formatDate } from "~/lib/utils";
 import { Icon } from "~/components/icon";
+import { DATE, NUMBER } from "~/lib/format";
 
 export function Request({
   accountId,
@@ -94,11 +94,11 @@ export function Request({
         <div className="flex h-5 flex-row items-center justify-start gap-4">
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
             <Flag01Svg className="h-5" />
-            {formatDate(Number(data.deadline))}
+            {DATE.date(data.deadline)}
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
             <BankNote01Svg className="h-5" />
-            {formatBudget(data.budget)}
+            {NUMBER.compact(data.budget)}
           </div>
           <div className="flex flex-row items-center justify-start gap-2 text-sm text-gray-400">
             <File02Svg className="h-5" />

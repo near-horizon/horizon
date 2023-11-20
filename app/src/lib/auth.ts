@@ -11,15 +11,7 @@ export async function loginUser(
   accountId: AccountId,
   publicKey: string
 ): Promise<IronSession["user"]> {
-  // Wait for chain to update key info
-  // await sleep(1500);
-
-  // const isKeyValid = await getKeyInfo(accountId, publicKey);
-  // if (!isKeyValid) {
-  //   throw new Error("Key is not valid");
-  // }
-
-  const [admin, ...hasProfile] = await Promise.all([
+  const [admin, isProject, isContributor, isBacker] = await Promise.all([
     viewCall<boolean>(env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID, "check_is_owner", {
       account_id: accountId,
     }),
@@ -28,12 +20,38 @@ export async function loginUser(
     hasBacker(accountId),
   ]);
 
-  return {
+  const user: IronSession["user"] = {
     accountId,
     publicKey,
     admin,
-    hasProfile: hasProfile.some(Boolean),
+    hasProfile: false,
   };
+
+  if (isProject) {
+    return {
+      ...user,
+      hasProfile: true,
+      profileType: "project",
+    };
+  }
+
+  if (isContributor) {
+    return {
+      ...user,
+      hasProfile: true,
+      profileType: "contributor",
+    };
+  }
+
+  if (isBacker) {
+    return {
+      ...user,
+      hasProfile: true,
+      profileType: "backer",
+    };
+  }
+
+  return user;
 }
 
 export function redirectOnboarding(): never {

@@ -22,6 +22,7 @@ import { env } from "~/env.mjs";
 import { QRDialog } from "~/components/qr-dialog";
 import { getUserFromSession } from "~/lib/session";
 import { Icon } from "~/components/icon";
+import { DATE } from "~/lib/format";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   const backersDigest = await getBackersDigest(accountId);
@@ -72,10 +73,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
           <div className="flex w-1/4 flex-col items-start justify-start gap-3">
             <div className="flex flex-row items-center justify-start gap-4 text-ui-elements-dark">
               <Flag06Svg className="h-5 w-5 text-ui-elements-gray" />
-              Joined{" "}
-              {new Date(
-                Number(`${project.creationTx?.timestamp}`.substring(0, 13))
-              ).toLocaleDateString()}
+              Joined {DATE.timestamp(project.creationTx?.timestamp)}
             </div>
             <div className="flex flex-row items-center justify-start gap-4 text-ui-elements-dark">
               <MarkerPin01Svg className="h-5 w-5 text-ui-elements-gray" />

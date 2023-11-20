@@ -13,6 +13,7 @@ import { MotionDiv } from "~/components/motion";
 import { CardFlip } from "~/components/animation/card-flip";
 import { cn } from "~/lib/utils";
 import { FormBuilder } from "~/components/inputs/form-builder";
+import { NUMBER } from "~/lib/format";
 
 export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   children,
@@ -51,8 +52,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
               <div className="flex flex-row items-center justify-start gap-4">
                 <h1 className="text-xl font-bold text-text-black">{title}</h1>
                 <small className="text-sm font-normal text-ui-elements-gray">
-                  Completed:{" "}
-                  {progress.toLocaleString("en-US", { style: "percent" })}
+                  Completed: {NUMBER.percentage(progress)}
                 </small>
               </div>
               <div className="flex flex-row items-center justify-end gap-4">
@@ -98,8 +98,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
                       {title}
                     </h1>
                     <small className="text-sm font-normal text-ui-elements-gray">
-                      Completed:{" "}
-                      {progress.toLocaleString("en-US", { style: "percent" })}
+                      Completed: {NUMBER.percentage(progress)}
                     </small>
                   </div>
                   <div className="flex flex-row items-center justify-end gap-4">

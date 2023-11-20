@@ -2,20 +2,17 @@ import { LabeledData } from "~/components/profile/labeled-data";
 import { devPhase, distribution, integration } from "~/lib/constants/filters";
 import { getProject } from "~/lib/server/projects";
 import { Skeleton } from "~/components/ui/skeleton";
+import { NUMBER } from "~/lib/format";
 
 export async function Data({ accountId }: { accountId: string }) {
   const project = await getProject(accountId);
   return (
     <div className="flex flex-col gap-4">
       <LabeledData label="Community / User base (MAU)">
-        {Number(project.userbase ?? 0).toLocaleString("en-US", {
-          notation: "compact",
-        })}
+        {NUMBER.compact(Number(project.mau ?? 0))}
       </LabeledData>
       <LabeledData label="Total addressable market (TAM)">
-        {Number(project.tam ?? 0).toLocaleString("en-US", {
-          notation: "compact",
-        })}
+        {NUMBER.compact(Number(project.tam ?? 0))}
       </LabeledData>
       <LabeledData label="Integration with NEAR">
         {integration[project.integration as keyof typeof integration] ??
