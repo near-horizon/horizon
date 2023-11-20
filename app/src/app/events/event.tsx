@@ -10,7 +10,7 @@ export default function Event({ event }: { event: Event }) {
           alt={event.title}
           objectFit="contain"
           fill
-          loader={({ src }) => src}
+          unoptimized
         />
       </div>
 
