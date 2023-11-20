@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { create } from "zustand";
 import { env } from "~/env.mjs";
+import { logout } from "~/lib/client/auth";
 
 interface GlobalStore {
   selector: WalletSelector | null;
@@ -56,16 +57,11 @@ export const useAccountId = () =>
   );
 
 export const setupSelector = () => {
-  // const domain = window.location.origin;
-  // const path = encodeURIComponent(window.location.pathname);
-  // const successUrl = `${domain}/api/auth/login?redirect=${path}`;
-  // console.log("successUrl", successUrl);
-
   return setupWalletSelector({
     network: "mainnet",
     modules: [
-      setupNearWallet(/* { successUrl } */),
-      setupMyNearWallet(/* { successUrl } */),
+      setupNearWallet(),
+      setupMyNearWallet(),
       setupSender(),
       setupHereWallet(),
       setupMeteorWallet(),
@@ -75,22 +71,6 @@ export const setupSelector = () => {
       }),
       setupNightly(),
       setupWelldoneWallet(),
-      // setupFastAuth({
-      //   networkId:"mainnet",
-      //   signInContractId,
-      //   relayerUrl:
-      //     networkId === 'testnet'
-      //       ? 'http://34.70.226.83:3030/relay'
-      //       : 'https://near-relayer-mainnet.api.pagoda.co/relay',
-      // }) as any, // TODO: Refactor setupFastAuth() to TS
-      // setupKeypom({
-      //   trialBaseUrl:
-      //      'https://near.org/#trial-url/',
-      //   networkId: "mainnet",
-      //   trialSplitDelim: '/',
-      //   signInContractId,
-      //   modalOptions: KEYPOM_OPTIONS(networkId),
-      // }) as any, // TODO: Refactor setupKeypom() to TS
     ],
   });
 };
@@ -117,7 +97,7 @@ export function useSignOut() {
       try {
         const wallet = await selector?.wallet();
         await wallet?.signOut();
-        await fetch("/api/auth/logout", { method: "POST" });
+        await logout();
         setUser(undefined);
         router.refresh();
       } catch (err) {

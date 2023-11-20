@@ -29,6 +29,7 @@ import {
 } from "~/lib/client/projects";
 import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
+import { updateSession } from "~/lib/client/auth";
 
 export function useProjects(query: ProjectsQuery) {
   return useQuery({
@@ -249,6 +250,7 @@ export function useCreateProject(): [
       },
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["project"] });
+        await updateSession();
       },
     }),
   ];

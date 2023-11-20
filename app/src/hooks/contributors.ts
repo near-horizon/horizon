@@ -22,6 +22,7 @@ import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
 import { useState } from "react";
 import { privateProjectSchema } from "~/lib/validation/projects";
+import { updateSession } from "~/lib/client/auth";
 
 export function useContributors(query: ContributorsQuery) {
   return useQuery({
@@ -111,6 +112,7 @@ export function useCreateContributor(): [
       },
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["contributors"] });
+        await updateSession();
       },
     }),
   ];

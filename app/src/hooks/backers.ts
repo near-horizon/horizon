@@ -23,6 +23,7 @@ import { pageSize } from "~/lib/constants/pagination";
 import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
 import { privateProjectSchema } from "~/lib/validation/projects";
+import { updateSession } from "~/lib/client/auth";
 
 export function useBackers(query: BackersQuery) {
   return useQuery({
@@ -120,6 +121,7 @@ export function useCreateBacker(): [
       },
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["backers"] });
+        await updateSession();
       },
     }),
   ];

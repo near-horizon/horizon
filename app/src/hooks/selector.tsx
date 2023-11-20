@@ -1,4 +1,3 @@
-import { type IronSession } from "iron-session";
 import { useEffect } from "react";
 import {
   setupModalSelector,
@@ -8,6 +7,7 @@ import {
   useGlobalStore,
 } from "~/stores/global";
 import { redirectOnboarding } from "~/lib/auth";
+import { getUser, login, logout } from "~/lib/client/auth";
 
 export function useWalletSelectorEffect() {
   useEffect(() => {
@@ -28,29 +28,19 @@ export function useWalletSelectorEffect() {
           }
 
           // Check the current session
-          const response = await fetch("/api/auth/user");
-          const { user } = (await response.json()) as unknown as {
-            user: IronSession["user"];
-          };
-
+          const user = await getUser();
           // If the user is already logged in, check if the account is the same
           if (user && user.accountId === account.accountId) {
             // If the account is the same, update the user
             setUser(user);
           } else {
             // If the account is different, log in with the new account
-            await fetch("/api/auth/login", {
-              method: "POST",
-              body: JSON.stringify({
-                accountId: account.accountId,
-                publicKey: account.publicKey,
-              }),
+            await login({
+              accountId: account.accountId,
+              publicKey: account.publicKey!,
             });
             // Update the user from the new session
-            const res = await fetch("/api/auth/user");
-            const { user: newUser } = (await res.json()) as unknown as {
-              user: IronSession["user"];
-            };
+            const newUser = await getUser();
             setUser(newUser);
             if (!newUser?.hasProfile) {
               redirectOnboarding();
@@ -64,17 +54,11 @@ export function useWalletSelectorEffect() {
           // If there is an account, log in
           if (account) {
             try {
-              await fetch("/api/auth/login", {
-                method: "POST",
-                body: JSON.stringify({
-                  accountId: account.accountId,
-                  publicKey: account.publicKey,
-                }),
+              await login({
+                accountId: account.accountId,
+                publicKey: account.publicKey!,
               });
-              const res = await fetch("/api/auth/user");
-              const { user } = (await res.json()) as unknown as {
-                user: IronSession["user"];
-              };
+              const user = await getUser();
               setUser(user);
               if (!user?.hasProfile) {
                 redirectOnboarding();
@@ -90,9 +74,7 @@ export function useWalletSelectorEffect() {
         selector.on("signedOut", async () => {
           try {
             // Log out
-            await fetch("/api/auth/logout", {
-              method: "POST",
-            });
+            await logout();
             setUser(undefined);
           } catch (e) {
             console.error(e);
