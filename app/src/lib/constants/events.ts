@@ -1,8 +1,14 @@
-import { NextResponse } from "next/server";
+import { type Event } from "~/lib/validation/events";
 
-import type { Event } from "~/lib/validation/events";
+export const OFFICE_HOURS_TIME = new Date(
+  "2023-07-28T13:30:00.000Z"
+).toLocaleString(undefined, {
+  weekday: "long",
+  hour: "numeric",
+  timeZoneName: "shortGeneric",
+});
 
-const eventItems = [
+export const EVENTS = [
   {
     title: "Product Demo Day",
     description:
@@ -23,6 +29,4 @@ const eventItems = [
   },
 ] satisfies Event[];
 
-export function GET() {
-  return NextResponse.json(eventItems);
-}
+export const SCHEDULE_LINK = "https://lu.ma/u/usr-5oZHY9dEDbDcaHY";

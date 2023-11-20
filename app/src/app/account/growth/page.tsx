@@ -1,11 +1,7 @@
-"use client";
-
+import { PROGRAM_ITEMS } from "~/lib/constants/growth";
 import GrowthProgramCard from "./card";
-import { useGrowthPrograms } from "~/hooks/growth-programs";
 
 export default function GrowthPrograms() {
-  const { data: growthPrograms } = useGrowthPrograms();
-
   return (
     <div>
       <div className="mb-4 text-3xl font-bold text-black">Growth Programs</div>
@@ -15,7 +11,7 @@ export default function GrowthPrograms() {
         litecoin. Ethereum kadena polkadot ICON BitTorrent.
       </div>
       <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2 2xl:grid-cols-3">
-        {growthPrograms.map((growthProgram) => (
+        {PROGRAM_ITEMS.map((growthProgram) => (
           <GrowthProgramCard program={growthProgram} key={growthProgram.name} />
         ))}
       </div>

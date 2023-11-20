@@ -6,18 +6,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import {
-  BookOpen02Svg,
-  CalendarSvg,
-  ChevronDownSvg,
-  HomeLineSvg,
-  LineChartUp02Svg,
-  MagicWand02Svg,
-  ProjectsSvg,
-  RequestSvg,
-  Shield011Svg,
-  Users02Svg,
-} from "~/icons";
+import { ChevronDownSvg, ProjectsSvg, Shield011Svg } from "~/icons";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import {
@@ -29,81 +18,7 @@ import { type ReactNode } from "react";
 import { Separator } from "~/components/ui/separator";
 import { useUser } from "~/stores/global";
 import { useHasBacker } from "~/hooks/backers";
-
-const routes = [
-  {
-    name: (
-      <>
-        <HomeLineSvg className="h-4 w-4" />
-        Home
-      </>
-    ),
-    href: "/",
-  },
-  {
-    name: (
-      <>
-        <ProjectsSvg className="h-4 w-4" />
-        Projects
-      </>
-    ),
-    href: "/projects",
-  },
-  {
-    name: (
-      <>
-        <RequestSvg className="h-4 w-4" />
-        Requests
-      </>
-    ),
-    href: "/requests",
-  },
-  {
-    name: (
-      <>
-        <Users02Svg className="h-4 w-4" />
-        Contributors
-      </>
-    ),
-    href: "/contributors",
-  },
-  {
-    name: (
-      <>
-        <LineChartUp02Svg className="h-4 w-4" />
-        Backers
-      </>
-    ),
-    href: "/backers",
-  },
-  {
-    name: (
-      <>
-        <MagicWand02Svg className="h-4 w-4" />
-        Perks
-      </>
-    ),
-    href: "/perks",
-  },
-  {
-    name: (
-      <>
-        <CalendarSvg className="h-4 w-4" />
-        Events
-      </>
-    ),
-    href: "/events",
-  },
-  {
-    name: (
-      <>
-        <BookOpen02Svg className="h-4 w-4" />
-        Learn
-      </>
-    ),
-    href: "/learn",
-  },
-];
+import { routes } from "~/lib/constants/navigation/public";
 
 export function NavLinks() {
   const [, section, sub] = usePathname()?.split("/");

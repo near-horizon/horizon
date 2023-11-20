@@ -12,7 +12,7 @@ import { cn } from "~/lib/utils";
 import { Separator } from "~/components/ui/separator";
 import { ExternalLink } from "~/components/external-link";
 import { Button } from "~/components/ui/button";
-import type { GrowthProgram } from "~/lib/validation/growth-programs";
+import { type GrowthProgram } from "~/lib/validation/growth-programs";
 import {
   ClockFastForwardSvg,
   Contrast01Svg,

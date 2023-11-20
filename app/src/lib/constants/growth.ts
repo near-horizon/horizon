@@ -1,8 +1,6 @@
-import { NextResponse } from "next/server";
+import { type GrowthProgram } from "../validation/growth-programs";
 
-import type { GrowthProgram } from "~/lib/validation/growth-programs";
-
-const programItems = [
+export const PROGRAM_ITEMS: GrowthProgram[] = [
   {
     name: "Encode Club",
     imageSvg: true,
@@ -76,8 +74,4 @@ const programItems = [
       website: "https://fellowship.mlh.io",
     },
   },
-] satisfies GrowthProgram[];
-
-export function GET() {
-  return NextResponse.json(programItems);
-}
+];

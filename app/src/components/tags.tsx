@@ -8,9 +8,7 @@ export function Tags({ tags }: { tags: Record<string, string> | string[] }) {
         return [tags, length];
       }
 
-      const tagLength = tag.length;
-
-      return [[...tags, tag], length + tagLength];
+      return [[...tags, tag], length + tag.length];
     },
     [new Array<string>(), 0]
   );
