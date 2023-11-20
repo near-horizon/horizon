@@ -6,7 +6,6 @@ import {
   setWalletSelectorModal,
   useGlobalStore,
 } from "~/stores/global";
-import { redirectOnboarding } from "~/lib/auth";
 import { getUser, login, logout } from "~/lib/client/auth";
 
 export function useWalletSelectorEffect() {
@@ -42,9 +41,6 @@ export function useWalletSelectorEffect() {
             // Update the user from the new session
             const newUser = await getUser();
             setUser(newUser);
-            if (!newUser?.hasProfile) {
-              redirectOnboarding();
-            }
           }
         });
 
@@ -60,9 +56,6 @@ export function useWalletSelectorEffect() {
               });
               const user = await getUser();
               setUser(user);
-              if (!user?.hasProfile) {
-                redirectOnboarding();
-              }
             } catch (e) {
               console.error(e);
             }
