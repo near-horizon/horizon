@@ -1,3 +1,4 @@
+import { learningResources } from "../constants/learn";
 import { viewCall } from "../fetching";
 import { type AccountId } from "../validation/common";
 import { type Profile } from "../validation/fetching";
@@ -8,7 +9,6 @@ import {
 import { type SearchResult } from "../validation/search";
 import { getBackers } from "./backers";
 import { getContributors } from "./contributors";
-import { learningResource } from "./learn";
 import { getProjects } from "./projects";
 import { getRequest, getRequests } from "./requests";
 
@@ -50,7 +50,7 @@ export async function search(query: string): Promise<SearchResult> {
     requests.map(([accountId, cid]) => getRequest(accountId, cid))
   );
 
-  const learningContent = learningResource.reduce((items, category) => {
+  const learningContent = learningResources.reduce((items, category) => {
     if (category.title.toLowerCase().includes(lowerCaseQuery)) {
       items.push(
         ...category.items.map((item) => ({ ...item, id: category.id }))
