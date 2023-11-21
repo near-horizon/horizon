@@ -6,7 +6,7 @@ export function Learning({ className }: { className?: string }) {
       fill="none"
       className={className}
     >
-      <g clip-path="url(#clip0_5474_35586)">
+      <g clipPath="url(#clip0_5474_35586)">
         <rect
           x="1"
           y="6"
@@ -14,9 +14,9 @@ export function Learning({ className }: { className?: string }) {
           height="7"
           rx="1"
           stroke="#66A0FF"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></rect>
         <rect
           x="8"
@@ -25,9 +25,9 @@ export function Learning({ className }: { className?: string }) {
           height="7"
           rx="1"
           stroke="#66A0FF"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></rect>
         <rect
           x="15"
@@ -36,9 +36,9 @@ export function Learning({ className }: { className?: string }) {
           height="7"
           rx="1"
           stroke="#66A0FF"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></rect>
       </g>
       <defs>

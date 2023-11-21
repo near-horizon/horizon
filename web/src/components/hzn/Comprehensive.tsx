@@ -1,11 +1,8 @@
 import { Learning } from "./svgs/learning.js";
 import { Expert } from "./svgs/expert.js";
-import { Fundraising } from "./svgs/fundraising.js";
-import { Discovery } from "./svgs/discovery.js";
 import { Networking } from "./svgs/networking.js";
 import { Access } from "./svgs/access.js";
 import { Earn } from "./svgs/earn.js";
-import { AI } from "./svgs/ai.js";
 import { Product } from "./svgs/product.js";
 import { Marketplace } from "./svgs/marketplace.js";
 import { Curated } from "./svgs/curated.js";
@@ -22,16 +19,6 @@ const benefits = [
     text: "We offer exclusive masterclasses with industry leaders like Illia Polosukhin (NEAR), Paul Hsu (Decasonic), Richard Muirhead (Fabric Ventures), and Michael Kelly (Open Forest Protocol)",
   },
   {
-    icon: <Fundraising className="w-8 h-8" />,
-    heading: "Fundraising Track",
-    text: "Get your startup investment-ready with personalized guidance on fundraising strategies, investor relations, pitch preparation, and leadership development",
-  },
-  {
-    icon: <Discovery className="w-8 h-8" />,
-    heading: "'Discovery' Track",
-    text: "Collaborate with our dedicated team to fast-track customer insights, early feedback, and user-centric strategies.",
-  },
-  {
     icon: <Networking className="w-8 h-8" />,
     heading: "Networking Opportunities",
     text: "Join exclusive in-person founder retreats, attend local meetups, and participate in virtual co-working days for a blend of online and IRL engagement.",
@@ -45,11 +32,6 @@ const benefits = [
     icon: <Earn className="w-8 h-8" />,
     heading: "Earn Horizon Credits",
     text: "Earn Horizon Credits by contributing to the community and participating in events and exchange them for essential services, resources, and access to premier industry experts.",
-  },
-  {
-    icon: <AI className="w-8 h-8" />,
-    heading: "AI Assisted Application Writer",
-    text: "This feature provides suggestions to application forms for grants, accelerators, and incubators, leveraging AI to make the process more efficient and approachable.",
   },
   {
     icon: <Product className="w-8 h-8" />,
@@ -72,7 +54,7 @@ export function Comprehensive() {
   return (
     <div className="flex flex-col items-center gap-7 w-full">
       <h2 className="text-ui-elements-dark text-center text-4xl font-bold">
-        HZN fellows get comprehensive benefits
+        Program Benefits and Perks
       </h2>
       <p className="text-background-dark text-center text-xl">
         HZN is an exclusive learning community for founders that addresses the
@@ -80,19 +62,17 @@ export function Comprehensive() {
         offering is more than just another program; it's a roadmap tailored for
         Web3 founders.
       </p>
-      <div className="flex flex-col-reverse gap-6 md:flex-row items-start justify-start flex-wrap md:gap-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-4">
         {benefits.map(({ icon, heading, text }) => (
-          <div className="md:w-[calc((100%-4rem)/3)] flex px-6 flex-col items-center gap-4 w-full">
+          <div className="bg-ui-elements-white rounded-3xl p-6 flex flex-col gap-4 text-[#66a0ff] items-center">
             {icon}
-            <div className="flex flex-col items-center gap-2 w-full">
-              <h3 className="text-ui-elements-dark text-center text-xl font-bold">
-                {heading}
-              </h3>
-              <p className="text-ui-elements-dark">{text}</p>
+            <div className="flex flex-col items-center gap-2 w-full text-ui-elements-dark">
+              <h3 className="text-center text-xl font-bold">{heading}</h3>
+              <p>{text}</p>
             </div>
           </div>
         ))}
-        <div className="flex py-5 px-6 flex-col items-center justify-center gap-3 self-stretch rounded-3xl border-dashed border border-ui-elements-light">
+        <div className="flex py-5 px-6 flex-col items-center justify-center gap-3 self-stretch rounded-3xl border-dashed border-2 border-ui-elements-light">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

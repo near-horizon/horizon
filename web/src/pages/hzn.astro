@@ -2,31 +2,38 @@
 import Layout from "@layouts/Layout.astro";
 import Hero from "@components/hzn/Hero.astro";
 import What from "@components/hzn/What.astro";
-import Benefits from "@components/hzn/Benefits.astro";
 import Who from "@components/hzn/Who.astro";
 import Testamonial from "@components/hzn/Testamonial.astro";
 import Journey from "@components/hzn/Journey.astro";
 import Structure from "@components/hzn/Structure.astro";
 import { Comprehensive } from "@components/hzn/Comprehensive.tsx";
-import Join from "@components/hzn/Join.astro";
 import FAQ from "@components/hzn/FAQ.astro";
 import Ask from "@components/hzn/Ask.astro";
+import Recognize from "@components/hzn/Recognize.astro";
+import { People } from "@components/hzn/People.tsx";
 ---
 
 <Layout title="HZN">
-  <main
-    class="p-6 bg-background-white w-full flex-col flex gap-14 max-w-screen-xl mx-auto"
-  >
-    <Hero />
-    <What />
-    <Benefits />
-    <Who />
-    <Testamonial />
-    <Journey />
-    <Structure />
-    <Comprehensive />
-    <Join />
-    <FAQ />
-    <Ask />
+  <main class="bg-background-light">
+    <div class="p-6 w-full flex-col flex gap-14 max-w-screen-xl mx-auto">
+      <Hero />
+      <Comprehensive />
+      <Structure />
+    </div>
+    <div class="bg-background-white">
+      <div class="p-6 w-full flex-col flex gap-14 max-w-screen-xl mx-auto">
+        <Who />
+        <Recognize />
+        <Testamonial />
+        <People client:load />
+        <Journey />
+        <What />
+        <Hero />
+      </div>
+    </div>
+    <div class="p-6 w-full flex-col flex gap-14 max-w-screen-xl mx-auto">
+      <FAQ />
+      <Ask />
+    </div>
   </main>
 </Layout>
