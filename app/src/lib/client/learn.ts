@@ -1,18 +1,3 @@
-import { z } from "zod";
-import {
-  type LearningCategory,
-  learningCategorySchema,
-} from "../validation/learn";
-
-export async function getLearningResources(): Promise<LearningCategory[]> {
-  const response = await fetch(`/api/learn`);
-  const learningResources = z
-    .array(learningCategorySchema)
-    .parseAsync(await response.json());
-
-  return learningResources;
-}
-
 export function formatCategoryLabel(categoryString: string) {
   let formattedString = categoryString
     .replace(/-/g, " ")

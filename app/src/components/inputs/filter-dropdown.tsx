@@ -54,7 +54,7 @@ export function FilterDropdown({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-96 flex-col gap-3 py-3">
-        <div className="flex flex-row flex-wrap gap-2 px-3">
+        <div className="flex max-h-96 flex-row flex-wrap gap-2 overflow-auto px-3">
           {availableOptions.map((option) => (
             <Button
               key={option.value}

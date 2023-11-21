@@ -1,6 +1,7 @@
+import { formatCategoryLabel } from "../client/learn";
 import { type LearningCategory } from "../validation/learn";
 
-export const learningResource = [
+export const learningResources = [
   {
     id: "encodeEducate",
     title: "Encode Educate",
@@ -393,3 +394,34 @@ export const learningResource = [
     ],
   },
 ] satisfies LearningCategory[];
+
+export const [, tagCategories] = learningResources.reduce(
+  ([tags, formatted], resourceItem) => {
+    resourceItem.items.forEach((resource) => {
+      resource.tags.forEach((tag) => {
+        if (!tags.includes(tag)) {
+          tags.push(tag);
+          formatted.push({
+            value: tag,
+            label: formatCategoryLabel(tag),
+          });
+        }
+      });
+    });
+    return [tags, formatted];
+  },
+  [new Array<string>(), new Array<{ value: string; label: string }>()] as [
+    string[],
+    { value: string; label: string }[]
+  ]
+);
+
+export const typeCategories = learningResources.map(({ id, title }) => ({
+  value: id,
+  label: title,
+}));
+
+export const learningResourcesCount = learningResources.reduce(
+  (count, { items }) => count + items.length,
+  0
+);
