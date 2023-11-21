@@ -7,8 +7,8 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { LinkExternal021Svg } from "~/icons";
-import { Separator } from "../ui/separator";
-import { ExternalLink } from "../external-link";
+import { Separator } from "~/components/ui/separator";
+import { ExternalLink } from "~/components/external-link";
 
 import type { LearningResource } from "~/lib/validation/learn";
 

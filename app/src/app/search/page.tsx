@@ -3,7 +3,7 @@ import { Project } from "../projects/card";
 import { Request } from "../requests/card";
 import { Contributor } from "../contributors/card";
 import { Backer } from "../backers/card";
-import { LearnCard } from "~/components/learn/learn-card";
+import { LearnCard } from "~/app/learn/card";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
