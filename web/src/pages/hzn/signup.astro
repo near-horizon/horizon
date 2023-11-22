@@ -1,0 +1,27 @@
+---
+import { SignupForm } from "@components/signup/hzn-form";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout title="HZN">
+  <main
+    class="p-6 bg-background-white w-full flex-col flex gap-14 max-w-screen-xl mx-auto"
+  >
+    <h1 class="text-ui-elements-black text-4xl font-bold text-center">
+      HZN Accelerator Application
+    </h1>
+
+    <h2 class="text-background-dark text-center">
+      HZN is real, grounded support tailored specifically for you - all
+      equity-free. We're all in on helping you grow without taking a slice of
+      your hard work. Apply to join our Founder Accelerator, designed to
+      catalyze your startup's success.
+      <div class="h-8"></div>
+       Fill out this form to apply to a next cohort.
+    </h2>
+
+    <div class="max-w-5xl mx-auto">
+      <SignupForm client:load />
+    </div>
+  </main>
+</Layout>
