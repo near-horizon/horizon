@@ -11,21 +11,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { useProjectCompletion } from "~/hooks/projects";
 import { usePathname } from "next/navigation";
-import { useUser } from "~/stores/global";
 import { type NavItemProps } from "~/lib/constants/navigation/user";
-import { NUMBER } from "~/lib/format";
 
 export function NavItem({
   section,
   icon,
   label,
   subMenu,
-  count,
+  badge,
 }: NavItemProps) {
-  const user = useUser();
-  const { data: completion } = useProjectCompletion(user?.accountId ?? "");
   const [sectionPart, subSectionPart] = usePathname().split("/").slice(2);
   const isSectionActive = sectionPart === section;
 
@@ -45,7 +40,7 @@ export function NavItem({
             label={label}
             isSectionActive={isSectionActive}
           />
-          {count}
+          {badge}
         </NavigationMenuLink>
       </NavigationMenuItem>
     );
@@ -70,20 +65,17 @@ export function NavItem({
           </AccordionTrigger>
           <AccordionContent>
             <div className="flex w-full flex-col items-start justify-start gap-3 pl-8 pt-2">
-              {completion &&
-                subMenu.map(({ section: subSection, label }) => (
-                  <SubMenuItem
-                    key={subSection}
-                    section={section}
-                    subSection={subSection}
-                    completion={
-                      completion[subSection as keyof typeof completion]
-                    }
-                    active={isSectionActive}
-                    label={label}
-                    subSectionPart={subSectionPart}
-                  />
-                ))}
+              {subMenu.map(({ section: subSection, label, badge }) => (
+                <SubMenuItem
+                  key={subSection}
+                  section={section}
+                  subSection={subSection}
+                  badge={badge}
+                  active={isSectionActive}
+                  label={label}
+                  subSectionPart={subSectionPart}
+                />
+              ))}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -121,14 +113,14 @@ function SubMenuItem({
   label,
   section,
   active,
-  completion,
+  badge,
   subSectionPart,
 }: {
   subSection: string;
   label: string;
   section: string;
   active: boolean;
-  completion: number;
+  badge?: React.ReactNode;
   subSectionPart?: string;
 }) {
   return (
@@ -140,7 +132,7 @@ function SubMenuItem({
       })}
     >
       <span>{label}</span>
-      <small>{NUMBER.percentage(completion)}</small>
+      <small>{badge}</small>
     </NavigationMenuLink>
   );
 }
