@@ -73,7 +73,7 @@ export function useProject(accountId: AccountId) {
   });
 }
 
-export function useProjectCompletion(accountId: AccountId) {
+export function useProjectCompletion(accountId?: AccountId) {
   return useQuery({
     queryKey: ["project-completion", accountId],
     queryFn: ({ queryKey: [, accountId] }) => getProjectCompletion(accountId!),

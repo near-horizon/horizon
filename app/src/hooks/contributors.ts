@@ -9,6 +9,7 @@ import { type AccountId } from "~/lib/validation/common";
 import { useSignTx } from "~/stores/global";
 import {
   getContributor,
+  getContributorCompletion,
   getContributors,
   getPaginatedContributors,
 } from "~/lib/client/contributors";
@@ -45,6 +46,15 @@ export function useContributor(accountId: AccountId) {
   return useQuery({
     queryKey: ["contributor", accountId],
     queryFn: ({ queryKey: [, accountId] }) => getContributor(accountId!),
+    enabled: !!accountId,
+  });
+}
+
+export function useContributorCompletion(accountId?: AccountId) {
+  return useQuery({
+    queryKey: ["contributor-completion", accountId],
+    queryFn: ({ queryKey: [, accountId] }) =>
+      getContributorCompletion(accountId!),
     enabled: !!accountId,
   });
 }

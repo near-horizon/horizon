@@ -40,6 +40,21 @@ export const contributorSchema = horizonSchema
   .extend({
     creationTx: transactionSchema.optional(),
     account_id: accountIdSchema,
+    poc: z.string().optional(),
+    languages: z.record(z.string(), z.string()).optional(),
+    portfolio: z
+      .array(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          url: z.string(),
+          category: z.string().optional(),
+          tags: z.record(z.string(), z.string()).optional(),
+          files: z.record(z.string(), z.string()).optional(),
+        })
+      )
+      .optional(),
+    location: z.string().optional(),
   });
 
 export type Contributor = z.infer<typeof contributorSchema>;
