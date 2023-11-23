@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import {
-  setupModalSelector,
   setUser,
   setWalletSelector,
   setWalletSelectorModal,
@@ -10,8 +9,8 @@ import { getUser, login, logout } from "~/lib/client/auth";
 
 export function useWalletSelectorEffect() {
   useEffect(() => {
-    import("../stores/global")
-      .then(async ({ setupSelector }) => {
+    import("../lib/selector")
+      .then(async ({ setupSelector, setupModalSelector }) => {
         const selector = await setupSelector();
         setWalletSelector(selector);
         setWalletSelectorModal(setupModalSelector(selector));
