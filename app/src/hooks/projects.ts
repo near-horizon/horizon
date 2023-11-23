@@ -282,9 +282,9 @@ export function useUpdateProject(): [
         accountId: AccountId;
         project: Partial<Project>;
       }) => {
-        const privateData = privateProjectSchema.parse(project);
-        const projectData = projectSchema.parse(project);
-        const profileData = profileSchema.strip().parse(project);
+        const privateData = privateProjectSchema.partial().parse(project);
+        const projectData = projectSchema.partial().parse(project);
+        const profileData = profileSchema.partial().strip().parse(project);
 
         if (Object.keys(projectData).length === 0) {
           setProgress({ value: 0, label: "Editing on-chain details..." });
@@ -305,7 +305,7 @@ export function useUpdateProject(): [
 
         if (Object.keys(privateData).length === 0) {
           setProgress({ value: 33, label: "Editing off-chain details..." });
-          const response = await fetch("/api/projects/" + accountId, {
+          const response = await fetch("/api/profile", {
             method: "PUT",
             body: JSON.stringify(privateData),
           });
@@ -329,6 +329,8 @@ export function useUpdateProject(): [
             throw new Error("Failed to update profile");
           }
           setProgress({ value: 100, label: "Profile saved!" });
+        } else {
+          setProgress({ value: 100, label: "Project updated!" });
         }
       },
       onSuccess: async (_, { accountId }) => {
