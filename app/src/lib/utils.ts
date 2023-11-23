@@ -27,6 +27,32 @@ export function makeIntoStrings(obj: Record<string, unknown>) {
   );
 }
 
+export function removeNulls<T>(obj: T): T | null {
+  if (typeof obj === "undefined") return null;
+
+  if (obj === null) return null;
+
+  if (typeof obj === "object") {
+    (Object.keys(obj) as (keyof typeof obj)[]).forEach((key) => {
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        removeEmpty(obj[key]);
+      } else if (obj[key] === undefined || obj[key] === null) {
+        delete obj[key];
+      }
+    });
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    obj = obj.map((item) => removeEmpty(item));
+  }
+
+  return obj;
+}
+
 export function removeEmpty<T>(obj: T): T | null {
   if (typeof obj === "undefined") return null;
 
