@@ -12,7 +12,7 @@ import {
   type ProjectsQuery,
 } from "../validation/projects";
 import { env } from "~/env.mjs";
-import { intoURLSearchParams } from "../utils";
+import { intoURLSearchParams, removeEmpty, removeNulls } from "../utils";
 import { getProfile, viewCall } from "../fetching";
 import { getTransactions } from "./transactions";
 import { type AccountId, imageSchema } from "../validation/common";
@@ -96,8 +96,8 @@ export async function getProject(accountId: AccountId) {
   ]);
 
   const { team: company_size, ...profile } = profileSchema.parse({
-    ...response,
-    ...changes,
+    ...removeEmpty(response),
+    ...(changes ? removeNulls(changes) : {}),
   });
   const horizon = horizonSchema.parse(horizonData);
   const creationTx = transactions.findLast((tx) => {
