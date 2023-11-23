@@ -14,10 +14,11 @@ import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
 import { useZodForm } from "~/hooks/form";
 import { useChanges, useHasChanges } from "~/hooks/profile";
-import { useProject } from "~/hooks/projects";
+import { useProject, useUpdateProject } from "~/hooks/projects";
 import { useSocialSet } from "~/hooks/social";
 import { cn } from "~/lib/utils";
 import { type AccountId } from "~/lib/validation/common";
+import { ProgressDialog } from "~/components/progress-dialog";
 
 const schema = z.object({
   name: z.string().min(3).max(50).optional(),
@@ -42,6 +43,7 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
   const viewRef = useRef<HTMLDivElement>(null);
   const editRef = useRef<HTMLDivElement>(null);
   const section = usePathname().split("/")[2];
+  const [progressUpdate, updateProject] = useUpdateProject();
 
   useEffect(() => {
     if (data) {
@@ -92,7 +94,21 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
         className="flex flex-row items-start justify-start gap-6"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={form.handleSubmit((data) => {
-          console.log(data);
+          updateProject.mutate({
+            accountId,
+            project: {
+              name: data.name,
+              tagline: data.tagline,
+              image: { ipfs_cid: data.image ?? "" },
+              tags: data.tags.reduce(
+                (acc, tag) => ({
+                  ...acc,
+                  [tag.value]: "",
+                }),
+                {}
+              ),
+            },
+          });
         })}
       >
         <div className="flex flex-grow flex-col items-start justify-start gap-1">
@@ -134,9 +150,12 @@ export function ProfileHeader({ accountId }: { accountId: AccountId }) {
           </div>
         </div>
         <div>
-          <Button type="submit" variant="default">
-            Save
-          </Button>
+          <ProgressDialog
+            progress={progressUpdate.value}
+            title="Updating your profile"
+            description={progressUpdate.label}
+            triggerText="Save"
+          />
         </div>
       </form>
     </Form>
