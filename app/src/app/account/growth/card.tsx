@@ -36,7 +36,7 @@ export default function GrowthProgramCard({
               alt={program.name}
               objectFit="contain"
               fill
-              loader={({ src }) => src}
+              unoptimized
             />
           </div>
 
