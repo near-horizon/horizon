@@ -25,9 +25,11 @@ import { Icon } from "~/components/icon";
 import { DATE } from "~/lib/format";
 
 export async function BackersDigest({ accountId }: { accountId: AccountId }) {
-  const backersDigest = await getBackersDigest(accountId);
-  const project = await getProject(accountId);
-  const user = await getUserFromSession();
+  const [backersDigest, project, user] = await Promise.all([
+    getBackersDigest(accountId),
+    getProject(accountId),
+    getUserFromSession(),
+  ]);
 
   let url = `/projects/${accountId}`;
   if (user && user.accountId === accountId) {
