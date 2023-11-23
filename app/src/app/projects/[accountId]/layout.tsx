@@ -12,6 +12,8 @@ import { Tags, TagsSkeleton } from "~/components/tags";
 import { Skeleton } from "~/components/ui/skeleton";
 import { CTA } from "~/components/ui/cta";
 import { MessageChatSquareSvg, Share06Svg } from "~/icons";
+import { Tabs } from "./tabs";
+import { backersViewFromKey } from "~/lib/constants/backers-digest";
 
 export default async function ProjectPageLayout({
   params: { accountId },
@@ -24,50 +26,18 @@ export default async function ProjectPageLayout({
 
   const hasPermission = await checkBackersDigestPermission(accountId, user);
 
-  const tabs = [
-    {
-      id: "overview",
-      text: "Overview",
-      href: `/projects/${accountId}/overview`,
-    },
-    {
-      id: "details",
-      text: "Details",
-      href: `/projects/${accountId}/details`,
-    },
-    {
-      id: "requests",
-      text: "Requests",
-      href: `/projects/${accountId}/requests`,
-    },
-    {
-      id: "contracts",
-      text: "Contracts",
-      href: `/projects/${accountId}/contracts`,
-    },
-    {
-      id: "history",
-      text: "Work History",
-      href: `/projects/${accountId}/history`,
-    },
-  ] satisfies Parameters<typeof ContentTabs>[0]["tabs"];
-
-  if (hasPermission) {
-    tabs.unshift({
-      id: "backers-digest",
-      text: "Backers Digest",
-      href: `/projects/${accountId}/backers-digest`,
-    });
-  }
-
   return (
     <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-white px-8 py-6 shadow">
       <div className="flex w-full flex-col gap-6">
         <Suspense fallback={<HeaderSkeleton accountId={accountId} />}>
           <Header accountId={accountId} />
         </Suspense>
-        <CTAs /* accountId={accountId} */ />
-        <ContentTabs tabs={tabs} />
+        <CTAs />
+        <Tabs
+          accountId={accountId}
+          backersViewFromKey={backersViewFromKey}
+          hasPermission={hasPermission}
+        />
         {children}
       </div>
     </div>
