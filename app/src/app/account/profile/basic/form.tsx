@@ -87,6 +87,7 @@ const contributorFormSchema = z.object({
   location: z.string(),
   linktree: linktreeSchema,
   poc: z.string(),
+  languages: z.array(z.string()),
 });
 
 export function ContributorBasicForm({
@@ -130,6 +131,7 @@ export function ContributorBasicForm({
             name="languages"
             control={control}
             label="Languages"
+            options={[]}
           />
           <TextInput name="location" control={control} label="Location" />
         </>
