@@ -16,13 +16,13 @@ import {
 import { useUser } from "~/stores/global";
 
 export function ProfileNav() {
-  const user = useUser()!;
+  const user = useUser();
 
   let items = PROJECT_MENU;
 
-  if (user.hasProfile && user.profileType === "project") {
+  if (user?.hasProfile && user.profileType === "project") {
     items = PROJECT_MENU_DIGEST;
-  } else if (user.hasProfile && user.profileType === "contributor") {
+  } else if (user?.hasProfile && user.profileType === "contributor") {
     items = CONTRIBUTOR_MENU;
   } else {
     items = BACKER_MENU;
