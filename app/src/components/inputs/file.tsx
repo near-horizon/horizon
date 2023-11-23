@@ -43,14 +43,14 @@ export function FileInput<
             <Tabs onValueChange={(tab) => setTab(tab)} value={tab} className="">
               <TabsList className="flex flex-row items-center justify-start gap-4">
                 <TabsTrigger
-                  className="flex flex-row items-center justify-center !border-none px-0 data-[state=inactive]:text-text-link"
+                  className="flex flex-row items-center justify-center !border-none px-0 !shadow-none data-[state=inactive]:text-text-link"
                   value="upload"
                 >
                   Upload a file
                 </TabsTrigger>
                 <Separator className="h-5 w-px" orientation="vertical" />
                 <TabsTrigger
-                  className="flex flex-row items-center justify-center !border-none px-0 data-[state=inactive]:text-text-link"
+                  className="flex flex-row items-center justify-center !border-none px-0 !shadow-none data-[state=inactive]:text-text-link"
                   value="paste"
                 >
                   Paste a link
