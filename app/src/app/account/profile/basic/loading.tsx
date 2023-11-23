@@ -1,10 +1,10 @@
-import { BasicForm } from "./form";
-import { DataSkeleton } from "./data";
+import { ProjectBasicForm } from "./form";
+import { ProjectDataSkeleton } from "./data";
 
 export default function Loader() {
   return (
-    <BasicForm defaultValues={{}} completion={0}>
-      <DataSkeleton />
-    </BasicForm>
+    <ProjectBasicForm defaultValues={{}} completion={0}>
+      <ProjectDataSkeleton />
+    </ProjectBasicForm>
   );
 }
