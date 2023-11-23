@@ -3,7 +3,6 @@
 import "~/styles/globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 import { setUser } from "~/stores/global";
-import { ThemeProvider } from "~/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { type IronSession } from "iron-session";
@@ -25,6 +24,24 @@ export function Providers({
   const [queryClient] = useState(() => new QueryClient());
   useWalletSelectorEffect();
   setUser(user ? user : undefined);
+  useOnboardingRedirect({ user });
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <ProgressBar>{children}</ProgressBar>
+        <Toaster />
+        <GTagScripts />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+function useOnboardingRedirect({
+  user,
+}: {
+  user?: IronSession["user"] | null;
+}) {
   const pathname = usePathname();
   const isOnboarding = pathname.includes("/onboarding");
   const isCreate = pathname.includes("/create");
@@ -32,16 +49,4 @@ export function Providers({
   if (user && !(isOnboarding || isCreate) && !user.hasProfile) {
     return redirectOnboarding();
   }
-
-  return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <ProgressBar>{children}</ProgressBar>
-          <Toaster />
-          <GTagScripts />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  );
 }
