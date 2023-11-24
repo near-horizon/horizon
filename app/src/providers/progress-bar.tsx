@@ -9,6 +9,7 @@ export function ProgressBar({ children }: { children?: React.ReactNode }) {
         height="5px"
         color="#66a0ff"
         options={{ showSpinner: false }}
+        delay={200}
         shallowRouting
       />
       {children}
