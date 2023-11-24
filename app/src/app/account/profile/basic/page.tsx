@@ -16,7 +16,7 @@ import { redirectOnboarding } from "~/lib/auth";
 export default async function BasicProfile() {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
 

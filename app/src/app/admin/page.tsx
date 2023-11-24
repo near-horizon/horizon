@@ -16,7 +16,7 @@ import { getUserFromSession } from "~/lib/session";
 export default async function AdminPage() {
   const user = await getUserFromSession();
 
-  if (!user || !user.admin) {
+  if (!user.logedIn || !user.admin) {
     return redirect("/");
   }
 
@@ -35,16 +35,16 @@ export default async function AdminPage() {
     fetch(`${env.API_URL}/data/metrics?above=90`).then((res) => res.json()),
     getStats(),
     fetch(`${env.API_URL}/data/metrics/average/fulfillment`).then((res) =>
-      res.json()
+      res.json(),
     ),
     fetch(`${env.API_URL}/data/metrics/average/project/transactions`).then(
-      (res) => res.json()
+      (res) => res.json(),
     ),
     fetch(`${env.API_URL}/data/metrics/average/project/requests`).then((res) =>
-      res.json()
+      res.json(),
     ),
     fetch(`${env.API_URL}/data/metrics/average/project/mau`).then((res) =>
-      res.json()
+      res.json(),
     ),
   ]);
 

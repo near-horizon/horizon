@@ -36,9 +36,8 @@ export function Perk(perk: Perk & { noButton?: boolean }) {
     code,
     requirements,
   } = perk;
-  const completedCount = requirements?.filter(
-    ({ completed }) => completed
-  ).length;
+  const completedCount = requirements?.filter(({ completed }) => completed)
+    .length;
   const requirementsMet =
     completedCount === requirements?.length && !perk.noButton;
 
@@ -51,10 +50,9 @@ export function Perk(perk: Perk & { noButton?: boolean }) {
             <Image
               src={logo?.url ?? ""}
               alt={name}
+              className="object-contain object-right"
               fill
               unoptimized
-              objectFit="contain"
-              objectPosition="right"
             />
           </div>
         </CardTitle>

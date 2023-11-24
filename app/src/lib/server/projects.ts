@@ -23,10 +23,10 @@ import {
   type ContributorContracts,
 } from "../validation/contracts";
 import deepEqual from "deep-equal";
-import { type IronSession } from "iron-session";
 import { hasBacker } from "./backers";
 import { headers } from "next/headers";
 import { backersViewFromKey } from "../constants/backers-digest";
+import { type User } from "../validation/user";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
   vertical: z.array(z.string()).optional().or(z.string().optional()),
@@ -39,7 +39,7 @@ export const projectsURLQuerySchema = fetchManyURLSchema.extend({
 });
 
 export async function getProjects(
-  query: z.infer<typeof projectsURLQuerySchema> | ProjectsQuery
+  query: z.infer<typeof projectsURLQuerySchema> | ProjectsQuery,
 ): Promise<string[]> {
   const projects = await fetch(
     env.API_URL + "/data/projects?" + intoURLSearchParams(query),
@@ -47,13 +47,13 @@ export async function getProjects(
       headers: {
         Authorization: `Bearer ${env.API_KEY}`,
       },
-    }
+    },
   );
   return projects.json() as Promise<string[]>;
 }
 
 export async function getProjectsCount(
-  query: z.infer<typeof projectsURLQuerySchema> | ProjectsQuery
+  query: z.infer<typeof projectsURLQuerySchema> | ProjectsQuery,
 ): Promise<number> {
   const projects = await fetch(
     env.API_URL + "/data/projects/count?" + intoURLSearchParams(query),
@@ -61,7 +61,7 @@ export async function getProjectsCount(
       headers: {
         Authorization: `Bearer ${env.API_KEY}`,
       },
-    }
+    },
   );
   return projects.json() as Promise<number>;
 }
@@ -71,7 +71,7 @@ export async function getChanges(accountId: AccountId) {
     `${env.API_URL}/data/projects/${accountId}/changes`,
     {
       method: "GET",
-    }
+    },
   );
 
   if (!response.ok) {
@@ -90,7 +90,7 @@ export async function getProject(accountId: AccountId) {
       "get_project",
       {
         account_id: accountId,
-      }
+      },
     ),
     getTransactions({ entity_type: "projects" }),
   ]);
@@ -179,7 +179,7 @@ export async function getRequestsForProject(accountId: AccountId) {
   const response = await viewCall<[string, string, string][]>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_project_requests",
-    { account_id: accountId }
+    { account_id: accountId },
   );
 
   return projectRequestsSchema.parse(response);
@@ -189,7 +189,7 @@ export async function getProjectContracts(accountId: AccountId) {
   const contracts = await viewCall<ContributorContracts>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_project_contributions",
-    { account_id: accountId }
+    { account_id: accountId },
   );
 
   const histories = await Promise.all(
@@ -197,16 +197,16 @@ export async function getProjectContracts(accountId: AccountId) {
       viewCall<string[]>(
         env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
         "get_contribution_history",
-        { project_id, vendor_id }
-      ).then((history) => history.map((cid) => [[project_id, cid], vendor_id]))
-    )
+        { project_id, vendor_id },
+      ).then((history) => history.map((cid) => [[project_id, cid], vendor_id])),
+    ),
   );
 
   const parsedHistories = contractsListSchema.parse(
     histories.reduce((acc, cur) => {
       acc.push(...cur);
       return acc;
-    }, [])
+    }, []),
   );
 
   return parsedHistories;
@@ -216,7 +216,7 @@ export async function getProjectCompletedContracts(accountId: AccountId) {
   const contracts = await viewCall<ContractId[]>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_project_completed_contributions",
-    { account_id: accountId }
+    { account_id: accountId },
   );
 
   const parsedHistories = contractsListSchema.parse(contracts);
@@ -232,7 +232,7 @@ export async function getBackersDigest(accountId: AccountId) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.API_KEY}`,
       },
-    }
+    },
   );
   return backersDigestSchema.parse(await response.json());
 }
@@ -255,7 +255,7 @@ export async function hasBackersDigest(accountId: AccountId) {
 
 export async function updateBackersDigest(
   accountId: AccountId,
-  backersDigest: BackersDigest
+  backersDigest: BackersDigest,
 ) {
   return fetch(`${env.API_URL}/data/projects/${accountId}/backers-digest`, {
     method: "PUT",
@@ -276,7 +276,7 @@ export async function addBackersDigestToken(accountId: AccountId) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.API_KEY}`,
       },
-    }
+    },
   );
 
   return (await response.json()) as string;
@@ -284,20 +284,33 @@ export async function addBackersDigestToken(accountId: AccountId) {
 
 export async function checkBackersDigestPermission(
   accountId: AccountId,
-  user?: IronSession["user"] | null
+  user: User,
 ) {
-  const isBacker = !!user && (await hasBacker(user.accountId));
-  const backersDigest = await getBackersDigest(accountId);
-  const isOwner = !!user && user.accountId === accountId;
-  const isPublished = !!backersDigest.published;
+  if (!user.logedIn) {
+    return false;
+  }
+
+  if (user.accountId === accountId) {
+    return true;
+  }
+
+  const [isBacker, backersDigest] = await Promise.all([
+    hasBacker(user.accountId),
+    getBackersDigest(accountId),
+  ]);
+
+  if (!backersDigest.published) {
+    return false;
+  }
+
+  if (isBacker) {
+    return true;
+  }
+
   const list = headers();
   const referer = list.get("referer");
 
   const from = referer ? new URL(referer).searchParams.get("from") : null;
   // const hasToken = !!token && token === backersDigest.token;
-  const isFromBackerView = !!from && from === backersViewFromKey;
-
-  return (
-    isOwner || (isPublished && (isBacker || /* hasToken || */ isFromBackerView))
-  );
+  return !!from && from === backersViewFromKey;
 }

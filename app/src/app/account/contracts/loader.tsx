@@ -12,7 +12,7 @@ import { getProjectContracts } from "~/lib/server/projects";
 export async function Loader() {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
 

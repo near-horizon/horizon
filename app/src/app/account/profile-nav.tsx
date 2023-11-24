@@ -20,9 +20,13 @@ export function ProfileNav() {
 
   let items = PROJECT_MENU;
 
-  if (user?.hasProfile && user.profileType === "project") {
+  if (!user.logedIn) {
+    return <></>;
+  }
+
+  if (user.hasProfile && user.profileType === "project") {
     items = PROJECT_MENU_DIGEST;
-  } else if (user?.hasProfile && user.profileType === "contributor") {
+  } else if (user.hasProfile && user.profileType === "contributor") {
     items = CONTRIBUTOR_MENU;
   } else {
     items = BACKER_MENU;

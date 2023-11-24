@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -15,8 +16,14 @@ import type { Incentives } from "~/lib/validation/incentives";
 export default async function Page() {
   const user = await getUserFromSession();
 
-  const transactions = await getFilteredTransactions(user?.accountId ?? "");
-  const incentives = await getIncentives();
+  if (!user.logedIn) {
+    return redirect("/login");
+  }
+
+  const [transactions, incentives] = await Promise.all([
+    getFilteredTransactions(user.accountId),
+    getIncentives(),
+  ]);
 
   return (
     <Table>

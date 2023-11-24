@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import {
+  removeUser,
   setUser,
   setWalletSelector,
   setWalletSelectorModal,
@@ -21,14 +22,14 @@ export function useWalletSelectorEffect() {
           const account = state.accounts.at(0);
           // If no account is selected, clear the user
           if (!account) {
-            setUser(undefined);
+            removeUser();
             return;
           }
 
-          // Check the current session
+          // Check the current session by fetching from the server
           const user = await getUser();
           // If the user is already logged in, check if the account is the same
-          if (user && user.accountId === account.accountId) {
+          if (user.logedIn && user.accountId === account.accountId) {
             // If the account is the same, update the user
             setUser(user);
           } else {
@@ -67,7 +68,7 @@ export function useWalletSelectorEffect() {
           try {
             // Log out
             await logout();
-            setUser(undefined);
+            removeUser();
           } catch (e) {
             console.error(e);
           }

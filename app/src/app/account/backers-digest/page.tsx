@@ -11,7 +11,7 @@ import { cn } from "~/lib/utils";
 export default async function BackersDigestPage() {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
 
@@ -68,7 +68,7 @@ export default async function BackersDigestPage() {
                 {
                   "border-primary bg-primary-light text-primary":
                     backersDigest?.published,
-                }
+                },
               )}
             >
               {backersDigest?.published ? "Published" : "Draft"}

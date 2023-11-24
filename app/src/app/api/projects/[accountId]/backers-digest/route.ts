@@ -5,17 +5,17 @@ import {
   getBackersDigest,
   updateBackersDigest,
 } from "~/lib/server/projects";
-import { getUserFromRequest } from "~/lib/session";
+import { getUserFromSession } from "~/lib/session";
 import { backersDigestSchema } from "~/lib/validation/projects";
 
 export async function GET(
-  req: NextRequest,
-  { params: { accountId } }: { params: { accountId: string } }
+  _req: NextRequest,
+  { params: { accountId } }: { params: { accountId: string } },
 ) {
-  const user = await getUserFromRequest(req);
+  const user = await getUserFromSession();
 
   if (
-    !user?.accountId ||
+    !user.logedIn ||
     user.accountId !== accountId ||
     (await hasBacker(user.accountId))
   ) {
@@ -27,11 +27,11 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params: { accountId } }: { params: { accountId: string } }
+  { params: { accountId } }: { params: { accountId: string } },
 ) {
-  const user = await getUserFromRequest(req);
+  const user = await getUserFromSession();
 
-  if (!user?.accountId || user.accountId !== accountId) {
+  if (!user.logedIn || user.accountId !== accountId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -51,18 +51,18 @@ export async function PUT(
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to unlock perk!" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function POST(
-  req: NextRequest,
-  { params: { accountId } }: { params: { accountId: string } }
+  _req: NextRequest,
+  { params: { accountId } }: { params: { accountId: string } },
 ) {
-  const user = await getUserFromRequest(req);
+  const user = await getUserFromSession();
 
-  if (!user?.accountId || user.accountId !== accountId) {
+  if (!user.logedIn || user.accountId !== accountId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -72,7 +72,7 @@ export async function POST(
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to unlock perk!" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

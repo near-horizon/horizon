@@ -7,7 +7,7 @@ import { Data, DataSkeleton } from "./data";
 
 export default async function FundingInfo() {
   const user = await getUserFromSession();
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
   const project = await getProject(user.accountId);

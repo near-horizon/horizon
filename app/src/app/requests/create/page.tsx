@@ -6,7 +6,7 @@ import { RequestsCreate } from "./create";
 export default async function RequestCreatePage() {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
 

@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { z } from "zod";
 import { env } from "~/env.mjs";
@@ -13,7 +13,7 @@ const imageGenerationSchema = z.object({
 export async function POST(req: NextRequest) {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: "Couldn't generate image" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   const file = new File(
     [toArrayBuffer(Buffer.from(response.data[0].b64_json, "base64"))],
     `${user.accountId}-${imageName ?? "image"}.png`,
-    { type: "image/png" }
+    { type: "image/png" },
   );
   let cid;
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: "Couldn't upload image" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
