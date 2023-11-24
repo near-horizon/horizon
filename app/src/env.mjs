@@ -20,7 +20,7 @@ export const env = createEnv({
       .string()
       .optional()
       .default(
-        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work.",
+        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work."
       ),
   },
 
