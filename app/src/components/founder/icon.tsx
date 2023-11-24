@@ -36,13 +36,13 @@ export function FounderIcon({
       <img
         alt={data?.name}
         src={
-          loading || status === "loading"
+          loading || status === "pending"
             ? "https://img.icons8.com/?size=512&id=Dajn8muCcSHe&format=png"
             : image ||
               "https://img.icons8.com/?size=512&id=Dajn8muCcSHe&format=png"
         }
         className={clsx("h-full w-full object-contain", {
-          "animate-pulse": status === "loading",
+          "animate-pulse": status === "pending",
         })}
       />
     </div>

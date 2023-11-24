@@ -8,7 +8,7 @@ import { query } from "~/lib/constants/pagination";
 export function ContributorsListSection({ count }: { count: number }) {
   const { data: contributors, status } = useContributors(query);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <ContributorsListSectionSkeleton />;
   }
 

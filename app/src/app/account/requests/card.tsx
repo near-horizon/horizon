@@ -20,7 +20,7 @@ import { DATE, NUMBER } from "~/lib/format";
 export function Card({ accountId, cid }: { accountId: AccountId; cid: CID }) {
   const { data: request, status } = useRequest(accountId, cid);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <CardSkeleton />;
   }
 

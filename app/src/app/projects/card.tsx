@@ -29,7 +29,7 @@ export function Project({
   const { data: requests, status: requestStatus } =
     useProjectRequests(accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <ProjectSkeleton />;
   }
 
@@ -43,7 +43,7 @@ export function Project({
 
   let requestsSection;
 
-  if (requestStatus === "loading") {
+  if (requestStatus === "pending") {
     requestsSection = <Skeleton className="h-4 w-32" />;
   } else if (requestStatus === "error") {
     requestsSection = (

@@ -34,7 +34,7 @@ export default function GrowthProgramCard({
             <Image
               src={program.imageSrc}
               alt={program.name}
-              objectFit="contain"
+              className="object-contain"
               fill
               unoptimized
             />

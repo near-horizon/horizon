@@ -1,12 +1,15 @@
-import { Hydrate, dehydrate } from "@tanstack/react-query";
-import getQueryClient from "~/app/query-client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
 import { Backers } from "./backers";
 import { getBacker, getBackers } from "~/lib/server/backers";
 
 export default async function BackersPage() {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   const backers = await getBackers({ limit: pageSize });
 
   queryClient.setQueryData(["backers-paginated"], {
@@ -16,7 +19,8 @@ export default async function BackersPage() {
 
   await Promise.all([
     backers.map((accountId) =>
-      queryClient.prefetchQuery(["backer", accountId], {
+      queryClient.prefetchQuery({
+        queryKey: ["backer", accountId],
         queryFn: async () => {
           const c = await getBacker(accountId);
           return removeEmpty(c);
@@ -26,8 +30,8 @@ export default async function BackersPage() {
   ]);
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Backers />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

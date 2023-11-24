@@ -1,6 +1,9 @@
-import { Hydrate, dehydrate } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { redirect } from "next/navigation";
-import getQueryClient from "~/app/query-client";
 import { getUserFromSession } from "~/lib/session";
 import { removeEmpty } from "~/lib/utils";
 import { List } from "./list";
@@ -13,7 +16,7 @@ export async function Loader() {
     return redirect("/login");
   }
 
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["requests", user.accountId],
     queryFn: async () => {
@@ -23,8 +26,8 @@ export async function Loader() {
   });
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <List accountId={user.accountId} />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

@@ -48,7 +48,7 @@ export function GlobalSearchBar() {
       </Button>
       {toSearch !== "" && (
         <div className="absolute left-0 top-full z-50 mt-2 hidden w-full rounded-lg bg-white p-4 shadow group-focus-within:block">
-          {status === "loading" ? (
+          {status === "pending" ? (
             <SearchLoader />
           ) : status === "error" ? (
             <div className="flex h-full w-full flex-col items-center justify-center">

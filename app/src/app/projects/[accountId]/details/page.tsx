@@ -65,7 +65,7 @@ function General({ project }: { project: Project }) {
         {/* <Detail */}
         {/*   label="Point of contact" */}
         {/*   value={<PointOfContact telegram={data?.linktree?.telegram} />} */}
-        {/*   loading={status === "loading"} */}
+        {/*   loading={status === "pending"} */}
         {/* /> */}
         <Detail label="Social links">
           <Socials links={project.linktree ?? {}} />

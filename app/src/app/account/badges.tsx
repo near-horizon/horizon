@@ -14,7 +14,7 @@ export function ProjectBadge({
   const user = useUser();
   const { data, status } = useProjectCompletion(user?.accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <Skeleton className="h-3 w-3 rounded-full" />;
   }
 
@@ -33,7 +33,7 @@ export function ContributorBadge({
   const user = useUser();
   const { data, status } = useContributorCompletion(user?.accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <Skeleton className="h-3 w-3 rounded-full" />;
   }
 

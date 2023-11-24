@@ -51,7 +51,9 @@ export function useSocialSet(): [
         setProgress({ value: 100, label: "Transaction signed" });
       },
       onSuccess: async (_, { accountId }) => {
-        await queryClient.invalidateQueries(["profile", accountId]);
+        await queryClient.invalidateQueries({
+          queryKey: ["profile", accountId],
+        });
       },
     }),
   ];

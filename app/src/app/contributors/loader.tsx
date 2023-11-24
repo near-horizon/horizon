@@ -1,5 +1,8 @@
-import { Hydrate, dehydrate } from "@tanstack/react-query";
-import getQueryClient from "../query-client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { ContributorsListSection } from "./list";
 import { removeEmpty } from "~/lib/utils";
 import { query } from "~/lib/constants/pagination";
@@ -7,7 +10,7 @@ import { getContributor, getContributors } from "~/lib/server/contributors";
 import { getStats } from "~/lib/server/transactions";
 
 export async function ContributorsListSectionLoader() {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   const [contributors, { contributors: count }] = await Promise.all([
     getContributors(query),
     getStats(),
@@ -28,8 +31,8 @@ export async function ContributorsListSectionLoader() {
   );
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <ContributorsListSection count={count} />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

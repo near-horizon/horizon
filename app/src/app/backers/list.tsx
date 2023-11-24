@@ -8,7 +8,7 @@ import { query } from "~/lib/constants/pagination";
 export function BackersListSection({ count }: { count: number }) {
   const { data: backers, status } = useBackers(query);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <BackersListSectionSkeleton />;
   }
 

@@ -1,4 +1,3 @@
-import ContentTabs from "~/components/ui/content-tabs";
 import { getUserFromSession } from "~/lib/session";
 import {
   checkBackersDigestPermission,

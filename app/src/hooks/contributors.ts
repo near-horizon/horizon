@@ -36,8 +36,9 @@ export function useContributors(query: ContributorsQuery) {
 export function usePaginatedContributors() {
   return useInfiniteQuery({
     queryKey: ["contributors-paginated"],
-    queryFn: ({ pageParam }) => getPaginatedContributors(pageParam as number),
-    getNextPageParam: (lastPage, _pageParam) =>
+    queryFn: ({ pageParam }) => getPaginatedContributors(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });
 }
@@ -207,7 +208,9 @@ export function useUpdateContributor(): [
         }
       },
       onSuccess: async (_, { accountId }) => {
-        await queryClient.invalidateQueries(["contributor", accountId]);
+        await queryClient.invalidateQueries({
+          queryKey: ["contributor", accountId],
+        });
       },
     }),
   ];

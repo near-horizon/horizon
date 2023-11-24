@@ -28,7 +28,7 @@ export function Request({
   const { data, status } = useRequest(accountId, cid);
   const { data: project, status: projectStatus } = useProject(accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <RequestSkeleton />;
   }
 
@@ -49,7 +49,7 @@ export function Request({
         Error loading project with account ID {accountId}
       </span>
     );
-  } else if (projectStatus === "loading") {
+  } else if (projectStatus === "pending") {
     projectSection = (
       <h3 className="flex flex-row items-start justify-start gap-4">
         <Skeleton className="h-7 w-7 rounded" />

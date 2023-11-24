@@ -35,8 +35,9 @@ export function useBackers(query: BackersQuery) {
 export function usePaginatedBackers() {
   return useInfiniteQuery({
     queryKey: ["backers-paginated"],
-    queryFn: ({ pageParam }) => getPaginatedBackers(pageParam as number),
-    getNextPageParam: (lastPage, _pageParam) =>
+    queryFn: ({ pageParam }) => getPaginatedBackers(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });
 }
@@ -206,7 +207,9 @@ export function useUpdateBacker(): [
         }
       },
       onSuccess: async (_, { accountId }) => {
-        await queryClient.invalidateQueries(["backer", accountId]);
+        await queryClient.invalidateQueries({
+          queryKey: ["backer", accountId],
+        });
       },
     }),
   ];

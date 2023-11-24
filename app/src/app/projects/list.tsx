@@ -8,7 +8,7 @@ import { query } from "~/lib/constants/pagination";
 export function ProjectsListSection({ count }: { count: number }) {
   const { data: projects, status } = useProjects(query);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <ProjectsListSectionSkeleton />;
   }
 

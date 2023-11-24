@@ -10,7 +10,7 @@ import { NoData } from "~/components/empty";
 export function List({ accountId }: { accountId: AccountId }) {
   const { data: requests, status } = useProjectRequests(accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <Skeleton />;
   }
 

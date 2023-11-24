@@ -1,5 +1,8 @@
-import { dehydrate, Hydrate } from "@tanstack/react-query";
-import getQueryClient from "~/app/query-client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { Projects } from "./projects";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
@@ -10,7 +13,7 @@ import {
 } from "~/lib/server/projects";
 
 export default async function ProjectsPage() {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   const [projects, count] = await Promise.all([
     getProjects({ limit: pageSize }),
     getProjectsCount({}),
@@ -25,7 +28,8 @@ export default async function ProjectsPage() {
 
   await Promise.all([
     projects.map((accountId) =>
-      queryClient.prefetchQuery(["project", accountId], {
+      queryClient.prefetchQuery({
+        queryKey: ["project", accountId],
         queryFn: async () => {
           const p = await getProject(accountId);
           return removeEmpty(p);
@@ -35,8 +39,8 @@ export default async function ProjectsPage() {
   ]);
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Projects />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }
