@@ -54,7 +54,7 @@ export function Proposal({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {status === "loading" ? (
+        {status === "pending" ? (
           <DescriptionSkeleton />
         ) : (
           <Description text={data?.description ?? ""} />

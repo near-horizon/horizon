@@ -1,12 +1,15 @@
-import { Hydrate, dehydrate } from "@tanstack/react-query";
-import getQueryClient from "~/app/query-client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
 import { Contributors } from "./contributors";
 import { getContributor, getContributors } from "~/lib/server/contributors";
 
 export default async function ContributorsPage() {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   const contributors = await getContributors({ limit: pageSize });
 
   queryClient.setQueryData(["contributors-paginated"], {
@@ -16,7 +19,8 @@ export default async function ContributorsPage() {
 
   await Promise.all([
     contributors.map((accountId) =>
-      queryClient.prefetchQuery(["contributor", accountId], {
+      queryClient.prefetchQuery({
+        queryKey: ["contributor", accountId],
         queryFn: async () => {
           const c = await getContributor(accountId);
           return removeEmpty(c);
@@ -26,8 +30,8 @@ export default async function ContributorsPage() {
   ]);
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Contributors />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

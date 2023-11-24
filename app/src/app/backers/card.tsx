@@ -12,7 +12,7 @@ import { Icon } from "~/components/icon";
 export function Backer({ accountId }: { accountId: AccountId }) {
   const { data, status } = useBacker(accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <BackerSkeleton />;
   }
 

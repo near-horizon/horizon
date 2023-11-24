@@ -142,7 +142,7 @@ export default function BackersDigestForm() {
     }
   }, [publishProgress, toast]);
 
-  if (!user || (!data && status !== "loading")) {
+  if (!user || (!data && status !== "pending")) {
     return redirect("/login");
   }
 

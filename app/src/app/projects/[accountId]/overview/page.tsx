@@ -29,7 +29,7 @@ export default async function ProjectOverview({
                 {/* <Detail */}
                 {/*   label="Point of contact" */}
                 {/*   value={<PointOfContact telegram={data?.linktree?.telegram} />} */}
-                {/*   loading={status === "loading"} */}
+                {/*   loading={status === "pending"} */}
                 {/* /> */}
                 <Detail label="Social links">
                   <Socials links={data?.linktree ?? {}} />

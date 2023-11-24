@@ -1,5 +1,8 @@
-import { Hydrate, dehydrate } from "@tanstack/react-query";
-import getQueryClient from "../query-client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { ProjectsListSection } from "./list";
 import { removeEmpty } from "~/lib/utils";
 import { query } from "~/lib/constants/pagination";
@@ -7,7 +10,7 @@ import { getProject, getProjects } from "~/lib/server/projects";
 import { getStats } from "~/lib/server/transactions";
 
 export async function ProjectsListSectionLoader() {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   const [projects, { projects: count }] = await Promise.all([
     getProjects(query),
     getStats(),
@@ -28,8 +31,8 @@ export async function ProjectsListSectionLoader() {
   );
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <ProjectsListSection count={count} />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

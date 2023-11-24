@@ -20,7 +20,7 @@ import { Icon } from "~/components/icon";
 export function Contributor({ accountId }: { accountId: AccountId }) {
   const { data, status } = useContributor(accountId);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <ContributorSkeleton />;
   }
 

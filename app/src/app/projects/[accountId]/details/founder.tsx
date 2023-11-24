@@ -28,12 +28,12 @@ export function Founder({
         target="_blank"
         referrerPolicy="origin"
       >
-        {status === "loading" || loading ? (
+        {status === "pending" || loading ? (
           <Skeleton className="h-4 w-full" />
         ) : (
           <b>{data?.name}</b>
         )}
-        {status === "loading" || loading ? (
+        {status === "pending" || loading ? (
           <Skeleton className="h-4 w-full" />
         ) : (
           <span>{accountId}</span>

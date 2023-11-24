@@ -50,8 +50,9 @@ export function usePaginatedProjects(query?: ProjectsQuery) {
   return useInfiniteQuery({
     queryKey: ["projects-paginated", query],
     queryFn: ({ pageParam, queryKey: [, query] }) =>
-      getPaginatedProjects(pageParam as number, query as ProjectsQuery),
-    getNextPageParam: (lastPage, _pageParam) =>
+      getPaginatedProjects(pageParam, query as ProjectsQuery),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });
 }
@@ -59,8 +60,9 @@ export function usePaginatedProjects(query?: ProjectsQuery) {
 export function useBackerPaginatedProjects() {
   return useInfiniteQuery({
     queryKey: ["backer-projects-paginated"],
-    queryFn: ({ pageParam }) => getBackerPaginatedProjects(pageParam as number),
-    getNextPageParam: (lastPage, _pageParam) =>
+    queryFn: ({ pageParam }) => getBackerPaginatedProjects(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });
 }
@@ -334,7 +336,9 @@ export function useUpdateProject(): [
         }
       },
       onSuccess: async (_, { accountId }) => {
-        await queryClient.invalidateQueries(["project", accountId]);
+        await queryClient.invalidateQueries({
+          queryKey: ["project", accountId],
+        });
       },
     }),
   ];

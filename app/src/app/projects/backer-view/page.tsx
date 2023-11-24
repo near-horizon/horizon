@@ -1,5 +1,8 @@
-import { dehydrate, Hydrate } from "@tanstack/react-query";
-import getQueryClient from "~/app/query-client";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { BackerProjects } from "./projects";
 import { removeEmpty } from "~/lib/utils";
 import { pageSize } from "~/lib/constants/pagination";
@@ -7,7 +10,7 @@ import { getProject, getProjects } from "~/lib/server/projects";
 import { env } from "~/env.mjs";
 
 export default async function BackersProjectsPage() {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   const projects = await getProjects({ limit: pageSize, fundraising: true });
 
   queryClient.setQueryData(["backer-projects-paginated"], {
@@ -17,7 +20,8 @@ export default async function BackersProjectsPage() {
 
   await Promise.all([
     projects.map((accountId) =>
-      queryClient.prefetchQuery(["project", accountId], {
+      queryClient.prefetchQuery({
+        queryKey: ["project", accountId],
         queryFn: async () => {
           const p = await getProject(accountId);
           return removeEmpty(p);
@@ -27,8 +31,8 @@ export default async function BackersProjectsPage() {
   ]);
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <BackerProjects backerViewKey={env.SESSION_PASSWORD} />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

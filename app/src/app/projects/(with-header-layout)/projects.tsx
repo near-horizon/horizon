@@ -102,7 +102,7 @@ export function Projects() {
               ))}
             </React.Fragment>
           ))
-        ) : status === "loading" ? (
+        ) : status === "pending" ? (
           <>
             {[...Array(pageSize).keys()].map((item) => (
               <li key={item}>

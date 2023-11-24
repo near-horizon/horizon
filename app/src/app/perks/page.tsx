@@ -1,7 +1,10 @@
-import { dehydrate, Hydrate } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { Perks } from "./perks";
 import { getUserFromSession } from "~/lib/session";
-import getQueryClient from "../query-client";
 import { getPerks } from "~/lib/server/perks";
 
 export default async function PerksPage() {
@@ -14,13 +17,13 @@ export default async function PerksPage() {
     perks = await getPerks(user.accountId);
   }
 
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
 
   queryClient.setQueryData(["perks"], perks);
 
   return (
-    <Hydrate state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Perks noButton={!user} />
-    </Hydrate>
+    </HydrationBoundary>
   );
 }

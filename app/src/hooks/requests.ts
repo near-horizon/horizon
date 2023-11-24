@@ -28,8 +28,9 @@ export function useRequests(query: RequestsQuery) {
 export function usePaginatedRequests() {
   return useInfiniteQuery({
     queryKey: ["requests-paginated"],
-    queryFn: ({ pageParam }) => getPaginatedRequests(pageParam as number),
-    getNextPageParam: (lastPage, _pageParam) =>
+    queryFn: ({ pageParam }) => getPaginatedRequests(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
       lastPage.items.length < pageSize ? undefined : lastPage.next,
   });
 }
@@ -128,7 +129,9 @@ export function useUpdateBacker(): [
         setProgress({ value: 100, label: "On-chain data saved!" });
       },
       onSuccess: async (_, { accountId, request: { cid } }) => {
-        await queryClient.invalidateQueries(["request", accountId, cid]);
+        await queryClient.invalidateQueries({
+          queryKey: ["request", accountId, cid],
+        });
       },
     }),
   ];

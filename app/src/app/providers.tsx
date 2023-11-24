@@ -3,16 +3,15 @@
 import "~/styles/globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 import { setUser } from "~/stores/global";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 import { type IronSession } from "iron-session";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { useWalletSelectorEffect } from "~/hooks/selector";
-import { ProgressBar } from "./progress-bar";
+import { ProgressBar } from "~/providers/progress-bar";
 import { Toaster } from "~/components/ui/toaster";
 import { usePathname } from "next/navigation";
 import { redirectOnboarding } from "~/lib/auth";
-import { GTagScripts } from "./gtag";
+import { GTagScripts } from "~/providers/gtag";
+import { QueryClientProvider } from "~/providers/query-client-provider";
 
 export function Providers({
   children,
@@ -21,13 +20,12 @@ export function Providers({
   children?: React.ReactNode;
   user?: IronSession["user"] | null;
 }) {
-  const [queryClient] = useState(() => new QueryClient());
   useWalletSelectorEffect();
   setUser(user ? user : undefined);
   useOnboardingRedirect({ user });
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider>
       <TooltipProvider>
         <ProgressBar>{children}</ProgressBar>
         <Toaster />

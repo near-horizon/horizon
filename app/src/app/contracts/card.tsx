@@ -43,10 +43,10 @@ export function Contract({
     useContributor(contributorId);
 
   if (
-    status === "loading" ||
-    requestStatus === "loading" ||
-    proposalStatus === "loading" ||
-    contributorStatus === "loading"
+    status === "pending" ||
+    requestStatus === "pending" ||
+    proposalStatus === "pending" ||
+    contributorStatus === "pending"
   ) {
     return <ContractSkeleton />;
   }

@@ -8,7 +8,7 @@ import { query } from "~/lib/constants/pagination";
 export function RequestsListSection({ count }: { count: number }) {
   const { data: backers, status } = useRequests(query);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return <RequestsListSectionSkeleton />;
   }
 
