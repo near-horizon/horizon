@@ -53,7 +53,6 @@ export function ProposalForm({
   const form = useZodForm(formSchema, {
     defaultValues: {
       request_id: [accountId, cid],
-      vendor_id: user!.accountId,
       title: request?.title,
       price: request?.budget,
       payment_type: request?.payment_type,
@@ -61,13 +60,15 @@ export function ProposalForm({
       proposal_type: request?.request_type,
       start_date: new Date().toISOString(),
       end_date: new Date(
-        Number(request?.deadline.substring(0, 13))
+        Number(request?.deadline.substring(0, 13)),
       ).toISOString(),
       description: "",
     },
   });
   const [progress, createProposal] = useCreateProposal();
-  const formId = `proposal-${accountId}-${cid}-${user?.accountId}`;
+  const formId = `proposal-${accountId}-${cid}-${
+    user.logedIn ? user.accountId : user.logedIn
+  }`;
   useLocalSaveForm(form, formSchema, formId);
 
   if (progress.value > 0 && progress.value < 100) {
@@ -90,6 +91,10 @@ export function ProposalForm({
     );
   }
 
+  if (!user.logedIn) {
+    return <div>Log in to send a proposal</div>;
+  }
+
   return (
     <div className="mx-auto flex w-full flex-col items-center justify-start gap-16">
       <Form {...form}>
@@ -101,6 +106,7 @@ export function ProposalForm({
             createProposal.mutate({
               proposal: {
                 ...proposal,
+                vendor_id: user.accountId,
                 start_date: `${new Date(proposal.start_date).getTime()}`,
                 end_date: `${new Date(proposal.end_date).getTime()}`,
               },

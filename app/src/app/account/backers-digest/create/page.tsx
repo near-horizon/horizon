@@ -58,8 +58,10 @@ export default function BackersDigestForm() {
       founders: [{}],
     },
   });
-  const { data, status } = useProject(user?.accountId ?? "");
-  const { data: backersDigest } = useBackersDigest(user?.accountId ?? "");
+  const { data, status } = useProject(user.logedIn ? user.accountId : "");
+  const { data: backersDigest } = useBackersDigest(
+    user.logedIn ? user.accountId : "",
+  );
   const traction = useFieldArray({
     control: form.control,
     name: "traction",
@@ -77,7 +79,7 @@ export default function BackersDigestForm() {
       Number(form.watch("email") !== "") +
       Number(form.watch("calendly_link") !== "") +
       Number(Object.keys(form.watch("linktree") ?? {}).length > 0)) /
-      8.0
+      8.0,
   );
   const presentationCompleted =
     Number((form.watch("demo") ?? "") !== "") +
@@ -142,7 +144,7 @@ export default function BackersDigestForm() {
     }
   }, [publishProgress, toast]);
 
-  if (!user || (!data && status !== "pending")) {
+  if (!user.logedIn || (!data && status !== "pending")) {
     return redirect("/login");
   }
 
@@ -207,7 +209,7 @@ export default function BackersDigestForm() {
                   {
                     "border-primary bg-primary-light text-primary":
                       backersDigest?.published,
-                  }
+                  },
                 )}
               >
                 {backersDigest?.published ? "Published" : "Draft"}

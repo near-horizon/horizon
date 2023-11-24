@@ -14,6 +14,7 @@ import { CardFlip } from "~/components/animation/card-flip";
 import { cn } from "~/lib/utils";
 import { FormBuilder } from "~/components/inputs/form-builder";
 import { NUMBER } from "~/lib/format";
+import { redirect } from "next/navigation";
 
 export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   children,
@@ -36,6 +37,8 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
   const toggleEdit = () => setEdit((prev) => !prev);
 
   const [progressUpdate, updateProject] = useUpdateProject();
+
+  if (!user.logedIn) return redirect("/login");
 
   return (
     <MotionDiv
@@ -82,7 +85,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
             progress={progressUpdate}
             onSubmit={async function (project) {
               await updateProject.mutateAsync({
-                accountId: user?.accountId ?? "",
+                accountId: user.accountId,
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 project,
@@ -113,7 +116,7 @@ export function ProfileLayout<Schema extends z.ZodObject<FieldValues>>({
                       variant="default"
                       className={cn(
                         "flex flex-row items-center justify-center gap-1",
-                        { "opacity-50": isDisabled }
+                        { "opacity-50": isDisabled },
                       )}
                     >
                       <CheckSvg className="h-5 w-5" />

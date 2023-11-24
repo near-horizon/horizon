@@ -10,7 +10,7 @@ export default async function RequestProposals({
   params: { accountId: AccountId; cid: CID };
 }) {
   const user = await getUserFromSession();
-  const isAdmin = !!user && user.accountId === accountId;
+  const isAdmin = user.logedIn && user.accountId === accountId;
 
   if (!isAdmin) {
     return redirect(`/requests/${accountId}/${cid}/overview`);

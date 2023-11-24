@@ -1,14 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { unlockPerk } from "~/lib/server/perks";
-import { getUserFromRequest } from "~/lib/session";
+import { getUserFromSession } from "~/lib/session";
 
 export async function POST(
-  req: NextRequest,
-  { params: { perkId } }: { params: { perkId: string } }
+  _req: NextRequest,
+  { params: { perkId } }: { params: { perkId: string } },
 ) {
-  const user = await getUserFromRequest(req);
+  const user = await getUserFromSession();
 
-  if (!user?.accountId) {
+  if (!user.logedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -18,7 +18,7 @@ export async function POST(
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to unlock perk!" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

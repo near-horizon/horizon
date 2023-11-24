@@ -23,7 +23,9 @@ import { routes } from "~/lib/constants/navigation/public";
 export function NavLinks() {
   const [, section, sub] = usePathname()?.split("/");
   const user = useUser();
-  const { data: isBacker } = useHasBacker(user?.accountId);
+  const { data: isBacker } = useHasBacker(
+    user.logedIn ? user.accountId : undefined,
+  );
 
   return (
     <NavigationMenu
@@ -40,7 +42,7 @@ export function NavLinks() {
                   "flex flex-row items-center justify-start gap-2",
                   {
                     "text-text-link": `/${section}` === route.href,
-                  }
+                  },
                 )}
               >
                 {route.name}
@@ -56,7 +58,7 @@ export function NavLinks() {
                   {
                     "text-text-link":
                       `/${section}/${sub}` === "/projects/backer-view",
-                  }
+                  },
                 )}
               >
                 <>
@@ -66,7 +68,7 @@ export function NavLinks() {
               </NavigationMenuLink>
             </NavigationMenuItem>
           )}
-          {user?.admin && (
+          {user.logedIn && user.admin && (
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/admin"
@@ -74,7 +76,7 @@ export function NavLinks() {
                   "flex flex-row items-center justify-start gap-2",
                   {
                     "text-text-link": `/${section}` === "/admin",
-                  }
+                  },
                 )}
               >
                 <>
@@ -93,7 +95,9 @@ export function NavLinks() {
 export function MobileNavLinks() {
   const [, section, sub] = usePathname()?.split("/");
   const user = useUser();
-  const { data: isBacker } = useHasBacker(user?.accountId);
+  const { data: isBacker } = useHasBacker(
+    user.logedIn ? user.accountId : undefined,
+  );
 
   return (
     <DropdownMenu>
@@ -113,7 +117,7 @@ export function MobileNavLinks() {
                   <Separator
                     key={`${route.href}-${list.length}`}
                     className="h-px w-full bg-ui-elements-light"
-                  />
+                  />,
                 );
               }
 
@@ -125,12 +129,12 @@ export function MobileNavLinks() {
                       "flex w-full flex-row items-center justify-start gap-2",
                       {
                         "text-text-link": `/${section}` === route.href,
-                      }
+                      },
                     )}
                   >
                     {route.name}
                   </NavigationMenuLink>
-                </NavigationMenuItem>
+                </NavigationMenuItem>,
               );
 
               return list;
@@ -146,7 +150,7 @@ export function MobileNavLinks() {
                       {
                         "text-text-link":
                           `/${section}/${sub}` === "/projects/backer-view",
-                      }
+                      },
                     )}
                   >
                     <>
@@ -157,7 +161,7 @@ export function MobileNavLinks() {
                 </NavigationMenuItem>
               </>
             )}
-            {user?.admin && (
+            {user.logedIn && user.admin && (
               <>
                 <Separator className="h-px w-full bg-ui-elements-light" />
                 <NavigationMenuItem>
@@ -167,7 +171,7 @@ export function MobileNavLinks() {
                       "flex flex-row items-center justify-start gap-2",
                       {
                         "text-text-link": `/${section}` === "/admin",
-                      }
+                      },
                     )}
                   >
                     <>

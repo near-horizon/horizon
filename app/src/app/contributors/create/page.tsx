@@ -6,7 +6,7 @@ import { ContributorsCreate } from "./create";
 export default async function ProjectCreatePage() {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
 

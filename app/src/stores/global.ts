@@ -3,26 +3,27 @@ import {
   type WalletSelector,
 } from "@near-wallet-selector/core";
 import { type WalletSelectorModal } from "@near-wallet-selector/modal-ui";
-import { type IronSession } from "iron-session";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { create } from "zustand";
 import { logout } from "~/lib/client/auth";
+import { DEFAULT_USER, type User } from "~/lib/validation/user";
 
 interface GlobalStore {
   selector: WalletSelector | null;
   modal: WalletSelectorModal | null;
-  user: IronSession["user"];
+  user: User;
 }
 
 export const useGlobalStore = create<GlobalStore>()(() => ({
   selector: null,
   modal: null,
-  user: undefined,
+  user: DEFAULT_USER,
 }));
 
-export const setUser = (user: IronSession["user"]) =>
-  useGlobalStore.setState({ user });
+export const setUser = (user: User) => useGlobalStore.setState({ user });
+
+export const removeUser = () => useGlobalStore.setState({ user: DEFAULT_USER });
 
 export const useUser = () => useGlobalStore((state) => state.user);
 
@@ -40,7 +41,7 @@ export const useWalletSelectorModal = () =>
 
 export const useAccountId = () =>
   useGlobalStore(
-    (state) => state.selector?.store.getState().accounts[0]?.accountId
+    (state) => state.selector?.store.getState().accounts[0]?.accountId,
   );
 
 export function useSignIn() {
@@ -51,7 +52,7 @@ export function useSignIn() {
       event.preventDefault();
       modal?.show();
     },
-    [modal]
+    [modal],
   );
 }
 
@@ -66,13 +67,13 @@ export function useSignOut() {
         const wallet = await selector?.wallet();
         await wallet?.signOut();
         await logout();
-        setUser(undefined);
+        removeUser();
         router.refresh();
       } catch (err) {
         console.error("Could not sign out:", err);
       }
     },
-    [selector, router]
+    [selector, router],
   );
 }
 
@@ -102,7 +103,7 @@ export function useSignTx() {
         console.error("Could not sign tx:", err);
       }
     },
-    [selector]
+    [selector],
   );
 }
 
@@ -120,6 +121,6 @@ export function useSignTxs() {
         console.error("Could not sign txs:", err);
       }
     },
-    [selector]
+    [selector],
   );
 }

@@ -1,9 +1,6 @@
 "use client";
 
-import "~/styles/globals.css";
-import "@near-wallet-selector/modal-ui/styles.css";
 import { setUser } from "~/stores/global";
-import { type IronSession } from "iron-session";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { useWalletSelectorEffect } from "~/hooks/selector";
 import { ProgressBar } from "~/providers/progress-bar";
@@ -12,17 +9,18 @@ import { usePathname } from "next/navigation";
 import { redirectOnboarding } from "~/lib/auth";
 import { GTagScripts } from "~/providers/gtag";
 import { QueryClientProvider } from "~/providers/query-client-provider";
+import { type User } from "~/lib/validation/user";
 
 export function Providers({
   children,
   user,
 }: {
   children?: React.ReactNode;
-  user?: IronSession["user"] | null;
+  user: User;
 }) {
   useWalletSelectorEffect();
-  setUser(user ? user : undefined);
-  useOnboardingRedirect({ user });
+  setUser(user);
+  useOnboardingRedirect(user);
 
   return (
     <QueryClientProvider>
@@ -35,16 +33,12 @@ export function Providers({
   );
 }
 
-function useOnboardingRedirect({
-  user,
-}: {
-  user?: IronSession["user"] | null;
-}) {
+function useOnboardingRedirect(user: User) {
   const pathname = usePathname();
   const isOnboarding = pathname.includes("/onboarding");
   const isCreate = pathname.includes("/create");
 
-  if (user && !(isOnboarding || isCreate) && !user.hasProfile) {
+  if (!(isOnboarding || isCreate) && user.logedIn && !user.hasProfile) {
     return redirectOnboarding();
   }
 }

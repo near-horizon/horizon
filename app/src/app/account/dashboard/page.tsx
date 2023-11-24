@@ -29,9 +29,9 @@ import { DATE } from "~/lib/format";
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
-  const hasProfile = user?.accountId ? await hasProject(user.accountId) : false;
+  const hasProfile = user.logedIn ? await hasProject(user.accountId) : false;
 
-  if (!user || !hasProfile) {
+  if (!user.logedIn || !hasProfile) {
     return redirect("/login");
   }
 
@@ -89,7 +89,7 @@ export default async function Dashboard() {
                       className={cn(
                         (tx.args.amount as number) > 0
                           ? "text-primary"
-                          : "text-destructive"
+                          : "text-destructive",
                       )}
                     >
                       {creditTxToAmount(tx)} NHZN

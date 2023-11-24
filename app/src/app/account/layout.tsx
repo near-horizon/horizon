@@ -11,7 +11,7 @@ export default async function ProfileLayout({
 }) {
   const user = await getUserFromSession();
 
-  if (!user) {
+  if (!user.logedIn) {
     return redirect("/login");
   }
 

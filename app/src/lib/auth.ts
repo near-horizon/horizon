@@ -1,4 +1,3 @@
-import { type IronSession } from "iron-session";
 import { /* getKeyInfo, */ viewCall } from "./client/fetching";
 import { env } from "~/env.mjs";
 import { type AccountId } from "./validation/common";
@@ -6,11 +5,12 @@ import { hasBacker } from "./client/backers";
 import { hasContributor } from "./client/contributors";
 import { hasProject } from "./client/projects";
 import { redirect, RedirectType } from "next/navigation";
+import { type User } from "./validation/user";
 
 export async function loginUser(
   accountId: AccountId,
-  publicKey: string
-): Promise<IronSession["user"]> {
+  publicKey: string,
+): Promise<User> {
   const [admin, isProject, isContributor, isBacker] = await Promise.all([
     viewCall<boolean>(env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID, "check_is_owner", {
       account_id: accountId,
@@ -20,7 +20,8 @@ export async function loginUser(
     hasBacker(accountId),
   ]);
 
-  const user: IronSession["user"] = {
+  const user: User = {
+    logedIn: true,
     accountId,
     publicKey,
     admin,

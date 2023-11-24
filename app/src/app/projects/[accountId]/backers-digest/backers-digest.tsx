@@ -32,7 +32,7 @@ export async function BackersDigest({ accountId }: { accountId: AccountId }) {
   ]);
 
   let url = `/projects/${accountId}`;
-  if (user && user.accountId === accountId) {
+  if (user.logedIn && user.accountId === accountId) {
     let token = backersDigest.token;
     if (!token) {
       token = await addBackersDigestToken(accountId);

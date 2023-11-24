@@ -23,7 +23,7 @@ export default async function RequestPageLayout({
   children: React.ReactNode;
 }) {
   const user = await getUserFromSession();
-  const isAdmin = !!user && user.accountId === accountId;
+  const isAdmin = user.logedIn && user.accountId === accountId;
   const request = await getRequest(accountId, cid);
 
   const navigation = isAdmin && (

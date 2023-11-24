@@ -19,9 +19,11 @@ import { useProfile } from "~/hooks/fetching";
 
 export function UserMenu({ mobile = false }: { mobile?: boolean }) {
   const user = useUser();
-  const { data: profile } = useProfile(user?.accountId);
+  const { data: profile } = useProfile(
+    user.logedIn ? user.accountId : undefined,
+  );
 
-  if (!user) {
+  if (!user.logedIn) {
     return <SignIn />;
   }
 

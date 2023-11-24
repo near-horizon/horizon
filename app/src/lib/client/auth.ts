@@ -1,5 +1,5 @@
-import { type IronSession } from "iron-session";
 import { type AccountId } from "../validation/common";
+import { DEFAULT_USER, userSchema } from "../validation/user";
 
 export async function login({
   accountId,
@@ -69,10 +69,13 @@ export async function getUser() {
   const response = await fetch("/api/auth/user");
 
   if (!response.ok) {
-    return undefined;
+    return DEFAULT_USER;
   }
 
-  const session = (await response.json()) as IronSession;
-
-  return session.user;
+  try {
+    const user = userSchema.parse(await response.json());
+    return user;
+  } catch (e) {
+    return DEFAULT_USER;
+  }
 }
