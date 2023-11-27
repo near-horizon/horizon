@@ -7,6 +7,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function getFileURL(
+  value: string,
+): string | { url: string; filename: string; size: string; uploaded: string } {
+  if (value.includes(",")) {
+    const [cid, filename, size, uploaded] = value.split(",");
+    return {
+      url: ipfsURL(cid!),
+      filename: filename!,
+      size: size!,
+      uploaded: uploaded!,
+    };
+  }
+  return value;
+}
+
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -23,7 +38,7 @@ export function makeIntoStrings(obj: Record<string, unknown>) {
         if (Array.isArray(value) && !value.length) return false;
         return true;
       })
-      .map(([key, value]) => [key, String(value)])
+      .map(([key, value]) => [key, String(value)]),
   );
 }
 
@@ -86,7 +101,7 @@ export function ipfsURL(cid: string) {
 export function toArrayBuffer(buffer: Buffer) {
   return buffer.buffer.slice(
     buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength
+    buffer.byteOffset + buffer.byteLength,
   );
 }
 
@@ -103,7 +118,7 @@ export async function uploadImage(file?: File) {
 }
 
 export async function generateImage(
-  prompt = "Stock image for a anonymous founder in a startup in a blockchain ecosystem. In a cartoonish style - not realistic"
+  prompt = "Stock image for a anonymous founder in a startup in a blockchain ecosystem. In a cartoonish style - not realistic",
 ) {
   const response = await fetch("/images/generate", {
     method: "POST",
