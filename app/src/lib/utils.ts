@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { env } from "~/env.mjs";
 import { fileUploadSchema } from "./validation/fetching";
+import { DATE, NUMBER } from "./format";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,8 +16,8 @@ export function getFileURL(
     return {
       url: ipfsURL(cid!),
       filename: filename!,
-      size: size!,
-      uploaded: uploaded!,
+      size: NUMBER.bytes(size!),
+      uploaded: DATE.time(uploaded),
     };
   }
   return value;

@@ -15,18 +15,23 @@ export default async function BackersDigestPage({
 }) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn || !!token || !!from) {
+  if (!user.logedIn && !token && !from) {
     return redirect(`/projects/${accountId}/overview`);
   }
 
-  const [isBacker, backersDigest] = await Promise.all([
-    hasBacker(user.accountId),
-    getBackersDigest(accountId),
-  ]);
-  const isOwner = user.accountId === accountId;
+  const isOwner = user.logedIn && user.accountId === accountId;
+  const isBacker = user.logedIn && (await hasBacker(user.accountId));
+
+  const backersDigest = await getBackersDigest(accountId);
+
   const isPublished = !!backersDigest.published;
-  const hasToken = !!token && token === backersDigest.token;
-  const isFromBackerView = !!from && from === backersViewFromKey;
+  const hasToken = token === backersDigest.token;
+  const isFromBackerView = from === backersViewFromKey;
+
+  if (!user.logedIn && !isPublished && !hasToken && !isFromBackerView) {
+    return redirect(`/projects/${accountId}/overview`);
+  }
+
   const hasPermission =
     isOwner || (isPublished && (isBacker || hasToken || isFromBackerView));
 

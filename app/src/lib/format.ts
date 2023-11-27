@@ -43,4 +43,28 @@ export const NUMBER = {
       style: "percent",
     });
   },
+  bytes: function (bytes: string) {
+    const size = Number(bytes);
+    const unit =
+      size < 1000
+        ? "byte"
+        : size < 1000000
+          ? "kilobyte"
+          : size < 1000000000
+            ? "megabyte"
+            : "gigabyte";
+    const value =
+      size < 1000
+        ? size
+        : size < 1000000
+          ? size / 1000
+          : size < 1000000000
+            ? size / 1000000
+            : size / 1000000000;
+    return value.toLocaleString("en-US", {
+      unit,
+      style: "unit",
+      unitDisplay: "narrow",
+    });
+  },
 };
