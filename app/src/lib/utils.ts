@@ -50,7 +50,7 @@ export function removeNulls<T>(obj: T): T | null {
   if (typeof obj === "object") {
     (Object.keys(obj) as (keyof typeof obj)[]).forEach((key) => {
       if (typeof obj[key] === "object" && obj[key] !== null) {
-        removeEmpty(obj[key]);
+        removeNulls(obj[key]);
       } else if (obj[key] === undefined || obj[key] === null) {
         delete obj[key];
       }
@@ -62,7 +62,7 @@ export function removeNulls<T>(obj: T): T | null {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    obj = obj.map((item) => removeEmpty(item));
+    obj = obj.map((item) => removeNulls(item));
   }
 
   return obj;
