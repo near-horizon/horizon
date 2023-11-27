@@ -11,8 +11,19 @@ import {
   statsSchema,
   validKeySchema,
 } from "../validation/fetching";
+import { NEAR_RPC_URL } from "../constants/near";
+import { providers } from "near-api-js";
+import {
+  type AccessKeyView,
+  type AccountView,
+  type CodeResult,
+} from "near-api-js/lib/providers/provider";
 
-const NEAR_RPC_URL = "https://rpc.mainnet.near.org";
+function getProvider() {
+  return new providers.JsonRpcProvider({
+    url: NEAR_RPC_URL,
+  });
+}
 
 export function encodeArgs(args: Record<string, unknown>) {
   return Buffer.from(JSON.stringify(args)).toString("base64");
@@ -23,60 +34,48 @@ export async function viewCall<T>(
   method: string,
   args: Record<string, unknown>
 ) {
-  const response = await fetch(NEAR_RPC_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: "dontcare",
-      method: "query",
-      params: {
-        request_type: "call_function",
-        finality: "final",
-        account_id: contract,
-        method_name: method,
-        args_base64: encodeArgs(args),
-      },
-    }),
+  const provider = getProvider();
+
+  const result = await provider.query<CodeResult>({
+    request_type: "call_function",
+    finality: "final",
+    account_id: contract,
+    method_name: method,
+    args_base64: encodeArgs(args),
   });
 
-  const s = (await response.json()) as {
-    result: { result: Uint8Array };
-  };
-
-  if ("error" in s.result) {
-    throw new Error(
-      `${s.result.error as string}: ${method} ${JSON.stringify(args)}`
-    );
-  }
-
-  const bytes = s.result.result;
-
-  return JSON.parse(Buffer.from(bytes).toString()) as T;
+  return JSON.parse(Buffer.from(result.result).toString()) as T;
 }
 
 export async function getKeyInfo(account_id: AccountId, public_key: string) {
-  const response = await fetch(NEAR_RPC_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: "dontcare",
-      method: "query",
-      params: {
-        request_type: "view_access_key",
-        finality: "final",
-        account_id,
-        public_key,
-      },
-    }),
-  });
+  const provider = getProvider();
+  try {
+    const accessKey = await provider.query<AccessKeyView>({
+      request_type: "view_access_key",
+      finality: "optimistic",
+      account_id,
+      public_key,
+    });
 
-  return validKeySchema.safeParse(await response.json()).success;
+    return validKeySchema.safeParse(accessKey).success;
+  } catch (e) {
+    return false;
+  }
+}
+
+export async function checkIfAccountExists(account_id: string) {
+  const provider = getProvider();
+
+  try {
+    const view = await provider.query<AccountView>({
+      request_type: "view_account",
+      finality: "optimistic",
+      account_id,
+    });
+    return view.block_hash !== undefined;
+  } catch (e) {
+    return false;
+  }
 }
 
 export async function getProfile(accountId: AccountId) {
