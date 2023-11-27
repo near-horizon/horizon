@@ -5,6 +5,11 @@ export const accountIdSchema = z
   .min(2)
   .max(64)
   .regex(/^(([a-z\d]+[\-_])*[a-z\d]+\.)*([a-z\d]+[\-_])*[a-z\d]+$/);
+// .refine(async (accountId) => {
+//   return await checkIfAccountExists(accountId);
+// }, {
+//   message: "Account does not exist",
+// });
 
 export const cidSchema = z.string().min(34).max(59);
 
