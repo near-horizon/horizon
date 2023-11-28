@@ -5,20 +5,41 @@ import What from "@components/hzn/What.astro";
 import Who from "@components/hzn/Who.astro";
 import Testamonial from "@components/hzn/Testamonial.astro";
 import Journey from "@components/hzn/Journey.astro";
-import Structure from "@components/hzn/Structure.astro";
 import { Comprehensive } from "@components/hzn/Comprehensive.tsx";
 import FAQ from "@components/hzn/FAQ.astro";
 import Ask from "@components/hzn/Ask.astro";
 import Recognize from "@components/hzn/Recognize.astro";
 import { People } from "@components/hzn/People.tsx";
+import Graphic from "@components/hzn/Graphic.astro";
+
+const airtableKey =
+  "patAwBuOv0fiKkpUS.0b8567fb9058f5f01906284620ec6a1d9c881e164d8577df88c6de0d49a733bf";
+const response = await fetch(
+  "https://api.airtable.com/v0/appYZgc3ux1uIHpe8/HZN%20members%20for%20export",
+  {
+    headers: {
+      Authorization: `Bearer ${airtableKey}`,
+    },
+  },
+);
+const json = await response.json();
+const people = json.records.map((record: any) => ({
+  name: record.fields["First Name & Last Name"],
+  title: record.fields["Title"],
+  description: record.fields["Project Name"],
+  image: record.fields["Photo"] ? record.fields["Photo"][0]?.url ?? "" : "",
+  role: record.fields["Role"],
+}));
 ---
 
 <Layout title="HZN">
   <main class="bg-background-light">
     <div class="p-6 w-full flex-col flex gap-14 max-w-screen-xl mx-auto py-14">
       <Hero />
+      <div class="pr-24 pb-10 pl-8">
+        <Graphic />
+      </div>
       <Comprehensive />
-      <Structure />
     </div>
     <div class="bg-background-white">
       <div
@@ -27,9 +48,8 @@ import { People } from "@components/hzn/People.tsx";
         <Who />
         <Recognize />
         <Testamonial />
-        <People client:load />
+        <People client:load people={people} />
         <Journey />
-        <What />
         <Hero />
       </div>
     </div>
