@@ -32,7 +32,7 @@ export function encodeArgs(args: Record<string, unknown>) {
 export async function viewCall<T>(
   contract: string,
   method: string,
-  args: Record<string, unknown>
+  args: Record<string, unknown>,
 ) {
   const provider = getProvider();
 
@@ -112,7 +112,7 @@ export function getImageURL(src: string) {
 }
 
 export async function getTransactions(
-  query: TransactionQuery = {}
+  query: TransactionQuery = {},
 ): Promise<Transaction[]> {
   const params: Record<string, string> = {};
   if (query.from) {
@@ -125,14 +125,14 @@ export async function getTransactions(
     params.entity_type = query.entity_type;
   }
   const result = await fetch(
-    "/api/transactions/all?" + new URLSearchParams(params).toString()
+    "/api/transactions/all?" + new URLSearchParams(params).toString(),
   );
   const transactions = transactionsSchema.parseAsync(await result.json());
   return transactions;
 }
 
 export async function getStats() {
-  const result = await fetch("/api/transactions/stats");
+  const result = await fetch("/api/transactions/stats", { cache: "no-cache" });
   const stats = statsSchema.parseAsync(await result.json());
 
   return stats;
