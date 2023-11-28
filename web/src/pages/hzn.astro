@@ -1,7 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Hero from "@components/hzn/Hero.astro";
-import What from "@components/hzn/What.astro";
 import Who from "@components/hzn/Who.astro";
 import Testamonial from "@components/hzn/Testamonial.astro";
 import Journey from "@components/hzn/Journey.astro";
@@ -26,7 +25,7 @@ const json = await response.json();
 const people = json.records.map((record: any) => ({
   name: record.fields["First Name & Last Name"],
   title: record.fields["Title"],
-  description: record.fields["Project Name"],
+  project: record.fields["Project Name"],
   image: record.fields["Photo"] ? record.fields["Photo"][0]?.url ?? "" : "",
   role: record.fields["Role"],
 }));
