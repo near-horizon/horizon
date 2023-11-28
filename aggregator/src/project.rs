@@ -86,7 +86,11 @@ pub async fn sync_deleted(pool: &PgPool, projects: &HashSet<String>) -> anyhow::
         &for_deletion
     )
     .execute(&mut tx)
-    .await?;
+    .await
+    .map_err(|e| {
+        eprintln!("Failed to delete projects: {:#?}", for_deletion);
+        e
+    })?;
 
     Ok(tx.commit().await?)
 }
