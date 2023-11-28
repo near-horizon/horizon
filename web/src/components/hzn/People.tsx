@@ -1,4 +1,4 @@
-import { cn, mapImage } from "@lib/utils";
+import { cn } from "@lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 
 function List({ children }: { children: React.ReactNode[] }) {
@@ -11,48 +11,31 @@ function List({ children }: { children: React.ReactNode[] }) {
   );
 }
 
-function Card({
-  image,
-  name,
-  title,
-  description,
-}: {
+interface CardProps {
   image: string;
   name: string;
   title: string;
-  description: string;
-}) {
+  project: string;
+}
+
+function Card({ image, name, title, project }: CardProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-background-light rounded-2xl h-80 min-w-[15rem]">
       <img src={image} alt={name} className="w-36 h-36 rounded-full" />
       <div className="text-center gap-3 w-full flex flex-col items-center justify-start">
         <h3 className="text-xl font-bold text-ui-elements-dark">{name}</h3>
         <h4 className="text-ui-elements-dark">{title}</h4>
-        <p className="text-ui-elements-gray">{description}</p>
+        <p className="text-ui-elements-gray">{project}</p>
       </div>
     </div>
   );
 }
 
-const image = mapImage(
-  "bafybeibet4t374gtgef22vnwxiaqgpofozf5tp2z2urnrz5htgeqbwdkj4",
-);
-
-const alumni = Array(10).fill({
-  image,
-  name: "Shawn Williamson",
-  title: "Founder @ StartupName",
-  description: "HZN1 Alumni",
-}) satisfies Parameters<typeof Card>[0][];
-
-const people = Array(10).fill({
-  image,
-  name: "Lance Corkery",
-  title: "Founder @ StartupName",
-  description: "HZN1 Alumni",
-}) satisfies Parameters<typeof Card>[0][];
-
-export function People() {
+export function People({
+  people: data,
+}: {
+  people: (CardProps & { role: string })[];
+}) {
   return (
     <Tabs defaultValue="alumni">
       <div className="flex justify-center mb-10">
@@ -72,18 +55,26 @@ export function People() {
         </TabsList>
       </div>
       <TabsContent value="alumni">
-        <List>
-          {alumni.map((props, i) => (
-            <Card key={i} {...props} />
-          ))}
-        </List>
+        {data && (
+          <List>
+            {data
+              .filter(({ role }) => role === "HZN member")
+              .map((props, i) => (
+                <Card key={i} {...props} />
+              ))}
+          </List>
+        )}
       </TabsContent>
       <TabsContent value="team">
-        <List>
-          {people.map((props, i) => (
-            <Card key={i} {...props} />
-          ))}
-        </List>
+        {data && (
+          <List>
+            {data
+              .filter(({ role }) => role !== "HZN member")
+              .map((props, i) => (
+                <Card key={i} {...props} />
+              ))}
+          </List>
+        )}
       </TabsContent>
       <div className="flex items-center justify-center w-full mt-10">
         <a
