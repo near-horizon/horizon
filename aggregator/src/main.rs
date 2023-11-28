@@ -3,7 +3,7 @@ use itertools::Itertools;
 use near_jsonrpc_client::{JsonRpcClient, NEAR_MAINNET_RPC_URL};
 
 use aggregator::{
-    claims, contribution,
+    /* claims, */ contribution,
     investor::{self, Investor},
     project::{self, Project},
     request::{self, FullRequest},
@@ -66,19 +66,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     eprintln!("Inserting...");
     contribution::insert_many(&pool, contributions.clone()).await?;
 
-    let claims = claims::get_all_claims(&client, &horizon_account).await?;
-    eprintln!("Claims: {:#?}", claims.len());
-    eprintln!("Inserting...");
-    claims::insert_many(&pool, claims.clone().into_iter().collect_vec()).await?;
-    eprintln!("Syncing deleted claims...");
-    claims::sync_deleted(
-        &pool,
-        &claims
-            .keys()
-            .map(|(project_id, account_id)| (project_id.to_string(), account_id.to_string()))
-            .collect(),
-    )
-    .await?;
+    // let claims = claims::get_all_claims(&client, &horizon_account).await?;
+    // eprintln!("Claims: {:#?}", claims.len());
+    // eprintln!("Inserting...");
+    // claims::insert_many(&pool, claims.clone().into_iter().collect_vec()).await?;
+    // eprintln!("Syncing deleted claims...");
+    // claims::sync_deleted(
+    //     &pool,
+    //     &claims
+    //         .keys()
+    //         .map(|(project_id, account_id)| (project_id.to_string(), account_id.to_string()))
+    //         .collect(),
+    // )
+    // .await?;
 
     eprintln!("Syncing deleted contributions...");
     contribution::sync_deleted(
