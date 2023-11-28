@@ -147,7 +147,11 @@ where
                     Ok(profile) => Some((k.clone(), profile)),
                     Err(e) => {
                         eprintln!("Failed to deserialize profile for account {:#?}\n{e:#?}", v);
-                        None
+                        v.as_object_mut().unwrap().remove("profile");
+                        Some((
+                            k.clone(),
+                            serde_json::from_value(v).expect("Failed to deserialize profile"),
+                        ))
                     }
                 }
             }));
