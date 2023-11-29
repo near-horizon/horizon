@@ -34,7 +34,7 @@ function Card({ image, name, title, project }: CardProps) {
 export function People({
   people: data,
 }: {
-  people: (CardProps & { role: string })[];
+  people: (CardProps & { role: string; featured: boolean })[];
 }) {
   return (
     <Tabs defaultValue="alumni">
@@ -58,7 +58,7 @@ export function People({
         {data && (
           <List>
             {data
-              .filter(({ role }) => role === "HZN member")
+              .filter(({ role, featured }) => role === "HZN member" && featured)
               .map((props, i) => (
                 <Card key={i} {...props} />
               ))}
