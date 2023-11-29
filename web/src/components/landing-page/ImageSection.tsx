@@ -75,13 +75,13 @@ export function ImageSection({
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row md:justify-between items-stretch gap-12 h-[30rem]",
+        "flex flex-col md:flex-row md:justify-between items-stretch gap-12 md:h-[30rem]",
         {
           "md:flex-row-reverse": direction === "right",
         },
       )}
     >
-      <div className="flex-1 flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
         <h2 className="flex justify-center  items-center self-stretch md:justify-start gap-2">
           <span className="text-background-dark font-bold text-3xl hidden md:block">
             Join Horizon
@@ -149,7 +149,7 @@ export function ImageSection({
       </div>
 
       <motion.div
-        className="flex-1 relative w-full h-full"
+        className="relative w-full md:h-full h-[455px]"
         initial={ViewOptions.FIRST}
         animate={currentView}
       >
