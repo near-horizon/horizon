@@ -7,6 +7,7 @@ import { MobileNavbar, Navbar } from "./navbar";
 import { Providers } from "./providers";
 import { getUserFromSession } from "~/lib/session";
 import { type Metadata } from "next";
+import { HZNBanner } from "~/components/banners/hzn";
 
 export default async function RootLayout({
   children,
@@ -18,6 +19,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="flex h-[100svh] flex-col">
+        <HZNBanner />
         <Providers user={user}>
           <div className="hidden md:block">
             <Navbar />
