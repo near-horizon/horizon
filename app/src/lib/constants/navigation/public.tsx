@@ -6,6 +6,7 @@ import {
   MagicWand02Svg,
   ProjectsSvg,
   RequestSvg,
+  Rocket02Svg,
   Users02Svg,
 } from "~/icons";
 
@@ -86,5 +87,17 @@ export const routes = [
       </>
     ),
     href: "/learn",
+  },
+  {
+    name: (
+      <>
+        <Rocket02Svg className="h-4 w-4" />
+        HZN Accelerator
+        <span className="rounded bg-[#FFA842] p-1 text-[.65rem] text-ui-elements-white">
+          HOT
+        </span>
+      </>
+    ),
+    href: "/docs",
   },
 ] satisfies Route[];
