@@ -30,6 +30,7 @@ interface Props {
   [ViewOptions.FIRST]: ViewProps;
   [ViewOptions.SECOND]: ViewProps;
   [ViewOptions.THIRD]: ViewProps;
+  children?: React.ReactNode;
 }
 
 export function StaticImageSection({
@@ -42,6 +43,7 @@ export function StaticImageSection({
   first,
   second,
   third,
+  children,
 }: Props) {
   return (
     <div
@@ -127,12 +129,22 @@ export function StaticImageSection({
       </div>
 
       <div className="md:flex-1 flex items-center justify-center">
-        <img
-          src={mapImage(desktop)}
-          alt="contributors"
-          className="hidden md:block"
-        />
-        <img src={mapImage(mobile)} alt="contributors" className="md:hidden" />
+        {children ? (
+          children
+        ) : (
+          <>
+            <img
+              src={mapImage(desktop)}
+              alt="contributors"
+              className="hidden md:block"
+            />
+            <img
+              src={mapImage(mobile)}
+              alt="contributors"
+              className="md:hidden"
+            />
+          </>
+        )}
       </div>
     </div>
   );

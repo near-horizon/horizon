@@ -4,7 +4,11 @@ import { HorizonEcosystem } from "@components/svgs/HorizonEcosystem";
 import { Education } from "@components/svgs/Education";
 import { StaticImageSection } from "./StaticImageSection";
 
-export default function ContributorsSection() {
+export default function ContributorsSection({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <StaticImageSection
       title="Horizon for Contributors"
@@ -37,6 +41,8 @@ export default function ContributorsSection() {
           variant="secondary"
         />
       }
-    />
+    >
+      {children}
+    </StaticImageSection>
   );
 }

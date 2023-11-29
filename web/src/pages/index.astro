@@ -12,6 +12,7 @@ import BackersSection from "@components/landing-page/BackersSection.tsx";
 import PartnersSection from "@components/landing-page/PartnersSection.tsx";
 import Nav from "@layouts/Nav.astro";
 import Layout from "@layouts/Layout.astro";
+import Partners from "@components/landing-page/Partners.astro";
 ---
 
 <Layout title="Horizon">
@@ -29,6 +30,8 @@ import Layout from "@layouts/Layout.astro";
     <Testimonial />
     <ContributorsSection client:visible />
     <BackersSection client:visible />
-    <PartnersSection client:visible />
+    <PartnersSection client:visible>
+      <Partners />
+    </PartnersSection>
   </main>
 </Layout>
