@@ -35,9 +35,14 @@ const schema = z.object({
     timezone: z.string(),
     accountId: z.string(),
     firstTime: z.coerce.boolean(),
-    background: z.enum([""]),
+    background: z.enum([
+      "technical",
+      "semi-technical",
+      "non-technical",
+      "other",
+    ]),
     about: z.string().min(1000),
-    time: z.enum([""]),
+    time: z.enum(["0-2", "2-4", "4-6", "6-*"]),
     linkedin: z.string().url(),
     x: z.string().url().optional(),
     github: z.string().url().optional(),
@@ -45,8 +50,8 @@ const schema = z.object({
   project: z.object({
     name: z.string().min(3).max(100),
     website: z.string().url(),
-    stage: z.enum([""]),
-    openSource: z.enum([""]),
+    stage: z.enum(["idea", "prototype", "beta", "live-no-users", "live-users"]),
+    openSource: z.enum(["yes", "not-yet", "no", "undecided"]),
     what: z.string().min(1000),
     unique: z.string().min(1000),
     goals: z.string().min(1000),
@@ -182,10 +187,20 @@ export function SignupForm() {
             label="What is your background?"
             placeholder=""
             options={[
-              { label: "Engineering", value: "engineering" },
-              { label: "Design", value: "design" },
-              { label: "Business", value: "business" },
-              { label: "Other", value: "other" },
+              {
+                label: "Technical - I actively write code",
+                value: "technical",
+              },
+              {
+                label: "Semi technical - I can write code but rarely do",
+                value: "semi-technical",
+              },
+              {
+                label:
+                  "Minimally technical - I can carry technical conversations but I cannot code",
+                value: "minimally-technical",
+              },
+              { label: "Not technical - I don't code", value: "non-technical" },
             ]}
           />
 
@@ -203,8 +218,10 @@ export function SignupForm() {
             label="How much time can you commit to the HZN?"
             placeholder=""
             options={[
-              { label: "Full-time", value: "full-time" },
-              { label: "Part-time", value: "part-time" },
+              { label: "Less than 2 hours / week", value: "0-2" },
+              { label: "2-4 hours / week", value: "2-4" },
+              { label: "4-6 hours / week", value: "4-6" },
+              { label: "6+ hours / week", value: "6-*" },
             ]}
           />
 
@@ -261,9 +278,16 @@ export function SignupForm() {
             placeholder=""
             options={[
               { label: "Idea", value: "idea" },
-              { label: "Prototype", value: "prototype" },
-              { label: "MVP", value: "mvp" },
-              { label: "Live", value: "live" },
+              { label: "Built proof of concept/prototype", value: "prototype" },
+              { label: "In private beta/testnet", value: "beta" },
+              {
+                label: "Live on mainnet without active users/contributors",
+                value: "live-no-users",
+              },
+              {
+                label: "Live on mainnet with active users/contributors",
+                value: "live-users",
+              },
             ]}
           />
 
@@ -273,9 +297,13 @@ export function SignupForm() {
             label="Is your project open source?"
             placeholder=""
             options={[
-              { label: "Yes", value: "yes" },
-              { label: "No", value: "no" },
-              { label: "Partial", value: "partial" },
+              { label: "Yes, it is already open source", value: "yes" },
+              {
+                label: "Not yet, but I will make it open source",
+                value: "not-yet",
+              },
+              { label: "I would prefer to keep it closed source", value: "no" },
+              { label: "I haven't decided yet", value: "undecided" },
             ]}
           />
 

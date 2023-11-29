@@ -11,10 +11,9 @@ import Recognize from "@components/hzn/Recognize.astro";
 import { People } from "@components/hzn/People.tsx";
 import Graphic from "@components/hzn/Graphic.astro";
 
-const airtableKey =
-  "patAwBuOv0fiKkpUS.0b8567fb9058f5f01906284620ec6a1d9c881e164d8577df88c6de0d49a733bf";
+const airtableKey = import.meta.env.PUBLIC_AIRTABLE_TOKEN;
 const response = await fetch(
-  "https://api.airtable.com/v0/appYZgc3ux1uIHpe8/HZN%20members%20for%20export",
+  "https://api.airtable.com/v0/appYZgc3ux1uIHpe8/tblhBsqdaPdYbqKc5",
   {
     headers: {
       Authorization: `Bearer ${airtableKey}`,
