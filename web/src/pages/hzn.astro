@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Hero from "@components/hzn/Hero.astro";
 import Who from "@components/hzn/Who.astro";
-import Testamonial from "@components/hzn/Testamonial.astro";
+// import Testamonial from "@components/hzn/Testamonial.astro";
 import Journey from "@components/hzn/Journey.astro";
 import { Comprehensive } from "@components/hzn/Comprehensive.tsx";
 import FAQ from "@components/hzn/FAQ.astro";
@@ -46,7 +46,7 @@ const people = json.records.map((record: any) => ({
       >
         <Who />
         <Recognize />
-        <Testamonial />
+        <!-- <Testamonial /> -->
         <People client:load people={people} />
         <Journey />
         <Hero />
