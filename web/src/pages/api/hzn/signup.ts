@@ -81,8 +81,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   const records = [
     {
-      fields: Object.fromEntries(
-        Object.entries(fields).map(([key, value]) => [keyMapping[key], value]),
+      fields: Object.assign(
+        Object.fromEntries(
+          Object.entries(fields).map(([key, value]) => [
+            keyMapping[key],
+            value,
+          ]),
+        ),
+        { from: "website" },
       ),
     },
   ];
