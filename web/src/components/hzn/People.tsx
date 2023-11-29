@@ -69,7 +69,7 @@ export function People({
         {data && (
           <List>
             {data
-              .filter(({ role }) => role !== "HZN member")
+              .filter(({ role }) => role === "Team")
               .map((props, i) => (
                 <Card key={i} {...props} />
               ))}
