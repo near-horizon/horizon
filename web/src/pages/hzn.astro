@@ -28,6 +28,7 @@ const people = json.records.map((record: any) => ({
   project: record.fields["Project Name"],
   image: record.fields["Photo"] ? record.fields["Photo"][0]?.url ?? "" : "",
   role: record.fields["Role"],
+  featured: record.fields["Featured"],
 }));
 ---
 
