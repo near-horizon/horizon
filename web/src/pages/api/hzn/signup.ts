@@ -18,7 +18,7 @@ export const schema = z.object({
     fullName: z.string(),
     email: z.string().email(),
     timezone: z.string(),
-    accountId: z.string(),
+    accountId: z.string().optional(),
     firstTime: z.coerce.boolean(),
     background: z.enum([
       "technical",

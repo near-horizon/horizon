@@ -141,6 +141,7 @@ export function SignupForm() {
         />
         <div className="px-10 pt-8 pb-14 gap-5 bg-ui-elements-white border border-ui-elements-light shadow-lg rounded-2xl flex flex-col items-end justify-center">
           <h3 className="w-full font-bold text-2xl">1. Personal information</h3>
+
           <InputField
             control={form.control}
             name="personal.fullName"
@@ -148,6 +149,7 @@ export function SignupForm() {
             placeholder=""
             type="text"
           />
+
           <InputField
             control={form.control}
             name="personal.email"
@@ -155,6 +157,7 @@ export function SignupForm() {
             placeholder=""
             type="email"
           />
+
           <InputField
             control={form.control}
             name="personal.timezone"
@@ -162,6 +165,7 @@ export function SignupForm() {
             placeholder=""
             type="text"
           />
+
           <InputField
             control={form.control}
             name="personal.accountId"
