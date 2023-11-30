@@ -1,30 +1,40 @@
 ---
-import { mapImage } from "@lib/utils";
-const image = "bafkreicediliywii236fdx7nekbcwhk2nxwo6ctd4ritdv3lmf6tv45i3q";
+import anna from "@assets/anna.png";
+import annaIcon from "@assets/anna-icon.png";
+import kenny from "@assets/kenny.png";
+import kennyIcon from "@assets/kenny-icon.png";
+import jerry from "@assets/jerry.png";
+import jerryIcon from "@assets/jerry-icon.png";
+import TestamonialItem from "./TestamonialItem.astro";
+import { HorizontalScroll } from "./HorizontalScroll.tsx";
 ---
 
-<div class="flex flex-col items-center w-full gap-8 md:p-16">
-  <div
-    class="flex px-9 py-12 flex-col items-start gap-3 w-full rounded-xl bg-ui-elements-dark text-ui-elements-white text-center text-4xl"
-  >
-    Joining Horizon's accelerator was a game-changer for our NFT startup. The
-    mentors provided invaluable guidance, the community offered meaningful
-    collaborations, and access to funding opportunities propelled our growth.
-    Highly recommended for Web3 founders looking to thrive
+<HorizontalScroll client:load>
+  <div class="flex flex-row items-center justify-start w-full">
+    {
+      [
+        {
+          text: "Joining Horizon's accelerator was a game-changer for our NFT startup. The mentors provided invaluable guidance, the community offered meaningful collaborations, and access to funding opportunities propelled our growth. Highly recommended for Web3 founders looking to thrive",
+          image: anna,
+          icon: annaIcon,
+          name: "Anna Stoilova",
+          title: "Co-Founder & CEO @ Rogues Studio",
+        },
+        {
+          text: "Been a real pleasure getting to learn while growing Ample through the NEAR HZN1 program. The access to the team, support and group feedback has been a huge value add for our project. Having AMAs and presentations on token modeling, demo days, fundraising and UX research with vetted industry players specifically has been invaluable. ",
+          image: kenny,
+          icon: kennyIcon,
+          name: "Kenny Johns",
+          title: "Founder/CEO @ Ample",
+        },
+        {
+          text: "Being selected to participate in the first HZN cohort has truly been a privilege. The HZN team has been incredible and all the teams have amazing projects and have been super collaborative. At Gravvity AI we’re truly excited to help bring web 3 mainstream via our gamified swipe to shop e-commerce platform. Hope this works!",
+          image: jerry,
+          icon: jerryIcon,
+          name: "Jerry Chien",
+          title: "EO & Co-Founder @ Gravvity",
+        },
+      ].map((item) => <TestamonialItem {...item} />)
+    }
   </div>
-  <div class="flex flex-col items-center gap-4">
-    <img
-      class="flex w-20 h-20 flex-col justify-center items-center rounded-[6.25rem]"
-      src={mapImage(image)}
-      alt="avatar"
-    />
-    <div class="flex flex-col items-center self-stretch gap-2">
-      <span class="text-ui-elements-dark text-center font-bold text-xl"
-        >John Doe</span
-      >
-      <small class="text-ui-elements-gray text-center"
-        >Web Developer, Sisyphus</small
-      >
-    </div>
-  </div>
-</div>
+</HorizontalScroll>
