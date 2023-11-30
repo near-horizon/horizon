@@ -91,6 +91,7 @@ export const POST: APIRoute = async ({ request }) => {
     cohort: parsed.data.cohort,
     ...parsed.data.personal,
     ...parsed.data.project,
+    firstTime: parsed.data.personal.firstTime ? "Yes" : "No",
   };
 
   const records = [
