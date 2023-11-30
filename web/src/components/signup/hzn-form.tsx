@@ -78,13 +78,11 @@ export function SignupForm() {
             </DialogHeader>
             <DialogFooter className="sm:justify-start">
               <DialogClose asChild>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setOpenDialog(false)}
-                >
-                  Close
-                </Button>
+                <a href="/">
+                  <Button type="button" variant="secondary">
+                    Close
+                  </Button>
+                </a>
               </DialogClose>
             </DialogFooter>
           </DialogContent>
