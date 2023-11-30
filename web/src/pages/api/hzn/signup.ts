@@ -92,6 +92,7 @@ export const POST: APIRoute = async ({ request }) => {
     ...parsed.data.personal,
     ...parsed.data.project,
     firstTime: parsed.data.personal.firstTime ? "Yes" : "No",
+    raised: parsed.data.project.raised ? "Yes" : "No",
   };
 
   const records = [
