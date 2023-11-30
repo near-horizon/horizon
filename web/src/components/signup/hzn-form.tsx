@@ -37,52 +37,7 @@ import {
   DialogTitle,
 } from "@components/ui/dialog";
 import { Button } from "@components/ui/button";
-
-const textAreaLimit = 300;
-const urlValue = z.string().refine((value) => {
-  if (value.startsWith("http://") || value.startsWith("https://")) {
-    return z.string().url().parse(value);
-  }
-
-  return z.string().url().parse(`https://${value}`);
-});
-
-const schema = z.object({
-  cohort: z.enum(["hzn2", "hzn3"]),
-  personal: z.object({
-    fullName: z.string(),
-    email: z.string().email(),
-    timezone: z.string(),
-    accountId: z.string(),
-    firstTime: z.coerce.boolean(),
-    background: z.enum([
-      "technical",
-      "semi-technical",
-      "non-technical",
-      "other",
-    ]),
-    about: z.string().min(textAreaLimit),
-    time: z.enum(["0-2", "2-4", "4-6", "6-*"]),
-    linkedin: urlValue,
-    x: urlValue.optional(),
-    github: urlValue.optional(),
-  }),
-  project: z.object({
-    name: z.string().min(3).max(100),
-    website: urlValue,
-    stage: z.enum(["idea", "prototype", "beta", "live-no-users", "live-users"]),
-    openSource: z.enum(["yes", "not-yet", "no", "undecided"]),
-    what: z.string().min(textAreaLimit),
-    unique: z.string().min(textAreaLimit),
-    goals: z.string().min(textAreaLimit),
-    team: z.string(),
-    audience: z.string(),
-    activeUserbase: z.coerce.boolean(),
-    partnerships: z.string(),
-    raised: z.coerce.boolean(),
-    nextRound: z.string(),
-  }),
-});
+import { schema } from "@pages/api/hzn/signup";
 
 export function SignupForm() {
   const form = useForm<z.infer<typeof schema>>({

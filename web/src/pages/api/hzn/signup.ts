@@ -3,6 +3,15 @@ import { z } from "zod";
 
 const token = import.meta.env.AIRTABLE_TOKEN;
 
+const textAreaLimit = 300;
+const urlValue = z.string().refine((value) => {
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return z.string().url().parse(value);
+  }
+
+  return z.string().url().parse(`https://${value}`);
+});
+
 export const schema = z.object({
   cohort: z.enum(["hzn2", "hzn3"]),
   personal: z.object({
@@ -11,21 +20,26 @@ export const schema = z.object({
     timezone: z.string(),
     accountId: z.string(),
     firstTime: z.coerce.boolean(),
-    background: z.enum(["engineering", "design", "business", "other"]),
-    about: z.string().min(1000),
-    time: z.enum(["full-time", "part-time"]),
-    linkedin: z.string().url(),
-    x: z.string().url().optional(),
-    github: z.string().url().optional(),
+    background: z.enum([
+      "technical",
+      "semi-technical",
+      "non-technical",
+      "other",
+    ]),
+    about: z.string().min(textAreaLimit),
+    time: z.enum(["0-2", "2-4", "4-6", "6-*"]),
+    linkedin: urlValue,
+    x: urlValue.optional(),
+    github: urlValue.optional(),
   }),
   project: z.object({
     name: z.string().min(3).max(100),
-    website: z.string().url(),
-    stage: z.enum(["idea", "prototype", "mvp", "live"]),
-    openSource: z.enum(["yes", "no", "partial"]),
-    what: z.string().min(1000),
-    unique: z.string().min(1000),
-    goals: z.string().min(1000),
+    website: urlValue,
+    stage: z.enum(["idea", "prototype", "beta", "live-no-users", "live-users"]),
+    openSource: z.enum(["yes", "not-yet", "no", "undecided"]),
+    what: z.string().min(textAreaLimit),
+    unique: z.string().min(textAreaLimit),
+    goals: z.string().min(textAreaLimit),
     team: z.string(),
     audience: z.string(),
     activeUserbase: z.coerce.boolean(),
