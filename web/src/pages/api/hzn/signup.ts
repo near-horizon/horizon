@@ -120,7 +120,9 @@ export const POST: APIRoute = async ({ request }) => {
   );
 
   if (!response.ok) {
-    return new Response(JSON.stringify(await response.json()), {
+    const error = await response.json();
+    console.error(error);
+    return new Response(JSON.stringify(error), {
       status: 500,
     });
   }
