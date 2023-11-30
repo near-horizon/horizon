@@ -75,22 +75,54 @@ const schema = z.object({
 
 export function SignupForm() {
   const form = useForm<z.infer<typeof schema>>({
+    mode: "onBlur",
     resolver: zodResolver(schema),
     defaultValues: {
       cohort: "hzn2",
     },
   });
-
   const isDisabled = !form.formState.isValid;
+  const [openDialog, setOpenDialog] = useState(false);
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log(`Sending ${data} to airtable`);
+        onSubmit={form.handleSubmit(async (data) => {
+          setOpenDialog(true);
+          const response = await fetch("/api/hzn/signup", {
+            method: "POST",
+            body: JSON.stringify(data),
+          });
+          if (response.ok) {
+            form.reset({ cohort: "hzn2" });
+          }
         })}
         className="space-y-10"
       >
+        <Dialog
+          open={form.formState.isSubmitSuccessful && openDialog}
+          onOpenChange={setOpenDialog}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Congratulations!</DialogTitle>
+              <DialogDescription>
+                You successfully submitted your application to HZN!
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="sm:justify-start">
+              <DialogClose asChild>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setOpenDialog(false)}
+                >
+                  Close
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <FormField
           control={form.control}
           name="cohort"
