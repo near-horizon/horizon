@@ -54,7 +54,7 @@ export function Comprehensive() {
   return (
     <div className="flex flex-col items-center gap-7 w-full">
       <h2 className="text-ui-elements-dark text-center text-4xl font-bold">
-        Program Benefits and Perks
+        Program Benefits
       </h2>
       <p className="text-background-dark text-center text-xl">
         HZN is an exclusive learning community for founders that addresses the
