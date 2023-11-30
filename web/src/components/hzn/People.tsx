@@ -1,4 +1,4 @@
-import { cn } from "@lib/utils";
+// import { cn } from "@lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 
 function List({ children }: { children: React.ReactNode[] }) {
@@ -76,20 +76,20 @@ export function People({
           </List>
         )}
       </TabsContent>
-      <div className="flex items-center justify-center w-full mt-10">
-        <a
-          href="#"
-          target="_blank"
-          className={cn([
-            "flex items-center justify-center gap-2 rounded-full bg-ui-elements-dark text-ui-elements-white text-center text-sm font-semibold py-2 px-4 transition-colors duration-200",
-            "hover:bg-ui-elements-gray hover:text-ui-elements-light hover:no-underline",
-            "focus:bg-ui-elements-gray focus:text-ui-elements-light focus:no-underline",
-            "active:bg-ui-elements-gray active:text-ui-elements-light active:no-underline",
-          ])}
-        >
-          See all alumni
-        </a>
-      </div>
+      {/* <div className="flex items-center justify-center w-full mt-10"> */}
+      {/*   <a */}
+      {/*     href="#" */}
+      {/*     target="_blank" */}
+      {/*     className={cn([ */}
+      {/*       "flex items-center justify-center gap-2 rounded-full bg-ui-elements-dark text-ui-elements-white text-center text-sm font-semibold py-2 px-4 transition-colors duration-200", */}
+      {/*       "hover:bg-ui-elements-gray hover:text-ui-elements-light hover:no-underline", */}
+      {/*       "focus:bg-ui-elements-gray focus:text-ui-elements-light focus:no-underline", */}
+      {/*       "active:bg-ui-elements-gray active:text-ui-elements-light active:no-underline", */}
+      {/*     ])} */}
+      {/*   > */}
+      {/*     See all alumni */}
+      {/*   </a> */}
+      {/* </div> */}
     </Tabs>
   );
 }

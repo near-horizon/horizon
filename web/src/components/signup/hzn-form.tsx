@@ -27,6 +27,15 @@ import {
 import { Textarea } from "@components/ui/textarea";
 import { cn } from "@lib/utils";
 
+const textAreaLimit = 300;
+const urlValue = z.string().refine((value) => {
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return z.string().url().parse(value);
+  }
+
+  return z.string().url().parse(`https://${value}`);
+});
+
 const schema = z.object({
   cohort: z.enum(["hzn2", "hzn3"]),
   personal: z.object({
@@ -41,20 +50,20 @@ const schema = z.object({
       "non-technical",
       "other",
     ]),
-    about: z.string().min(1000),
+    about: z.string().min(textAreaLimit),
     time: z.enum(["0-2", "2-4", "4-6", "6-*"]),
-    linkedin: z.string().url(),
-    x: z.string().url().optional(),
-    github: z.string().url().optional(),
+    linkedin: urlValue,
+    x: urlValue.optional(),
+    github: urlValue.optional(),
   }),
   project: z.object({
     name: z.string().min(3).max(100),
-    website: z.string().url(),
+    website: urlValue,
     stage: z.enum(["idea", "prototype", "beta", "live-no-users", "live-users"]),
     openSource: z.enum(["yes", "not-yet", "no", "undecided"]),
-    what: z.string().min(1000),
-    unique: z.string().min(1000),
-    goals: z.string().min(1000),
+    what: z.string().min(textAreaLimit),
+    unique: z.string().min(textAreaLimit),
+    goals: z.string().min(textAreaLimit),
     team: z.string(),
     audience: z.string(),
     activeUserbase: z.coerce.boolean(),
@@ -432,10 +441,8 @@ function InputField<
           <div className="flex flex-col items-end gap-2 justify-start max-w-[calc(20%-2rem)]">
             <FormLabel className="pt-5 font-semibold text-right">
               {props.label}
+              {!props.optional && " *"}
             </FormLabel>
-            {props.optional && (
-              <span className="text-ui-elements-gray text-sm">Optional</span>
-            )}
           </div>
           <div className="flex flex-col items-start justify-start w-4/5">
             <FormControl>
@@ -470,10 +477,8 @@ function TextAreaField<
           <div className="flex flex-col items-end gap-2 justify-start max-w-[calc(20%-2rem)]">
             <FormLabel className="pt-5 font-semibold text-right">
               {props.label}
+              {!props.optional && " *"}
             </FormLabel>
-            {props.optional && (
-              <span className="text-ui-elements-gray text-sm">Optional</span>
-            )}
           </div>
           <div className="flex flex-col items-start justify-start w-4/5">
             <FormControl>
@@ -485,8 +490,8 @@ function TextAreaField<
                   {props.description}
                 </FormDescription>
               )}
-              <span className="absolute right-0 top-0 text-right text-xs">
-                Min 1000 characters
+              <span className="absolute right-0 top-0 text-right text-xs pt-2 text-muted-foreground">
+                Min 300 characters
               </span>
             </div>
             <FormMessage />
@@ -514,6 +519,7 @@ function SelectField<
         <FormItem className="flex flex-row items-start justify-end w-full gap-8">
           <FormLabel className="pt-5 font-semibold max-w-[calc(20%-2rem)] text-right">
             {props.label}
+            {!props.optional && " *"}
           </FormLabel>
           <div className="flex flex-col items-start justify-start w-4/5">
             <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -550,6 +556,7 @@ function BinaryOptionField<
         <FormItem className="flex flex-row items-start justify-end w-full gap-8">
           <FormLabel className="pt-5 font-semibold max-w-[calc(20%-2rem)] text-right">
             {props.label}
+            {!props.optional && " *"}
           </FormLabel>
           <FormControl className="w-4/5">
             <RadioGroup
