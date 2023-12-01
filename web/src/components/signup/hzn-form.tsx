@@ -568,7 +568,7 @@ function SelectField<
             {props.label}
             {!props.optional && " *"}
           </FormLabel>
-          <div className="flex flex-col items-start justify-start md:w-4/5">
+          <div className="flex flex-col items-start justify-start md:w-4/5 w-full">
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
@@ -577,7 +577,11 @@ function SelectField<
               </FormControl>
               <SelectContent>
                 {props.options.map((option) => (
-                  <SelectItem value={option.value} key={option.value}>
+                  <SelectItem
+                    value={option.value}
+                    key={option.value}
+                    className="whitespace-wrap max-w-[min(20rem,75svw)]"
+                  >
                     {option.label}
                   </SelectItem>
                 ))}
