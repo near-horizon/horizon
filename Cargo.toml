@@ -21,7 +21,9 @@ overflow-checks = true
 
 [workspace.dependencies]
 anyhow = "1.0.75"
-itertools = "0.11.0"
+dotenvy = "0.15.7"
+futures = "0.3.29"
+itertools = "0.12.0"
 near-account-id = "0.17.0"
 near-crypto = "0.17.0"
 near-jsonrpc-client = "0.6.0"
