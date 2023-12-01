@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@radix-ui/react-select";
+} from "@components/ui/select";
 import type {
   FieldPath,
   FieldValues,
