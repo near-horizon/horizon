@@ -102,9 +102,9 @@ export function SignupForm() {
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-row gap-6"
+                  className="flex flex-col md:flex-row gap-6"
                 >
-                  <FormItem className="h-28 w-80 relative space-y-0">
+                  <FormItem className="h-28 w-[min(20rem,80svw)] relative space-y-0">
                     <FormControl>
                       <RadioGroupItem
                         value="hzn2"
@@ -120,7 +120,7 @@ export function SignupForm() {
                       </span>
                     </FormLabel>
                   </FormItem>
-                  <FormItem className="h-28 w-80 relative space-y-0">
+                  <FormItem className="h-28 w-[min(20rem,80svw)] relative space-y-0">
                     <FormControl>
                       <RadioGroupItem
                         value="hzn3"
@@ -484,14 +484,14 @@ function InputField<
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-start justify-end w-full gap-8">
-          <div className="flex flex-col items-end gap-2 justify-start max-w-[calc(20%-2rem)]">
+        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
+          <div className="flex flex-col items-end gap-2 justify-start md:max-w-[calc(20%-2rem)]">
             <FormLabel className="pt-5 font-semibold text-right">
               {props.label}
               {!props.optional && " *"}
             </FormLabel>
           </div>
-          <div className="flex flex-col items-start justify-start w-4/5">
+          <div className="flex flex-col items-start justify-start w-full md:w-4/5">
             <FormControl>
               <Input
                 {...field}
@@ -520,20 +520,20 @@ function TextAreaField<
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-start justify-end w-full gap-8">
-          <div className="flex flex-col items-end gap-2 justify-start max-w-[calc(20%-2rem)]">
+        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
+          <div className="flex flex-col items-end gap-2 justify-start md:max-w-[calc(20%-2rem)]">
             <FormLabel className="pt-5 font-semibold text-right">
               {props.label}
               {!props.optional && " *"}
             </FormLabel>
           </div>
-          <div className="flex flex-col items-start justify-start w-4/5">
+          <div className="flex flex-col items-start justify-start md:w-4/5 w-full">
             <FormControl>
               <Textarea {...field} placeholder={props.placeholder} rows={4} />
             </FormControl>
             <div className="relative w-full">
               {props.description && (
-                <FormDescription className="w-4/5">
+                <FormDescription className="md:w-4/5 w-1/2">
                   {props.description}
                 </FormDescription>
               )}
@@ -563,12 +563,12 @@ function SelectField<
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-start justify-end w-full gap-8">
-          <FormLabel className="pt-5 font-semibold max-w-[calc(20%-2rem)] text-right">
+        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
+          <FormLabel className="pt-5 font-semibold md:max-w-[calc(20%-2rem)] text-right">
             {props.label}
             {!props.optional && " *"}
           </FormLabel>
-          <div className="flex flex-col items-start justify-start w-4/5">
+          <div className="flex flex-col items-start justify-start md:w-4/5">
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
@@ -600,16 +600,16 @@ function BinaryOptionField<
       control={props.control}
       name={props.name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-start justify-end w-full gap-8">
-          <FormLabel className="pt-5 font-semibold max-w-[calc(20%-2rem)] text-right">
+        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
+          <FormLabel className="pt-5 font-semibold md:max-w-[calc(20%-2rem)] text-right">
             {props.label}
             {!props.optional && " *"}
           </FormLabel>
-          <FormControl className="w-4/5">
+          <FormControl className="md:w-4/5">
             <RadioGroup
               onValueChange={field.onChange}
               defaultValue={String(field.value)}
-              className="flex flex-col gap-6"
+              className="flex flex-row md:flex-col gap-6"
             >
               <FormItem className="flex gap-2 space-y-0">
                 <FormControl>
