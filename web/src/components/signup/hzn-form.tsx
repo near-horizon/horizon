@@ -39,6 +39,7 @@ import {
 import { Button } from "@components/ui/button";
 import { schema } from "@pages/api/hzn/signup";
 import { Separator } from "@components/ui/separator";
+import { motion } from "framer-motion";
 
 export function SignupForm() {
   const form = useForm<z.infer<typeof schema>>({
@@ -385,6 +386,46 @@ export function SignupForm() {
             label="When do you expect your next funding round?"
             placeholder=""
           />
+        </div>
+
+        <div className="px-10 pt-8 pb-14 gap-5 bg-ui-elements-white border border-ui-elements-light shadow-lg rounded-2xl flex flex-col items-end justify-center">
+          <h3 className="w-full font-bold text-2xl">3. Referral</h3>
+
+          <SelectField
+            control={form.control}
+            name="heard.type"
+            label="How did you hear about HZN?"
+            placeholder=""
+            options={[
+              { label: "From a referral", value: "referral" },
+              {
+                label: "From a social media post (Twitter, LinkedIn, etc)",
+                value: "social",
+              },
+              { label: "From near.org", value: "near.org" },
+              { label: "Other", value: "other" },
+            ]}
+          />
+
+          <motion.div
+            variants={{
+              closed: { height: 0, opacity: 0.8 },
+              open: { height: "auto", opacity: 1 },
+            }}
+            animate={
+              form.watch("heard.type") === "referral" ? "open" : "closed"
+            }
+            transition={{ duration: 0.4 }}
+            className="w-full flex flex-col items-start justify-start gap-8 overflow-hidden"
+          >
+            <InputField
+              control={form.control}
+              name="heard.referral"
+              label="Who referred you?"
+              placeholder=""
+              type="text"
+            />
+          </motion.div>
         </div>
 
         <div className="w-full flex items-center justify-center">
