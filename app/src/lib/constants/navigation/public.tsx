@@ -98,6 +98,6 @@ export const routes = [
         </span>
       </>
     ),
-    href: "/docs",
+    href: "https://hzn.xyz/hzn",
   },
 ] satisfies Route[];
