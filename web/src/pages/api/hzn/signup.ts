@@ -15,8 +15,18 @@ const urlValue = z.string().refine((value) => {
 export const schema = z.object({
   cohort: z.enum(["hzn2", "hzn3"]),
   heard: z.object({
-    type: z.enum(["referral", "social", "near.org", "other"]),
-    referral: z.string().optional(),
+    type: z.enum([
+      "alumni",
+      "nf",
+      "x",
+      "linkedin",
+      "event",
+      "nearcon",
+      "blog",
+      "friend",
+      "se",
+      "other",
+    ]),
   }),
   personal: z.object({
     fullName: z.string(),
@@ -98,10 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
     ...parsed.data.project,
     firstTime: parsed.data.personal.firstTime ? "Yes" : "No",
     raised: parsed.data.project.raised ? "Yes" : "No",
-    heard:
-      parsed.data.heard.type === "referral"
-        ? `referred by ${parsed.data.heard.referral}`
-        : parsed.data.heard.type,
+    heard: parsed.data.heard.type,
   };
 
   const records = [

@@ -24,7 +24,6 @@ import {
 import { Button } from "@components/ui/button";
 import { schema } from "@pages/api/hzn/signup";
 import { Separator } from "@components/ui/separator";
-import { motion } from "framer-motion";
 import { BinaryOptionField } from "@components/inputs/binary";
 import { InputField } from "@components/inputs/input";
 import { TextAreaField } from "@components/inputs/text-area";
@@ -386,35 +385,24 @@ export function SignupForm() {
             label="How did you hear about HZN?"
             placeholder=""
             options={[
-              { label: "From a referral", value: "referral" },
+              { label: "A current or alumni HZN founder", value: "alumni" },
               {
-                label: "From a social media post (Twitter, LinkedIn, etc)",
-                value: "social",
+                label: "A Near Foundation employee",
+                value: "nf",
               },
-              { label: "From near.org", value: "near.org" },
+              { label: "X (Twitter)", value: "x" },
+              { label: "LinkedIn", value: "linkedin" },
+              { label: "HZN event", value: "event" },
+              { label: "NEARCON", value: "nearcon" },
+              { label: "HZN blog", value: "blog" },
+              { label: "Friend (not a current HZN member)", value: "friend" },
+              {
+                label: "Google or via search engine doing my own research",
+                value: "se",
+              },
               { label: "Other", value: "other" },
             ]}
           />
-
-          <motion.div
-            variants={{
-              closed: { height: 0, opacity: 0.8 },
-              open: { height: "auto", opacity: 1 },
-            }}
-            animate={
-              form.watch("heard.type") === "referral" ? "open" : "closed"
-            }
-            transition={{ duration: 0.4 }}
-            className="w-full flex flex-col items-start justify-start gap-8 overflow-hidden"
-          >
-            <InputField
-              control={form.control}
-              name="heard.referral"
-              label="Who referred you?"
-              placeholder=""
-              type="text"
-            />
-          </motion.div>
         </div>
 
         <div className="w-full flex items-center justify-center">
