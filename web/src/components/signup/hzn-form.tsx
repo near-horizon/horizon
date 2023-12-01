@@ -38,10 +38,12 @@ import {
 } from "@components/ui/dialog";
 import { Button } from "@components/ui/button";
 import { schema } from "@pages/api/hzn/signup";
+import { Separator } from "@components/ui/separator";
 
 export function SignupForm() {
   const form = useForm<z.infer<typeof schema>>({
     mode: "onBlur",
+    shouldUseNativeValidation: false,
     resolver: zodResolver(schema),
     defaultValues: {
       cohort: "hzn2",
@@ -241,7 +243,7 @@ export function SignupForm() {
             name="personal.linkedin"
             label="LinkedIn"
             placeholder=""
-            type="url"
+            type="text"
           />
 
           <InputField
@@ -249,7 +251,7 @@ export function SignupForm() {
             name="personal.x"
             label="X (ex. Twitter)"
             placeholder=""
-            type="url"
+            type="text"
             optional
           />
 
@@ -258,7 +260,7 @@ export function SignupForm() {
             name="personal.github"
             label="GitHub"
             placeholder=""
-            type="url"
+            type="text"
             optional
           />
         </div>
@@ -277,7 +279,7 @@ export function SignupForm() {
             name="project.website"
             label="Project website"
             placeholder=""
-            type="url"
+            type="text"
           />
 
           <SelectField
@@ -316,6 +318,8 @@ export function SignupForm() {
             ]}
           />
 
+          <Separator className="w-full h-px bg-ui-elements-light my-8" />
+
           <TextAreaField
             control={form.control}
             name="project.what"
@@ -344,6 +348,8 @@ export function SignupForm() {
             placeholder=""
             description="If possible, please share location/timezones and linkedIn/socials of your team members."
           />
+
+          <Separator className="w-full h-px bg-ui-elements-light my-8" />
 
           <TextAreaField
             control={form.control}
