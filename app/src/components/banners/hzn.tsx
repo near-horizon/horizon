@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 export function HZNBanner() {
   return (
     <BannerShell id="hzn">
-      <div className="flex w-full flex-row items-center justify-center gap-14">
+      <div className="flex w-full flex-col items-center justify-center gap-2 md:flex-row md:gap-14">
         <div className="flex flex-row items-center justify-start gap-3">
           <svg
             width="24"

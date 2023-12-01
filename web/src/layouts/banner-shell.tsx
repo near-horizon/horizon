@@ -24,10 +24,10 @@ export function BannerShell({
   }, [id]);
 
   return (
-    <div className={cn("bg-secondary-dark h-16 py-4", { hidden: hide })}>
+    <div className={cn("bg-secondary-dark py-4", { hidden: hide })}>
       <div className="max-w-screen-xl mx-auto relative px-6">
         {children}
-        <div className="absolute right-6 top-2">
+        <div className="absolute right-6 top-1/2 -translate-y-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>

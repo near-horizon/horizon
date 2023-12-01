@@ -11,7 +11,9 @@ const { showBanner } = Astro.props;
 
 <div class={!showBanner ? "hidden" : ""}>
   <BannerShell id="hzn" client:load>
-    <div class="w-full flex flex-row items-center justify-center gap-14">
+    <div
+      class="w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-14"
+    >
       <div class="flex flex-row items-center justify-start gap-3">
         <svg
           width="24"
