@@ -39,7 +39,7 @@ export function People({
   return (
     <Tabs defaultValue="alumni">
       <div className="flex justify-center mb-10">
-        <TabsList className="text-ui-elements-dark bg-transparent gap-4 text-4xl font-bold">
+        <TabsList className="text-ui-elements-dark bg-transparent gap-4 text-4xl font-bold flex-col md:flex-row">
           <TabsTrigger
             value="alumni"
             className="text-4xl font-bold bg-transparent data-[state=active]:shadow-none data-[state=inactive]:text-ui-elements-gray transition-colors duration-200"
