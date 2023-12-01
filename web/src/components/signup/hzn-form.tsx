@@ -1,30 +1,15 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@components/ui/form";
-import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup, RadioGroupItem } from "@components/ui/radio-group";
-import {
-  type FieldPath,
-  type FieldValues,
-  type UseControllerProps,
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@components/ui/select";
-import { Textarea } from "@components/ui/textarea";
 import { cn } from "@lib/utils";
 import { useState } from "react";
 import {
@@ -40,6 +25,10 @@ import { Button } from "@components/ui/button";
 import { schema } from "@pages/api/hzn/signup";
 import { Separator } from "@components/ui/separator";
 import { motion } from "framer-motion";
+import { BinaryOptionField } from "@components/inputs/binary";
+import { InputField } from "@components/inputs/input";
+import { TextAreaField } from "@components/inputs/text-area";
+import { SelectField } from "@components/inputs/select";
 
 export function SignupForm() {
   const form = useForm<z.infer<typeof schema>>({
@@ -464,180 +453,5 @@ export function SignupForm() {
         </div>
       </form>
     </Form>
-  );
-}
-
-interface InputProps {
-  label: string;
-  description?: React.ReactNode;
-  placeholder: string;
-  type: React.HTMLInputTypeAttribute;
-  optional?: boolean;
-}
-
-function InputField<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(props: UseControllerProps<TFieldValues, TName> & InputProps) {
-  return (
-    <FormField
-      control={props.control}
-      name={props.name}
-      render={({ field }) => (
-        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
-          <div className="flex flex-col items-end gap-2 justify-start md:max-w-[calc(20%-2rem)]">
-            <FormLabel className="pt-5 font-semibold text-right">
-              {props.label}
-              {!props.optional && " *"}
-            </FormLabel>
-          </div>
-          <div className="flex flex-col items-start justify-start w-full md:w-4/5">
-            <FormControl>
-              <Input
-                {...field}
-                type={props.type}
-                className=""
-                placeholder={props.placeholder}
-              />
-            </FormControl>
-            {props.description && (
-              <FormDescription>{props.description}</FormDescription>
-            )}
-            <FormMessage />
-          </div>
-        </FormItem>
-      )}
-    />
-  );
-}
-
-function TextAreaField<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(props: UseControllerProps<TFieldValues, TName> & Omit<InputProps, "type">) {
-  return (
-    <FormField
-      control={props.control}
-      name={props.name}
-      render={({ field }) => (
-        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
-          <div className="flex flex-col items-end gap-2 justify-start md:max-w-[calc(20%-2rem)]">
-            <FormLabel className="pt-5 font-semibold text-right">
-              {props.label}
-              {!props.optional && " *"}
-            </FormLabel>
-          </div>
-          <div className="flex flex-col items-start justify-start md:w-4/5 w-full">
-            <FormControl>
-              <Textarea {...field} placeholder={props.placeholder} rows={4} />
-            </FormControl>
-            <div className="relative w-full">
-              {props.description && (
-                <FormDescription className="md:w-4/5 w-1/2">
-                  {props.description}
-                </FormDescription>
-              )}
-              <span className="absolute right-0 top-0 text-right text-xs pt-2 text-muted-foreground">
-                Min 300 characters
-              </span>
-            </div>
-            <FormMessage />
-          </div>
-        </FormItem>
-      )}
-    />
-  );
-}
-
-function SelectField<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(
-  props: UseControllerProps<TFieldValues, TName> &
-    Omit<InputProps, "type"> & {
-      options: { label: string; value: string }[];
-    },
-) {
-  return (
-    <FormField
-      control={props.control}
-      name={props.name}
-      render={({ field }) => (
-        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
-          <FormLabel className="pt-5 font-semibold md:max-w-[calc(20%-2rem)] text-right">
-            {props.label}
-            {!props.optional && " *"}
-          </FormLabel>
-          <div className="flex flex-col items-start justify-start md:w-4/5 w-full">
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select an option" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {props.options.map((option) => (
-                  <SelectItem
-                    value={option.value}
-                    key={option.value}
-                    className="whitespace-wrap max-w-[min(20rem,75svw)]"
-                  >
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </div>
-        </FormItem>
-      )}
-    />
-  );
-}
-
-function BinaryOptionField<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(props: UseControllerProps<TFieldValues, TName> & Omit<InputProps, "type">) {
-  return (
-    <FormField
-      control={props.control}
-      name={props.name}
-      render={({ field }) => (
-        <FormItem className="flex flex-col md:flex-row items-start justify-end w-full gap-2 md:gap-8">
-          <FormLabel className="pt-5 font-semibold md:max-w-[calc(20%-2rem)] text-right">
-            {props.label}
-            {!props.optional && " *"}
-          </FormLabel>
-          <FormControl className="md:w-4/5">
-            <RadioGroup
-              onValueChange={field.onChange}
-              defaultValue={String(field.value)}
-              className="flex flex-row md:flex-col gap-6"
-            >
-              <FormItem className="flex gap-2 space-y-0">
-                <FormControl>
-                  <RadioGroupItem
-                    value="true"
-                    className="rounded-xl border-ui-elements-light"
-                  />
-                </FormControl>
-                <FormLabel>Yes</FormLabel>
-              </FormItem>
-              <FormItem className="flex gap-2 space-y-0">
-                <FormControl>
-                  <RadioGroupItem
-                    value="false"
-                    className="rounded-xl border-ui-elements-light"
-                  />
-                </FormControl>
-                <FormLabel>No</FormLabel>
-              </FormItem>
-            </RadioGroup>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
   );
 }
