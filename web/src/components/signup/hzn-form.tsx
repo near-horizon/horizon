@@ -14,22 +14,19 @@ import { cn } from "@lib/utils";
 import { useState } from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@components/ui/dialog";
-import { Button } from "@components/ui/button";
 import { schema } from "@pages/api/hzn/signup";
 import { Separator } from "@components/ui/separator";
 import { BinaryOptionField } from "@components/inputs/binary";
 import { InputField } from "@components/inputs/input";
 import { TextAreaField } from "@components/inputs/text-area";
 import { SelectField } from "@components/inputs/select";
+import { RotateCw } from "lucide-react";
 
-export function SignupForm() {
+export function SignupForm({ redirect }: { redirect: () => void }) {
   const form = useForm<z.infer<typeof schema>>({
     mode: "onBlur",
     shouldUseNativeValidation: false,
@@ -40,6 +37,9 @@ export function SignupForm() {
   });
   const isDisabled = !form.formState.isValid;
   const [openDialog, setOpenDialog] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState(
+    "Submitting your application!",
+  );
 
   return (
     <Form {...form}>
@@ -52,32 +52,22 @@ export function SignupForm() {
           });
           if (response.ok) {
             form.reset({ cohort: "hzn2" });
+            redirect();
+          } else {
+            setDialogTitle("There was an error submitting your application");
           }
         })}
         className="space-y-10"
       >
-        <Dialog
-          open={form.formState.isSubmitSuccessful && openDialog}
-          onOpenChange={setOpenDialog}
-        >
+        <Dialog open={openDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Congratulations!</DialogTitle>
-              <DialogDescription>
-                You successfully submitted your application to HZN!
-              </DialogDescription>
+              <DialogTitle>{dialogTitle}</DialogTitle>
             </DialogHeader>
-            <DialogFooter className="sm:justify-start">
-              <DialogClose asChild>
-                <a href="/">
-                  <Button type="button" variant="secondary">
-                    Close
-                  </Button>
-                </a>
-              </DialogClose>
-            </DialogFooter>
+            <RotateCw className="w-20 h-20 mx-auto text-primary animate-spin" />
           </DialogContent>
         </Dialog>
+
         <FormField
           control={form.control}
           name="cohort"
@@ -130,6 +120,7 @@ export function SignupForm() {
             </FormItem>
           )}
         />
+
         <div className="px-10 pt-8 pb-14 gap-5 bg-ui-elements-white border border-ui-elements-light shadow-lg rounded-2xl flex flex-col items-end justify-center">
           <h3 className="w-full font-bold text-2xl">1. Personal information</h3>
 
@@ -414,12 +405,12 @@ export function SignupForm() {
                 "bg-background-light text-ui-elements-gray": isDisabled,
               },
             )}
-            onClick={(e) => {
-              if (isDisabled) {
-                e.preventDefault();
-                void form.trigger();
-              }
-            }}
+            // onClick={(e) => {
+            //   if (isDisabled) {
+            //     e.preventDefault();
+            //     void form.trigger();
+            //   }
+            // }}
           >
             Submit application
             <svg

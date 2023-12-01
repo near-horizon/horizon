@@ -1,0 +1,56 @@
+---
+import Layout from "@layouts/Layout.astro";
+import HZNNav from "@layouts/HZNNav.astro";
+---
+
+<Layout title="Thank You!" showBanner={false}>
+  <HZNNav />
+  <main
+    class="bg-background-beige flex h-[max(75svh,30rem)] flex-col justify-center"
+  >
+    <div
+      class="rounded-xl shadow-md bg-background-white px-20 py-10 flex flex-col items-center justify-center max-w-3xl mx-auto gap-5"
+    >
+      <svg
+        viewBox="0 0 19 18"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="text-primary w-12 h-12"
+      >
+        <path
+          d="M8.37464 10.1251L16.2496 2.25013M8.47033 10.3712L10.4414 15.4397C10.6151 15.8862 10.7019 16.1094 10.827 16.1746C10.9354 16.2311 11.0646 16.2312 11.1731 16.1748C11.2983 16.1098 11.3854 15.8866 11.5596 15.4403L16.5023 2.77453C16.6595 2.37164 16.7381 2.1702 16.6951 2.04148C16.6578 1.92969 16.5701 1.84197 16.4583 1.80462C16.3296 1.76162 16.1281 1.84023 15.7252 1.99746L3.05943 6.94021C2.61313 7.11438 2.38997 7.20146 2.32494 7.32664C2.26857 7.43516 2.26864 7.56434 2.32515 7.67279C2.39033 7.7979 2.61358 7.88472 3.06009 8.05836L8.12859 10.0294C8.21923 10.0647 8.26455 10.0823 8.30271 10.1095C8.33653 10.1337 8.36611 10.1632 8.39024 10.1971C8.41746 10.2352 8.43508 10.2805 8.47033 10.3712Z"
+          stroke="currentColor"
+          stroke-width="1.66667"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+
+      <h1 class="text-primary text-4xl text-center font-bold">
+        Application sent!
+      </h1>
+
+      <p class="text-ui-elements-dark text-lg text-center">
+        Thank you for applying to HZN!
+      </p>
+
+      <p class="text-ui-elements-dark text-lg text-center">
+        We will closely review your application and reach out for a follow-up if
+        we believe you are a good fit for the program. Do not hesitate to reach
+        out to our team if you have any questions.
+      </p>
+
+      <p class="text-ui-elements-dark text-lg text-center">
+        Meanwhile, <a
+          href="https://x.com/nearhorizon"
+          class="text-text-link underline font-medium">Subscribe to us on X</a
+        >
+         and
+        <a
+          href="https://app.hzn.xyz"
+          class="text-text-link underline font-medium"
+          >Explore the Horizon platform</a
+        >
+      </p>
+    </div>
+  </main>
+</Layout>

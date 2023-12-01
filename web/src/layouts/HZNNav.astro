@@ -1,0 +1,54 @@
+---
+import { LinkButton } from "@components/LinkButton";
+---
+
+<div>
+  <nav
+    class="flex flex-col md:flex-row items-center justify-between w-full mx-auto max-w-screen-xl px-8 py-4"
+  >
+    <div class="flex flex-row items-center justify-between w-full">
+      <div class="flex flex-row items-center justify-start gap-4">
+        <svg
+          class="h-10"
+          viewBox="0 0 138 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M28.3736 38.3303L19.3081 14.9436L22.6846 38.9013C22.7616 39.4451 23.2137 39.8493 23.7462 39.8493H27.3779C28.137 39.8493 28.6552 39.058 28.3736 38.3314V38.3303ZM15.9306 38.9002L19.307 14.9425L10.2416 38.3292C9.95991 39.0557 10.4781 39.847 11.2372 39.847H14.8689C15.4014 39.847 15.8536 39.444 15.9306 38.8991V38.9002ZM34.5401 0H4.07616C1.8252 0 0 1.88342 0 4.2062V35.642C0 36.062 0.0605106 36.4684 0.172729 36.851C0.422469 37.7036 1.50064 37.9137 2.03973 37.2189L19.3092 14.9436L36.5787 37.2189C37.1178 37.9137 38.196 37.7036 38.4457 36.851C38.5579 36.4684 38.6184 36.0632 38.6184 35.642V4.2062C38.6184 1.88342 36.7932 0 34.5423 0H34.5401Z"
+            fill="#66A0FF"></path>
+          <path
+            d="M85.3256 30.0005H106.761V33.3872H80.0163V30.4301L100.568 9.69473H80.0063V6.30811H106.778V8.8872L85.3256 30.0005Z"
+            fill="black"></path>
+          <path
+            d="M134.257 27.3272V6.46191L137.55 6.46191V33.377H135.16L114.532 11.9128V33.3871H111.24L111.24 6.50702L114.115 6.50702L134.257 27.3272Z"
+            fill="black"></path>
+          <path
+            d="M53.0115 21.5888V33.3872H48.9268V6.30811H53.0115V17.9915H71.287V6.30811H75.3904V33.3872H71.287V21.5888H53.0115Z"
+            fill="black"></path>
+        </svg>
+
+        <p class="hidden md:block">
+          Equity-free Web3 accelerator by <a
+            href="/"
+            class="underline text-text-link">Horizon</a
+          >
+        </p>
+      </div>
+
+      <LinkButton
+        className="font-medium py-2 px-3 text-sm"
+        label="Apply to HZN"
+        href="/hzn/signup"
+      />
+    </div>
+
+    <p class="md:hidden">
+      Equity-free Web3 accelerator by <a
+        href="/"
+        class="underline text-text-link">Horizon</a
+      >
+    </p>
+  </nav>
+  <div></div>
+</div>

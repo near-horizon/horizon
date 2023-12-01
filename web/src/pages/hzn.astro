@@ -10,6 +10,7 @@ import Ask from "@components/hzn/Ask.astro";
 import Recognize from "@components/hzn/Recognize.astro";
 import { People } from "@components/hzn/People.tsx";
 import Graphic from "@components/hzn/Graphic.astro";
+import HZNNav from "@layouts/HZNNav.astro";
 
 const airtableKey = import.meta.env.PUBLIC_AIRTABLE_TOKEN;
 const response = await fetch(
@@ -32,6 +33,7 @@ const people = json.records.map((record: any) => ({
 ---
 
 <Layout title="HZN" showBanner={false}>
+  <HZNNav />
   <main class="bg-background-light">
     <div class="p-6 w-full flex-col flex gap-14 max-w-screen-xl mx-auto py-14">
       <Hero />

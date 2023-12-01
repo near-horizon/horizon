@@ -1,9 +1,11 @@
 ---
 import { SignupForm } from "@components/signup/hzn-form";
 import Layout from "@layouts/Layout.astro";
+import HZNNav from "@layouts/HZNNav.astro";
 ---
 
 <Layout title="HZN" showBanner={false}>
+  <HZNNav />
   <main
     class="p-6 bg-background-white w-full flex-col flex gap-14 max-w-screen-xl mx-auto"
   >
@@ -21,7 +23,12 @@ import Layout from "@layouts/Layout.astro";
     </h2>
 
     <div class="max-w-5xl mx-auto">
-      <SignupForm client:load />
+      <SignupForm
+        client:load
+        redirect={() => {
+          Astro.redirect("/signup/thank-you");
+        }}
+      />
     </div>
   </main>
 </Layout>
