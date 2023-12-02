@@ -1,0 +1,22 @@
+---
+import { Gallery as GalleryComponent } from "./Gallery";
+import { Image } from "astro:assets";
+import one from "./gallery/1.png";
+import two from "./gallery/2.png";
+import three from "./gallery/3.png";
+import four from "./gallery/4.png";
+import five from "./gallery/5.png";
+import six from "./gallery/6.png";
+
+const images = [one, two, three, four, five, six];
+---
+
+<GalleryComponent client:load>
+  {
+    images.map((image) => (
+      <div class="rounded-xl w-[81svw] max-h-[40rem] overflow-hidden">
+        <Image src={image} alt="image" class="object-cover" />
+      </div>
+    ))
+  }
+</GalleryComponent>

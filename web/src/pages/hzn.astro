@@ -11,6 +11,7 @@ import Recognize from "@components/hzn/Recognize.astro";
 import { People } from "@components/hzn/People.tsx";
 import Graphic from "@components/hzn/Graphic.astro";
 import HZNNav from "@layouts/HZNNav.astro";
+import Gallery from "@components/hzn/Gallery.astro";
 
 const airtableKey = import.meta.env.PUBLIC_AIRTABLE_TOKEN;
 const response = await fetch(
@@ -48,8 +49,9 @@ const people = json.records.map((record: any) => ({
       >
         <Who />
         <Recognize />
-        <Testamonial />
         <People client:load people={people} />
+        <Testamonial />
+        <Gallery />
         <!-- <Journey /> -->
         <Hero />
       </div>
