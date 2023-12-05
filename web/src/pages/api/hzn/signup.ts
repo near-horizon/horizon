@@ -37,8 +37,8 @@ export const schema = z.object({
     background: z.enum([
       "technical",
       "semi-technical",
+      "minimally-technical",
       "non-technical",
-      "other",
     ]),
     about: z.string().min(textAreaLimit),
     time: z.enum(["0-2", "2-4", "4-6", "6-*"]),
