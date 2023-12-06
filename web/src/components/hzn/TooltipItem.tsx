@@ -15,8 +15,10 @@ export function TooltipItem({
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>
-          <b className="font-medium text-2xl text-ui-elements-dark">{label}</b>
+        <TooltipTrigger className="-translate-x-1/4 xl:translate-x-0">
+          <b className="font-medium text-lg lg:text-xl xl:text-2xl text-ui-elements-dark whitespace-nowrap">
+            {label}
+          </b>
         </TooltipTrigger>
         <TooltipContent className="bg-ui-elements-dark bg-opacity-[.85] shadow-md max-w-xs p-4 relative overflow-visible -translate-y-2">
           <p className="text-white font-xl">{children}</p>
