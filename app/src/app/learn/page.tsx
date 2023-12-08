@@ -11,13 +11,11 @@ import {
   tagCategories,
   typeCategories,
 } from "~/lib/constants/learn";
-import { Toggleable } from "~/components/toggleable";
 
 export default function LearnPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [visible, setVisible] = useState(false);
 
   const filterData = (
     selectedCategories: string[],
@@ -47,13 +45,6 @@ export default function LearnPage() {
 
   return (
     <div className="flex flex-col items-center gap-8 rounded-xl border border-ui-elements-light bg-background-white p-12 pt-6 shadow">
-      <Toggleable
-        id="toggleable"
-        value={visible}
-        onChange={(visible) => setVisible(visible)}
-      >
-        Hello
-      </Toggleable>
       <div className="flex w-full max-w-[max(calc(100%-1rem),1536px)] flex-col gap-8 2xl:mx-auto">
         <div className="mb-6 text-3xl font-bold tracking-wide text-gray-900">
           Learning resources{" "}
