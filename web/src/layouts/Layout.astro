@@ -20,6 +20,17 @@ const { title, showBanner = true } = Astro.props;
     <link rel="icon" type="image/svg" href="/icon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-72CCMT2FGJ"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-72CCMT2FGJ");
+    </script>
   </head>
   <body>
     <Banner showBanner={showBanner} />
