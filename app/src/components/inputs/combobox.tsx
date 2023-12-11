@@ -29,13 +29,13 @@ import { type InputProps } from "~/lib/validation/inputs";
 
 export function ComboboxInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
   props: UseControllerProps<TFieldValues, TName> &
     InputProps & {
       emptyText?: string;
       options: { value: string; text: string }[];
-    }
+    },
 ) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -56,7 +56,7 @@ export function ComboboxInput<
                   role="combobox"
                   className={cn(
                     "justify-between rounded-md",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
                   )}
                 >
                   {field.value
@@ -88,7 +88,7 @@ export function ComboboxInput<
                           "mr-2 h-6 w-6",
                           item.value === field.value
                             ? "opacity-100"
-                            : "opacity-0"
+                            : "opacity-0",
                         )}
                       />
                       {item.text}
@@ -99,7 +99,7 @@ export function ComboboxInput<
             </PopoverContent>
           </Popover>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

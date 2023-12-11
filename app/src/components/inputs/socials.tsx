@@ -135,7 +135,7 @@ export function SocialProfilesInput<
             </div>
           </FormControl>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

@@ -24,7 +24,7 @@ import { Separator } from "../ui/separator";
 
 export function FileInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -123,7 +123,7 @@ export function FileInput<
             </FormControl>
           </div>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

@@ -16,7 +16,7 @@ import { type InputProps } from "~/lib/validation/inputs";
 
 export function EmailInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   return (
     <FormField
@@ -31,7 +31,7 @@ export function EmailInput<
             <Input {...field} placeholder={props.placeholder} type="email" />
           </FormControl>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

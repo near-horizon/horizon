@@ -21,7 +21,7 @@ import { Icon } from "../icon";
 
 export function ImageInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
   props: UseControllerProps<TFieldValues, TName> &
     InputProps & {
@@ -29,7 +29,7 @@ export function ImageInput<
       cid: string;
       generateEnabled?: boolean;
       generate?: boolean;
-    }
+    },
 ) {
   const ref = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -148,7 +148,7 @@ export function ImageInput<
             </FormControl>
           </div>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

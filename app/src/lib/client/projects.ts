@@ -5,13 +5,13 @@ import {
   type BackersDigest,
   backersDigestSchema,
   type HorizonProject,
-  newProjectSchema,
   projectSchema,
   type ProjectsQuery,
 } from "../validation/projects";
 import { viewCall } from "./fetching";
 import { env } from "~/env.mjs";
 import deepEqual from "deep-equal";
+import { newProjectSchema } from "../validation/project/new";
 
 export async function getProjects(query: ProjectsQuery) {
   const result = await fetch("/api/projects?" + intoURLSearchParams(query));

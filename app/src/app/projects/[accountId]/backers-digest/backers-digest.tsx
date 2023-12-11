@@ -1,28 +1,30 @@
 "use client";
 
 import { type AccountId } from "~/lib/validation/common";
-import { Toggleable } from "~/components/toggleable";
 import { useZodForm } from "~/hooks/form";
 import { Form } from "~/components/ui/form";
+import { useEffect, useState } from "react";
+import { getNewProject } from "~/lib/client/projects";
 import {
   newProjectSchema,
+  projectArtifactsCompletion,
+  projectContactCompletion,
+  projectFoundersCompletion,
+  projectMetricsCompletion,
   projectProfileCompletion,
-} from "~/lib/validation/projects";
-import { TextInput } from "~/components/inputs/text";
-import { ImageInput } from "~/components/inputs/image";
-import { useEffect, useState } from "react";
-import { NUMBER } from "~/lib/format";
-import { getNewProject } from "~/lib/client/projects";
-
-// name: nameSchema,
-// logo: imageSchema,
-// email: emailSchema,
-// vertical: verticalSchema,
-// tagline: taglineSchema,
-// website: websiteSchema.optional(),
-// socials: socialsSchema.optional(),
-// location: locationSchema.optional(),
-// size: sizeSchema.optional(),
+  projectProgressCompletion,
+} from "~/lib/validation/project/new";
+import { FoundersInput } from "./inputs/founder";
+import { KeyValueInput } from "~/components/inputs/key-value";
+import { DetailsInput } from "./inputs/details";
+import { ContactInput } from "./inputs/contact";
+import { GeneralInput } from "./inputs/general";
+import { InputSection } from "./inputs/section";
+import { ArtifactsInput } from "./inputs/artifacts";
+import { ExternalLink } from "lucide-react";
+import { Download01Svg, File06Svg, Share03Svg } from "~/icons";
+import { getFileURL } from "~/lib/utils";
+import { MediaInput } from "./inputs/media";
 
 export function BackersDigest({ accountId }: { accountId: AccountId }) {
   const form = useZodForm(newProjectSchema);
@@ -32,55 +34,136 @@ export function BackersDigest({ accountId }: { accountId: AccountId }) {
   useEffect(() => {
     getNewProject(accountId)
       .then((project) => {
-        console.log("project", project);
         form.reset(project);
+        project.profile.logo &&
+          "ipfs_cid" in project.profile.logo &&
+          setCid(project.profile.logo.ipfs_cid);
       })
       .catch(console.error);
   }, [accountId, form]);
 
   return (
     <Form {...form}>
-      <form>
-        <Toggleable disabled value={true} id="public">
-          <div className="flex flex-col items-start justify-start gap-4">
-            <h3 className="text-2xl font-bold">General information</h3>
-            <div className="flex flex-row items-start justify-start gap-6">
-              <span>
-                Completed form:{" "}
-                {NUMBER.percentage(projectProfileCompletion(profile))}
-              </span>
-            </div>
+      <form className="flex w-full flex-col items-stretch justify-start gap-8">
+        <InputSection
+          title="General information"
+          completion={projectProfileCompletion(profile)}
+          value={true}
+          disabled
+        >
+          <GeneralInput form={form} cid={cid} setCid={(cid) => setCid(cid)} />
+        </InputSection>
 
-            <TextInput
-              control={form.control}
-              label="Name"
-              placeholder="Name"
-              name="profile.name"
-              rules={{ required: true }}
-            />
+        <InputSection
+          title="Contact information"
+          completion={projectContactCompletion(profile)}
+          value={form.watch("contact.visible")}
+          onChange={(value) => form.setValue("contact.visible", value)}
+        >
+          <ContactInput form={form} />
+        </InputSection>
 
-            <ImageInput
-              name="profile.logo"
-              control={form.control}
-              label="Logo"
-              rules={{ required: true }}
-              defaultValue={{ ipfs_cid: "" }}
-              setCid={setCid}
-              cid={cid}
-              generate
-              generateEnabled={form.formState.isValid && form.formState.isDirty}
-            />
+        <InputSection
+          title="Project details"
+          completion={projectProgressCompletion(profile)}
+          value={form.watch("progress.visible")}
+          onChange={(value) => form.setValue("progress.visible", value)}
+        >
+          <DetailsInput form={form} />
+        </InputSection>
 
-            <TextInput
-              control={form.control}
-              label="Email"
-              placeholder="Email"
-              name="profile.email"
-              rules={{ required: true }}
-            />
-          </div>
-        </Toggleable>
+        <InputSection
+          title="Traction metrics"
+          completion={projectMetricsCompletion(profile)}
+          value={form.watch("metrics.visible")}
+          onChange={(value) => form.setValue("metrics.visible", value)}
+        >
+          <KeyValueInput form={form} />
+        </InputSection>
+
+        <InputSection
+          title="Founders"
+          completion={projectFoundersCompletion(profile)}
+          value={form.watch("founders.visible")}
+          onChange={(value) => form.setValue("founders.visible", value)}
+        >
+          <FoundersInput form={form} />
+        </InputSection>
+
+        <InputSection
+          title="Artifacts"
+          completion={projectArtifactsCompletion(profile)}
+          value={true}
+          disabled
+        >
+          <ArtifactsInput form={form} />
+        </InputSection>
+
+        <InputSection
+          title="Media coverage"
+          completion={0}
+          value={form.watch("media.visible")}
+          onChange={(value) => form.setValue("media.visible", value)}
+        >
+          <MediaInput form={form} />
+        </InputSection>
       </form>
     </Form>
+  );
+}
+
+export function Section({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) {
+  return (
+    <section className="flex flex-col items-start justify-start gap-4">
+      <h2 className="text-xl font-bold">{title}</h2>
+      {children}
+    </section>
+  );
+}
+export function FileDescription({ file }: { file: string }) {
+  const value = getFileURL(file);
+
+  if (typeof value === "string") {
+    return (
+      <div className="flex w-full flex-col items-start justify-start gap-2 rounded-lg border border-ui-elements-light bg-background-light px-4 py-2">
+        <span className="flex w-full flex-row items-center justify-start gap-2">
+          <File06Svg className="h-6 w-6 text-ui-elements-gray" />
+          <ExternalLink href={value}>
+            <span className="flex flex-row items-center justify-start gap-2">
+              {value}
+              <Share03Svg className="h-4 w-4 text-ui-elements-gray" />
+            </span>
+          </ExternalLink>
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col items-start justify-start gap-2 rounded-lg border border-ui-elements-light bg-background-light px-4 py-2">
+      <span className="flex w-full flex-row items-center justify-start gap-2">
+        <File06Svg className="h-6 w-6 text-ui-elements-gray" />
+        <a
+          href={value.url}
+          download
+          className="flex max-w-prose flex-row items-center justify-start gap-2 truncate text-text-link"
+        >
+          {value.filename}
+          <Download01Svg className="h-4 w-4 text-ui-elements-gray" />
+        </a>
+        <small className="text-sm font-medium text-ui-elements-gray">
+          {value.size}
+        </small>
+      </span>
+      <small className="text-sm font-medium text-ui-elements-gray">
+        Uploaded {value.uploaded}
+      </small>
+    </div>
   );
 }

@@ -101,7 +101,11 @@ export default function BackersDigestForm() {
           "",
         linkedin: backersDigest?.linkedin ?? data?.linktree?.linkedin ?? "",
         twitter: backersDigest?.twitter ?? data?.linktree?.twitter ?? "",
-        linktree: backersDigest?.linktree ?? data?.linktree ?? {},
+        linktree: backersDigest?.linktree
+          ? typeof backersDigest.linktree === "object"
+            ? backersDigest.linktree
+            : undefined
+          : data?.linktree ?? {},
         demo: backersDigest?.demo ?? data?.demo ?? "",
         pitch: backersDigest?.pitch ?? data?.deck ?? "",
         fundraising: backersDigest?.fundraising ?? false,
@@ -268,7 +272,13 @@ export default function BackersDigestForm() {
           <SocialProfilesInput
             control={form.control}
             name="linktree"
-            defaultValue={backersDigest?.linktree ?? data?.linktree ?? {}}
+            defaultValue={
+              backersDigest?.linktree
+                ? typeof backersDigest.linktree === "object"
+                  ? backersDigest.linktree
+                  : undefined
+                : data?.linktree ?? {}
+            }
             label="Social profiles"
           />
           <CheckboxInput

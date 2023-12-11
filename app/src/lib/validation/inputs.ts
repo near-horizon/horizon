@@ -5,30 +5,39 @@ export interface InputProps {
   label?: string;
   description?: string;
   placeholder?: string;
+  noLabel?: boolean;
 }
 
-const handleRegex = /^@[a-zA-Z0-9_]{1,15}$/;
+const handleRegex = /^@[+a-zA-Z0-9_]{1,45}$/;
 
 export function createSocialValidation(domain: string) {
   return z
     .string()
     .refine((urlOrHandle) => {
+      urlOrHandle = urlOrHandle.trim();
+      while (urlOrHandle.startsWith("/")) {
+        urlOrHandle = urlOrHandle.substring(1);
+      }
       const urlRegex = new RegExp(
-        `^(https?:\/\/)?(www\.)?${domain}\/([A-Za-z0-9_]+)(\?.*)?$`,
+        `^(https?:\/\/)?(www\.)?${domain}\/([+a-zA-Z0-9_]{1,45})([?].*)?$`,
       );
 
       if (handleRegex.test(urlOrHandle)) {
         return z.string().regex(handleRegex).parse(urlOrHandle);
       }
 
-      if (!urlRegex.test(urlOrHandle)) {
-        throw new Error("Invalid URL or handle");
+      if (handleRegex.test(`@${urlOrHandle}`)) {
+        return z.string().regex(handleRegex).parse(`@${urlOrHandle}`);
       }
 
-      return z
-        .string()
-        .regex(handleRegex)
-        .parse("@" + urlOrHandle.split("/").pop()?.split("?")[0]);
+      if (urlRegex.test(urlOrHandle)) {
+        return z
+          .string()
+          .regex(handleRegex)
+          .parse("@" + urlOrHandle.split("/").pop()?.split("?")[0]);
+      }
+
+      return false;
     })
     .transform((handle) => handle.substring(1));
 }
@@ -51,6 +60,8 @@ export const verticalSchema = z.enum([
 
 export const taglineSchema = z.string().min(3).max(100);
 
+export const descriptionSchema = z.string().min(50).max(1000);
+
 export const websiteSchema = z.string().refine((url) => {
   if (url.startsWith("http://") || url.startsWith("https://")) {
     return z.string().url().parse(url);
@@ -59,14 +70,19 @@ export const websiteSchema = z.string().refine((url) => {
   return z.string().url().parse(`https://${url}`);
 });
 
+export const xSchema = createSocialValidation("twitter.com").or(
+  createSocialValidation("x.com"),
+);
+export const telegramSchema = createSocialValidation("t.me");
+export const linkedinSchema = createSocialValidation("linkedin.com");
+export const instagramSchema = createSocialValidation("instagram.com");
+
 export const socialSchema = z
   .object({
-    x: createSocialValidation("x.com").or(
-      createSocialValidation("twitter.com"),
-    ),
-    telegram: createSocialValidation("t.me"),
-    linkedin: createSocialValidation("linkedin.com"),
-    instagram: createSocialValidation("instagram.com"),
+    x: xSchema,
+    telegram: telegramSchema,
+    linkedin: linkedinSchema,
+    instagram: instagramSchema,
   })
   .partial();
 
@@ -86,6 +102,7 @@ export const stageSchema = z.enum([
   "series-b",
   "series-c",
   "series-d",
+  "other",
 ]);
 
 export const openSourceSchema = z.boolean();

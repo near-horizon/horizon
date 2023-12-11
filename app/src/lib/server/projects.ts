@@ -8,7 +8,6 @@ import {
   type BackersDigest,
   backersDigestSchema,
   horizonSchema,
-  NewProject,
   projectSchema,
   type ProjectsQuery,
 } from "../validation/projects";
@@ -28,6 +27,7 @@ import { hasBacker } from "./backers";
 import { headers } from "next/headers";
 import { backersViewFromKey } from "../constants/backers-digest";
 import { type User } from "../validation/user";
+import { NewProject } from "../validation/project/new";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
   vertical: z.array(z.string()).optional().or(z.string().optional()),
@@ -105,13 +105,15 @@ export async function getProject(accountId: AccountId) {
     return tx.method_name === "add_project" && tx.args.account_id === accountId;
   });
 
-  return projectSchema.parse({
+  const project = projectSchema.parse({
     ...profile,
     ...horizon,
     company_size: typeof company_size === "string" ? company_size : "",
     account_id: accountId,
     creationTx,
   });
+
+  return project;
 }
 
 export async function hasProject(accountId: AccountId) {

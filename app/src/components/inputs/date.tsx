@@ -21,12 +21,12 @@ import { DATE } from "~/lib/format";
 
 export function DateInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
   props: UseControllerProps<TFieldValues, TName> &
     InputProps & {
       invalidDates?: (date: Date) => boolean;
-    }
+    },
 ) {
   return (
     <FormField
@@ -44,7 +44,7 @@ export function DateInput<
                   variant={"outline"}
                   className={cn(
                     "w-[240px] rounded-md pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
                   )}
                 >
                   {field.value ? (
@@ -67,7 +67,7 @@ export function DateInput<
             </PopoverContent>
           </Popover>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

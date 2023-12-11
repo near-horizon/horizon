@@ -16,7 +16,7 @@ import { type InputProps } from "~/lib/validation/inputs";
 
 export function NumberInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   return (
     <FormField
@@ -44,7 +44,7 @@ export function NumberInput<
             />
           </FormControl>
           <FormDescription>{props.description}</FormDescription>
-          <FormMessage />
+          <FormMessage className="col-start-3" />
         </FormItem>
       )}
     />

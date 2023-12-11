@@ -5,30 +5,30 @@ type Props =
   | {
       children: React.ReactNode;
       id: string;
-      disabled: true;
       value: boolean;
+      className?: string;
+      disabled: true;
     }
   | {
       children: React.ReactNode;
-      value: boolean;
-      onChange: (value: boolean) => void;
       id: string;
-      disabled: false;
+      value: boolean;
+      className?: string;
+      disabled?: false;
+      onChange: (value: boolean) => void;
     };
 
 export function Toggleable(props: Props) {
   return (
-    <div className="relative w-full rounded-2xl border border-ui-elements-light bg-ui-elements-white p-10 pt-8">
+    <div
+      className={cn(
+        "relative w-full rounded-2xl border border-ui-elements-light bg-ui-elements-white p-10 pt-8",
+        props.className,
+      )}
+    >
       <div className="absolute right-10 top-8 flex flex-row items-center justify-end gap-2">
-        <span
-          className={cn(
-            "text-xs font-semibold text-ui-elements-black transition-all duration-200",
-            {
-              "opacity-40": props.value,
-            },
-          )}
-        >
-          Visible for backers
+        <span className="text-xs font-semibold text-ui-elements-black transition-all duration-200">
+          Visible for {props.value ? "all users" : "backers"}
         </span>
         <Switch
           id={props.id}
@@ -39,16 +39,6 @@ export function Toggleable(props: Props) {
           disabled={props.disabled}
           className="scale-90"
         />
-        <span
-          className={cn(
-            "text-xs font-semibold text-ui-elements-black transition-all duration-200",
-            {
-              "opacity-40": !props.value,
-            },
-          )}
-        >
-          Visible for all users
-        </span>
       </div>
       {props.children}
     </div>
