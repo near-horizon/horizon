@@ -5,6 +5,7 @@ import {
   type BackersDigest,
   backersDigestSchema,
   type HorizonProject,
+  newProjectSchema,
   projectSchema,
   type ProjectsQuery,
 } from "../validation/projects";
@@ -20,7 +21,7 @@ export async function getProjects(query: ProjectsQuery) {
 
 export async function getProjectsCount(query: ProjectsQuery) {
   const result = await fetch(
-    "/api/projects/count?" + intoURLSearchParams(query)
+    "/api/projects/count?" + intoURLSearchParams(query),
   );
   const projects = (await result.json()) as number;
   return projects;
@@ -28,12 +29,12 @@ export async function getProjectsCount(query: ProjectsQuery) {
 
 export async function getPaginatedProjects(
   pageParam = 0,
-  query?: ProjectsQuery
+  query?: ProjectsQuery,
 ) {
   const result = await fetch(
     `/api/projects?limit=${pageSize}&from=` +
       pageParam * pageSize +
-      (query ? "&" + intoURLSearchParams(query) : "")
+      (query ? "&" + intoURLSearchParams(query) : ""),
   );
   const projects = (await result.json()) as string[];
 
@@ -46,7 +47,7 @@ export async function getPaginatedProjects(
 export async function getBackerPaginatedProjects(pageParam = 0) {
   const result = await fetch(
     `/api/projects?fundraising=${true}&limit=${pageSize}&from=` +
-      pageParam * pageSize
+      pageParam * pageSize,
   );
   const projects = (await result.json()) as string[];
 
@@ -62,12 +63,18 @@ export async function getProject(accountId: AccountId) {
   return projectSchema.parse(await response.json());
 }
 
+export async function getNewProject(accountId: AccountId) {
+  const response = await fetch("/api/projects/" + accountId + "/new");
+
+  return newProjectSchema.parse(await response.json());
+}
+
 export async function hasProject(accountId: AccountId) {
   try {
     await viewCall<HorizonProject>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
       "get_project",
-      { account_id: accountId }
+      { account_id: accountId },
     );
     return true;
   } catch (e) {
@@ -83,7 +90,7 @@ export async function getProjectBackersDigest(accountId: AccountId) {
 
 export async function updateProjectBackersDigest(
   accountId: AccountId,
-  digest: BackersDigest
+  digest: BackersDigest,
 ) {
   return fetch(`/api/projects/${accountId}/backers-digest`, {
     method: "PUT",

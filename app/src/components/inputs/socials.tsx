@@ -14,38 +14,38 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
-import { type Linktree, socialsSchema } from "~/lib/validation/fetching";
+import { type Linktree, oldSocialsSchema } from "~/lib/validation/fetching";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { Button } from "../ui/button";
 import { PlusSvg, XSvg } from "~/icons";
 
 export function SocialProfilesInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   const [socials, setSocials] = useState(
     new Map(
-      socialsSchema.options.map((value) => [
+      oldSocialsSchema.options.map((value) => [
         value,
         props.defaultValue ? value in props.defaultValue : value === "telegram",
-      ])
-    )
+      ]),
+    ),
   );
   const [socialInputs, setSocialInputs] = useState<Linktree>(
-    props.defaultValue ?? { telegram: "" }
+    props.defaultValue ?? { telegram: "" },
   );
 
   useEffect(() => {
     setSocialInputs(props.defaultValue ?? { telegram: "" });
     setSocials(
       new Map(
-        socialsSchema.options.map((value) => [
+        oldSocialsSchema.options.map((value) => [
           value,
           props.defaultValue
             ? value in props.defaultValue
             : value === "telegram",
-        ])
-      )
+        ]),
+      ),
     );
   }, [props.defaultValue]);
 
@@ -113,7 +113,7 @@ export function SocialProfilesInput<
                 type="button"
                 onClick={() => {
                   const next = [...socials.entries()].find(
-                    ([, selected]) => !selected
+                    ([, selected]) => !selected,
                   )![0];
                   setSocialInputs((prev) => {
                     prev[next] = "";
@@ -127,7 +127,7 @@ export function SocialProfilesInput<
                   });
                 }}
                 disabled={[...socials.entries()].every(
-                  ([, selected]) => selected
+                  ([, selected]) => selected,
                 )}
               >
                 <PlusSvg className="h-5 w-5" />

@@ -3,7 +3,7 @@ import { imageSchema } from "./common";
 import { env } from "~/env.mjs";
 import { constObjectKeysIntoZodEnum, sortBy } from "../constants/filters";
 
-export const socialsSchema = z.enum([
+export const oldSocialsSchema = z.enum([
   "github",
   "twitter",
   "discord",
@@ -14,7 +14,7 @@ export const socialsSchema = z.enum([
   "telegram",
 ]);
 
-export const linktreeSchema = z.record(socialsSchema, z.string());
+export const linktreeSchema = z.record(oldSocialsSchema, z.string());
 
 export type Linktree = z.infer<typeof linktreeSchema>;
 

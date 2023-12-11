@@ -1,10 +1,5 @@
 import { z } from "zod";
-import {
-  fetchManySchema,
-  linktreeSchema,
-  profileSchema,
-  socialsSchema,
-} from "./fetching";
+import { fetchManySchema, linktreeSchema, profileSchema } from "./fetching";
 import {
   accountIdSchema,
   applicationSchema,
@@ -24,6 +19,7 @@ import {
   problemSchema,
   raisedSchema,
   sizeSchema,
+  socialSchema,
   stageSchema,
   taglineSchema,
   verticalSchema,
@@ -73,14 +69,44 @@ export const projectProfileSchema = z.object({
   vertical: verticalSchema,
   tagline: taglineSchema,
   website: websiteSchema.optional(),
-  socials: socialsSchema.optional(),
+  socials: socialSchema.optional(),
   location: locationSchema.optional(),
   size: sizeSchema.optional(),
 });
 
+export function projectProfileCompletion({ profile }: NewProject) {
+  if (!profile) {
+    return 0;
+  }
+
+  const fields = [
+    profile.name && profile.name.length > 0,
+    profile.logo &&
+      Object.values(profile.logo).every((v) => {
+        if (typeof v === "string") {
+          return v.length > 0;
+        }
+
+        return Object.values(v).every((v) => v && v.length > 0);
+      }),
+    profile.email && profile.email.length > 0,
+    profile.vertical && profile.vertical.length > 0,
+    profile.tagline && profile.tagline.length > 0,
+    profile.website && profile.website.length > 0,
+    profile.socials &&
+      Object.values(profile.socials).some((v) => v && v.length > 0),
+    profile.location && profile.location.length > 0,
+    profile.size && profile.size.length > 0,
+  ];
+
+  return fields.filter(Boolean).length / fields.length;
+}
+
+export type ProjectProfile = z.infer<typeof projectProfileSchema>;
+
 export function createToggleableSchema<T extends z.ZodSchema>(
   schema: T,
-): z.ZodSchema<z.infer<T> & { visible: boolean }> {
+): z.ZodObject<{ value: T; visible: z.ZodBoolean }> {
   return z.object({
     visible: z.boolean(),
     value: schema,
@@ -92,6 +118,21 @@ export const projectContactSchema = z.object({
   meeting_link: websiteSchema.optional(),
 });
 
+export function projectContactCompletion({
+  contact: { value: contact },
+}: NewProject) {
+  if (!contact) {
+    return 0;
+  }
+
+  const fields = [
+    contact.email && contact.email.length > 0,
+    contact.meeting_link && contact.meeting_link.length > 0,
+  ];
+
+  return fields.filter(Boolean).length / fields.length;
+}
+
 export const projectProgressSchema = z.object({
   stage: stageSchema,
   open_source: openSourceSchema.optional(),
@@ -102,17 +143,62 @@ export const projectProgressSchema = z.object({
   raised: raisedSchema.optional(),
 });
 
+export function projectProgressCompletion({
+  progress: { value: progress },
+}: NewProject) {
+  if (!progress) {
+    return 0;
+  }
+
+  const fields = [
+    progress.stage && progress.stage.length > 0,
+    progress.open_source !== undefined,
+    progress.near_integration !== undefined,
+    progress.problem && progress.problem.length > 0,
+    progress.needs && progress.needs.length > 0,
+    progress.fundraising !== undefined,
+    progress.raised !== undefined,
+  ];
+
+  return fields.filter(Boolean).length / fields.length;
+}
+
 export const founderSchema = z.object({
   name: nameSchema.optional(),
   account_id: accountIdSchema.optional(),
-  socials: socialsSchema.optional(),
+  socials: socialSchema.optional(),
 });
+
+export function projectFoundersCompletion({
+  founders: { value: founders },
+}: NewProject) {
+  if (!founders) {
+    return 0;
+  }
+
+  return +founders.some((founder) => {
+    const fields = [
+      founder.name && founder.name.length > 0,
+      founder.account_id && founder.account_id.length > 0,
+      founder.socials &&
+        Object.values(founder.socials).some((v) => v && v.length > 0),
+    ];
+
+    return fields.filter(Boolean).length === fields.length;
+  });
+}
 
 export const projectFoundersSchema = z.array(founderSchema);
 
 export const metricsSchema = z
   .record(z.string(), z.string().optional())
   .optional();
+
+export function projectMetricsCompletion({
+  metrics: { value: metrics },
+}: NewProject) {
+  return +(!!metrics && Object.values(metrics).some((v) => v && v.length > 0));
+}
 
 export const artifactSchema = z.object({
   name: z.string(),
@@ -127,6 +213,24 @@ export const artifactSchema = z.object({
 });
 
 export const artifactsSchema = z.array(artifactSchema);
+
+export function projectArtifactsCompletion({
+  artifacts: { value: artifacts },
+}: NewProject) {
+  if (!artifacts) {
+    return 0;
+  }
+
+  return +artifacts.some((artifact) => {
+    const fields = [
+      artifact.name && artifact.name.length > 0,
+      artifact.value &&
+        Object.values(artifact.value).some((v) => v && v.length > 0),
+    ];
+
+    return fields.filter(Boolean).length === fields.length;
+  });
+}
 
 export const artifactNameOptions = [
   "Demo Day Pitch",
@@ -145,6 +249,19 @@ export const newProjectSchema = z.object({
   founders: createToggleableSchema(projectFoundersSchema),
   artifacts: createToggleableSchema(artifactsSchema),
 });
+
+export function projectCompletion(project: NewProject) {
+  const fields = [
+    projectProfileCompletion(project),
+    projectContactCompletion(project),
+    projectProgressCompletion(project),
+    projectMetricsCompletion(project),
+    projectFoundersCompletion(project),
+    projectArtifactsCompletion(project),
+  ];
+
+  return fields.reduce((a, b) => a + b, 0) / fields.length;
+}
 
 export type NewProjectType = z.infer<typeof newProjectSchema>;
 

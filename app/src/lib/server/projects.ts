@@ -8,6 +8,7 @@ import {
   type BackersDigest,
   backersDigestSchema,
   horizonSchema,
+  NewProject,
   projectSchema,
   type ProjectsQuery,
 } from "../validation/projects";
@@ -235,6 +236,15 @@ export async function getBackersDigest(accountId: AccountId) {
     },
   );
   return backersDigestSchema.parse(await response.json());
+}
+
+export async function getNewProject(accountId: AccountId) {
+  const [project, digest] = await Promise.all([
+    getProject(accountId),
+    getBackersDigest(accountId),
+  ]);
+
+  return NewProject.fromOld({ ...project, digest });
 }
 
 export async function hasBackersDigest(accountId: AccountId) {
