@@ -37,9 +37,7 @@ export function MultiSelectInput<
               : field.value
           }
           onBlur={field.onBlur}
-          onChange={(v: { value: string }[]) =>
-            field.onChange(v.map((v) => v.value))
-          }
+          onChange={(v) => field.onChange(v.map((v) => v.value))}
           placeholder={props.placeholder}
           options={mapOptions(props.options)}
           unstyled

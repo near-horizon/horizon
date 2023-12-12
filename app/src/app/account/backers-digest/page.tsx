@@ -1,12 +1,10 @@
 import { redirect } from "next/navigation";
-import { getBackersDigest, hasBackersDigest } from "~/lib/server/projects";
+import { hasBackersDigest } from "~/lib/server/projects";
 import { getUserFromSession } from "~/lib/session";
-import { Edit03Svg, Target04Svg } from "~/icons";
+import { Target04Svg } from "~/icons";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { BackersDigest } from "~/app/projects/[accountId]/backers-digest/backers-digest";
-import { Badge } from "~/components/ui/badge";
-import { cn } from "~/lib/utils";
 
 export default async function BackersDigestPage() {
   const user = await getUserFromSession();
@@ -15,7 +13,6 @@ export default async function BackersDigestPage() {
     return redirect("/login");
   }
 
-  const backersDigest = await getBackersDigest(user.accountId);
   const hasDigest = await hasBackersDigest(user.accountId);
 
   if (!hasDigest) {
