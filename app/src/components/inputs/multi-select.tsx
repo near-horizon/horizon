@@ -6,6 +6,14 @@ import {
 import { type InputProps } from "~/lib/validation/inputs";
 import Creatable from "react-select/creatable";
 import { InputBuilder } from "./input-builder";
+import { cn } from "~/lib/utils";
+
+function mapOptions(options: string[]) {
+  return options.map((value) => ({
+    label: value,
+    value,
+  }));
+}
 
 export function MultiSelectInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -16,24 +24,31 @@ export function MultiSelectInput<
 ) {
   return (
     <InputBuilder {...props}>
-      {({ field }) => (
+      {({ field, fieldState }) => (
         <Creatable
+          instanceId={field.name}
           ref={field.ref}
           name={field.name}
-          value={field.value}
+          value={
+            field.value &&
+            Array.isArray(field.value) &&
+            typeof field.value[0] === "string"
+              ? mapOptions(field.value)
+              : field.value
+          }
           onBlur={field.onBlur}
-          onChange={field.onChange}
+          onChange={(v: { value: string }[]) =>
+            field.onChange(v.map((v) => v.value))
+          }
           placeholder={props.placeholder}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          options={props.options.map((option) => ({
-            label: option,
-            value: option,
-          }))}
+          options={mapOptions(props.options)}
           unstyled
           classNames={{
             control: () =>
-              "form-input rounded-lg focus-within:ring border border-input",
+              cn(
+                "form-input rounded-lg focus-within:ring border border-input",
+                fieldState.error && "ring ring-offset-2 ring-destructive",
+              ),
             menu: () => "p-2 bg-white shadow-lg rounded-md shadow",
             input: () => "[&>input:focus]:ring-0",
             valueContainer: () => "pl-0 flex flex-row gap-2 flex-wrap",

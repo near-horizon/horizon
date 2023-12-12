@@ -54,40 +54,5 @@ export default async function BackersDigestPage() {
     );
   }
 
-  return (
-    <div className="flex flex-col items-stretch justify-start gap-6">
-      <div className="flex flex-row items-start justify-start gap-4">
-        <div className="flex flex-grow flex-col gap-2">
-          <div className="flex flex-row items-center justify-start gap-2">
-            <Target04Svg className="h-10 w-10 text-error" />
-            <h1 className="text-2xl font-bold">Backers digest</h1>
-            <Badge
-              variant="outline"
-              className={cn(
-                "rounded border-orange-400 border-opacity-90 bg-orange-50 text-orange-700 mix-blend-multiply",
-                {
-                  "border-primary bg-primary-light text-primary":
-                    backersDigest?.published,
-                },
-              )}
-            >
-              {backersDigest?.published ? "Published" : "Draft"}
-            </Badge>
-          </div>
-        </div>
-        <div className="flex flex-row items-center justify-end gap-5">
-          <Link href="/account/backers-digest/create">
-            <Button
-              variant="outline"
-              className="flex flex-row items-center justify-center gap-2"
-            >
-              <Edit03Svg className="h-5 w-5" />
-              Edit
-            </Button>
-          </Link>
-        </div>
-      </div>
-      <BackersDigest accountId={user.accountId} />
-    </div>
-  );
+  return <BackersDigest accountId={user.accountId} />;
 }

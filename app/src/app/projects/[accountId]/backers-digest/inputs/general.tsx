@@ -76,6 +76,7 @@ export function GeneralInput({
         label="Description"
         placeholder="Description"
         name="profile.description"
+        maxLength={1000}
       />
 
       <TextInput

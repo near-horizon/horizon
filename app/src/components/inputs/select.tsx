@@ -50,12 +50,15 @@ export function SelectInput<
 
   return (
     <InputBuilder {...props}>
-      {({ field }) => (
+      {({ field, fieldState }) => (
         <Select onValueChange={field.onChange} defaultValue={field.value}>
           <SelectTrigger
-            className={cn({
-              "[&>span]:text-muted-foreground": !field.value,
-            })}
+            className={cn(
+              {
+                "[&>span]:text-muted-foreground": !field.value,
+              },
+              fieldState.error && "ring ring-destructive ring-offset-2",
+            )}
           >
             <SelectValue placeholder={props.placeholder} />
           </SelectTrigger>

@@ -3,7 +3,7 @@
 import { type AccountId } from "~/lib/validation/common";
 import { useZodForm } from "~/hooks/form";
 import { Form } from "~/components/ui/form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getNewProject } from "~/lib/client/projects";
 import {
   newProjectSchema,
@@ -27,20 +27,17 @@ import { getFileURL } from "~/lib/utils";
 import { MediaInput } from "./inputs/media";
 
 export function BackersDigest({ accountId }: { accountId: AccountId }) {
-  const form = useZodForm(newProjectSchema);
   const [cid, setCid] = useState("");
+  const form = useZodForm(newProjectSchema, {
+    defaultValues: async () => {
+      const project = await getNewProject(accountId);
+      project.profile.logo &&
+        "ipfs_cid" in project.profile.logo &&
+        setCid(project.profile.logo.ipfs_cid);
+      return project;
+    },
+  });
   const profile = form.watch();
-
-  useEffect(() => {
-    getNewProject(accountId)
-      .then((project) => {
-        form.reset(project);
-        project.profile.logo &&
-          "ipfs_cid" in project.profile.logo &&
-          setCid(project.profile.logo.ipfs_cid);
-      })
-      .catch(console.error);
-  }, [accountId, form]);
 
   return (
     <Form {...form}>

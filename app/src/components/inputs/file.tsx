@@ -26,7 +26,7 @@ export function FileInput<
 
   return (
     <InputBuilder {...props}>
-      {({ field }) => (
+      {({ field, fieldState }) => (
         <div className="flex min-h-[6rem] w-full flex-col items-start justify-start gap-2 pl-2">
           <Tabs onValueChange={(tab) => setTab(tab)} value={tab} className="">
             <TabsList className="flex flex-row items-center justify-start gap-4">
@@ -51,7 +51,10 @@ export function FileInput<
               type="text"
               value={uploading ? "Uploading..." : field.value}
               disabled={tab === "upload"}
-              className="disabled:hidden"
+              className={cn(
+                "disabled:hidden",
+                fieldState.error && "ring ring-destructive ring-offset-2",
+              )}
             />
           </div>
           <Input

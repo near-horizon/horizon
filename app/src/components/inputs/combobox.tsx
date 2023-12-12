@@ -34,7 +34,7 @@ export function ComboboxInput<
 
   return (
     <InputBuilder {...props}>
-      {({ field }) => (
+      {({ field, fieldState }) => (
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -43,6 +43,7 @@ export function ComboboxInput<
               className={cn(
                 "w-full justify-between rounded-md pr-3",
                 !field.value && "text-muted-foreground",
+                fieldState.error && "ring ring-destructive ring-offset-2",
               )}
               ref={ref}
             >

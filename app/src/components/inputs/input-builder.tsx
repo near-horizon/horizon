@@ -49,7 +49,7 @@ export function InputBuilder<
       render={({ field, fieldState, formState }) => (
         <FormItem className="grid w-full grid-cols-12 items-start justify-end gap-2 space-y-0">
           {!props.noLabel && (
-            <FormLabel className="col-span-2 pt-1 text-right capitalize">
+            <FormLabel className="col-span-2 pt-1 text-right font-bold capitalize">
               {props.label ?? field.name}
               <br />
               {props.rules?.required && (
@@ -66,16 +66,16 @@ export function InputBuilder<
               {props.children({ field, fieldState, formState })}
             </div>
           </FormControl>
-          {props.extra && (
-            <div className="col-start-3">
-              {props.extra({ field, formState, fieldState })}
-            </div>
-          )}
-          {props.description && (
-            <FormDescription className="col-start-3">
+          <div className="col-span-10 col-start-3 grid grid-cols-12">
+            <FormDescription className="col-span-10">
               {props.description}
             </FormDescription>
-          )}
+            {props.extra && (
+              <div className="col-span-2">
+                {props.extra({ field, formState, fieldState })}
+              </div>
+            )}
+          </div>
           <FormMessage className="col-span-10 col-start-3" />
         </FormItem>
       )}

@@ -30,7 +30,7 @@ export const projectProfileSchema = z.object({
   name: nameSchema,
   logo: imageSchema,
   email: emailSchema,
-  vertical: verticalSchema,
+  vertical: verticalSchema.array(),
   tagline: taglineSchema,
   description: descriptionSchema.optional(),
   website: websiteSchema.optional(),
@@ -265,7 +265,7 @@ export class NewProject implements NewProjectType {
         name: "",
         email: "",
         tagline: "",
-        vertical: "ai",
+        vertical: [],
       };
       this.contact = {
         visible: false,
@@ -448,9 +448,9 @@ export class NewProject implements NewProjectType {
     const size =
       companySize < 10 ? "small" : companySize < 50 ? "medium" : "large";
 
-    const parsedVertical = verticalSchema.safeParse(
-      Object.keys(data.vertical ?? {})[0],
-    );
+    const parsedVertical = verticalSchema
+      .array()
+      .safeParse(Object.keys(data.vertical ?? {}));
 
     const vertical = parsedVertical.success ? parsedVertical.data : "other";
 

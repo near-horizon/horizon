@@ -6,6 +6,7 @@ import {
 import { Input } from "../ui/input";
 import { type InputProps } from "~/lib/validation/inputs";
 import { InputBuilder } from "./input-builder";
+import { cn } from "~/lib/utils";
 
 export function TextInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -13,8 +14,15 @@ export function TextInput<
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   return (
     <InputBuilder {...props}>
-      {({ field }) => (
-        <Input {...field} placeholder={props.placeholder} type="text" />
+      {({ field, fieldState }) => (
+        <Input
+          {...field}
+          placeholder={props.placeholder}
+          type="text"
+          className={cn(
+            fieldState.error && "ring ring-destructive ring-offset-2",
+          )}
+        />
       )}
     </InputBuilder>
   );
