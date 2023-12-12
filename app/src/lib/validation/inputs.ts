@@ -39,7 +39,13 @@ export function createSocialValidation(domain: string) {
 
       return false;
     })
-    .transform((handle) => handle.substring(1));
+    .transform((handle) => {
+      if (handle.startsWith("@")) {
+        return handle.substring(1);
+      }
+
+      return handle;
+    });
 }
 
 export const nameSchema = z.string().min(3).max(100);

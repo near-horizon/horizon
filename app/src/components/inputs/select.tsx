@@ -12,16 +12,9 @@ import {
   type FieldValues,
   type UseControllerProps,
 } from "react-hook-form";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
 import { type InputProps } from "~/lib/validation/inputs";
 import { cn } from "~/lib/utils";
+import { InputBuilder } from "./input-builder";
 
 export function SelectInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -56,36 +49,19 @@ export function SelectInput<
   });
 
   return (
-    <FormField
-      {...props}
-      render={({ field }) => (
-        <FormItem className="grid w-full grid-cols-12 items-start justify-end gap-2 space-y-0">
-          {!props.noLabel && (
-            <FormLabel className="col-span-2 text-right capitalize">
-              {props.label ?? field.name}
-              {props.rules?.required && " *"}
-            </FormLabel>
-          )}
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl
-              className={cn(props.noLabel ? "col-span-full" : "col-span-10")}
-            >
-              <SelectTrigger
-                className={cn({
-                  "[&>span]:text-muted-foreground": !field.value,
-                })}
-              >
-                <SelectValue placeholder={props.placeholder} />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>{options}</SelectContent>
-          </Select>
-          {props.description && (
-            <FormDescription>{props.description}</FormDescription>
-          )}
-          <FormMessage className="col-start-3" />
-        </FormItem>
+    <InputBuilder {...props}>
+      {({ field }) => (
+        <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger
+            className={cn({
+              "[&>span]:text-muted-foreground": !field.value,
+            })}
+          >
+            <SelectValue placeholder={props.placeholder} />
+          </SelectTrigger>
+          <SelectContent>{options}</SelectContent>
+        </Select>
       )}
-    />
+    </InputBuilder>
   );
 }

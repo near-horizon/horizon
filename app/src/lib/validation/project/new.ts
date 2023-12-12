@@ -513,10 +513,7 @@ export class NewProject implements NewProjectType {
         visible: true,
         value: founders,
       },
-      artifacts: {
-        visible: true,
-        value: artifacts,
-      },
+      artifacts,
       media: {
         visible: true,
         value: data.digest.announcement ? [data.digest.announcement] : [],

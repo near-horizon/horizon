@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
 
   try {
     response = await openAI.images.generate({
+      model: "dall-e-3",
       size: "256x256",
       n: 1,
       response_format: "b64_json",

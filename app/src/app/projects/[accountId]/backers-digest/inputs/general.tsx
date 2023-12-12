@@ -1,9 +1,11 @@
 import { type UseFormReturn } from "react-hook-form";
+import { ComboboxInput } from "~/components/inputs/combobox";
 import { ImageInput } from "~/components/inputs/image";
 import { MultiSelectInput } from "~/components/inputs/multi-select";
 import { SelectInput } from "~/components/inputs/select";
 import { TextInput } from "~/components/inputs/text";
 import { TextAreaInput } from "~/components/inputs/text-area";
+import { Separator } from "~/components/ui/separator";
 import { iso3166 } from "~/lib/constants/iso-3166";
 import { STRING } from "~/lib/format";
 import { verticalSchema } from "~/lib/validation/inputs";
@@ -27,7 +29,7 @@ export function GeneralInput({
       <ImageInput
         name="profile.logo"
         control={form.control}
-        label="Logo"
+        label="Project logo"
         rules={{ required: true }}
         defaultValue={{ ipfs_cid: "" }}
         setCid={setCid}
@@ -83,7 +85,11 @@ export function GeneralInput({
         name="profile.website"
       />
 
-      <h4>Social profiles</h4>
+      <div className="grid grid-cols-12">
+        <h4 className="col-span-4 col-start-2 font-semibold">
+          Social profiles
+        </h4>
+      </div>
 
       <TextInput
         control={form.control}
@@ -113,6 +119,8 @@ export function GeneralInput({
         name="profile.socials.telegram"
       />
 
+      <Separator className="h-px w-full bg-ui-elements-light" />
+
       <SelectInput
         control={form.control}
         label="Company size"
@@ -124,7 +132,7 @@ export function GeneralInput({
         }))}
       />
 
-      <SelectInput
+      <ComboboxInput
         control={form.control}
         label="Location"
         placeholder="Location"

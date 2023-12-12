@@ -6,6 +6,7 @@ import {
 } from "react-hook-form";
 import { ImageInput } from "~/components/inputs/image";
 import { TextInput } from "~/components/inputs/text";
+import { MotionDiv } from "~/components/motion";
 import { Button } from "~/components/ui/button";
 import { PlusCircleSvg, XSvg } from "~/icons";
 import { type NewProjectType } from "~/lib/validation/project/new";
@@ -62,18 +63,23 @@ export function FounderInput({
   index: number;
 }) {
   return (
-    <div
+    <MotionDiv
       key={field.id}
-      className="relative flex w-full flex-col items-stretch justify-start gap-3 rounded-xl bg-background-light p-6"
+      className="relative flex w-full origin-top-right flex-col items-stretch justify-start gap-3 rounded-xl bg-background-light p-6"
+      initial={{ opacity: 0, scale: 0.4 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.4 }}
+      transition={{ duration: 0.4 }}
     >
       <Button
         variant="destructive"
         type="button"
-        className="absolute right-6 top-6 flex w-1/12 flex-row items-center justify-center border-none bg-transparent"
+        className="absolute right-6 top-6 flex flex-row items-center justify-center border-none bg-transparent"
         onClick={() => founders.remove(index)}
       >
         <XSvg className="h-6 w-6" />
       </Button>
+
       <ImageInput
         control={form.control}
         name={`founders.value.${index}.image` as const}
@@ -106,7 +112,11 @@ export function FounderInput({
         label="NEAR ID"
       />
 
-      <h4>Social profiles</h4>
+      <div className="grid grid-cols-12">
+        <h4 className="col-span-4 col-start-2 font-semibold">
+          Social profiles
+        </h4>
+      </div>
 
       <TextInput
         control={form.control}
@@ -135,6 +145,6 @@ export function FounderInput({
         placeholder="Telegram"
         name={`founders.value.${index}.socials.telegram` as const}
       />
-    </div>
+    </MotionDiv>
   );
 }

@@ -44,7 +44,7 @@ export function ArtifactsInput({
             onChange={(value) =>
               form.setValue(`artifacts.${index}.visible`, value)
             }
-            className="-mt-6 flex flex-col items-stretch justify-start gap-3 border-none bg-transparent px-0 pt-10"
+            className="-mt-6 flex flex-col items-stretch justify-start gap-3 border-none bg-transparent px-0 pt-20"
           >
             <TextInput
               control={form.control}

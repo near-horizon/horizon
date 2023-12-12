@@ -43,7 +43,7 @@ export const NUMBER = {
       style: "percent",
     });
   },
-  bytes: function (bytes: string) {
+  bytes: function (bytes: string | number) {
     const size = Number(bytes);
     const unit =
       size < 1000

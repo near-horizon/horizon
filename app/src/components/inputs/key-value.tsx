@@ -3,6 +3,7 @@ import { PlusCircleSvg, XSvg } from "~/icons";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { type NewProjectType } from "~/lib/validation/project/new";
+import { MotionDiv } from "../motion";
 
 export function KeyValueInput({
   form,
@@ -22,9 +23,13 @@ export function KeyValueInput({
         <h6 className="w-1/3 text-sm font-bold">Value</h6>
       </div>
       {array.fields.map((field, index) => (
-        <div
+        <MotionDiv
           key={field.id}
           className="flex flex-row items-center justify-between gap-2"
+          initial={{ opacity: 0, scale: 0.4 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.4 }}
+          transition={{ duration: 0.4 }}
         >
           <div className="flex-grow">
             <Input
@@ -46,9 +51,9 @@ export function KeyValueInput({
           >
             <XSvg className="h-4 w-4" />
           </Button>
-        </div>
+        </MotionDiv>
       ))}
-      <div className="flex w-full flex-row items-stretch justify-end">
+      <div className="flex w-full flex-row items-stretch justify-end pt-2">
         <Button
           variant="outline"
           type="button"

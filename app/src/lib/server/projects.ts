@@ -12,7 +12,7 @@ import {
   type ProjectsQuery,
 } from "../validation/projects";
 import { env } from "~/env.mjs";
-import { intoURLSearchParams, removeEmpty, removeNulls } from "../utils";
+import { intoURLSearchParams, removeEmpty } from "../utils";
 import { getProfile, viewCall } from "../fetching";
 import { getTransactions } from "./transactions";
 import { type AccountId, imageSchema } from "../validation/common";
@@ -83,9 +83,8 @@ export async function getChanges(accountId: AccountId) {
 }
 
 export async function getProject(accountId: AccountId) {
-  const [response, changes, horizonData, transactions] = await Promise.all([
+  const [response, horizonData, transactions] = await Promise.all([
     getProfile(accountId),
-    getChanges(accountId),
     viewCall<z.infer<typeof horizonSchema>>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
       "get_project",
@@ -96,10 +95,9 @@ export async function getProject(accountId: AccountId) {
     getTransactions({ entity_type: "projects" }),
   ]);
 
-  const { team: company_size, ...profile } = profileSchema.parse({
-    ...removeEmpty(response),
-    ...(changes ? removeNulls(changes) : {}),
-  });
+  const { team: company_size, ...profile } = profileSchema.parse(
+    removeEmpty(response),
+  );
   const horizon = horizonSchema.parse(horizonData);
   const creationTx = transactions.findLast((tx) => {
     return tx.method_name === "add_project" && tx.args.account_id === accountId;
