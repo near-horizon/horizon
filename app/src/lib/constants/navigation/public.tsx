@@ -4,6 +4,7 @@ import {
   HomeLineSvg,
   LineChartUp02Svg,
   MagicWand02Svg,
+  MessageSmileCircleSvg,
   ProjectsSvg,
   RequestSvg,
   Rocket02Svg,
@@ -99,5 +100,14 @@ export const routes = [
       </>
     ),
     href: "https://hzn.xyz/hzn",
+  },
+  {
+    name: (
+      <>
+        <MessageSmileCircleSvg className="h-4 w-4" />
+        Copilot
+      </>
+    ),
+    href: "/copilot",
   },
 ] satisfies Route[];
