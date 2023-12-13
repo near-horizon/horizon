@@ -2,11 +2,11 @@
 
 import { type Message } from "ai";
 import { cn } from "~/lib/utils";
-import { CodeBlock } from "../markdown/CodeBlock";
-import { MemoizedReactMarkdown } from "../markdown/MemoizedReactMarkdown";
+import { CodeBlock } from "../markdown/code-block";
+import { MemoizedReactMarkdown } from "../markdown/react-markdown";
 import { useCallback } from "react";
 import { Avatar } from "~/components/ui/avatar";
-import { RateMessage } from "./rateMessage";
+import { RateMessage } from "./rate-message";
 
 function getSources(message: Message) {
   const sourcesIndex = message?.content.indexOf("Verified Sources:");

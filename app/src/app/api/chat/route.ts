@@ -2,7 +2,7 @@ import { StreamingTextResponse } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
 import { env } from "~/env.mjs";
 import { WELCOME_MESSAGE } from "~/lib/constants/copilot";
-import { MendableStream } from "~/lib/mendable_stream";
+import { MendableStream } from "~/lib/mendable-stream";
 import { createNewConversation } from "~/lib/server/copilot";
 import { copilotBodySchema } from "~/lib/validation/copilot";
 
