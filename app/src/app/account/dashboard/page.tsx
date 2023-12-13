@@ -23,16 +23,18 @@ import {
   getProjectContracts,
   getRequestsForProject,
 } from "~/lib/server/projects";
-import { hasProject } from "~/lib/client/projects";
 import { getIncentives } from "~/lib/client/incentives";
 import { DATE } from "~/lib/format";
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
-  const hasProfile = user.logedIn ? await hasProject(user.accountId) : false;
 
-  if (!user.logedIn || !hasProfile) {
+  if (!user.logedIn) {
     return redirect("/login");
+  }
+
+  if (!user.hasProfile) {
+    return redirect("/onboarding");
   }
 
   const [incentives, profile, creditHistory, requests, contracts] =

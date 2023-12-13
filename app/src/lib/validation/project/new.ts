@@ -39,7 +39,7 @@ export const projectProfileSchema = z.object({
   size: sizeSchema.optional(),
 });
 
-export function projectProfileCompletion({ profile }: NewProject) {
+export function projectProfileCompletion({ profile }: NewProjectType) {
   if (!profile) {
     return 0;
   }
@@ -83,7 +83,7 @@ export const projectContactSchema = z.object({
 
 export function projectContactCompletion({
   contact: { value: contact } = { visible: false, value: {} },
-}: NewProject) {
+}: NewProjectType) {
   if (!contact) {
     return 0;
   }
@@ -114,7 +114,7 @@ export function projectProgressCompletion({
       problem: "",
     },
   },
-}: NewProject) {
+}: NewProjectType) {
   if (!progress) {
     return 0;
   }
@@ -141,7 +141,7 @@ export const founderSchema = z.object({
 
 export function projectFoundersCompletion({
   founders: { value: founders } = { visible: false, value: [] },
-}: NewProject) {
+}: NewProjectType) {
   if (!founders) {
     return 0;
   }
@@ -171,7 +171,7 @@ export const metricsSchema = z
 
 export function projectMetricsCompletion({
   metrics: { value: metrics } = { visible: false, value: [] },
-}: NewProject) {
+}: NewProjectType) {
   return +(
     !!metrics &&
     metrics.length > 0 &&
@@ -194,7 +194,7 @@ export const artifactSchema = z.object({
   ]),
 });
 
-export function projectArtifactsCompletion({ artifacts }: NewProject) {
+export function projectArtifactsCompletion({ artifacts }: NewProjectType) {
   if (!artifacts) {
     return 0;
   }
@@ -223,6 +223,7 @@ export const artifactNameOptions = [
 export const mediaSchema = z.array(z.object({ link: websiteSchema }));
 
 export const newProjectSchema = z.object({
+  account_id: accountIdSchema,
   profile: projectProfileSchema,
   contact: createToggleableSchema(projectContactSchema),
   progress: createToggleableSchema(projectProgressSchema),
@@ -232,7 +233,7 @@ export const newProjectSchema = z.object({
   media: createToggleableSchema(mediaSchema),
 });
 
-export function projectCompletion(project: NewProject) {
+export function projectCompletion(project: NewProjectType) {
   const fields = [
     projectProfileCompletion(project),
     projectContactCompletion(project),
@@ -248,6 +249,7 @@ export function projectCompletion(project: NewProject) {
 export type NewProjectType = z.infer<typeof newProjectSchema>;
 
 export class NewProject implements NewProjectType {
+  public account_id: NewProjectType["account_id"];
   public profile: NewProjectType["profile"];
   public contact: NewProjectType["contact"];
   public progress: NewProjectType["progress"];
@@ -260,6 +262,7 @@ export class NewProject implements NewProjectType {
     const parsed = newProjectSchema.safeParse(data);
     if (!parsed.success) {
       console.log({ error: parsed.error, data });
+      this.account_id = "";
       this.profile = {
         logo: { url: "" },
         name: "",
@@ -292,6 +295,7 @@ export class NewProject implements NewProjectType {
         value: [],
       };
     } else {
+      this.account_id = parsed.data.account_id;
       this.profile = parsed.data.profile;
       this.contact = parsed.data.contact;
       this.progress = parsed.data.progress;
@@ -300,6 +304,19 @@ export class NewProject implements NewProjectType {
       this.artifacts = parsed.data.artifacts;
       this.media = parsed.data.media;
     }
+  }
+
+  asType(): NewProjectType {
+    return {
+      account_id: this.account_id,
+      profile: this.profile,
+      contact: this.contact,
+      progress: this.progress,
+      metrics: this.metrics,
+      founders: this.founders,
+      artifacts: this.artifacts,
+      media: this.media,
+    };
   }
 
   static #parseOldSocials(linktree?: Linktree | null) {
@@ -467,6 +484,7 @@ export class NewProject implements NewProjectType {
     const founders = NewProject.#parseOldFounders(data);
 
     return new NewProject({
+      account_id: data.account_id,
       profile: {
         name: data.name,
         logo: data.image,

@@ -73,15 +73,6 @@ export const routes = [
   {
     name: (
       <>
-        <CalendarSvg className="h-4 w-4" />
-        Events
-      </>
-    ),
-    href: "/events",
-  },
-  {
-    name: (
-      <>
         <BookOpen02Svg className="h-4 w-4" />
         Learn
       </>

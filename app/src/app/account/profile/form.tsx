@@ -1,13 +1,13 @@
 "use client";
 
-import { type AccountId } from "~/lib/validation/common";
 import { useZodForm } from "~/hooks/form";
 import { Form } from "~/components/ui/form";
 import { useState } from "react";
-import { getNewProject } from "~/lib/client/projects";
 import {
   newProjectSchema,
+  type NewProjectType,
   projectArtifactsCompletion,
+  projectCompletion,
   projectContactCompletion,
   projectFoundersCompletion,
   projectMetricsCompletion,
@@ -22,26 +22,75 @@ import { GeneralInput } from "./inputs/general";
 import { InputSection } from "./inputs/section";
 import { ArtifactsInput } from "./inputs/artifacts";
 import { ExternalLink } from "lucide-react";
-import { Download01Svg, File06Svg, Share03Svg } from "~/icons";
+import {
+  Circle2Svg,
+  Download01Svg,
+  File06Svg,
+  FileCheck02Svg,
+  LinkExternal02Svg,
+  Share03Svg,
+} from "~/icons";
 import { getFileURL } from "~/lib/utils";
 import { MediaInput } from "./inputs/media";
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
+import { NUMBER } from "~/lib/format";
+import { InfoTooltip } from "~/components/info-tooltip";
 
-export function BackersDigest({ accountId }: { accountId: AccountId }) {
-  const [cid, setCid] = useState("");
+export function ProfileForm({ project }: { project: NewProjectType }) {
+  const [cid, setCid] = useState(
+    project.profile.logo && "ipfs_cid" in project.profile.logo
+      ? project.profile.logo.ipfs_cid
+      : "",
+  );
   const form = useZodForm(newProjectSchema, {
-    defaultValues: async () => {
-      const project = await getNewProject(accountId);
-      project.profile.logo &&
-        "ipfs_cid" in project.profile.logo &&
-        setCid(project.profile.logo.ipfs_cid);
-      return project;
-    },
+    defaultValues: project,
   });
   const profile = form.watch();
 
   return (
     <Form {...form}>
       <form className="flex w-full flex-col items-stretch justify-start gap-8">
+        <div>
+          <div className="flex flex-row items-start justify-between">
+            <h1 className="text-2xl font-bold text-ui-elements-black">
+              Project profile
+            </h1>
+            <div className="flex flex-row items-center justify-end gap-2">
+              <Button
+                type="submit"
+                variant="default"
+                className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
+              >
+                <FileCheck02Svg className="h-4 w-4" />
+                Save profile
+              </Button>
+              <Link href={`/projects/${project.account_id}`} target="_blank">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
+                >
+                  <LinkExternal02Svg className="h-4 w-4" />
+                  Preview
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex flex-row items-center justify-start gap-2 text-sm font-medium">
+            <span className="text-ui-elements-dark">
+              Completed: {NUMBER.percentage(projectCompletion(profile))}
+            </span>
+            <Circle2Svg className="h-1 w-1 text-ui-elements-gray" />
+            <span className="text-primary-pressed">Reward: +5 HZN</span>
+            <InfoTooltip>
+              The reward is given for completing the profile and publishing the
+              project.
+            </InfoTooltip>
+          </div>
+        </div>
+
         <InputSection
           title="General information"
           completion={projectProfileCompletion(profile)}
@@ -104,6 +153,27 @@ export function BackersDigest({ accountId }: { accountId: AccountId }) {
         >
           <MediaInput form={form} />
         </InputSection>
+
+        <div className="flex flex-row items-center justify-end gap-2">
+          <Button
+            type="submit"
+            variant="default"
+            className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
+          >
+            <FileCheck02Svg className="h-4 w-4" />
+            Save profile
+          </Button>
+          <Link href={`/projects/${project.account_id}`} target="_blank">
+            <Button
+              type="button"
+              variant="outline"
+              className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
+            >
+              <LinkExternal02Svg className="h-4 w-4" />
+              Preview
+            </Button>
+          </Link>
+        </div>
       </form>
     </Form>
   );
@@ -121,46 +191,5 @@ export function Section({
       <h2 className="text-xl font-bold">{title}</h2>
       {children}
     </section>
-  );
-}
-export function FileDescription({ file }: { file: string }) {
-  const value = getFileURL(file);
-
-  if (typeof value === "string") {
-    return (
-      <div className="flex w-full flex-col items-start justify-start gap-2 rounded-lg border border-ui-elements-light bg-background-light px-4 py-2">
-        <span className="flex w-full flex-row items-center justify-start gap-2">
-          <File06Svg className="h-6 w-6 text-ui-elements-gray" />
-          <ExternalLink href={value}>
-            <span className="flex flex-row items-center justify-start gap-2">
-              {value}
-              <Share03Svg className="h-4 w-4 text-ui-elements-gray" />
-            </span>
-          </ExternalLink>
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex w-full flex-col items-start justify-start gap-2 rounded-lg border border-ui-elements-light bg-background-light px-4 py-2">
-      <span className="flex w-full flex-row items-center justify-start gap-2">
-        <File06Svg className="h-6 w-6 text-ui-elements-gray" />
-        <a
-          href={value.url}
-          download
-          className="flex max-w-prose flex-row items-center justify-start gap-2 truncate text-text-link"
-        >
-          {value.filename}
-          <Download01Svg className="h-4 w-4 text-ui-elements-gray" />
-        </a>
-        <small className="text-sm font-medium text-ui-elements-gray">
-          {value.size}
-        </small>
-      </span>
-      <small className="text-sm font-medium text-ui-elements-gray">
-        Uploaded {value.uploaded}
-      </small>
-    </div>
   );
 }

@@ -1,4 +1,3 @@
-import { ProfileHeader } from "./profile-header";
 import { WelcomeBanner } from "./welcome-banner";
 import { ProfileNav } from "./profile-nav";
 import { getUserFromSession } from "~/lib/session";
@@ -15,18 +14,18 @@ export default async function ProfileLayout({
     return redirect("/login");
   }
 
+  if (!user.hasProfile) {
+    return redirect("/onboarding");
+  }
+
   return (
-    <div className="flex h-full w-full flex-row items-stretch justify-start">
-      <div className="hidden min-w-[240px] flex-grow-0 md:block">
+    <div className="relative flex h-full w-full flex-row items-start justify-start">
+      <div className="sticky top-4 hidden min-w-[14rem] flex-grow-0 md:block">
         <ProfileNav />
       </div>
-      {/* TODO: update the layout to actual styling */}
-      <div className="flex max-w-full flex-grow flex-col items-start justify-start gap-6 md:max-w-[calc(100%-240px)]">
+      <div className="flex max-w-full flex-grow flex-col items-center justify-start gap-6 md:max-w-screen-lg">
         <WelcomeBanner />
-        <div className="w-full flex-grow px-8 pb-12">
-          <ProfileHeader accountId={user.accountId} />
-          <div className="mt-6">{children}</div>
-        </div>
+        <div className="w-full flex-grow px-8 pb-12">{children}</div>
       </div>
     </div>
   );

@@ -1,9 +1,4 @@
-import { getUserFromSession } from "~/lib/session";
-import {
-  checkBackersDigestPermission,
-  getProject,
-  hasProject,
-} from "~/lib/server/projects";
+import { getProject, hasProject } from "~/lib/server/projects";
 import { Suspense } from "react";
 import { type AccountId } from "~/lib/validation/common";
 import { Icon } from "~/components/icon";
@@ -13,7 +8,6 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { CTA } from "~/components/ui/cta";
 import { MessageChatSquareSvg, Share06Svg } from "~/icons";
 import { Tabs } from "./tabs";
-import { backersViewFromKey } from "~/lib/constants/backers-digest";
 import { notFound } from "next/navigation";
 
 export default async function ProjectPageLayout({
@@ -23,15 +17,11 @@ export default async function ProjectPageLayout({
   params: { accountId: string };
   children: React.ReactNode;
 }) {
-  const user = await getUserFromSession();
-
   const isProject = await hasProject(accountId);
 
   if (!isProject) {
     return notFound();
   }
-
-  const hasPermission = await checkBackersDigestPermission(accountId, user);
 
   return (
     <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-white px-8 py-6 shadow">
@@ -40,11 +30,7 @@ export default async function ProjectPageLayout({
           <Header accountId={accountId} />
         </Suspense>
         <CTAs />
-        <Tabs
-          accountId={accountId}
-          backersViewFromKey={backersViewFromKey}
-          hasPermission={hasPermission}
-        />
+        <Tabs accountId={accountId} />
         {children}
       </div>
     </div>

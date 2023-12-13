@@ -26,7 +26,12 @@ export function Toggleable(props: Props) {
         props.className,
       )}
     >
-      <div className="absolute right-10 top-8 flex flex-row items-center justify-end gap-2">
+      <div
+        className={cn(
+          "absolute right-10 top-8 flex flex-row items-center justify-end gap-2",
+          props.disabled && "hidden",
+        )}
+      >
         <span className="text-xs font-semibold text-ui-elements-black transition-all duration-200">
           Visible for {props.value ? "all users" : "backers"}
         </span>

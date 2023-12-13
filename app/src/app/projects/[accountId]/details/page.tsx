@@ -8,7 +8,7 @@ import { type Project } from "~/lib/validation/projects";
 import { Stats } from "./stats";
 import { Founder } from "./founder";
 import { DATE } from "~/lib/format";
-import { FileDescription } from "../backers-digest/backers-digest";
+import { FileDescription } from "~/components/file-description";
 
 export default async function ProjectDetails({
   params: { accountId },

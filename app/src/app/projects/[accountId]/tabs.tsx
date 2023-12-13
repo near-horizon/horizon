@@ -1,22 +1,7 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import ContentTabs from "~/components/ui/content-tabs";
 import { type AccountId } from "~/lib/validation/common";
 
-export function Tabs({
-  accountId,
-  backersViewFromKey,
-  hasPermission,
-}: {
-  accountId: AccountId;
-  backersViewFromKey: string;
-  hasPermission: boolean;
-}) {
-  const searchParams = useSearchParams();
-  const from = searchParams.get("from");
-  const isFromBackerView = !!from && from === backersViewFromKey;
-
+export function Tabs({ accountId }: { accountId: AccountId }) {
   const tabs = [
     {
       id: "overview",
@@ -44,14 +29,6 @@ export function Tabs({
       href: `/projects/${accountId}/history`,
     },
   ] satisfies Parameters<typeof ContentTabs>[0]["tabs"];
-
-  if (hasPermission || isFromBackerView) {
-    tabs.unshift({
-      id: "backers-digest",
-      text: "Backers Digest",
-      href: `/projects/${accountId}/backers-digest`,
-    });
-  }
 
   return <ContentTabs tabs={tabs} />;
 }

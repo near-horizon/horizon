@@ -11,7 +11,6 @@ import {
   BACKER_MENU,
   CONTRIBUTOR_MENU,
   PROJECT_MENU,
-  PROJECT_MENU_DIGEST,
 } from "~/lib/constants/navigation/user";
 import { useUser } from "~/stores/global";
 
@@ -24,11 +23,9 @@ export function ProfileNav() {
     return <></>;
   }
 
-  if (user.hasProfile && user.profileType === "project") {
-    items = PROJECT_MENU_DIGEST;
-  } else if (user.hasProfile && user.profileType === "contributor") {
+  if (user.hasProfile && user.profileType === "contributor") {
     items = CONTRIBUTOR_MENU;
-  } else {
+  } else if (user.hasProfile && user.profileType === "backer") {
     items = BACKER_MENU;
   }
 
