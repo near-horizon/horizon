@@ -4,12 +4,14 @@ import { type Message } from "ai";
 import { cn } from "~/lib/utils";
 import { CodeBlock } from "../markdown/code-block";
 import { MemoizedReactMarkdown } from "../markdown/react-markdown";
-import { useCallback } from "react";
 import { Avatar } from "~/components/ui/avatar";
 import { RateMessage } from "./rate-message";
 
+const verifiedSourcesText = "Verified Sources:";
+
 function getSources(message: Message) {
-  const sourcesIndex = message?.content.indexOf("Verified Sources:");
+  const sourcesIndex = message.content.indexOf(verifiedSourcesText);
+
   if (sourcesIndex === -1 || message.role !== "assistant") {
     return {
       sources: [],
@@ -18,21 +20,27 @@ function getSources(message: Message) {
     };
   }
 
+  const idIndex = sourcesIndex - 9;
+
   // Extract everything up to "Verified Sources:"
-  const messageWithOutSources = message?.content.substring(0, sourcesIndex - 9);
+  const messageWithOutSources = message.content.substring(0, idIndex);
   const messageId = Number(
-    message?.content.substring(sourcesIndex - 9, sourcesIndex).trim(),
+    message.content.substring(idIndex, sourcesIndex).trim(),
   );
+
   // Extract the substring from "Verified Sources" to the end of the string
-  const verifiedSourcesSection = message?.content.substring(sourcesIndex);
-  // Split the section into lines
-  const sourcesLines = verifiedSourcesSection.split("\n");
-  // Remove the first line ("Verified Sources:") and keep the URLs
-  const sources = sourcesLines.slice(1, sourcesLines.length - 1).map((line) => {
+  const verifiedSourcesSection = message.content.substring(sourcesIndex);
+
+  // Split the section into lines and remove the first line
+  const [, ...sourcesLines] = verifiedSourcesSection.split("\n");
+
+  // Keep the URLs
+  const sources = sourcesLines.map((line) => {
     // You can further process each line if necessary, for example, extract URLs from markdown links
-    const urlMatch = line.match(/\[(.*?)\]\((.*?)\)/);
-    if (urlMatch?.[2]) {
-      return urlMatch[2];
+    const urlMatch = line.match(/\[.*?\]\((?<url>.*?)\)/);
+
+    if (urlMatch?.groups?.url) {
+      return urlMatch.groups.url;
     }
 
     return line.trim(); // This will return the URL part of the markdown link
@@ -45,6 +53,19 @@ function getSources(message: Message) {
   };
 }
 
+function getDisplayNameFromURL(url: string) {
+  const urlObj = new URL(url);
+  // Remove common subdomains
+  const hostname = urlObj.hostname.replace(/^www\./, "");
+
+  // Extract the second-level domain part
+  const parts = hostname.split(".");
+  const displayName = parts.length > 1 ? parts.at(-2)! : hostname;
+
+  // Capitalize the first letter
+  return displayName.charAt(0).toUpperCase() + displayName.slice(1);
+}
+
 export default function Bubble({
   message,
   loading = false,
@@ -53,24 +74,6 @@ export default function Bubble({
   loading?: boolean;
 }) {
   const { sources, messageWithOutSources, messageId } = getSources(message);
-
-  const getDisplayNameFromURL = useCallback((url: string) => {
-    try {
-      const urlObj = new URL(url);
-      let hostname = urlObj.hostname;
-
-      // Remove common subdomains
-      hostname = hostname.replace(/^www\./, "");
-
-      // Extract the second-level domain part
-      const parts = hostname.split(".");
-      const displayName =
-        parts.length > 1 ? parts[parts.length - 2]! : hostname;
-
-      // Capitalize the first letter
-      return displayName.charAt(0).toUpperCase() + displayName.slice(1);
-    } catch (error) {}
-  }, []);
 
   return (
     <div
@@ -192,9 +195,9 @@ export default function Bubble({
                 // Check if the last child is a string and if it ends with a period
                 if (
                   Array.isArray(children) &&
-                  typeof children[children.length - 1] === "string"
+                  typeof children.at(-1) === "string"
                 ) {
-                  const lastChild = children[children.length - 1] as string;
+                  const lastChild = children.at(-1) as string;
 
                   return (
                     <>
