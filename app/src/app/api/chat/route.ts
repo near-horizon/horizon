@@ -19,9 +19,7 @@ export async function POST(req: NextRequest) {
         message: "Invalid request body",
         error: parsedBody.error,
       },
-      {
-        status: 400,
-      },
+      { status: 400 },
     );
   }
 
@@ -34,9 +32,7 @@ export async function POST(req: NextRequest) {
       {
         message: "No messages provided",
       },
-      {
-        status: 400,
-      },
+      { status: 400 },
     );
   }
 
@@ -45,19 +41,24 @@ export async function POST(req: NextRequest) {
 
   const { conversation_id } = await createNewConversation();
 
-  const history = [
-    {
-      prompt: "",
-      response: WELCOME_MESSAGE,
+  const history = messages.reduce(
+    (acc, { content }, index) => {
+      if (index % 2 === 0) {
+        acc.push({ prompt: content });
+        return acc;
+      }
+
+      acc.at(-1)!.response = content;
+
+      return acc;
     },
-  ];
-
-  for (let i = 0; i < messages.length; i += 2) {
-    const { content: prompt } = messages[i]!;
-    const { content: response } = messages[i + 1]!;
-
-    history.push({ prompt, response });
-  }
+    [
+      {
+        prompt: "",
+        response: WELCOME_MESSAGE,
+      },
+    ] as Array<{ prompt: string; response?: string }>,
+  );
 
   const stream = await MendableStream(
     {
