@@ -67,7 +67,7 @@ export function GeneralInput({
         control={form.control}
         label="Stage"
         placeholder="Stage"
-        name="profile.value.stage"
+        name="profile.stage"
         options={stageSchema.options.map((option) => ({
           value: option,
           text: STRING.capitalize(option),

@@ -1,6 +1,5 @@
 import {
   BookOpen02Svg,
-  CalendarSvg,
   HomeLineSvg,
   LineChartUp02Svg,
   MagicWand02Svg,

@@ -87,8 +87,8 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
       <form
         className="flex w-full flex-col items-stretch justify-start gap-8"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={form.handleSubmit(async (data) => {
-          await updateProject.mutateAsync(data);
+        onSubmit={form.handleSubmit(async (project) => {
+          await updateProject.mutateAsync({ project });
         })}
       >
         <div>
@@ -133,8 +133,8 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
         <InputSection
           title="Project details"
           completion={projectProgressCompletion(profile)}
-          value={form.watch("progress.visible")}
-          onChange={(value) => form.setValue("progress.visible", value)}
+          value={form.watch("details.visible")}
+          onChange={(value) => form.setValue("details.visible", value)}
         >
           <DetailsInput form={form} />
         </InputSection>

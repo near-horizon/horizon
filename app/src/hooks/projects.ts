@@ -11,9 +11,6 @@ import { useSignTx, useSignTxs } from "~/stores/global";
 import { useState } from "react";
 import {
   type BackersDigest,
-  privateProjectSchema,
-  type Project,
-  projectSchema,
   type ProjectsQuery,
 } from "~/lib/validation/projects";
 import {
@@ -30,9 +27,9 @@ import {
   updateProjectBackersDigest,
 } from "~/lib/client/projects";
 import { type Progress } from "~/lib/client/mutating";
-import { type Profile, profileSchema } from "~/lib/validation/fetching";
+import { type Profile } from "~/lib/validation/fetching";
 import { updateSession } from "~/lib/client/auth";
-import { NewProjectType } from "~/lib/validation/project/new";
+import { type NewProjectType } from "~/lib/validation/project/new";
 import deepEqual from "deep-equal";
 import { calculateDeposit, createSocialUpdate } from "~/lib/client/social";
 
