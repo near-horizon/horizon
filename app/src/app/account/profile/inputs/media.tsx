@@ -48,6 +48,7 @@ export function MediaInput({
           </Button>
         </MotionDiv>
       ))}
+
       <div className="flex w-full flex-row items-start justify-end">
         <Button
           variant="outline"

@@ -66,12 +66,12 @@ export function InputBuilder<
               {props.children({ field, fieldState, formState })}
             </div>
           </FormControl>
-          <div className="col-span-10 col-start-3 grid grid-cols-12">
-            <FormDescription className="col-span-10">
+          <div className="col-span-10 col-start-3 flex flex-row items-start justify-between">
+            <FormDescription className="flex-grow">
               {props.description}
             </FormDescription>
             {props.extra && (
-              <div className="col-span-2">
+              <div className="min-w-fit flex-shrink-0">
                 {props.extra({ field, formState, fieldState })}
               </div>
             )}

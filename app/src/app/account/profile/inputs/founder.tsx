@@ -33,6 +33,7 @@ export function FoundersInput({
           key={field.id}
         />
       ))}
+
       <div className="flex w-full flex-row items-start justify-end">
         <Button
           variant="outline"
@@ -65,7 +66,7 @@ export function FounderInput({
   return (
     <MotionDiv
       key={field.id}
-      className="relative flex w-full origin-top-right flex-col items-stretch justify-start gap-3 rounded-xl bg-background-light p-6"
+      className="relative flex w-full origin-top-right flex-col items-stretch justify-start gap-3 rounded-xl bg-background-light p-6 pr-20"
       initial={{ opacity: 0, scale: 0.4 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.4 }}

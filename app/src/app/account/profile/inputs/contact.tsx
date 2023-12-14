@@ -9,7 +9,7 @@ export function ContactInput({
   form: UseFormReturn<NewProjectType, any, undefined>;
 }) {
   return (
-    <>
+    <div className="flex w-full flex-col items-stretch justify-start gap-4 pr-20">
       <TextInput
         control={form.control}
         label="Contact email"
@@ -23,6 +23,6 @@ export function ContactInput({
         placeholder="Meeting scheduling link"
         name="contact.value.meeting_link"
       />
-    </>
+    </div>
   );
 }

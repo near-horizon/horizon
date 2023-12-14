@@ -8,7 +8,7 @@ import { TextAreaInput } from "~/components/inputs/text-area";
 import { Separator } from "~/components/ui/separator";
 import { iso3166 } from "~/lib/constants/iso-3166";
 import { STRING } from "~/lib/format";
-import { verticalSchema } from "~/lib/validation/inputs";
+import { stageSchema, verticalSchema } from "~/lib/validation/inputs";
 import {
   type NewProjectType,
   projectSizeSchema,
@@ -25,7 +25,7 @@ export function GeneralInput({
   setCid: (cid: string) => void;
 }) {
   return (
-    <>
+    <div className="flex w-full flex-col items-stretch justify-start gap-4 pr-20">
       <ImageInput
         name="profile.logo"
         control={form.control}
@@ -61,6 +61,18 @@ export function GeneralInput({
         name="profile.vertical"
         rules={{ required: true }}
         options={verticalSchema.options}
+      />
+
+      <SelectInput
+        control={form.control}
+        label="Stage"
+        placeholder="Stage"
+        name="profile.value.stage"
+        options={stageSchema.options.map((option) => ({
+          value: option,
+          text: STRING.capitalize(option),
+        }))}
+        rules={{ required: true }}
       />
 
       <TextInput
@@ -140,6 +152,6 @@ export function GeneralInput({
         name="profile.location"
         options={iso3166}
       />
-    </>
+    </div>
   );
 }

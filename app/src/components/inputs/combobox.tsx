@@ -57,7 +57,7 @@ export function ComboboxInput<
             className="p-0"
             style={{ width: `${ref.current?.clientWidth}px` }}
           >
-            <Command>
+            <Command onBlur={field.onBlur}>
               <CommandInput placeholder={props.placeholder} />
               <CommandEmpty>{props.emptyText}</CommandEmpty>
               <CommandGroup className="max-h-64">
@@ -65,9 +65,7 @@ export function ComboboxInput<
                   <CommandItem
                     value={`${item.value}-${item.text}`}
                     key={item.value}
-                    onSelect={() => {
-                      field.onChange({ target: { value: item.value } });
-                    }}
+                    onSelect={() => field.onChange(item.value)}
                   >
                     <CheckSvg
                       className={cn(
