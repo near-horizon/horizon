@@ -45,7 +45,7 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
   const [progress, updateProject] = useUpdateProject();
 
   const buttons = (
-    <div className="flex flex-row items-center justify-end gap-2">
+    <div className="flex flex-row items-center justify-start gap-2 md:justify-end">
       <ProgressDialog
         progress={progress.value}
         description={progress.label}
@@ -91,25 +91,25 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
           await updateProject.mutateAsync({ project });
         })}
       >
-        <div>
-          <div className="flex flex-row items-start justify-between">
+        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:gap-0">
+          <div>
             <h1 className="text-2xl font-bold text-ui-elements-black">
               Project profile
             </h1>
-            {buttons}
-          </div>
 
-          <div className="flex flex-row items-center justify-start gap-2 text-sm font-medium">
-            <span className="text-ui-elements-dark">
-              Completed: {NUMBER.percentage(projectCompletion(profile))}
-            </span>
-            <Circle2Svg className="h-1 w-1 text-ui-elements-gray" />
-            <span className="text-primary-pressed">Reward: +5 HZN</span>
-            <InfoTooltip>
-              The reward is given for completing the profile and publishing the
-              project.
-            </InfoTooltip>
+            <div className="flex flex-row items-center justify-start gap-2 text-sm font-medium">
+              <span className="text-ui-elements-dark">
+                Completed: {NUMBER.percentage(projectCompletion(profile))}
+              </span>
+              <Circle2Svg className="h-1 w-1 text-ui-elements-gray" />
+              <span className="text-primary-pressed">Reward: +5 HZN</span>
+              <InfoTooltip>
+                The reward is given for completing the profile and publishing
+                the project.
+              </InfoTooltip>
+            </div>
           </div>
+          {buttons}
         </div>
 
         <InputSection
