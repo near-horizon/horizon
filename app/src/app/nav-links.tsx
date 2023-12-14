@@ -6,7 +6,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "~/components/ui/navigation-menu";
-import { ChevronDownSvg, ProjectsSvg, Shield011Svg } from "~/icons";
+import { IconSvg, Menu01Svg, ProjectsSvg, Shield011Svg } from "~/icons";
 import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import {
@@ -102,8 +102,8 @@ export function MobileNavLinks() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="group flex flex-row items-center justify-between gap-2 p-2 focus-visible:ring-0">
-        Explore
-        <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
+        <Menu01Svg className="h-8 w-8 rotate-0 transition-transform duration-200 group-data-[state='open']:rotate-90" />
+        <IconSvg className="h-8 w-8" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[100svw] origin-left p-0">
         <NavigationMenu

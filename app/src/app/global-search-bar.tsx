@@ -25,14 +25,14 @@ export function GlobalSearchBar() {
     <div
       className={cn(
         "relative flex flex-row items-stretch justify-start rounded-full border border-primary-disabled bg-background-white",
-        "group w-[min(90%,30rem)] py-0 shadow focus-within:ring"
+        "group w-[min(90%,30rem)] py-0 shadow focus-within:ring",
       )}
     >
       <SearchInput
         value={searchQuery}
         setValue={setSearchQuery}
         className="flex-grow rounded-r-none border-none shadow-none focus-within:ring-0"
-        placeholder="Search..."
+        placeholder="Search Horizon"
         onEnter={() => {
           router.push(`/search?q=${searchQuery}`);
         }}
@@ -44,7 +44,7 @@ export function GlobalSearchBar() {
         }}
         className="h-11 rounded-l-none border-l border-l-primary-disabled"
       >
-        Search
+        <SearchSmSvg className="h-5 w-5 text-ui-elements-dark" />
       </Button>
       {toSearch !== "" && (
         <div className="absolute left-0 top-full z-50 mt-2 hidden w-full rounded-lg bg-white p-4 shadow group-focus-within:block">

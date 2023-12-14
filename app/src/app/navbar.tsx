@@ -1,4 +1,4 @@
-import { IconSvg, LogoSvg } from "~/icons";
+import { LogoSvg } from "~/icons";
 import { GlobalSearchBar } from "./global-search-bar";
 import { MobileNavLinks, NavLinks } from "./nav-links";
 import { UserMenu } from "./user-menu";
@@ -25,16 +25,12 @@ export function MobileNavbar() {
     <header
       className={cn(
         "flex w-full flex-col items-center justify-start gap-4",
-        "rounded rounded-b-none border border-b-0 border-ui-elements-light bg-background-light py-4",
+        "rounded rounded-b-none border border-b-0 border-ui-elements-light bg-ui-elements-white py-4",
+        "shadow",
       )}
     >
       <div className="flex w-full flex-row items-center justify-between px-8">
-        <div className="flex flex-row items-center justify-start">
-          <Link href="/" className="flex items-center justify-center">
-            <IconSvg className="h-8 w-full" />
-          </Link>
-          <MobileNavLinks />
-        </div>
+        <MobileNavLinks />
         <UserMenu mobile />
       </div>
       <GlobalSearchBar />

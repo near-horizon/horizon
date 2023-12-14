@@ -36,8 +36,8 @@ export function UserMenu({ mobile = false }: { mobile?: boolean }) {
             image={profile?.image}
             className="h-8 w-8 rounded-full"
           />
-          My profile
-          <ChevronDownSvg className="h-4 w-4 rotate-180 transition-transform duration-200 group-data-[state='open']:rotate-0" />
+          Profile
+          <ChevronDownSvg className="h-4 w-4 rotate-0 transition-transform duration-200 group-data-[state='open']:rotate-180" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="flex w-[100svw] flex-col items-stretch justify-start pt-6">
           {user.hasProfile && <ProfileNav />}

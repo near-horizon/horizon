@@ -49,7 +49,7 @@ export function InputBuilder<
       render={({ field, fieldState, formState }) => (
         <FormItem className="grid w-full grid-cols-12 items-start justify-end gap-2 space-y-0">
           {!props.noLabel && (
-            <FormLabel className="col-span-12 pt-1 font-bold md:col-span-2 md:text-right">
+            <FormLabel className="col-span-12 pt-1 text-[1rem] font-bold md:col-span-2 md:text-right">
               {props.label ?? field.name}
               <br className="hidden md:block" />
               {props.rules?.required && (
