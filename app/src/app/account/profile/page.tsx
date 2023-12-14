@@ -14,6 +14,10 @@ export default async function Profile() {
     return redirect("/onboarding");
   }
 
+  if (!user.accountId) {
+    return redirect("/login");
+  }
+
   const project = await getNewProject(user.accountId);
 
   return <ProfileForm project={project} />;

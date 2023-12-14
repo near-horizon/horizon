@@ -6,9 +6,12 @@ import { Handle, HandleSkeleton } from "~/components/handle";
 import { Tags, TagsSkeleton } from "~/components/tags";
 import { Skeleton } from "~/components/ui/skeleton";
 import { CTA } from "~/components/ui/cta";
-import { MessageChatSquareSvg, Share06Svg } from "~/icons";
+import { ArrowNarrowLeftSvg, MessageChatSquareSvg, Share06Svg } from "~/icons";
 import { Tabs } from "./tabs";
 import { notFound } from "next/navigation";
+import { Cover } from "./cover";
+import { cn, ipfsURL } from "~/lib/utils";
+import Link from "next/link";
 
 export default async function ProjectPageLayout({
   params: { accountId },
@@ -24,15 +27,12 @@ export default async function ProjectPageLayout({
   }
 
   return (
-    <div className="flex w-full flex-row rounded-xl border border-ui-elements-light bg-white px-8 py-6 shadow">
-      <div className="flex w-full flex-col gap-6">
-        <Suspense fallback={<HeaderSkeleton accountId={accountId} />}>
-          <Header accountId={accountId} />
-        </Suspense>
-        <CTAs />
-        <Tabs accountId={accountId} />
-        {children}
-      </div>
+    <div className="mx-auto flex w-full max-w-screen-lg flex-col gap-6">
+      <Suspense fallback={<HeaderSkeleton accountId={accountId} />}>
+        <Header accountId={accountId} />
+      </Suspense>
+      <Tabs accountId={accountId} />
+      {children}
     </div>
   );
 }
@@ -41,7 +41,31 @@ async function Header({ accountId }: { accountId: AccountId }) {
   const data = await getProject(accountId);
 
   return (
-    <div className="flex flex-row items-center justify-start gap-4">
+    <div
+      className={cn(
+        "relative flex flex-col items-start justify-start gap-4 overflow-hidden",
+        "rounded-lg border border-ui-elements-light bg-ui-elements-white px-12 pb-8 pt-28",
+        "shadow",
+      )}
+    >
+      <div className="absolute left-0 top-0 z-0 h-40 w-full">
+        <Cover
+          url={
+            data.image && "ipfs_cid" in data.image
+              ? ipfsURL(data.image.ipfs_cid)
+              : ""
+          }
+        />
+      </div>
+
+      <Link
+        href="/projects"
+        className="absolute left-12 top-8 z-10 flex flex-row items-center justify-start gap-2 text-sm font-semibold text-ui-elements-white"
+      >
+        <ArrowNarrowLeftSvg className="h-5 w-5" />
+        Back to projects
+      </Link>
+
       <Icon name={data.name ?? ""} image={data?.image} />
 
       <div className="flex flex-col items-start justify-start gap-3">
@@ -53,6 +77,8 @@ async function Header({ accountId }: { accountId: AccountId }) {
 
         <Tags tags={data.product_type ?? {}} />
       </div>
+
+      <CTAs />
     </div>
   );
 }

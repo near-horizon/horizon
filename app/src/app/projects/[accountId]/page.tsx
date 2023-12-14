@@ -1,13 +1,16 @@
-import { redirect } from "next/navigation";
 import { getProjects } from "~/lib/server/projects";
-import { type AccountId } from "~/lib/validation/common";
+import { ProjectProfile } from "./profile";
 
 export default function ProjectPage({
   params: { accountId },
 }: {
-  params: { accountId: AccountId };
+  params: { accountId: string };
 }) {
-  return redirect(`/projects/${accountId}/overview`);
+  if (!accountId || accountId === "undefined") {
+    return "Nothing";
+  }
+
+  return <ProjectProfile accountId={accountId} />;
 }
 
 export async function generateStaticParams() {

@@ -1,34 +1,34 @@
-import ContentTabs from "~/components/ui/content-tabs";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "~/lib/utils";
 import { type AccountId } from "~/lib/validation/common";
 
 export function Tabs({ accountId }: { accountId: AccountId }) {
-  const tabs = [
-    {
-      id: "overview",
-      text: "Overview",
-      href: `/projects/${accountId}/overview`,
-    },
-    {
-      id: "details",
-      text: "Details",
-      href: `/projects/${accountId}/details`,
-    },
-    {
-      id: "requests",
-      text: "Requests",
-      href: `/projects/${accountId}/requests`,
-    },
-    {
-      id: "contracts",
-      text: "Contracts",
-      href: `/projects/${accountId}/contracts`,
-    },
-    {
-      id: "history",
-      text: "Work History",
-      href: `/projects/${accountId}/history`,
-    },
-  ] satisfies Parameters<typeof ContentTabs>[0]["tabs"];
+  const pathname = usePathname();
+  const isOnRequests = pathname.includes("#requests");
 
-  return <ContentTabs tabs={tabs} />;
+  return (
+    <div className="flex flex-row items-center justify-start gap-2">
+      <Link
+        href={`/projects/${accountId}#profile`}
+        className={cn(
+          "rounded-lg bg-ui-elements-white px-4 py-2 text-sm font-medium text-ui-elements-black",
+          isOnRequests && "bg-background-light text-background-dark",
+        )}
+      >
+        Project profile
+      </Link>
+      <Link
+        href={`/projects/${accountId}#requests`}
+        className={cn(
+          "rounded-lg bg-ui-elements-white px-4 py-2 text-sm font-medium text-ui-elements-black",
+          !isOnRequests && "bg-background-light text-background-dark",
+        )}
+      >
+        Requests
+      </Link>
+    </div>
+  );
 }

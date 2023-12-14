@@ -12,6 +12,8 @@ export const oldSocialsSchema = z.enum([
   "reddit",
   "website",
   "telegram",
+  "x",
+  "instagram",
 ]);
 
 export const linktreeSchema = z.record(oldSocialsSchema, z.string());
