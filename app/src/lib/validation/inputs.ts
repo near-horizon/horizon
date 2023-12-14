@@ -94,7 +94,7 @@ export const socialSchema = z
 
 export const locationSchema = z.string().refine(
   (location) => {
-    return !iso3166.find((country) => country.value === location);
+    return !!iso3166.find((country) => country.value === location);
   },
   { message: "Invalid location" },
 );
