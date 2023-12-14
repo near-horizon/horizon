@@ -49,6 +49,7 @@ export async function rateMessage({
 
     return response.ok;
   } catch (error) {
+    console.error(error);
     return false;
   }
 }
