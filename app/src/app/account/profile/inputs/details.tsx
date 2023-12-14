@@ -13,9 +13,9 @@ export function DetailsInput({
   form: UseFormReturn<NewProjectType, any, undefined>;
 }) {
   return (
-    <div className="flex w-full flex-col items-stretch justify-start gap-4 pr-20">
+    <div className="flex w-full flex-col items-stretch justify-start gap-4 md:pr-20">
       <div className="grid grid-cols-12">
-        <div className="col-span-10 col-start-3">
+        <div className="col-span-full md:col-span-10 md:col-start-3">
           <CheckboxInput
             control={form.control}
             label="Is your project open source?"
@@ -50,7 +50,7 @@ export function DetailsInput({
       />
 
       <div className="grid grid-cols-12">
-        <div className="col-span-10 col-start-3">
+        <div className="col-span-full md:col-span-10 md:col-start-3">
           <CheckboxInput
             control={form.control}
             label="Are you currently fundraising?"
@@ -60,7 +60,7 @@ export function DetailsInput({
       </div>
 
       <div className="grid grid-cols-12">
-        <div className="col-span-10 col-start-3">
+        <div className="col-span-full md:col-span-10 md:col-start-3">
           <CheckboxInput
             control={form.control}
             label="Have you raised funding before?"

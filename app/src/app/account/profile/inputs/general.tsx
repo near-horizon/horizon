@@ -25,7 +25,7 @@ export function GeneralInput({
   setCid: (cid: string) => void;
 }) {
   return (
-    <div className="flex w-full flex-col items-stretch justify-start gap-4 pr-20">
+    <div className="flex w-full flex-col items-stretch justify-start gap-4 md:pr-20">
       <ImageInput
         name="profile.logo"
         control={form.control}
@@ -99,7 +99,7 @@ export function GeneralInput({
       />
 
       <div className="grid grid-cols-12">
-        <h4 className="col-span-4 col-start-2 font-semibold">
+        <h4 className="col-span-full font-semibold md:col-span-4 md:col-start-2">
           Social profiles
         </h4>
       </div>

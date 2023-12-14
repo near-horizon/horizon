@@ -1,4 +1,5 @@
 import {
+  type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
   type UseControllerProps,
@@ -7,7 +8,7 @@ import { Input } from "../ui/input";
 import { type InputProps } from "~/lib/validation/inputs";
 import { Button } from "../ui/button";
 import { UploadCloud01Svg } from "~/icons";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { cn, uploadImage } from "~/lib/utils";
 import { getImageURL } from "~/lib/client/fetching";
 import { Tabs, TabsTrigger } from "../ui/tabs";
@@ -23,6 +24,39 @@ export function FileInput<
   const ref = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [tab, setTab] = useState<string>("upload");
+
+  const handleChange = useCallback(
+    async (
+      e: React.ChangeEvent<HTMLInputElement>,
+      field: ControllerRenderProps<TFieldValues, TName>,
+    ) => {
+      if (e.target.files) {
+        const [file] = e.target.files;
+        if (!file) return;
+
+        if (file.size > MAX_FILE_SIZE) {
+          props.control?.setError(field.name, {
+            message: "File size is too large",
+          });
+          return;
+        }
+        try {
+          setUploading(true);
+          const cid = await uploadImage(file);
+          if (cid) {
+            field.onChange(getImageURL(cid));
+          }
+        } catch (_e) {
+          console.error(_e);
+          props.control?.setError(field.name, {
+            message: "Failed to upload file",
+          });
+        }
+        setUploading(false);
+      }
+    },
+    [props],
+  );
 
   return (
     <InputBuilder {...props}>
@@ -45,6 +79,7 @@ export function FileInput<
               </TabsTrigger>
             </TabsList>
           </Tabs>
+
           <div className="w-full">
             <Input
               {...field}
@@ -57,44 +92,25 @@ export function FileInput<
               )}
             />
           </div>
+
           <Input
             ref={ref}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onChange={async (e) => {
-              if (e.target.files) {
-                const [file] = e.target.files;
-                if (!file) return;
-
-                if (file.size > MAX_FILE_SIZE) {
-                  props.control?.setError(field.name, {
-                    message: "File size is too large",
-                  });
-                  return;
-                }
-                try {
-                  setUploading(true);
-                  const cid = await uploadImage(file);
-                  if (cid) {
-                    field.onChange(getImageURL(cid));
-                  }
-                } catch (_e) {
-                  console.error(_e);
-                  props.control?.setError(field.name, {
-                    message: "Failed to upload file",
-                  });
-                }
-                setUploading(false);
-              }
+            onChange={(e) => {
+              void handleChange(e, field);
             }}
             placeholder={props.placeholder}
             type="file"
             className="hidden"
             accept=".pdf, .ppt, .jpg"
           />
+
           <div
-            className={cn("flex flex-row items-center justify-start gap-4", {
-              hidden: tab === "paste",
-            })}
+            className={cn(
+              "flex w-full flex-col items-center justify-center gap-4 md:flex-row md:justify-start",
+              {
+                hidden: tab === "paste",
+              },
+            )}
           >
             <Button
               className="flex flex-row items-center gap-2"
@@ -108,9 +124,10 @@ export function FileInput<
               <UploadCloud01Svg className="h-5 w-5" />
               {!field.value ? "Upload file" : "Replace file"}
             </Button>
-            <span className="text-sm text-ui-elements-gray">
+
+            <span className="text-center text-sm text-ui-elements-gray md:text-left">
               Supported formats: PDF, PPT, JPG.
-              <br />
+              <br className="hidden md:block" />
               Max. file size: 5MB
             </span>
           </div>

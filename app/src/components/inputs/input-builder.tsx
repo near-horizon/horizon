@@ -49,24 +49,26 @@ export function InputBuilder<
       render={({ field, fieldState, formState }) => (
         <FormItem className="grid w-full grid-cols-12 items-start justify-end gap-2 space-y-0">
           {!props.noLabel && (
-            <FormLabel className="col-span-2 pt-1 text-right font-bold capitalize">
+            <FormLabel className="col-span-12 pt-1 font-bold md:col-span-2 md:text-right">
               {props.label ?? field.name}
-              <br />
+              <br className="hidden md:block" />
               {props.rules?.required && (
-                <span className="text-sm font-light text-ui-elements-gray">
+                <span className="ml-2 text-sm font-light text-ui-elements-gray md:ml-0">
                   Required
                 </span>
               )}
             </FormLabel>
           )}
           <FormControl
-            className={cn(props.noLabel ? "col-span-full" : "col-span-10")}
+            className={cn(
+              props.noLabel ? "col-span-full" : "col-span-full md:col-span-10",
+            )}
           >
             <div className="w-full">
               {props.children({ field, fieldState, formState })}
             </div>
           </FormControl>
-          <div className="col-span-10 col-start-3 flex flex-row items-start justify-between">
+          <div className="col-span-full flex flex-row items-start justify-between md:col-span-10 md:col-start-3">
             <FormDescription className="flex-grow">
               {props.description}
             </FormDescription>
@@ -76,7 +78,7 @@ export function InputBuilder<
               </div>
             )}
           </div>
-          <FormMessage className="col-span-10 col-start-3" />
+          <FormMessage className="col-span-full md:col-span-10 md:col-start-3" />
         </FormItem>
       )}
     />

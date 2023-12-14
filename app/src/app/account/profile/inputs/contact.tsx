@@ -9,7 +9,7 @@ export function ContactInput({
   form: UseFormReturn<NewProjectType, any, undefined>;
 }) {
   return (
-    <div className="flex w-full flex-col items-stretch justify-start gap-4 pr-20">
+    <div className="flex w-full flex-col items-stretch justify-start gap-4 md:pr-20">
       <TextInput
         control={form.control}
         label="Contact email"

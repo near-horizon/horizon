@@ -1,28 +1,27 @@
 import { cn } from "~/lib/utils";
 import { Switch } from "./ui/switch";
 
-type Props =
+type Props = {
+  children: React.ReactNode;
+  id: string;
+  value: boolean;
+  className?: string;
+} & (
   | {
-      children: React.ReactNode;
-      id: string;
-      value: boolean;
-      className?: string;
       disabled: true;
     }
   | {
-      children: React.ReactNode;
-      id: string;
-      value: boolean;
-      className?: string;
       disabled?: false;
       onChange: (value: boolean) => void;
-    };
+    }
+);
 
 export function Toggleable(props: Props) {
   return (
     <div
       className={cn(
         "relative w-full rounded-2xl border border-ui-elements-light bg-ui-elements-white p-10 pt-8",
+        !props.disabled && "pt-16 md:pt-8",
         props.className,
       )}
     >

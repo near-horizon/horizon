@@ -66,7 +66,7 @@ export function FounderInput({
   return (
     <MotionDiv
       key={field.id}
-      className="relative flex w-full origin-top-right flex-col items-stretch justify-start gap-3 rounded-xl bg-background-light p-6 pr-20"
+      className="relative flex w-full origin-top-right flex-col items-stretch justify-start gap-3 rounded-xl bg-background-light p-6 md:pr-20"
       initial={{ opacity: 0, scale: 0.4 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.4 }}
@@ -114,7 +114,7 @@ export function FounderInput({
       />
 
       <div className="grid grid-cols-12">
-        <h4 className="col-span-4 col-start-2 font-semibold">
+        <h4 className="col-span-full font-semibold md:col-span-4 md:col-start-2">
           Social profiles
         </h4>
       </div>
