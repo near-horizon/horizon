@@ -21,21 +21,15 @@ import { ContactInput } from "./inputs/contact";
 import { GeneralInput } from "./inputs/general";
 import { InputSection } from "./inputs/section";
 import { ArtifactsInput } from "./inputs/artifacts";
-import { ExternalLink } from "lucide-react";
-import {
-  Circle2Svg,
-  Download01Svg,
-  File06Svg,
-  FileCheck02Svg,
-  LinkExternal02Svg,
-  Share03Svg,
-} from "~/icons";
-import { getFileURL } from "~/lib/utils";
+import { Circle2Svg, FileCheck02Svg, LinkExternal02Svg } from "~/icons";
 import { MediaInput } from "./inputs/media";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { NUMBER } from "~/lib/format";
 import { InfoTooltip } from "~/components/info-tooltip";
+import { cn } from "~/lib/utils";
+import { useUpdateProject } from "~/hooks/projects";
+import { ProgressDialog } from "~/components/progress-dialog";
 
 export function ProfileForm({ project }: { project: NewProjectType }) {
   const [cid, setCid] = useState(
@@ -47,35 +41,62 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
     defaultValues: project,
   });
   const profile = form.watch();
+  const disabled = !form.formState.isValid || form.formState.isSubmitting;
+  const [progress, updateProject] = useUpdateProject();
+
+  const buttons = (
+    <div className="flex flex-row items-center justify-end gap-2">
+      <ProgressDialog
+        progress={progress.value}
+        description={progress.label}
+        title="Updating project"
+        className={cn(
+          "flex-row items-center justify-center gap-2 text-ui-elements-dark",
+          disabled && "opacity-50",
+        )}
+        triggerText={
+          <>
+            <FileCheck02Svg className="h-4 w-4" />
+            Save profile
+          </>
+        }
+        onClick={(e) => {
+          if (disabled) {
+            e.preventDefault();
+            void form.trigger();
+          } else {
+            void updateProject.mutateAsync({ project: profile });
+          }
+        }}
+      />
+      <Link href={`/projects/${project.account_id}`} target="_blank">
+        <Button
+          type="button"
+          variant="outline"
+          className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
+        >
+          <LinkExternal02Svg className="h-4 w-4" />
+          Preview
+        </Button>
+      </Link>
+    </div>
+  );
 
   return (
     <Form {...form}>
-      <form className="flex w-full flex-col items-stretch justify-start gap-8">
+      <form
+        className="flex w-full flex-col items-stretch justify-start gap-8"
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={form.handleSubmit(async (data) => {
+          await updateProject.mutateAsync(data);
+        })}
+      >
         <div>
           <div className="flex flex-row items-start justify-between">
             <h1 className="text-2xl font-bold text-ui-elements-black">
               Project profile
             </h1>
-            <div className="flex flex-row items-center justify-end gap-2">
-              <Button
-                type="submit"
-                variant="default"
-                className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
-              >
-                <FileCheck02Svg className="h-4 w-4" />
-                Save profile
-              </Button>
-              <Link href={`/projects/${project.account_id}`} target="_blank">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
-                >
-                  <LinkExternal02Svg className="h-4 w-4" />
-                  Preview
-                </Button>
-              </Link>
-            </div>
+            {buttons}
           </div>
 
           <div className="flex flex-row items-center justify-start gap-2 text-sm font-medium">
@@ -154,26 +175,7 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
           <MediaInput form={form} />
         </InputSection>
 
-        <div className="flex flex-row items-center justify-end gap-2">
-          <Button
-            type="submit"
-            variant="default"
-            className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
-          >
-            <FileCheck02Svg className="h-4 w-4" />
-            Save profile
-          </Button>
-          <Link href={`/projects/${project.account_id}`} target="_blank">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-row items-center justify-center gap-2 text-ui-elements-dark"
-            >
-              <LinkExternal02Svg className="h-4 w-4" />
-              Preview
-            </Button>
-          </Link>
-        </div>
+        {buttons}
       </form>
     </Form>
   );

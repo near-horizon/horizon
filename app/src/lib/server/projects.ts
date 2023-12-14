@@ -27,7 +27,11 @@ import { hasBacker } from "./backers";
 import { headers } from "next/headers";
 import { backersViewFromKey } from "../constants/backers-digest";
 import { type User } from "../validation/user";
-import { NewProject } from "../validation/project/new";
+import {
+  NewProject,
+  newProjectSchema,
+  type NewProjectType,
+} from "../validation/project/new";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
   vertical: z.array(z.string()).optional().or(z.string().optional()),
@@ -238,13 +242,47 @@ export async function getBackersDigest(accountId: AccountId) {
   return backersDigestSchema.parse(await response.json());
 }
 
-export async function getNewProject(accountId: AccountId) {
+export async function getNewProject(
+  accountId: AccountId,
+): Promise<NewProjectType> {
+  const response = await fetch(`${env.API_URL}/data/projects/${accountId}`);
+
+  if (response.ok) {
+    const parsed = newProjectSchema.safeParse(await response.json());
+
+    console.log(parsed);
+
+    if (parsed.success) {
+      return parsed.data;
+    }
+  }
+
   const [project, digest] = await Promise.all([
     getProject(accountId),
     getBackersDigest(accountId),
   ]);
 
-  return NewProject.fromOld({ ...project, digest });
+  return NewProject.fromOld({ ...project, digest }).asType();
+}
+
+export async function updateNewProject(project: NewProjectType) {
+  const response = await fetch(
+    `${env.API_URL}/data/projects/${project.account_id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+      body: JSON.stringify(project),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update new project");
+  }
+
+  return newProjectSchema.parse(await response.json());
 }
 
 export async function hasBackersDigest(accountId: AccountId) {

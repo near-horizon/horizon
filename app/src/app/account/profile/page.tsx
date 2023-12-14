@@ -16,5 +16,5 @@ export default async function Profile() {
 
   const project = await getNewProject(user.accountId);
 
-  return <ProfileForm project={project.asType()} />;
+  return <ProfileForm project={project} />;
 }

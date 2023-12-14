@@ -31,6 +31,7 @@ export const projectProfileSchema = z.object({
   logo: imageSchema,
   email: emailSchema,
   vertical: verticalSchema.array(),
+  stage: stageSchema,
   tagline: taglineSchema,
   description: descriptionSchema.optional(),
   website: websiteSchema.optional(),
@@ -56,6 +57,7 @@ export function projectProfileCompletion({ profile }: NewProjectType) {
       }),
     profile.email && profile.email.length > 0,
     profile.vertical && profile.vertical.length > 0,
+    profile.stage && profile.stage.length > 0,
     profile.tagline && profile.tagline.length > 0,
     profile.website && profile.website.length > 0,
     profile.socials &&
@@ -96,23 +98,21 @@ export function projectContactCompletion({
   return fields.filter(Boolean).length / fields.length;
 }
 
-export const projectProgressSchema = z.object({
-  stage: stageSchema,
-  open_source: openSourceSchema.optional(),
-  near_integration: nearIntegrationSchema.optional(),
-  problem: problemSchema,
-  needs: needsSchema.optional(),
-  fundraising: fundraisingSchema.optional(),
-  raised: raisedSchema.optional(),
-});
+export const projectDetailsSchema = z
+  .object({
+    open_source: openSourceSchema,
+    near_integration: nearIntegrationSchema,
+    problem: problemSchema,
+    needs: needsSchema,
+    fundraising: fundraisingSchema,
+    raised: raisedSchema,
+  })
+  .partial();
 
 export function projectProgressCompletion({
-  progress: { value: progress } = {
+  details: { value: progress } = {
     visible: false,
-    value: {
-      stage: "pre-seed",
-      problem: "",
-    },
+    value: {},
   },
 }: NewProjectType) {
   if (!progress) {
@@ -120,7 +120,6 @@ export function projectProgressCompletion({
   }
 
   const fields = [
-    progress.stage && progress.stage.length > 0,
     progress.open_source !== undefined,
     progress.near_integration !== undefined,
     progress.problem && progress.problem.length > 0,
@@ -226,7 +225,7 @@ export const newProjectSchema = z.object({
   account_id: accountIdSchema,
   profile: projectProfileSchema,
   contact: createToggleableSchema(projectContactSchema),
-  progress: createToggleableSchema(projectProgressSchema),
+  details: createToggleableSchema(projectDetailsSchema),
   metrics: createToggleableSchema(metricsSchema),
   founders: createToggleableSchema(projectFoundersSchema),
   artifacts: artifactsSchema,
@@ -252,7 +251,7 @@ export class NewProject implements NewProjectType {
   public account_id: NewProjectType["account_id"];
   public profile: NewProjectType["profile"];
   public contact: NewProjectType["contact"];
-  public progress: NewProjectType["progress"];
+  public details: NewProjectType["details"];
   public metrics: NewProjectType["metrics"];
   public founders: NewProjectType["founders"];
   public artifacts: NewProjectType["artifacts"];
@@ -269,17 +268,15 @@ export class NewProject implements NewProjectType {
         email: "",
         tagline: "",
         vertical: [],
+        stage: "other",
       };
       this.contact = {
         visible: false,
         value: {},
       };
-      this.progress = {
+      this.details = {
         visible: false,
-        value: {
-          stage: "pre-seed",
-          problem: "",
-        },
+        value: {},
       };
       this.metrics = {
         visible: false,
@@ -298,7 +295,7 @@ export class NewProject implements NewProjectType {
       this.account_id = parsed.data.account_id;
       this.profile = parsed.data.profile;
       this.contact = parsed.data.contact;
-      this.progress = parsed.data.progress;
+      this.details = parsed.data.details;
       this.metrics = parsed.data.metrics;
       this.founders = parsed.data.founders;
       this.artifacts = parsed.data.artifacts;
@@ -311,7 +308,7 @@ export class NewProject implements NewProjectType {
       account_id: this.account_id,
       profile: this.profile,
       contact: this.contact,
-      progress: this.progress,
+      details: this.details,
       metrics: this.metrics,
       founders: this.founders,
       artifacts: this.artifacts,
@@ -446,7 +443,7 @@ export class NewProject implements NewProjectType {
           },
           [] as NewProjectType["founders"]["value"],
         )
-      : {};
+      : [];
   }
 
   static fromOld(data: Project & { digest: BackersDigest }): NewProject {
@@ -483,6 +480,10 @@ export class NewProject implements NewProjectType {
 
     const founders = NewProject.#parseOldFounders(data);
 
+    const parsedLocation = locationSchema.safeParse(data.geo);
+
+    const location = parsedLocation.success ? parsedLocation.data : undefined;
+
     return new NewProject({
       account_id: data.account_id,
       profile: {
@@ -490,17 +491,17 @@ export class NewProject implements NewProjectType {
         logo: data.image,
         email: contact.value.email ?? "test@test.com",
         vertical,
+        stage,
         tagline: data.tagline ?? " ".repeat(20),
         website: data.website ? data.website : "test.com",
         socials,
-        location: data.geo,
+        location,
         size,
       },
       contact,
-      progress: {
+      details: {
         visible: false,
         value: {
-          stage,
           open_source: data.distribution === "open-source",
           near_integration:
             data.integration === "no"

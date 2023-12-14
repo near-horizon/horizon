@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { type AccountId } from "~/lib/validation/common";
 import { pageSize } from "~/lib/constants/pagination";
-import { useSignTx } from "~/stores/global";
+import { useSignTx, useSignTxs } from "~/stores/global";
 import { useState } from "react";
 import {
   type BackersDigest,
@@ -18,6 +18,7 @@ import {
 } from "~/lib/validation/projects";
 import {
   getBackerPaginatedProjects,
+  getNewProject,
   getPaginatedProjects,
   getProject,
   getProjectBackersDigest,
@@ -25,11 +26,15 @@ import {
   getProjects,
   getProjectsCount,
   hasProject,
+  updateNewProject,
   updateProjectBackersDigest,
 } from "~/lib/client/projects";
 import { type Progress } from "~/lib/client/mutating";
 import { type Profile, profileSchema } from "~/lib/validation/fetching";
 import { updateSession } from "~/lib/client/auth";
+import { NewProjectType } from "~/lib/validation/project/new";
+import deepEqual from "deep-equal";
+import { calculateDeposit, createSocialUpdate } from "~/lib/client/social";
 
 export function useProjects(query: ProjectsQuery) {
   return useQuery({
@@ -109,7 +114,7 @@ export function useUpdateBackersDigest(): [
       digest: BackersDigest;
     },
     unknown
-  >
+  >,
 ] {
   const queryClient = useQueryClient();
   const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
@@ -157,7 +162,7 @@ export function usePublishBackersDigest(): [
       accountId: AccountId;
     },
     unknown
-  >
+  >,
 ] {
   const queryClient = useQueryClient();
   const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
@@ -203,7 +208,7 @@ export function useCreateProject(): [
       email: string;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -264,80 +269,49 @@ export function useUpdateProject(): [
     void,
     unknown,
     {
-      accountId: AccountId;
-      project: Partial<Project>;
+      project: NewProjectType;
     },
     unknown
-  >
+  >,
 ] {
-  const signTx = useSignTx();
+  const signTxs = useSignTxs();
   const queryClient = useQueryClient();
   const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
 
   return [
     progress,
     useMutation({
-      mutationFn: async ({
-        accountId,
-        project,
-      }: {
-        accountId: AccountId;
-        project: Partial<Project>;
-      }) => {
-        const privateData = privateProjectSchema.partial().parse(project);
-        const projectData = projectSchema.partial().parse(project);
-        const profileData = profileSchema.partial().strip().parse(project);
+      mutationFn: async ({ project }: { project: NewProjectType }) => {
+        setProgress({ value: 25, label: "Storing off-chain data..." });
+        const result = await updateNewProject(project);
 
-        if (Object.keys(projectData).length === 0) {
-          setProgress({ value: 0, label: "Editing on-chain details..." });
-          try {
-            await signTx("edit_project", {
-              account_id: accountId,
-              project: projectData,
-            });
-          } catch (e) {
-            setProgress({
-              value: 0,
-              label: "Failed to update on-chain project data!",
-            });
-            throw new Error("Failed to update project");
-          }
-          setProgress({ value: 33, label: "On-chain data saved!" });
+        if (!result) {
+          setProgress({ value: 25, label: "Failed to store off-chain data!" });
+          throw new Error("Failed to edit project");
         }
 
-        if (Object.keys(privateData).length === 0) {
-          setProgress({ value: 33, label: "Editing off-chain details..." });
-          const response = await fetch("/api/profile", {
-            method: "PUT",
-            body: JSON.stringify(privateData),
-          });
+        setProgress({ value: 50, label: "Checking on-chain diff..." });
+        const onChain = await getNewProject(project.account_id);
+        const different = deepEqual(project.profile, onChain.profile);
 
-          if (!response.ok) {
-            setProgress({ value: 33, label: "Failed to update project data!" });
-            throw new Error("Failed to update project");
-          }
-          setProgress({ value: 66, label: "Off-chain data saved!" });
-        }
-
-        if (Object.keys(profileData).length === 0) {
-          setProgress({ value: 66, label: "Editing profile..." });
-          const response = await fetch("/api/profile", {
-            method: "PUT",
-            body: JSON.stringify(profileData),
-          });
-
-          if (!response.ok) {
-            setProgress({ value: 66, label: "Failed to update profile data!" });
-            throw new Error("Failed to update profile");
-          }
-          setProgress({ value: 100, label: "Profile saved!" });
+        if (different) {
+          setProgress({ value: 75, label: "Updating project on-chain..." });
+          const deposit = await calculateDeposit(
+            project.account_id,
+            project.profile,
+          );
+          await signTxs([
+            createSocialUpdate(project.account_id, project.profile, deposit),
+          ]);
         } else {
-          setProgress({ value: 100, label: "Project updated!" });
+          setProgress({ value: 75, label: "No on-chain diff detected!" });
         }
+
+        setProgress({ value: 100, label: "Project updated!" });
       },
-      onSuccess: async (_, { accountId }) => {
+      onSuccess: async (_, { project: { account_id } }) => {
         await queryClient.invalidateQueries({
-          queryKey: ["project", accountId],
+          queryKey: ["project", account_id],
         });
       },
     }),

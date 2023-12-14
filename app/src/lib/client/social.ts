@@ -8,13 +8,12 @@ import {
   TX_GAS,
 } from "../constants/tx";
 import { getProfile, viewCall } from "./fetching";
-import { type Profile } from "../validation/fetching";
 import { type AccountId } from "../validation/common";
 import { type Optional, type Transaction } from "@near-wallet-selector/core";
 
 export async function calculateDeposit(
   accountId: string,
-  changes: Profile
+  changes: Record<string, unknown>,
 ): Promise<bigint> {
   const currentProfile = await getProfile(accountId);
   const storageDeposit = await viewCall<{ total: string; available: string }>(
@@ -22,7 +21,7 @@ export async function calculateDeposit(
     "storage_balance_of",
     {
       account_id: accountId,
-    }
+    },
   );
 
   const [storageBalance, initialAccountStorageBalance, minStorageBalance] =
@@ -51,7 +50,7 @@ export async function calculateDeposit(
 
 export function estimateDataCost(
   data: unknown,
-  previousData?: unknown
+  previousData?: unknown,
 ): bigint {
   if (data === null || !data) {
     return 0n;
@@ -74,7 +73,7 @@ export function estimateDataCost(
       typeof previousData === "symbol"
     ) {
       return BigInt(
-        Math.max(stringData.length, 8) - previousData.toString().length
+        Math.max(stringData.length, 8) - previousData.toString().length,
       );
     }
 
@@ -92,7 +91,7 @@ export function estimateDataCost(
           acc +
           estimateDataCost(
             value,
-            previousData[key as keyof typeof previousData]
+            previousData[key as keyof typeof previousData],
           )
         );
       }
@@ -117,8 +116,8 @@ export function estimateDataCost(
 
 export function createSocialUpdate(
   accountId: AccountId,
-  profile: Profile,
-  deposit: bigint
+  profile: Record<string, unknown>,
+  deposit: bigint,
 ): Optional<Transaction, "signerId"> {
   return {
     receiverId: "social.near",

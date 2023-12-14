@@ -11,7 +11,10 @@ import {
 import { viewCall } from "./fetching";
 import { env } from "~/env.mjs";
 import deepEqual from "deep-equal";
-import { newProjectSchema } from "../validation/project/new";
+import {
+  newProjectSchema,
+  type NewProjectType,
+} from "../validation/project/new";
 
 export async function getProjects(query: ProjectsQuery) {
   const result = await fetch("/api/projects?" + intoURLSearchParams(query));
@@ -65,6 +68,15 @@ export async function getProject(accountId: AccountId) {
 
 export async function getNewProject(accountId: AccountId) {
   const response = await fetch("/api/projects/" + accountId + "/new");
+
+  return newProjectSchema.parse(await response.json());
+}
+
+export async function updateNewProject(project: NewProjectType) {
+  const response = await fetch("/api/projects/" + project.account_id + "/new", {
+    method: "PUT",
+    body: JSON.stringify(project),
+  });
 
   return newProjectSchema.parse(await response.json());
 }
