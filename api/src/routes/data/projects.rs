@@ -627,109 +627,41 @@ async fn get_completion(
     Ok(Json(Completion { avg, list }))
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PatchProject {
-    #[serde(default)]
-    email: Option<String>,
-    #[serde(default)]
-    name: Option<String>,
-    #[serde(default)]
-    description: Option<String>,
-    #[serde(default)]
-    image: Option<serde_json::Value>,
-    #[serde(default)]
-    website: Option<String>,
-    #[serde(default)]
-    tagline: Option<String>,
-    #[serde(default)]
-    linktree: Option<serde_json::Value>,
-    #[serde(default)]
-    vertical: Option<serde_json::Value>,
-    #[serde(default)]
-    stage: Option<String>,
-    #[serde(default)]
-    userbase: Option<i32>,
-    #[serde(default)]
-    distribution: Option<String>,
-    #[serde(default)]
-    dev: Option<String>,
-    #[serde(default)]
-    product_type: Option<Vec<String>>,
-    #[serde(default)]
-    company_size: Option<i32>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PatchProjectResonse {
-    pub status: bool,
-}
-
 #[debug_handler(state = AppState)]
 async fn put_project(
     Path(account_id): Path<String>,
     State(state): State<AppState>,
     headers: HeaderMap,
-    Json(params): Json<PatchProject>,
-) -> ApiResult<Json<PatchProjectResonse>> {
+    Json(params): Json<Value>,
+) -> ApiResult<Json<Value>> {
     authorize_bearer(&headers, &state).await?;
-    sqlx::query_scalar!(
+    let params = params
+        .as_object()
+        .ok_or((StatusCode::BAD_REQUEST, "Invalid request body".to_string()))?;
+
+    let project_account_id = params
+        .get("account_id")
+        .ok_or((StatusCode::BAD_REQUEST, "Invalid request body".to_string()))?;
+
+    if project_account_id.as_str().unwrap() != account_id {
+        return Err((StatusCode::BAD_REQUEST, "Invalid request body".to_string()));
+    }
+
+    let value = Value::Object(params.to_owned());
+    println!("{account_id}: {value:#?}");
+
+    sqlx::query!(
         r#"
         INSERT INTO
-          changes (
-            account_id,
-            email,
-            name,
-            description,
-            image,
-            website,
-            tagline,
-            linktree,
-            vertical,
-            stage,
-            userbase,
-            distribution,
-            dev,
-            product_type,
-            company_size
-          )
+          profiles (id, value)
         VALUES
-          (
-            $1, $2, $3, $4, $5, $6, $7, $8,
-            $9, $10, $11, $12, $13, $14, $15
-          ) ON CONFLICT (account_id) DO
+          ($1, $2) ON CONFLICT (id) DO
         UPDATE
         SET
-          email = EXCLUDED.email,
-          name = EXCLUDED.name,
-          description = EXCLUDED.description,
-          image = EXCLUDED.image,
-          website = EXCLUDED.website,
-          tagline = EXCLUDED.tagline,
-          linktree = EXCLUDED.linktree,
-          vertical = EXCLUDED.vertical,
-          stage = EXCLUDED.stage,
-          userbase = EXCLUDED.userbase,
-          distribution = EXCLUDED.distribution,
-          dev = EXCLUDED.dev,
-          product_type = EXCLUDED.product_type,
-          company_size = EXCLUDED.company_size 
-        RETURNING TRUE;
-       "#,
+          value = $2 RETURNING value
+        "#,
         account_id,
-        params.email.unwrap_or_default(),
-        params.name.unwrap_or_default(),
-        params.description.unwrap_or_default(),
-        params.image.unwrap_or_default(),
-        params.website.unwrap_or_default(),
-        params.tagline.unwrap_or_default(),
-        params.linktree.unwrap_or_default(),
-        params.vertical.unwrap_or_default(),
-        params.stage.unwrap_or_default(),
-        params.userbase.unwrap_or_default(),
-        params.distribution.unwrap_or_default(),
-        params.dev.unwrap_or_default(),
-        &params.product_type.unwrap_or_default(),
-        params.company_size.unwrap_or_default(),
+        value,
     )
     .fetch_one(&state.pool)
     .await
@@ -739,11 +671,34 @@ async fn put_project(
             format!("Failed to update project: {e}"),
         )
     })
-    .map(|status| {
-        Json(PatchProjectResonse {
-            status: status.unwrap_or_default(),
-        })
+    .map(|p| Json(p.value))
+}
+
+#[debug_handler(state = AppState)]
+async fn get_project(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+) -> ApiResult<Json<Value>> {
+    sqlx::query!(
+        r#"
+        SELECT
+          value
+        FROM
+          profiles
+        WHERE
+          id = $1
+        "#,
+        account_id
+    )
+    .fetch_one(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get project: {e}"),
+        )
     })
+    .map(|p| Json(p.value))
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -998,7 +953,7 @@ pub fn create_router() -> Router<AppState> {
         .route("/count", get(projects_count))
         .route("/completion", get(get_completion))
         .route("/:account_id/similar", get(get_similar_projects))
-        .route("/:account_id", put(put_project))
+        .route("/:account_id", put(put_project).get(get_project))
         .route("/:account_id/changes", get(changes))
         .route(
             "/:account_id/backers-digest",
