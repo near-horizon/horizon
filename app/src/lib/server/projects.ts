@@ -250,8 +250,6 @@ export async function getNewProject(
   if (response.ok) {
     const parsed = newProjectSchema.safeParse(await response.json());
 
-    console.log(parsed);
-
     if (parsed.success) {
       return parsed.data;
     }

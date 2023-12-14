@@ -260,7 +260,6 @@ export class NewProject implements NewProjectType {
   constructor(data?: unknown) {
     const parsed = newProjectSchema.safeParse(data);
     if (!parsed.success) {
-      console.log({ error: parsed.error, data });
       this.account_id = "";
       this.profile = {
         logo: { url: "" },
