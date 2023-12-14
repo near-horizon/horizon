@@ -48,70 +48,91 @@ export async function calculateDeposit(
   }
 }
 
+export function isPrimitive(
+  value: unknown,
+): value is string | number | bigint | boolean | symbol {
+  return (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "bigint" ||
+    typeof value === "symbol" ||
+    typeof value === "boolean"
+  );
+}
+
 export function estimateDataCost(
   data: unknown,
   previousData?: unknown,
 ): bigint {
-  if (data === null || !data) {
+  if (!data) {
     return 0n;
   }
 
-  if (
-    typeof data === "string" ||
-    typeof data === "boolean" ||
-    typeof data === "number" ||
-    typeof data === "bigint" ||
-    typeof data === "symbol"
-  ) {
-    const stringData = data.toString();
+  if (isPrimitive(data)) {
+    let dataLength = Math.max(data.toString().length, 8);
 
-    if (
-      typeof previousData === "string" ||
-      typeof previousData === "boolean" ||
-      typeof previousData === "number" ||
-      typeof previousData === "bigint" ||
-      typeof previousData === "symbol"
-    ) {
-      return BigInt(
-        Math.max(stringData.length, 8) - previousData.toString().length,
-      );
+    if (isPrimitive(previousData)) {
+      dataLength -= previousData.toString().length;
     }
 
-    return BigInt(Math.max(stringData.length, 8));
+    return BigInt(dataLength);
   }
 
-  if (typeof data === "object") {
-    const innerDataVost = Object.entries(data).reduce((acc, [key, value]) => {
-      if (
-        typeof previousData === "object" &&
-        previousData !== null &&
-        key in previousData
-      ) {
-        return (
-          acc +
-          estimateDataCost(
-            value,
-            previousData[key as keyof typeof previousData],
-          )
-        );
-      }
+  if (typeof data !== "object") {
+    return 0n;
+  }
 
+  let innerDataCost = Object.entries(data).reduce((acc, [key, value]) => {
+    if (
+      typeof previousData === "object" &&
+      !!previousData &&
+      key in previousData
+    ) {
       return (
         acc +
-        BigInt(key.length * 2) +
-        ESTIMATED_KEY_VALUE_SIZE +
-        estimateDataCost(value)
+        estimateDataCost(value, previousData[key as keyof typeof previousData])
       );
-    }, 0n);
-
-    if (typeof previousData === "object" && previousData !== null) {
-      return innerDataVost;
-    } else {
-      return innerDataVost + ESTIMATED_NODE_SIZE;
     }
+
+    return (
+      acc +
+      BigInt(key.length * 2) +
+      ESTIMATED_KEY_VALUE_SIZE +
+      estimateDataCost(value)
+    );
+  }, 0n);
+
+  if (typeof previousData !== "object" || !previousData) {
+    innerDataCost += ESTIMATED_NODE_SIZE;
   }
 
-  return 0n;
+  return innerDataCost;
+}
+
+function formatForSocialDb(
+  profile: Record<string, unknown>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(profile).map(([key, value]) => {
+      if (isPrimitive(value)) {
+        return [key, value.toString()];
+      }
+
+      if (!value) {
+        return [key, null];
+      }
+
+      if (Array.isArray(value)) {
+        return [key, Object.fromEntries(value.map((v) => [v, ""]))];
+      }
+
+      if (typeof value === "object") {
+        return [key, formatForSocialDb(value as Record<string, unknown>)];
+      }
+
+      return [key, value];
+    }),
+  ) as Record<string, unknown>;
 }
 
 export function createSocialUpdate(
@@ -119,6 +140,7 @@ export function createSocialUpdate(
   profile: Record<string, unknown>,
   deposit: bigint,
 ): Optional<Transaction, "signerId"> {
+  profile = formatForSocialDb(profile);
   return {
     receiverId: "social.near",
     actions: [

@@ -32,6 +32,7 @@ import { updateSession } from "~/lib/client/auth";
 import { type NewProjectType } from "~/lib/validation/project/new";
 import deepEqual from "deep-equal";
 import { calculateDeposit, createSocialUpdate } from "~/lib/client/social";
+import { sleep } from "~/lib/utils";
 
 export function useProjects(query: ProjectsQuery) {
   return useQuery({
@@ -289,7 +290,7 @@ export function useUpdateProject(): [
 
         setProgress({ value: 50, label: "Checking on-chain diff..." });
         const onChain = await getNewProject(project.account_id);
-        const different = deepEqual(project.profile, onChain.profile);
+        const different = !deepEqual(project.profile, onChain.profile);
 
         if (different) {
           setProgress({ value: 75, label: "Updating project on-chain..." });
@@ -304,11 +305,12 @@ export function useUpdateProject(): [
           setProgress({ value: 75, label: "No on-chain diff detected!" });
         }
 
+        await sleep(1500);
         setProgress({ value: 100, label: "Project updated!" });
       },
       onSuccess: async (_, { project: { account_id } }) => {
         await queryClient.invalidateQueries({
-          queryKey: ["project", account_id],
+          queryKey: ["projects", account_id],
         });
       },
     }),
