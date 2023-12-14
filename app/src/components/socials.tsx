@@ -177,8 +177,8 @@ const supportedLinks: { name: keyof Linktree; url: string; icon: ReactNode }[] =
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          height="800"
-          width="1200"
+          height="24"
+          width="24"
           viewBox="-100.7682 -167.947 873.3244 1007.682"
         >
           <g fill="#98A2B3">

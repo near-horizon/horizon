@@ -44,7 +44,12 @@ export function FileInput<
           setUploading(true);
           const cid = await uploadImage(file);
           if (cid) {
-            field.onChange(getImageURL(cid));
+            field.onChange({
+              file: getImageURL(cid),
+              name: file.name,
+              size: file.size,
+              type: file.type,
+            });
           }
         } catch (_e) {
           console.error(_e);
@@ -86,6 +91,12 @@ export function FileInput<
               type="text"
               value={uploading ? "Uploading..." : field.value}
               disabled={tab === "upload"}
+              onChange={(e) => {
+                field.onChange({
+                  file: e.target.value,
+                  type: "web",
+                });
+              }}
               className={cn(
                 "disabled:hidden",
                 fieldState.error && "ring ring-destructive ring-offset-2",

@@ -183,14 +183,12 @@ export function projectMetricsCompletion({
 export const artifactSchema = z.object({
   name: z.string(),
   note: z.string().optional().optional(),
-  value: z.union([
-    z.object({
-      url: z.string(),
-    }),
-    z.object({
-      file: z.string(),
-    }),
-  ]),
+  value: z.object({
+    file: z.string(),
+    name: z.string().optional(),
+    type: z.string().optional(),
+    size: z.number().optional(),
+  }),
 });
 
 export function projectArtifactsCompletion({ artifacts }: NewProjectType) {
@@ -201,7 +199,7 @@ export function projectArtifactsCompletion({ artifacts }: NewProjectType) {
   return +artifacts.some(({ value }) => {
     const fields = [
       value.name && value.name.length > 0,
-      value.value && Object.values(value.value).some((v) => v && v.length > 0),
+      value.value && value.value.file.length > 0,
     ];
 
     return fields.filter(Boolean).length === fields.length;
@@ -340,21 +338,9 @@ export class NewProject implements NewProjectType {
 
     if (data.digest.pitch ?? data.deck) {
       const value = data.digest.pitch
-        ? data.digest.pitch.startsWith("http")
-          ? {
-              url: data.digest.pitch,
-            }
-          : {
-              file: data.digest.pitch,
-            }
+        ? { file: data.digest.pitch }
         : data.deck
-          ? data.deck.startsWith("http")
-            ? {
-                url: data.deck,
-              }
-            : {
-                file: data.deck,
-              }
+          ? { file: data.deck }
           : undefined;
       if (value) {
         artifacts.push({
@@ -366,21 +352,9 @@ export class NewProject implements NewProjectType {
 
     if (data.digest.demo ?? data.demo) {
       const value = data.digest.demo
-        ? data.digest.demo.startsWith("http")
-          ? {
-              url: data.digest.demo,
-            }
-          : {
-              file: data.digest.demo,
-            }
+        ? { file: data.digest.demo }
         : data.demo
-          ? data.demo.startsWith("http")
-            ? {
-                url: data.demo,
-              }
-            : {
-                file: data.demo,
-              }
+          ? { file: data.demo }
           : undefined;
       if (value) {
         artifacts.push({
@@ -395,13 +369,9 @@ export class NewProject implements NewProjectType {
         visible: false,
         value: {
           name: "Demo Video",
-          value: data.digest.demo_video.startsWith("http")
-            ? {
-                url: data.digest.demo_video,
-              }
-            : {
-                file: data.digest.demo_video,
-              },
+          value: {
+            file: data.digest.demo_video,
+          },
         },
       });
     }

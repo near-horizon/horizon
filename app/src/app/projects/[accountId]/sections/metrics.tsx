@@ -1,22 +1,16 @@
 import { type NewProjectType } from "~/lib/validation/project/new";
-import { Section } from "./section";
+import { Section, type SectionProps } from "./section";
 import { NoData } from "~/components/empty";
 
-export function TractionMetrics({ metrics }: Pick<NewProjectType, "metrics">) {
-  if (!metrics.visible) {
-    return <></>;
-  }
+export function TractionMetrics({
+  metrics,
+  isOwner,
+  isBacker,
+}: Pick<NewProjectType, "metrics"> & SectionProps) {
+  let data = <NoData className="h-56 w-full" />;
 
-  if (!metrics.value) {
-    return (
-      <Section title="Traction metrics">
-        <NoData className="h-56 w-full" />
-      </Section>
-    );
-  }
-
-  return (
-    <Section title="Traction metrics">
+  if (!!metrics.value && metrics.value.length !== 0) {
+    data = (
       <div className="grid w-full grid-cols-12 gap-6">
         {metrics.value.map(({ name, value }) => (
           <div
@@ -28,6 +22,17 @@ export function TractionMetrics({ metrics }: Pick<NewProjectType, "metrics">) {
           </div>
         ))}
       </div>
+    );
+  }
+
+  return (
+    <Section
+      title="Traction metrics"
+      hide={!(metrics.visible || isBacker || isOwner)}
+      watermark={isOwner && !metrics.visible}
+      separator
+    >
+      {data}
     </Section>
   );
 }

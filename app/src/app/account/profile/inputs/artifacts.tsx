@@ -44,7 +44,7 @@ export function ArtifactsInput({
             onChange={(value) =>
               form.setValue(`artifacts.${index}.visible`, value)
             }
-            className="-mt-6 flex flex-col items-stretch justify-start gap-3 border-none bg-transparent px-0 pt-20 md:pr-20"
+            className="-mt-6 flex flex-col items-stretch justify-start gap-3 border-none bg-transparent px-0 pt-20 md:pr-20 md:pt-20"
           >
             <TextInput
               control={form.control}
@@ -55,7 +55,7 @@ export function ArtifactsInput({
 
             <FileInput
               control={form.control}
-              name={`artifacts.${index}.value.value.file` as const}
+              name={`artifacts.${index}.value.value` as const}
               label="Attachment"
               defaultValue=""
             />

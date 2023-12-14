@@ -1,16 +1,15 @@
 import { getProjects } from "~/lib/server/projects";
 import { ProjectProfile } from "./profile";
+import { getUserFromSession } from "~/lib/session";
 
-export default function ProjectPage({
+export default async function ProjectPage({
   params: { accountId },
 }: {
   params: { accountId: string };
 }) {
-  if (!accountId || accountId === "undefined") {
-    return "Nothing";
-  }
+  const user = await getUserFromSession();
 
-  return <ProjectProfile accountId={accountId} />;
+  return <ProjectProfile accountId={accountId} user={user} />;
 }
 
 export async function generateStaticParams() {

@@ -1,15 +1,11 @@
 "use client";
 
-import Color /* , { useColor } */ from "color-thief-react";
+import Color from "color-thief-react";
 
 export function Cover({ url }: { url: string }) {
   return (
-    <Color url={url} format="rgbString" crossOrigin="anonymous">
+    <Color src={url} format="rgbString" crossOrigin="anonymous">
       {({ data, loading, error }) => {
-        // const { data, loading, error } = useColor(url, "rgbString", {
-        //   crossOrigin: "anonymous",
-        // });
-
         const backgroundColor = !data || loading || error ? "#458bca" : data;
 
         return (
