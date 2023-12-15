@@ -21,6 +21,7 @@ export async function getTransactions(
   }
   const projects = await fetch(
     env.API_URL + "/transactions/all?" + new URLSearchParams(params).toString(),
+    { next: { revalidate: 60 } },
   );
   return projects.json() as Promise<Transaction[]>;
 }

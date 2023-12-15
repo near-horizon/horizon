@@ -17,10 +17,11 @@ export const backersURLQuerySchema = fetchManyURLSchema.extend({
 });
 
 export async function getBackers(
-  query: z.infer<typeof backersURLQuerySchema> | BackersQuery
+  query: z.infer<typeof backersURLQuerySchema> | BackersQuery,
 ): Promise<string[]> {
   const response = await fetch(
-    env.API_URL + "/data/investors?" + intoURLSearchParams(query)
+    env.API_URL + "/data/investors?" + intoURLSearchParams(query),
+    { next: { revalidate: 60 } },
   );
   return response.json() as Promise<string[]>;
 }
@@ -33,7 +34,7 @@ export async function getBacker(accountId: AccountId) {
       "get_investor",
       {
         account_id: accountId,
-      }
+      },
     ),
     getTransactions({ entity_type: "backers" }),
   ]);

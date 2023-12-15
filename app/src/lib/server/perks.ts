@@ -4,7 +4,9 @@ import { z } from "zod";
 import { perkSchema } from "../validation/perks";
 
 export async function getPerks(accountId: AccountId) {
-  const response = await fetch(env.API_URL + "/data/perks/" + accountId);
+  const response = await fetch(env.API_URL + "/data/perks/" + accountId, {
+    next: { revalidate: 60 },
+  });
   const perks = z.array(perkSchema).parse(await response.json());
   return perks.sort((a, b) => a.fields.name.localeCompare(b.fields.name));
 }
@@ -19,6 +21,7 @@ export async function unlockPerk(perkId: string, accountId: AccountId) {
       perk_id: perkId,
       account_id: accountId,
     }),
+    next: { revalidate: 60 },
   });
   if (!response.ok) {
     throw new Error("Failed to unlock perk!");

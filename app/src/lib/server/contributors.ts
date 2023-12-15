@@ -28,10 +28,11 @@ export const contributorsURLQuerySchema = fetchManyURLSchema.extend({
 });
 
 export async function getContributors(
-  query: z.infer<typeof contributorsURLQuerySchema> | ContributorsQuery
+  query: z.infer<typeof contributorsURLQuerySchema> | ContributorsQuery,
 ): Promise<string[]> {
   const response = await fetch(
-    env.API_URL + "/data/vendors?" + intoURLSearchParams(query)
+    env.API_URL + "/data/vendors?" + intoURLSearchParams(query),
+    { next: { revalidate: 60 } },
   );
   return response.json() as Promise<string[]>;
 }
@@ -44,7 +45,7 @@ export async function getContributor(accountId: AccountId) {
       "get_vendor",
       {
         account_id: accountId,
-      }
+      },
     ),
     getTransactions({ entity_type: "contributors" }),
   ]);
@@ -80,7 +81,7 @@ export async function getContributorContracts(accountId: AccountId) {
   const contracts = await viewCall<ContributorContracts>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_vendor_contributions",
-    { account_id: accountId }
+    { account_id: accountId },
   );
 
   const histories = await Promise.all(
@@ -88,16 +89,16 @@ export async function getContributorContracts(accountId: AccountId) {
       viewCall<string[]>(
         env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
         "get_contribution_history",
-        { project_id, vendor_id }
-      ).then((history) => history.map((cid) => [[project_id, cid], vendor_id]))
-    )
+        { project_id, vendor_id },
+      ).then((history) => history.map((cid) => [[project_id, cid], vendor_id])),
+    ),
   );
 
   const parsedHistories = contractsListSchema.parse(
     histories.reduce((acc, cur) => {
       acc.push(...cur);
       return acc;
-    }, [])
+    }, []),
   );
 
   return parsedHistories;
@@ -107,7 +108,7 @@ export async function getContributorCompletedContracts(accountId: AccountId) {
   const contracts = await viewCall<ContractId[]>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_vendor_completed_contributions",
-    { account_id: accountId }
+    { account_id: accountId },
   );
 
   const parsedHistories = contractsListSchema.parse(contracts);

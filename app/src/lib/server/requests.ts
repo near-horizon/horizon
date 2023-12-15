@@ -26,10 +26,11 @@ export const requestsURLQuerySchema = fetchManyURLSchema.extend({
 });
 
 export async function getRequests(
-  query: z.infer<typeof requestsURLQuerySchema> | RequestsQuery
+  query: z.infer<typeof requestsURLQuerySchema> | RequestsQuery,
 ): Promise<[string, string][]> {
   const response = await fetch(
-    env.API_URL + "/data/requests?" + intoURLSearchParams(query)
+    env.API_URL + "/data/requests?" + intoURLSearchParams(query),
+    { next: { revalidate: 60 } },
   );
   return response.json() as Promise<[string, string][]>;
 }
@@ -68,7 +69,7 @@ export async function getRequestProposals(accountId: AccountId, cid: string) {
   const contracts = await viewCall<ProposalId[]>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_request_proposals",
-    { account_id: accountId, cid }
+    { account_id: accountId, cid },
   );
 
   return contractsListSchema.parse(contracts);

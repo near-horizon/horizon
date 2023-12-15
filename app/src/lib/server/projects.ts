@@ -52,6 +52,7 @@ export async function getProjects(
       headers: {
         Authorization: `Bearer ${env.API_KEY}`,
       },
+      next: { revalidate: 60 },
     },
   );
   return projects.json() as Promise<string[]>;
@@ -66,6 +67,7 @@ export async function getProjectsCount(
       headers: {
         Authorization: `Bearer ${env.API_KEY}`,
       },
+      next: { revalidate: 60 },
     },
   );
   return projects.json() as Promise<number>;
@@ -76,6 +78,7 @@ export async function getChanges(accountId: AccountId) {
     `${env.API_URL}/data/projects/${accountId}/changes`,
     {
       method: "GET",
+      next: { revalidate: 60 },
     },
   );
 
@@ -237,6 +240,7 @@ export async function getBackersDigest(accountId: AccountId) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.API_KEY}`,
       },
+      next: { revalidate: 60 },
     },
   );
 
@@ -250,7 +254,9 @@ export async function getBackersDigest(accountId: AccountId) {
 export async function getNewProject(
   accountId: AccountId,
 ): Promise<NewProjectType> {
-  const response = await fetch(`${env.API_URL}/data/projects/${accountId}`);
+  const response = await fetch(`${env.API_URL}/data/projects/${accountId}`, {
+    next: { revalidate: 60 },
+  });
 
   if (response.ok) {
     try {
@@ -282,6 +288,7 @@ export async function updateNewProject(project: NewProjectType) {
         Authorization: `Bearer ${env.API_KEY}`,
       },
       body: JSON.stringify(project),
+      next: { revalidate: 60 },
     },
   );
 
@@ -319,6 +326,7 @@ export async function updateBackersDigest(
       Authorization: `Bearer ${env.API_KEY}`,
     },
     body: JSON.stringify(backersDigest),
+    next: { revalidate: 60 },
   });
 }
 
@@ -331,6 +339,7 @@ export async function addBackersDigestToken(accountId: AccountId) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${env.API_KEY}`,
       },
+      next: { revalidate: 60 },
     },
   );
 
