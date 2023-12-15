@@ -61,6 +61,7 @@ export function projectProfileCompletion({ profile }: NewProjectType) {
     profile.stage && profile.stage.length > 0,
     profile.tagline && profile.tagline.length > 0,
     profile.website && profile.website.length > 0,
+    profile.description && profile.description.length > 0,
     profile.socials &&
       Object.values(profile.socials).some((v) => v && v.length > 0),
     profile.location && profile.location.length > 0,
@@ -506,7 +507,9 @@ export class NewProject implements NewProjectType {
         vertical,
         stage,
         tagline: data.tagline ?? " ".repeat(20),
-        description: data.description ?? " ".repeat(50),
+        description: data.description
+          ? data.description + " ".repeat(50 - data.description.length)
+          : undefined,
         website: data.website ? data.website : "test.com",
         socials,
         location,
