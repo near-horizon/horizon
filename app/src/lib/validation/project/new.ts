@@ -496,6 +496,7 @@ export class NewProject implements NewProjectType {
         vertical,
         stage,
         tagline: data.tagline ?? " ".repeat(20),
+        description: data.description ?? " ".repeat(50),
         website: data.website ? data.website : "test.com",
         socials,
         location,
