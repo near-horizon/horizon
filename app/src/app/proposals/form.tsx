@@ -43,7 +43,7 @@ const schema = z.object({
   payment_source: paymentSourceSchema,
 });
 
-export function Contribute({
+export function ProposalForm({
   cid,
   request,
   user_account_id,

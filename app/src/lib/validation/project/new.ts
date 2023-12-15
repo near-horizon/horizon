@@ -439,14 +439,14 @@ export class NewProject implements NewProjectType {
                 (founder.first_name as string) +
                 " " +
                 (founder.last_name as string),
-              account_id: founder.account_id,
+              account_id: founder.account_id as string,
               image: {
-                ipfs_cid: founder.image,
+                ipfs_cid: founder.image as string,
               },
               socials: {
-                x: founder.twitter,
-                linkedin: founder.linkedin,
-                telegram: founder.telegram,
+                x: (founder.socials as Linktree).twitter!,
+                linkedin: (founder.socials as Linktree).linkedin!,
+                telegram: (founder.socials as Linktree).telegram!,
               },
             };
 

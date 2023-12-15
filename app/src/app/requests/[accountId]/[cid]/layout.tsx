@@ -53,7 +53,7 @@ export default async function RequestPageLayout({
       />
       <CTA color="gray" icon={<></>} text="Close" />
     </>
-  ) : (
+  ) : user.logedIn ? (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="default">
@@ -68,10 +68,16 @@ export default async function RequestPageLayout({
           <DialogTitle>Propose contribution</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <ProposalForm accountId={accountId} cid={cid} />
+          <ProposalForm
+            request={request}
+            cid={cid}
+            user_account_id={user.accountId}
+          />
         </div>
       </DialogContent>
     </Dialog>
+  ) : (
+    <></>
   );
 
   return (

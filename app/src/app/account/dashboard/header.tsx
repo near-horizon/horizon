@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { Handle, HandleSkeleton } from "~/components/handle";
 import { Tags, TagsSkeleton } from "~/components/tags";
 import { Skeleton } from "~/components/ui/skeleton";
-import { ArrowNarrowLeftSvg } from "~/icons";
 import { getNewProject } from "~/lib/server/projects";
 import { cn, ipfsURL } from "~/lib/utils";
 import { type AccountId } from "~/lib/validation/common";
