@@ -1,10 +1,6 @@
 import { type NewProjectType } from "~/lib/validation/project/new";
 import { Section, type SectionProps } from "./section";
 import { NoData } from "~/components/empty";
-import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
-import Image from "next/image";
-import { Skeleton } from "~/components/ui/skeleton";
 import { LinkPreview } from "./link-preview";
 
 export function MediaCoverage({

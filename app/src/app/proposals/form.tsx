@@ -23,8 +23,6 @@ import {
   paymentTypeSchema,
   requestTypeSchema,
 } from "~/lib/validation/requests";
-import { Progress } from "~/components/ui/progress";
-import Link from "next/link";
 import { Send01Svg } from "~/icons";
 import { useLocalSaveForm } from "~/hooks/mutating";
 
@@ -65,31 +63,11 @@ export function ProposalForm({
       description: "",
     },
   });
-  const [progress, createProposal] = useCreateProposal();
+  const createProposal = useCreateProposal();
   const formId = `proposal-${accountId}-${cid}-${
     user.logedIn ? user.accountId : user.logedIn
   }`;
   useLocalSaveForm(form, formSchema, formId);
-
-  if (progress.value > 0 && progress.value < 100) {
-    return (
-      <div>
-        <span>{progress.label}</span>
-        <Progress value={progress.value} />
-      </div>
-    );
-  }
-
-  if (progress.value === 100) {
-    return (
-      <div>
-        <span>{progress.label}</span>
-        <Button variant="link">
-          <Link href="/requests">View other requests</Link>
-        </Button>
-      </div>
-    );
-  }
 
   if (!user.logedIn) {
     return <div>Log in to send a proposal</div>;

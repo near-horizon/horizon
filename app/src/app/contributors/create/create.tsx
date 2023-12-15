@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { z } from "zod";
-import { ComboboxInput } from "~/components/inputs/combobox";
 import { EmailInput } from "~/components/inputs/email";
 import { ImageInput } from "~/components/inputs/image";
+import { MultiSelectInput } from "~/components/inputs/multi-select";
 import { TextInput } from "~/components/inputs/text";
 import { TextAreaInput } from "~/components/inputs/text-area";
 import { ProgressDialog } from "~/components/progress-dialog";
@@ -15,32 +15,12 @@ import { useZodForm } from "~/hooks/form";
 import { useLocalSaveForm } from "~/hooks/mutating";
 import { clearLocalSaveForm } from "~/lib/client/mutating";
 import { type AccountId } from "~/lib/validation/common";
-
-const verticals = [
-  { text: "DeSci", value: "desci" },
-  { text: "DeFi", value: "defi" },
-  { text: "Gaming", value: "gaming" },
-  { text: "Metaverse", value: "metaverse" },
-  { text: "Commercial", value: "commercial" },
-  {
-    text: "Sports and Entertainment",
-    value: "sports-and-entertainment",
-  },
-  { text: "Infrastructure", value: "infrastructure" },
-  { text: "Social", value: "social" },
-  { text: "Social Impact", value: "social-impact" },
-  { text: "Creative", value: "creative" },
-  { text: "Education", value: "education" },
-];
+import { verticalSchema } from "~/lib/validation/inputs";
 
 const formSchema = z.object({
   email: z.string().email(),
-  "Contributor name": z.string().min(3).max(50),
-  vertical: z
-    .string()
-    .refine((val) => verticals.some(({ value }) => value === val), {
-      message: "Please select a vertical",
-    }),
+  name: z.string().min(3).max(50),
+  vertical: verticalSchema.array(),
   tagline: z.string().min(3).max(50),
   description: z.string().min(30).max(500),
   image: z.string(),
@@ -70,8 +50,7 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
               email,
               profile: {
                 ...contributor,
-                name: contributor["Contributor name"],
-                vertical: { [vertical]: "" },
+                vertical: Object.fromEntries(vertical.map((v) => [v, ""])),
                 image: { ipfs_cid: cid },
               },
             });
@@ -79,21 +58,19 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
         >
           <TextInput
             control={form.control}
-            name="Contributor name"
+            name="name"
+            label="Contributor name"
             placeholder="Enter your name"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
           <div className="w-3/5">
-            <ComboboxInput
+            <MultiSelectInput
               control={form.control}
+              label="Vertical"
+              placeholder="Vertical"
               name="vertical"
-              placeholder="Select a vertical"
               rules={{ required: true }}
-              defaultValue=""
-              disabled={false}
-              options={verticals}
+              options={verticalSchema.options}
             />
           </div>
           <TextInput
@@ -101,16 +78,12 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
             name="tagline"
             placeholder="Your tagline or motto"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
           <TextAreaInput
             control={form.control}
             name="description"
             placeholder="Add a short description"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
             maxLength={500}
           />
           <EmailInput
@@ -118,8 +91,6 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
             name="email"
             placeholder="Email"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
           <ImageInput
             name="image"

@@ -50,21 +50,18 @@ export function ArtifactsInput({
               control={form.control}
               name={`artifacts.${index}.value.name` as const}
               label="Title"
-              defaultValue=""
             />
 
             <FileInput
               control={form.control}
               name={`artifacts.${index}.value.value` as const}
               label="Attachment"
-              defaultValue=""
             />
 
             <TextInput
               control={form.control}
               name={`artifacts.${index}.value.note` as const}
               label="Note"
-              defaultValue=""
             />
           </Toggleable>
         </MotionDiv>

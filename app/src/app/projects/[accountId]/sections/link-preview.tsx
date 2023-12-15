@@ -45,7 +45,9 @@ async function LinkPreviewAsync({ link }: { link: string }) {
           <b className="font-semibold text-text-link underline">{data.title}</b>
         </a>
 
-        <div className="text-sm text-ui-elements-dark">{data.description}</div>
+        <div className="line-clamp-3 text-sm text-ui-elements-dark">
+          {data.description}
+        </div>
 
         <a
           href={link}

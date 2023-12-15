@@ -239,6 +239,11 @@ export async function getBackersDigest(accountId: AccountId) {
       },
     },
   );
+
+  if (!response.ok) {
+    return {} as BackersDigest;
+  }
+
   return backersDigestSchema.parse(await response.json());
 }
 

@@ -10,6 +10,7 @@ import {
   projectCompletion,
   projectContactCompletion,
   projectFoundersCompletion,
+  projectMediaCompletion,
   projectMetricsCompletion,
   projectProfileCompletion,
   projectProgressCompletion,
@@ -168,7 +169,7 @@ export function ProfileForm({ project }: { project: NewProjectType }) {
 
         <InputSection
           title="Media coverage"
-          completion={0}
+          completion={projectMediaCompletion(profile)}
           value={form.watch("media.visible")}
           onChange={(value) => form.setValue("media.visible", value)}
         >

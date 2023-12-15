@@ -219,6 +219,16 @@ export const artifactNameOptions = [
 
 export const mediaSchema = z.array(z.object({ link: websiteSchema }));
 
+export function projectMediaCompletion({
+  media: { value: media } = { visible: false, value: [] },
+}: NewProjectType) {
+  if (!media) {
+    return 0;
+  }
+
+  return +media.some(({ link }) => link && link.length > 0);
+}
+
 export const newProjectSchema = z.object({
   account_id: accountIdSchema,
   profile: projectProfileSchema,
@@ -238,6 +248,7 @@ export function projectCompletion(project: NewProjectType) {
     projectMetricsCompletion(project),
     projectFoundersCompletion(project),
     projectArtifactsCompletion(project),
+    projectMediaCompletion(project),
   ];
 
   return fields.reduce((a, b) => a + b, 0) / fields.length;

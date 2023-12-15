@@ -6,29 +6,29 @@ function isValidNumberDate(date: string | number) {
 }
 
 export const DATE = {
-  timestamp: function (timestamp: string | number = Date.now()) {
+  dateObject: function (timestamp: string | number = Date.now()) {
     const shortened = isValidNumberDate(timestamp)
-      ? timestamp.toString().slice(0, 13)
+      ? Number(timestamp.toString().slice(0, 13))
       : timestamp;
-    return new Date(Number(shortened)).toLocaleDateString("en-GB", {});
+    return new Date(shortened);
+  },
+  timestamp: function (timestamp: string | number = Date.now()) {
+    return DATE.dateObject(timestamp).toLocaleDateString("en-GB", {});
   },
   date: function (timestamp: string | number = Date.now()) {
-    const shortened = isValidNumberDate(timestamp)
-      ? timestamp.toString().slice(0, 13)
-      : timestamp;
-    return new Date(Number(shortened)).toLocaleDateString("en-GB");
+    return DATE.dateObject(timestamp).toLocaleDateString("en-GB");
   },
   time: function (timestamp: string | number = Date.now()) {
-    const shortened = isValidNumberDate(timestamp)
-      ? timestamp.toString().slice(0, 13)
-      : timestamp;
-    return new Date(Number(shortened)).toLocaleString();
+    return DATE.dateObject(timestamp).toLocaleString();
   },
   timeago: function (timestamp: string | number = Date.now()) {
     return timeago(timestamp, "en-US");
   },
   input: function (value: string | number | Date = Date.now()) {
-    return fns(new Date(value), "PPP");
+    return fns(
+      DATE.dateObject(value instanceof Date ? value.toISOString() : value),
+      "PPP",
+    );
   },
 };
 

@@ -3,12 +3,12 @@
 import type QRCodeStyling from "qr-code-styling";
 import { Button } from "./ui/button";
 import { useEffect, useRef, useState } from "react";
-import { Copy01Svg, XSvg } from "~/icons";
+import { Copy01Svg, Share06Svg, XSvg } from "~/icons";
 import { cleanURL } from "~/lib/utils";
 import { MotionDiv } from "./motion";
 
 function useQRCodeStyling(
-  options: ConstructorParameters<typeof QRCodeStyling>[0]
+  options: ConstructorParameters<typeof QRCodeStyling>[0],
 ): QRCodeStyling | null {
   if (typeof window !== "undefined") {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -69,7 +69,12 @@ export function QRDialog({ url }: { url: string }) {
 
   return (
     <>
-      <Button variant="outline" onClick={() => setShow(true)}>
+      <Button
+        variant="outline"
+        onClick={() => setShow(true)}
+        className="flex flex-row items-center justify-center gap-2"
+      >
+        <Share06Svg className="h-4 w-4" />
         Share
       </Button>
       <MotionDiv
@@ -121,7 +126,7 @@ export function QRDialog({ url }: { url: string }) {
             </small>
             <div className="flex w-full flex-row items-center justify-between gap-4">
               <span className="flex flex-row items-center justify-start rounded border border-ui-elements-gray bg-white p-3 shadow">
-                {finalUrl.substring(8, finalUrl.indexOf("?"))}
+                {finalUrl.substring(8)}
               </span>
               <Button
                 variant="default"

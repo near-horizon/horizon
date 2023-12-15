@@ -9,6 +9,7 @@ import {
 } from "~/icons";
 import { Socials } from "~/components/socials";
 import { iso3166 } from "~/lib/constants/iso-3166";
+import { STRING } from "~/lib/format";
 
 export function GeneralSection({ profile }: Pick<NewProjectType, "profile">) {
   return (
@@ -34,10 +35,10 @@ export function GeneralSection({ profile }: Pick<NewProjectType, "profile">) {
       {profile.stage && profile.stage !== "other" && (
         <Row>
           <Target01Svg className="h-5 w-5 text-ui-elements-gray" />
-          <p className="text-sm font-normal capitalize text-ui-elements-dark">
+          <p className="text-sm font-normal text-ui-elements-dark">
             {profile.stage === "pre-seed"
               ? "Pre-seed"
-              : profile.stage.split("-").join(" ")}
+              : STRING.capitalize(profile.stage.split("-").join(" "))}
           </p>
         </Row>
       )}

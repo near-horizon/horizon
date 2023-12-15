@@ -85,13 +85,13 @@ async function RequestCardAsync({
       <Tags tags={request.tags} />
 
       <div className="flex flex-row items-center justify-start gap-3">
-        <div className="flex flex-row items-center justify-start gap-2">
-          <Flag06Svg className="h-5 w-5 text-ui-elements-gray" />
+        <div className="flex flex-row items-center justify-start gap-2 text-sm text-ui-elements-gray">
+          <Flag06Svg className="h-5 w-5" />
           <span>{DATE.date(request.deadline)}</span>
         </div>
 
-        <div className="flex flex-row items-center justify-start gap-2">
-          <BankNote01Svg className="h-5 w-5 text-ui-elements-gray" />
+        <div className="flex flex-row items-center justify-start gap-2 text-sm text-ui-elements-gray">
+          <BankNote01Svg className="h-5 w-5" />
           <span>{NUMBER.compact(request.budget)}</span>
         </div>
 

@@ -3,6 +3,7 @@ import { type AccountId } from "~/lib/validation/common";
 import { RequestCard, RequestCardSkeleton } from "./card";
 import { Suspense } from "react";
 import { NoData } from "~/components/empty";
+import { Separator } from "~/components/ui/separator";
 
 export function ProjectRequestsList({ accountId }: { accountId: AccountId }) {
   return (
@@ -14,11 +15,22 @@ export function ProjectRequestsList({ accountId }: { accountId: AccountId }) {
 
 function ProjectRequestsSkeleton() {
   return (
-    <>
-      {Array.from({ length: 3 }).map((_, i) => (
-        <RequestCardSkeleton key={i} />
-      ))}
-    </>
+    <div className="flex w-full flex-col items-start justify-start gap-6">
+      {Array.from({ length: 3 }, () => 0).reduce((acc, _, index) => {
+        if (index > 0) {
+          acc.push(
+            <Separator
+              key={`separator-${index}`}
+              className="h-px w-full bg-ui-elements-light"
+            />,
+          );
+        }
+
+        acc.push(<RequestCardSkeleton key={index} />);
+
+        return acc;
+      }, new Array<React.ReactNode>(0))}
+    </div>
   );
 }
 
@@ -30,10 +42,21 @@ async function ProjectRequestsAsync({ accountId }: { accountId: AccountId }) {
   }
 
   return (
-    <>
-      {data.map(([, cid]) => (
-        <RequestCard accountId={accountId} cid={cid} key={cid} />
-      ))}
-    </>
+    <div className="flex w-full flex-col items-start justify-start gap-6">
+      {data.reduce((acc, [, cid], index) => {
+        if (index > 0) {
+          acc.push(
+            <Separator
+              key={`separator-${index}`}
+              className="h-px w-full bg-ui-elements-light"
+            />,
+          );
+        }
+
+        acc.push(<RequestCard accountId={accountId} cid={cid} key={cid} />);
+
+        return acc;
+      }, new Array<React.ReactNode>(0))}
+    </div>
   );
 }
