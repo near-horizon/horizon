@@ -4,92 +4,40 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import {
-  BookOpen02Svg,
-  CheckSquareBroken1Svg,
-  LogoSvg,
-  MessageChatSquareSvg,
-  Rocket02Svg,
-  Users01Svg,
-  Wallet02Svg,
-  XSvg,
-} from "~/icons";
+import { CheckSquareBroken1Svg, LogoSvg, Rocket02Svg, XSvg } from "~/icons";
 import {
   setLocalStorageItem,
   useLocalStorageItem,
 } from "~/hooks/local-storage";
 import { z } from "zod";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 
 const cards = [
   {
     icon: <CheckSquareBroken1Svg className="h-7 w-7" />,
-    title: "Get the jobs done",
-    description: "Post your needs and find ecosystem experts to fulfill them.",
+    title: "Find talent",
+    description:
+      "Work with a network of professionals — both organizations and freelancers.",
     cta: {
       text: "Create request",
       link: "/requests/create",
     },
     secondary: {
-      text: "Browse contributors",
+      text: "Browse professionals",
       link: "/contributors",
     },
   },
   {
     icon: <Rocket02Svg className="h-7 w-7" />,
-    title: "Boost your growth",
-    description:
-      "Crypto ipsum bitcoin ethereum dogecoin litecoin. PancakeSwap.",
+    title: "Join our accelerator",
+    description: "Join our premier accelerator for Founders",
     cta: {
-      text: "Join HZN cohort",
-      link: "/hzn/join",
+      text: "Apply to HZN accelerator",
+      link: "https://hzn.xyz/hzn/signup",
     },
     secondary: {
       text: "Learn about HZN",
-      link: "/hzn",
-    },
-  },
-  {
-    icon: <Wallet02Svg className="h-7 w-7" />,
-    title: "Earn and spend credits",
-    description:
-      "Crypto ipsum bitcoin ethereum dogecoin litecoin. PancakeSwap.",
-    cta: {
-      text: "Earn credits",
-      link: "/account/credits",
-    },
-    secondary: {
-      text: "Learn how credits work",
-      link: "/account/credits/how",
-    },
-  },
-  {
-    icon: <Users01Svg className="h-7 w-7" />,
-    title: "Join the community",
-    description:
-      "Crypto ipsum bitcoin ethereum dogecoin litecoin. PancakeSwap.",
-    cta: {
-      text: "Join discord",
-      link: "/discord",
-    },
-  },
-  {
-    icon: <MessageChatSquareSvg className="h-7 w-7" />,
-    title: "Get in touch with us",
-    description:
-      "Crypto ipsum bitcoin ethereum dogecoin litecoin. PancakeSwap.",
-    cta: {
-      text: "Browse events",
-      link: "/events",
-    },
-  },
-  {
-    icon: <BookOpen02Svg className="h-7 w-7" />,
-    title: "Get educated",
-    description:
-      "Crypto ipsum bitcoin ethereum dogecoin litecoin. PancakeSwap.",
-    cta: {
-      text: "Browse learning resources",
-      link: "/learn",
+      link: "https://hzn.xyz/hzn",
     },
   },
 ] satisfies Parameters<typeof Card>[0][];
@@ -99,16 +47,17 @@ export function WelcomeBanner() {
   const isDashboard = section === "dashboard";
   const dismissed = useLocalStorageItem(
     "welcome-banner-dismissed",
-    z.boolean()
+    z.boolean(),
   );
 
   return (
     <div
       className={cn(
-        "relative flex max-w-full flex-col items-center justify-center gap-8 rounded-xl rounded-b-none border border-ui-elements-light bg-blue-100 py-8",
+        "relative flex max-w-full flex-col items-center justify-center gap-8 rounded-xl",
+        "w-full border border-ui-elements-light bg-blue-100 py-8 md:max-w-screen-lg",
         {
           hidden: !isDashboard || dismissed,
-        }
+        },
       )}
     >
       <Button
@@ -120,21 +69,22 @@ export function WelcomeBanner() {
       >
         <XSvg className="h-6 w-6" />
       </Button>
+
       <div className="flex w-full flex-col items-center justify-center gap-3">
         <h4 className="flex w-full flex-row justify-center gap-4 whitespace-nowrap text-2xl text-text-dark">
           Welcome to <LogoSvg className="h-8" />
         </h4>
-        <p className="text-ui-elements-black">
-          Use these highlights to get started:
-        </p>
+        <p className="text-ui-elements-black">Start here:</p>
       </div>
-      <div className="hide-scroll-bar flex max-w-full flex-row items-start justify-start overflow-x-auto">
+
+      <ScrollArea className="max-w-full">
         <div className="flex flex-row items-stretch justify-start gap-4 px-8">
           {cards.map((props) => (
             <Card key={props.title} {...props} />
           ))}
         </div>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 }
@@ -160,35 +110,27 @@ function Card({
         <p className="text-center text-sm">{description}</p>
       </div>
       <div className="flex flex-grow-0 flex-col items-stretch justify-center gap-2">
-        <Button
-          variant="default"
-          type="button"
-          className="flex items-center justify-stretch"
-        >
-          <Link
-            href={link}
-            className="flex w-full items-center justify-center text-center"
+        <Link href={link} className="w-full">
+          <Button
+            variant="default"
+            type="button"
+            className="flex w-full items-center justify-center"
           >
             {text}
-          </Link>
-        </Button>
-        <Button
-          variant="outline"
-          type="button"
-          className={cn("flex items-stretch justify-stretch", {
-            "!opacity-0": !secondary,
-          })}
-          disabled={!secondary}
-        >
-          {secondary && (
-            <Link
-              href={secondary.link}
-              className="flex w-full items-center justify-center text-center"
+          </Button>
+        </Link>
+
+        {secondary && (
+          <Link href={secondary.link} className="w-full">
+            <Button
+              variant="outline"
+              type="button"
+              className="flex w-full items-center justify-center"
             >
               {secondary.text}
-            </Link>
-          )}
-        </Button>
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );

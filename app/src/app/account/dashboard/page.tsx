@@ -25,6 +25,8 @@ import {
 } from "~/lib/server/projects";
 import { getIncentives } from "~/lib/client/incentives";
 import { DATE } from "~/lib/format";
+import { Header } from "./header";
+import { WelcomeBanner } from "../welcome-banner";
 
 export default async function Dashboard() {
   const user = await getUserFromSession();
@@ -175,12 +177,18 @@ export default async function Dashboard() {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      {dashboardCards.map((card, index) => (
-        <div key={index}>
-          <DashboardCard {...card} />
-        </div>
-      ))}
+    <div className="flex flex-col items-start justify-start gap-6">
+      <WelcomeBanner />
+
+      <Header accountId={user.accountId} />
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {dashboardCards.map((card, index) => (
+          <div key={index}>
+            <DashboardCard {...card} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,25 +1,27 @@
-import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Button } from "~/components/ui/button";
 import { Loader } from "./loader";
 import { Skeleton } from "./list";
+import { PlusSvg } from "~/icons";
 
 export default function Page() {
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between">
+    <div className="flex w-full flex-col items-start justify-start gap-4 rounded-xl border border-ui-elements-light bg-ui-elements-white px-12 py-10 shadow">
+      <div className="flex w-full flex-row items-center justify-between">
         <h1 className="text-xl font-bold text-text-black">Your requests</h1>
-        <Button variant="default" className="flex items-center justify-center">
-          <Link
-            href="/requests/create"
-            className="flex w-full flex-row items-center justify-center gap-2"
+
+        <Link href="/requests/create">
+          <Button
+            variant="default"
+            className="flex items-center justify-center gap-2"
           >
-            <PlusIcon />
+            <PlusSvg className="h-5 w-5" />
             Create a request
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
+
       <Suspense fallback={<Skeleton />}>
         <Loader />
       </Suspense>
