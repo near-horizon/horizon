@@ -1,35 +1,39 @@
 "use client";
 
-import { useRequest } from "~/hooks/requests";
-import {
-  type AccountId,
-  accountIdSchema,
-  type CID,
-} from "~/lib/validation/common";
-import { Form } from "~/components/ui/form";
-import { useZodForm } from "~/hooks/form";
-import { useUser } from "~/stores/global";
-import { clearLocalSaveForm } from "~/lib/client/mutating";
+import { useState } from "react";
+import { z } from "zod";
+import { DateInput } from "~/components/inputs/date";
+import { NumberInput } from "~/components/inputs/number";
+import { SelectInput } from "~/components/inputs/select";
 import { TextInput } from "~/components/inputs/text";
 import { TextAreaInput } from "~/components/inputs/text-area";
 import { Button } from "~/components/ui/button";
+import { Form } from "~/components/ui/form";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
+import { toast } from "~/components/ui/use-toast";
+import { useZodForm } from "~/hooks/form";
 import { useCreateProposal } from "~/hooks/proposals";
-import { ComboboxInput } from "~/components/inputs/combobox";
-import { NumberInput } from "~/components/inputs/number";
-import { DateInput } from "~/components/inputs/date";
-import { z } from "zod";
+import { UserPlus01Svg } from "~/icons";
+import { cn } from "~/lib/utils";
+import { type AccountId, type CID } from "~/lib/validation/common";
 import {
   paymentSourceSchema,
   paymentTypeSchema,
+  type Request,
   requestTypeSchema,
 } from "~/lib/validation/requests";
-import { Send01Svg } from "~/icons";
-import { useLocalSaveForm } from "~/hooks/mutating";
 
-const formSchema = z.object({
-  request_id: z.tuple([accountIdSchema, z.string()]),
-  vendor_id: accountIdSchema,
-  title: z.string().min(3).max(50),
+const schema = z.object({
+  title: z.string().min(5).max(50),
   description: z.string().min(30).max(500),
   start_date: z.string(),
   end_date: z.string(),
@@ -39,129 +43,135 @@ const formSchema = z.object({
   payment_source: paymentSourceSchema,
 });
 
-export function ProposalForm({
-  accountId,
+export function Contribute({
   cid,
+  request,
+  user_account_id,
 }: {
-  accountId: AccountId;
   cid: CID;
+  request: Request;
+  user_account_id: AccountId;
 }) {
-  const user = useUser();
-  const { data: request } = useRequest(accountId, cid);
-  const form = useZodForm(formSchema, {
-    defaultValues: {
-      request_id: [accountId, cid],
-      title: request?.title,
-      price: request?.budget,
-      payment_type: request?.payment_type,
-      payment_source: request?.source,
-      proposal_type: request?.request_type,
-      start_date: new Date().toISOString(),
-      end_date: new Date(
-        Number(request?.deadline.substring(0, 13)),
-      ).toISOString(),
-      description: "",
-    },
-  });
+  const form = useZodForm(schema);
   const createProposal = useCreateProposal();
-  const formId = `proposal-${accountId}-${cid}-${
-    user.logedIn ? user.accountId : user.logedIn
-  }`;
-  useLocalSaveForm(form, formSchema, formId);
+  const [open, setOpen] = useState(false);
 
-  if (!user.logedIn) {
-    return <div>Log in to send a proposal</div>;
-  }
+  const isDisabled = !form.formState.isValid || form.formState.isSubmitting;
+
+  const handleSubmit = form.handleSubmit(async (values) => {
+    await createProposal.mutateAsync({
+      proposal: {
+        request_id: [request.project_id, cid],
+        vendor_id: user_account_id,
+        ...values,
+      },
+    });
+    toast({
+      title: "Proposal created!",
+      description: "Your proposal has been submitted successfully.",
+    });
+    setOpen(false);
+  });
 
   return (
-    <div className="mx-auto flex w-full flex-col items-center justify-start gap-16">
-      <Form {...form}>
-        <form
-          className="w-full"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={form.handleSubmit((proposal) => {
-            clearLocalSaveForm(formId);
-            createProposal.mutate({
-              proposal: {
-                ...proposal,
-                vendor_id: user.accountId,
-                start_date: `${new Date(proposal.start_date).getTime()}`,
-                end_date: `${new Date(proposal.end_date).getTime()}`,
-              },
-            });
-          })}
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button
+          variant="outline"
+          className="flex flex-row items-center justify-center gap-2 text-ui-elements-black"
         >
-          <TextInput
-            control={form.control}
-            name="title"
-            placeholder="Enter the proposal title"
-            rules={{ required: true }}
-            disabled={false}
-          />
-          <TextAreaInput
-            control={form.control}
-            name="description"
-            placeholder="Add a short description"
-            rules={{ required: true }}
-            disabled={false}
-            maxLength={500}
-          />
-          <div className="w-3/5">
-            <ComboboxInput
+          <UserPlus01Svg className="h-4 w-4" />
+          Contribute
+        </Button>
+      </SheetTrigger>
+
+      <Form {...form}>
+        <SheetContent className="min-w-[600px]">
+          <SheetHeader>
+            <SheetTitle>Submit proposal</SheetTitle>
+            <SheetDescription>
+              Propose a contribution for this request
+            </SheetDescription>
+          </SheetHeader>
+
+          {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+          <form onSubmit={handleSubmit} className="pt-8">
+            <TextInput
+              control={form.control}
+              name="title"
+              label="Title"
+              placeholder="Enter the proposal title"
+              rules={{ required: true }}
+            />
+
+            <TextAreaInput
+              control={form.control}
+              name="description"
+              label="Description"
+              placeholder="Add a short description"
+              rules={{ required: true }}
+              maxLength={500}
+            />
+
+            <SelectInput
               control={form.control}
               name="proposal_type"
+              label="Proposal type"
               placeholder="Select a proposal type"
               rules={{ required: true }}
-              disabled={false}
-              options={formSchema.shape.proposal_type.options.map((value) => ({
+              options={requestTypeSchema.options.map((value) => ({
                 text: value,
                 value,
               }))}
             />
-            <ComboboxInput
+
+            <SelectInput
               control={form.control}
               name="payment_type"
+              label="Payment type"
               placeholder="Select a payment type"
               rules={{ required: true }}
-              disabled={false}
-              options={formSchema.shape.payment_type.options.map((value) => ({
+              options={paymentTypeSchema.options.map((value) => ({
                 text: value,
                 value,
               }))}
             />
-            <ComboboxInput
+
+            <SelectInput
               control={form.control}
               name="payment_source"
+              label="Payment source"
               placeholder="Select a payment source"
               rules={{ required: true }}
-              disabled={false}
-              options={formSchema.shape.payment_source.options.map((value) => ({
+              options={paymentSourceSchema.options.map((value) => ({
                 text: value,
                 value,
               }))}
             />
+
             <NumberInput
               control={form.control}
               name="price"
+              label="Price"
               placeholder="Enter the budget"
               rules={{ required: true }}
-              disabled={false}
             />
-          </div>
-          <div className="flex w-full flex-row items-center justify-between gap-4">
+
             <DateInput
               control={form.control}
               name="start_date"
+              label="Start date"
               placeholder="Enter the start date"
               rules={{ required: true }}
-              disabled={false}
               invalidDates={(date) =>
                 z.date().max(new Date()).safeParse(date).success
               }
             />
+
             <DateInput
               control={form.control}
               name="end_date"
+              label="End date"
               placeholder="Enter the end date"
               rules={{ required: true }}
               disabled={false}
@@ -169,20 +179,34 @@ export function ProposalForm({
                 z.date().max(new Date()).safeParse(date).success
               }
             />
-          </div>
-          <div className="mt-6 flex flex-row items-center justify-between">
-            <Button variant="destructive">Cancel</Button>
+          </form>
+
+          <SheetFooter>
             <Button
+              type="submit"
               variant="default"
-              disabled={!form.formState.isValid}
-              className="inline-flex flex-row items-center justify-between gap-2"
+              className={cn({ "opacity-50": isDisabled })}
+              onClick={(e) => {
+                if (isDisabled) {
+                  e.preventDefault();
+                  void form.trigger();
+                }
+              }}
             >
-              <Send01Svg className="w-5" />
-              Send proposal
+              Submit
             </Button>
-          </div>
-        </form>
+
+            <SheetClose asChild>
+              <Button
+                variant="destructive"
+                disabled={form.formState.isSubmitting}
+              >
+                Cancel
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
       </Form>
-    </div>
+    </Sheet>
   );
 }
