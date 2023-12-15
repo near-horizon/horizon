@@ -31,7 +31,10 @@ export async function ProjectProfile({
         id="profile"
         className="flex w-full flex-col items-start justify-start gap-12 rounded-lg border border-ui-elements-light bg-ui-elements-white px-12 py-10 shadow"
       >
-        <GeneralSection profile={project.profile} />
+        <GeneralSection
+          profile={project.profile}
+          creationTx={project.creationTx}
+        />
 
         <ProjectDetails
           details={project.details}

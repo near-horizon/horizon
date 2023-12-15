@@ -253,10 +253,14 @@ export async function getNewProject(
   const response = await fetch(`${env.API_URL}/data/projects/${accountId}`);
 
   if (response.ok) {
-    const parsed = newProjectSchema.safeParse(await response.json());
+    try {
+      const parsed = newProjectSchema.safeParse(await response.json());
 
-    if (parsed.success) {
-      return parsed.data;
+      if (parsed.success) {
+        return parsed.data;
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 

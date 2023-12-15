@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { accountIdSchema, imageSchema } from "../common";
+import { accountIdSchema, imageSchema, transactionSchema } from "../common";
 import { type Linktree } from "../fetching";
 import {
   descriptionSchema,
@@ -239,6 +239,7 @@ export const newProjectSchema = z.object({
   founders: createToggleableSchema(projectFoundersSchema),
   artifacts: artifactsSchema,
   media: createToggleableSchema(mediaSchema),
+  creationTx: transactionSchema,
 });
 
 export function projectCompletion(project: NewProjectType) {
@@ -266,10 +267,12 @@ export class NewProject implements NewProjectType {
   public founders: NewProjectType["founders"];
   public artifacts: NewProjectType["artifacts"];
   public media: NewProjectType["media"];
+  public creationTx: NewProjectType["creationTx"];
 
   constructor(data?: unknown) {
     const parsed = newProjectSchema.safeParse(data);
     if (!parsed.success) {
+      console.error(parsed.error);
       this.account_id = "";
       this.profile = {
         logo: { url: "" },
@@ -300,6 +303,16 @@ export class NewProject implements NewProjectType {
         visible: false,
         value: [],
       };
+      this.creationTx = {
+        id: 0,
+        timestamp: 0,
+        block_hash: "",
+        hash: "",
+        signer_id: "",
+        method_name: "",
+        args: {},
+        log: "",
+      };
     } else {
       this.account_id = parsed.data.account_id;
       this.profile = parsed.data.profile;
@@ -309,6 +322,7 @@ export class NewProject implements NewProjectType {
       this.founders = parsed.data.founders;
       this.artifacts = parsed.data.artifacts;
       this.media = parsed.data.media;
+      this.creationTx = parsed.data.creationTx;
     }
   }
 
@@ -322,6 +336,7 @@ export class NewProject implements NewProjectType {
       founders: this.founders,
       artifacts: this.artifacts,
       media: this.media,
+      creationTx: this.creationTx,
     };
   }
 
@@ -419,28 +434,23 @@ export class NewProject implements NewProjectType {
           (acc, founder) => {
             type Founder = NewProjectType["founders"]["value"][number];
 
-            const list = Object.entries(founder).map<Founder>(
-              ([name, value]) => {
-                if (typeof value === "string") {
-                  return { name, account_id: value };
-                }
-
-                const socials: NewProjectType["profile"]["socials"] = {};
-                if (value.twitter) {
-                  socials.x = value.twitter;
-                }
-                if (value.telegram) {
-                  socials.telegram = value.telegram;
-                }
-                if (value.linkedin) {
-                  socials.linkedin = value.linkedin;
-                }
-
-                return { name, socials };
+            const newFounder: Founder = {
+              name:
+                (founder.first_name as string) +
+                " " +
+                (founder.last_name as string),
+              account_id: founder.account_id,
+              image: {
+                ipfs_cid: founder.image,
               },
-            );
+              socials: {
+                x: founder.twitter,
+                linkedin: founder.linkedin,
+                telegram: founder.telegram,
+              },
+            };
 
-            acc.push(...list);
+            acc.push(newFounder);
 
             return acc;
           },
@@ -541,6 +551,7 @@ export class NewProject implements NewProjectType {
         visible: true,
         value: data.digest.announcement ? [data.digest.announcement] : [],
       },
+      creationTx: data.creationTx,
     });
   }
 }
