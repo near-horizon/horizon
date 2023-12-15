@@ -23,6 +23,7 @@ import {
   xSchema,
 } from "../inputs";
 import { type BackersDigest, type Project } from "../projects";
+import { ipfsURL } from "~/lib/utils";
 
 export const projectSizeSchema = z.enum(["small", "medium", "large"]);
 
@@ -345,15 +346,27 @@ export class NewProject implements NewProjectType {
   }
 
   static #parseOldArtifacts(data: Project & { digest: BackersDigest }) {
-    const artifacts: NewProjectType["artifacts"] = [];
+    type Artifact = NewProjectType["artifacts"][number];
+    type ArtifactValue = Artifact["value"]["value"];
+
+    const artifacts: Artifact[] = [];
 
     if (data.digest.pitch ?? data.deck) {
-      const value = data.digest.pitch
-        ? { file: data.digest.pitch }
-        : data.deck
-          ? { file: data.deck }
-          : undefined;
-      if (value) {
+      let value: ArtifactValue = { file: "" };
+
+      if (data.digest.pitch) {
+        value = { file: data.digest.pitch, type: "web" };
+      } else if (data.deck) {
+        const [cid, filename, size] = data.deck.split(",");
+        value = {
+          file: cid && cid.length > 0 ? ipfsURL(cid) : "",
+          name: filename!,
+          size: Number(size),
+          type: filename!.split(".").pop(),
+        };
+      }
+
+      if (value.file.length > 0) {
         artifacts.push({
           visible: false,
           value: { name: "Pitch Deck", value },
@@ -362,12 +375,21 @@ export class NewProject implements NewProjectType {
     }
 
     if (data.digest.demo ?? data.demo) {
-      const value = data.digest.demo
-        ? { file: data.digest.demo }
-        : data.demo
-          ? { file: data.demo }
-          : undefined;
-      if (value) {
+      let value: ArtifactValue = { file: "" };
+
+      if (data.digest.demo) {
+        value = { file: data.digest.demo, type: "web" };
+      } else if (data.demo) {
+        const [cid, filename, size] = data.demo.split(",");
+        value = {
+          file: cid && cid.length > 0 ? ipfsURL(cid) : "",
+          name: filename!,
+          size: Number(size),
+          type: filename!.split(".").pop(),
+        };
+      }
+
+      if (value.file.length > 0) {
         artifacts.push({
           visible: false,
           value: { name: "Demo Day Pitch", value },
@@ -382,6 +404,7 @@ export class NewProject implements NewProjectType {
           name: "Demo Video",
           value: {
             file: data.digest.demo_video,
+            type: "web",
           },
         },
       });

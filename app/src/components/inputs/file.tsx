@@ -89,7 +89,8 @@ export function FileInput<
             <Input
               {...field}
               type="text"
-              value={uploading ? "Uploading..." : field.value}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              value={uploading ? "Uploading..." : field.value.file}
               disabled={tab === "upload"}
               onChange={(e) => {
                 field.onChange({

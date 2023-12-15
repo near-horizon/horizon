@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { z } from "zod";
-import { ComboboxInput } from "~/components/inputs/combobox";
 import { EmailInput } from "~/components/inputs/email";
 import { ImageInput } from "~/components/inputs/image";
 import { TextInput } from "~/components/inputs/text";
@@ -15,16 +14,13 @@ import { clearLocalSaveForm } from "~/lib/client/mutating";
 import { useCreateProject } from "~/hooks/projects";
 import { type AccountId } from "~/lib/validation/common";
 import { useLocalSaveForm } from "~/hooks/mutating";
-import { verticals } from "~/lib/constants/filters";
+import { MultiSelectInput } from "~/components/inputs/multi-select";
+import { verticalSchema } from "~/lib/validation/inputs";
 
 const formSchema = z.object({
   email: z.string().email(),
-  "Project name": z.string().min(3).max(50),
-  vertical: z
-    .string()
-    .refine((val) => Object.keys(verticals).some((value) => value === val), {
-      message: "Please select a vertical",
-    }),
+  name: z.string().min(3).max(50),
+  vertical: verticalSchema.array(),
   tagline: z.string().min(3).max(50),
   description: z.string().min(30).max(500),
   image: z.string(),
@@ -54,8 +50,7 @@ export function ProjectCreate({ accountId }: { accountId: AccountId }) {
               email,
               profile: {
                 ...project,
-                name: project["Project name"],
-                vertical: { [vertical]: "" },
+                vertical: Object.fromEntries(vertical.map((v) => [v, ""])),
                 image: { ipfs_cid: cid },
               },
             });
@@ -63,51 +58,48 @@ export function ProjectCreate({ accountId }: { accountId: AccountId }) {
         >
           <TextInput
             control={form.control}
-            name="Project name"
+            name="name"
+            label="Project name"
             placeholder="Enter your project's name"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
+
           <div className="w-3/5">
-            <ComboboxInput
+            <MultiSelectInput
               control={form.control}
               name="vertical"
+              label="Verticals"
               placeholder="Select a vertical"
               rules={{ required: true }}
-              defaultValue=""
-              disabled={false}
-              options={Object.entries(verticals).map(([key, value]) => ({
-                text: value,
-                value: key,
-              }))}
+              options={verticalSchema.options}
             />
           </div>
+
           <TextInput
             control={form.control}
             name="tagline"
+            label="Tagline"
             placeholder="Your tagline or motto"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
+
           <TextAreaInput
             control={form.control}
             name="description"
+            label="Description"
             placeholder="Describe your project"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
             maxLength={500}
           />
+
           <EmailInput
             control={form.control}
             name="email"
+            label="Email"
             placeholder="Email"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
+
           <ImageInput
             name="image"
             control={form.control}
@@ -119,6 +111,7 @@ export function ProjectCreate({ accountId }: { accountId: AccountId }) {
             generate
             generateEnabled={form.formState.isValid && form.formState.isDirty}
           />
+
           <div className="mt-6 flex flex-row items-center justify-between">
             <Button variant="destructive">Cancel</Button>
             <ProgressDialog
