@@ -61,7 +61,7 @@ export function useCreateRequest(): [
       request: Omit<Request, "cid" | "creationTx">;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -93,46 +93,23 @@ export function useCreateRequest(): [
   ];
 }
 
-export function useUpdateBacker(): [
-  progress: Progress,
-  mutation: UseMutationResult<
-    void,
-    unknown,
-    {
-      accountId: AccountId;
-      request: Request;
-    },
-    unknown
-  >
-] {
+export function useUpdateRequest() {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
-  const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
 
-  return [
-    progress,
-    useMutation({
-      mutationFn: async ({
-        accountId,
-        request,
-      }: {
-        accountId: AccountId;
-        request: Request;
-      }) => {
-        setProgress({ value: 50, label: "Editing on-chain details..." });
-        try {
-          await signTx("edit_request", { account_id: accountId, request });
-        } catch (e) {
-          setProgress({ value: 50, label: "Failed to update on-chain data!" });
-          throw new Error("Failed to update request");
-        }
-        setProgress({ value: 100, label: "On-chain data saved!" });
-      },
-      onSuccess: async (_, { accountId, request: { cid } }) => {
-        await queryClient.invalidateQueries({
-          queryKey: ["request", accountId, cid],
-        });
-      },
-    }),
-  ];
+  return useMutation({
+    mutationFn: async ({ cid, request }: { cid: CID; request: Request }) => {
+      try {
+        await signTx("edit_request", { cid, request });
+      } catch (e) {
+        console.error(e);
+        throw new Error("Failed to update request");
+      }
+    },
+    onSuccess: async (_, { cid, request: { project_id } }) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["request", project_id, cid],
+      });
+    },
+  });
 }
