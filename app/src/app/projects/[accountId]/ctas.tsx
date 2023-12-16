@@ -8,6 +8,7 @@ import { type User } from "~/lib/validation/user";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { env } from "~/env.mjs";
+import { DEFAULT_EMAIL } from "~/lib/constants/parsing";
 
 export function CTAs({
   user,
@@ -54,6 +55,11 @@ async function ContactAsync({ accountId }: { accountId: AccountId }) {
   const {
     profile: { email },
   } = await getNewProject(accountId);
+
+  if (email === DEFAULT_EMAIL) {
+    return <></>;
+  }
+
   return (
     <a
       href={`mailto:${email}?subject=${env.REACHOUT_SUBJECT}&body=${env.REACHOUT_BODY}`}

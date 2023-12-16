@@ -24,6 +24,7 @@ import {
 } from "../inputs";
 import { type BackersDigest, type Project } from "../projects";
 import { ipfsURL } from "~/lib/utils";
+import { DEFAULT_EMAIL } from "~/lib/constants/parsing";
 
 export const projectSizeSchema = z.enum(["small", "medium", "large"]);
 
@@ -368,7 +369,7 @@ export class NewProject implements NewProjectType {
     return {
       name: data.name,
       logo: data.image,
-      email: data.digest.email ?? "test@test.com",
+      email: data.digest.email ?? DEFAULT_EMAIL,
       vertical,
       stage,
       tagline: data.tagline ?? " ".repeat(20),
