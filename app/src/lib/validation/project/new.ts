@@ -341,6 +341,47 @@ export class NewProject implements NewProjectType {
     };
   }
 
+  static #parseOldProfile(data: Project & { digest: BackersDigest }) {
+    const socials = NewProject.#parseOldSocials(data.linktree);
+
+    const parsedStage = stageSchema.safeParse(data.stage);
+
+    const stage = parsedStage.success ? parsedStage.data : "other";
+
+    const companySize = Number(
+      data.company_size ?? data.digest.company_size ?? 0,
+    );
+
+    const size =
+      companySize < 10 ? "small" : companySize < 50 ? "medium" : "large";
+
+    const parsedVertical = verticalSchema
+      .array()
+      .safeParse(Object.keys(data.vertical ?? {}));
+
+    const vertical = parsedVertical.success ? parsedVertical.data : "other";
+
+    const parsedLocation = locationSchema.safeParse(data.geo);
+
+    const location = parsedLocation.success ? parsedLocation.data : undefined;
+
+    return {
+      name: data.name,
+      logo: data.image,
+      email: data.digest.email ?? "test@test.com",
+      vertical,
+      stage,
+      tagline: data.tagline ?? " ".repeat(20),
+      description: data.description
+        ? data.description + " ".repeat(50 - data.description.length)
+        : undefined,
+      website: data.website ? data.website : "test.com",
+      socials,
+      location,
+      size,
+    };
+  }
+
   static #parseOldSocials(linktree?: Linktree | null) {
     const socials: NewProjectType["profile"]["socials"] = {};
     if (linktree?.twitter && xSchema.safeParse(linktree.twitter).success) {
@@ -359,6 +400,22 @@ export class NewProject implements NewProjectType {
       socials.linkedin = linktree.linkedin;
     }
     return socials;
+  }
+
+  static #parseOldDetails(data: Project & { digest: BackersDigest }) {
+    return {
+      open_source: data.distribution === "open-source",
+      near_integration:
+        data.integration === "no"
+          ? "no"
+          : data.integration === "interested"
+            ? "in-progress"
+            : "yes",
+      problem: data.problem
+        ? data.problem.concat(" ".repeat(Math.max(0, 50 - data.problem.length)))
+        : " ".repeat(50),
+      fundraising: data.digest.fundraising,
+    };
   }
 
   static #parseOldArtifacts(data: Project & { digest: BackersDigest }) {
@@ -461,26 +518,11 @@ export class NewProject implements NewProjectType {
   }
 
   static fromOld(data: Project & { digest: BackersDigest }): NewProject {
-    const socials = NewProject.#parseOldSocials(data.linktree);
+    const profile = NewProject.#parseOldProfile(data);
+
+    const details = NewProject.#parseOldDetails(data);
 
     const artifacts = NewProject.#parseOldArtifacts(data);
-
-    const parsedStage = stageSchema.safeParse(data.stage);
-
-    const stage = parsedStage.success ? parsedStage.data : "other";
-
-    const companySize = Number(
-      data.company_size ?? data.digest.company_size ?? 0,
-    );
-
-    const size =
-      companySize < 10 ? "small" : companySize < 50 ? "medium" : "large";
-
-    const parsedVertical = verticalSchema
-      .array()
-      .safeParse(Object.keys(data.vertical ?? {}));
-
-    const vertical = parsedVertical.success ? parsedVertical.data : "other";
 
     const contact: NewProjectType["contact"] = { visible: false, value: {} };
 
@@ -494,65 +536,37 @@ export class NewProject implements NewProjectType {
 
     const founders = NewProject.#parseOldFounders(data);
 
-    const parsedLocation = locationSchema.safeParse(data.geo);
+    const traction = data.digest.traction
+      ? typeof data.digest.traction === "string"
+        ? []
+        : Object.entries(data.digest.traction).map(([name, value]) => ({
+            name,
+            value,
+          }))
+      : [];
 
-    const location = parsedLocation.success ? parsedLocation.data : undefined;
+    const media = data.digest.announcement ? [data.digest.announcement] : [];
 
     return new NewProject({
       account_id: data.account_id,
-      profile: {
-        name: data.name,
-        logo: data.image,
-        email: contact.value.email ?? "test@test.com",
-        vertical,
-        stage,
-        tagline: data.tagline ?? " ".repeat(20),
-        description: data.description
-          ? data.description + " ".repeat(50 - data.description.length)
-          : undefined,
-        website: data.website ? data.website : "test.com",
-        socials,
-        location,
-        size,
-      },
+      profile,
       contact,
       details: {
         visible: false,
-        value: {
-          open_source: data.distribution === "open-source",
-          near_integration:
-            data.integration === "no"
-              ? "no"
-              : data.integration === "interested"
-                ? "in-progress"
-                : "yes",
-          problem: data.problem
-            ? data.problem.concat(
-                " ".repeat(Math.max(0, 50 - data.problem.length)),
-              )
-            : " ".repeat(50),
-          fundraising: data.digest.fundraising,
-        },
+        value: details,
       },
       metrics: {
-        visible: true,
-        value: data.digest.traction
-          ? typeof data.digest.traction === "string"
-            ? []
-            : Object.entries(data.digest.traction).map(([name, value]) => ({
-                name,
-                value,
-              }))
-          : [],
+        visible: traction.length > 0,
+        value: traction,
       },
       founders: {
-        visible: true,
+        visible: founders.length > 0,
         value: founders,
       },
       artifacts,
       media: {
-        visible: true,
-        value: data.digest.announcement ? [data.digest.announcement] : [],
+        visible: media.length > 0,
+        value: media,
       },
       creationTx: data.creationTx,
     });
