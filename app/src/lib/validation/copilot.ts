@@ -9,7 +9,7 @@ export const copilotBodySchema = z.object({
 });
 
 export const newConversationSchema = z.object({
-  conversation_id: z.string(),
+  conversation_id: z.number(),
 });
 
 export const messageRatingSchema = z.object({

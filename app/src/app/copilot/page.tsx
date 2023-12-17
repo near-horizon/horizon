@@ -16,6 +16,7 @@ import { useChat } from "ai/react";
 import Bubble from "./chat/bubble";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Send02Svg } from "~/icons";
+import { cn } from "~/lib/utils";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
@@ -35,7 +36,7 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <ChatContainer className="flex flex-col">
+    <ChatContainer className="flex w-full flex-col">
       {messages.length === 0 ? (
         <div className="mx-auto mt-[15%] flex w-[300px] flex-grow flex-col space-y-6 sm:w-[600px]">
           <div className="text-center text-4xl font-bold text-black">
@@ -80,23 +81,22 @@ export default function Chat() {
 
       <ChatFooter className="sticky bottom-0 w-full space-x-2 pt-2">
         <div className="content_width flex items-center bg-transparent">
-          <form
-            onSubmit={handleSubmit}
-            className="bg-assistant-background mx-auto flex  w-full items-center overflow-hidden rounded-xl text-gray-600"
-          >
+          <form onSubmit={handleSubmit} className="relative">
             <Input
               placeholder="Type your message"
               value={input}
               onChange={handleInputChange}
-              className="-mr-9 rounded-xl bg-transparent text-foreground"
+              className="w-full"
             />
+
             <button
               type={`${!isLoading ? "submit" : "button"}`}
-              className={`mr-2 rounded p-1.5 text-white opacity-60 ${
+              className={cn(
+                "absolute right-1 top-1/2 -translate-y-1/2 rounded p-1.5 text-white opacity-60",
                 !isLoading
-                  ? " hover:bg-gray-500 hover:text-white/80"
-                  : "pointer-events-none"
-              } `}
+                  ? "hover:bg-gray-500 hover:text-white/80"
+                  : "pointer-events-none",
+              )}
             >
               {isLoading ? (
                 <Skeleton className="h-5 w-5 rounded-full" />
