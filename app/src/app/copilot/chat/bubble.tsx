@@ -28,7 +28,7 @@ function getSources(message: Message) {
   );
 
   // Extract the substring from "Verified Sources" to the end of the string
-  const verifiedSourcesSection = message.content.substring(sourcesIndex);
+  const verifiedSourcesSection = message.content.substring(sourcesIndex).trim();
 
   // Split the section into lines and remove the first line
   const [, ...sourcesLines] = verifiedSourcesSection.split("\n");
@@ -53,16 +53,21 @@ function getSources(message: Message) {
 }
 
 function getDisplayNameFromURL(url: string) {
-  const urlObj = new URL(url);
-  // Remove common subdomains
-  const hostname = urlObj.hostname.replace(/^www\./, "");
+  try {
+    const urlObj = new URL(url);
+    // Remove common subdomains
+    const hostname = urlObj.hostname.replace(/^www\./, "");
 
-  // Extract the second-level domain part
-  const parts = hostname.split(".");
-  const displayName = parts.length > 1 ? parts.at(-2)! : hostname;
+    // Extract the second-level domain part
+    const parts = hostname.split(".");
+    const displayName = parts.length > 1 ? parts.at(-2)! : hostname;
 
-  // Capitalize the first letter
-  return displayName.charAt(0).toUpperCase() + displayName.slice(1);
+    // Capitalize the first letter
+    return displayName.charAt(0).toUpperCase() + displayName.slice(1);
+  } catch (e) {
+    console.error(e, url);
+    return url;
+  }
 }
 
 export default function Bubble({
