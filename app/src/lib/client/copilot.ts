@@ -3,7 +3,7 @@ import { type MessageRating } from "../validation/copilot";
 
 export async function rateMessage(rating: MessageRating) {
   try {
-    const result = await fetch("/api/chat/rate-message", {
+    const result = await fetch("/api/chat/rate", {
       method: "POST",
       body: JSON.stringify(rating),
     });
@@ -14,11 +14,7 @@ export async function rateMessage(rating: MessageRating) {
 
     const parsedBody = z.boolean().safeParse(await result.json());
 
-    if (!parsedBody.success) {
-      return false;
-    }
-
-    return parsedBody.data;
+    return parsedBody.success && parsedBody.data;
   } catch (error) {
     console.error(error);
     return false;
