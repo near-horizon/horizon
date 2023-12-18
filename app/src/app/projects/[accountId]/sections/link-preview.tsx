@@ -27,8 +27,8 @@ async function LinkPreviewAsync({ link }: { link: string }) {
   const data = linkPreviewSchema.parse(await res.json());
 
   return (
-    <div className="flex w-full flex-row items-start justify-start gap-6">
-      <div className="w-64 overflow-hidden rounded-md">
+    <div className="flex w-full flex-col items-start justify-start gap-6 md:flex-row">
+      <div className="w-full overflow-hidden rounded-md md:w-64">
         <AspectRatio ratio={16 / 10} className="relative">
           <Image
             src={data.image}
@@ -45,7 +45,7 @@ async function LinkPreviewAsync({ link }: { link: string }) {
           <b className="font-semibold text-text-link underline">{data.title}</b>
         </a>
 
-        <div className="line-clamp-3 text-sm text-ui-elements-dark">
+        <div className="line-clamp-2 text-sm text-ui-elements-dark md:line-clamp-3">
           {data.description}
         </div>
 
@@ -53,7 +53,7 @@ async function LinkPreviewAsync({ link }: { link: string }) {
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-ui-elements-gray"
+          className="truncate text-sm text-ui-elements-gray"
         >
           {link}
         </a>
@@ -64,8 +64,8 @@ async function LinkPreviewAsync({ link }: { link: string }) {
 
 function LinkPreviewSkeleton({ link }: { link: string }) {
   return (
-    <div className="flex w-full flex-row items-start justify-start gap-6">
-      <div className="w-64 overflow-hidden rounded-md">
+    <div className="flex w-full flex-col items-start justify-start gap-6 md:flex-row">
+      <div className="w-full overflow-hidden rounded-md md:w-64">
         <AspectRatio ratio={16 / 10} className="relative">
           <Skeleton className="h-full w-full" />
         </AspectRatio>
@@ -78,7 +78,7 @@ function LinkPreviewSkeleton({ link }: { link: string }) {
           </b>
         </a>
 
-        <div className="w-full text-sm text-ui-elements-dark">
+        <div className="line-clamp-2 text-sm text-ui-elements-dark md:line-clamp-3">
           <Skeleton className="mb-2 h-4 w-4/5" />
           <Skeleton className="mb-2 h-4 w-full" />
           <Skeleton className="h-4 w-3/5" />
@@ -88,7 +88,7 @@ function LinkPreviewSkeleton({ link }: { link: string }) {
           href={link}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-ui-elements-gray"
+          className="truncate text-sm text-ui-elements-gray"
         >
           {link}
         </a>
