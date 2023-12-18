@@ -17,6 +17,14 @@ module.exports = {
     },
     extend: {
       colors: {
+        assistant: {
+          background: "hsl(var(--assistant-background))",
+          foreground: "hsl(var(--assistant-forground))",
+        },
+        human: {
+          background: "hsl(var(--human-background))",
+          foreground: "hsl(var(--human-forground))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

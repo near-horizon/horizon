@@ -1,5 +1,5 @@
 // style imports
-import "~/styles/globals.css";
+import "./globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 
 import { Footer } from "~/components/footer";
