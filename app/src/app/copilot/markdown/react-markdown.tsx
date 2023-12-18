@@ -13,7 +13,7 @@ export const MemoizedReactMarkdown: FC<Options> = memo(
 export function Markdown({ children }: { children: string }) {
   return (
     <MemoizedReactMarkdown
-      className="prose flex-1 dark:prose-invert"
+      className="custom-prose prose w-full dark:prose-invert"
       components={{
         code({ className, children, ...props }) {
           if (Array.isArray(children) && typeof children[0] === "string") {
@@ -64,25 +64,15 @@ export function Markdown({ children }: { children: string }) {
           );
         },
         a({ href, children, ...props }) {
-          // Check if the last child is a string and if it ends with a period
-          if (Array.isArray(children) && typeof children.at(-1) === "string") {
-            const lastChild = children.at(-1) as string;
-
-            return (
-              <>
-                <a
-                  href={href}
-                  className="markdown-link text-blue-400"
-                  {...props}
-                >
-                  {children}
-                </a>
-                {!lastChild.trim().endsWith(".") && ". "}
-              </>
-            );
-          }
-
-          return <>{children}</>;
+          console.log("href", href);
+          console.log("Children", children);
+          return (
+            <>
+              <a href={href} className="markdown-link text-blue-400" {...props}>
+                {children}
+              </a>
+            </>
+          );
         },
       }}
     >
