@@ -9,6 +9,7 @@ import { type AccountId, type CID } from "~/lib/validation/common";
 import { EditRequest } from "./edit";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Suspense } from "react";
+import { ProposalForm } from "~/app/proposals/form";
 
 export function RequestCard({
   accountId,
@@ -73,6 +74,11 @@ async function RequestCardAsync({
   const request = await getRequest(accountId, cid);
 
   const isOwner = user.logedIn && user.accountId === accountId;
+  const isContributor =
+    user.logedIn &&
+    user.hasProfile &&
+    user.profileType === "contributor" &&
+    !isOwner;
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-4">
@@ -103,6 +109,13 @@ async function RequestCardAsync({
       </div>
 
       {isOwner && <EditRequest request={request} cid={cid} />}
+      {isContributor && (
+        <ProposalForm
+          cid={cid}
+          request={request}
+          user_account_id={user.accountId}
+        />
+      )}
     </div>
   );
 }
