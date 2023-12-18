@@ -39,6 +39,7 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
       <h1 className="text-4xl font-bold text-text-black">
         Create a new contributor profile
       </h1>
+
       <Form {...form}>
         <form
           className="w-full"
@@ -63,6 +64,7 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
             placeholder="Enter your name"
             rules={{ required: true }}
           />
+
           <div className="w-3/5">
             <MultiSelectInput
               control={form.control}
@@ -73,12 +75,14 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
               options={verticalSchema.options}
             />
           </div>
+
           <TextInput
             control={form.control}
             name="tagline"
             placeholder="Your tagline or motto"
             rules={{ required: true }}
           />
+
           <TextAreaInput
             control={form.control}
             name="description"
@@ -86,12 +90,14 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
             rules={{ required: true }}
             maxLength={500}
           />
+
           <EmailInput
             control={form.control}
             name="email"
             placeholder="Email"
             rules={{ required: true }}
           />
+
           <ImageInput
             name="image"
             control={form.control}
@@ -103,6 +109,7 @@ export function ContributorsCreate({ accountId }: { accountId: AccountId }) {
             generate
             generateEnabled={form.formState.isValid && form.formState.isDirty}
           />
+
           <div className="mt-6 flex flex-row items-center justify-between">
             <Button variant="destructive">Cancel</Button>
             <ProgressDialog

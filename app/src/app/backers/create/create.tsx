@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { z } from "zod";
-import { ComboboxInput } from "~/components/inputs/combobox";
 import { EmailInput } from "~/components/inputs/email";
 import { ImageInput } from "~/components/inputs/image";
+import { MultiSelectInput } from "~/components/inputs/multi-select";
 import { TextInput } from "~/components/inputs/text";
 import { TextAreaInput } from "~/components/inputs/text-area";
 import { ProgressDialog } from "~/components/progress-dialog";
@@ -15,32 +15,12 @@ import { useZodForm } from "~/hooks/form";
 import { useLocalSaveForm } from "~/hooks/mutating";
 import { clearLocalSaveForm } from "~/lib/client/mutating";
 import { type AccountId } from "~/lib/validation/common";
-
-const verticals = [
-  { text: "DeSci", value: "desci" },
-  { text: "DeFi", value: "defi" },
-  { text: "Gaming", value: "gaming" },
-  { text: "Metaverse", value: "metaverse" },
-  { text: "Commercial", value: "commercial" },
-  {
-    text: "Sports and Entertainment",
-    value: "sports-and-entertainment",
-  },
-  { text: "Infrastructure", value: "infrastructure" },
-  { text: "Social", value: "social" },
-  { text: "Social Impact", value: "social-impact" },
-  { text: "Creative", value: "creative" },
-  { text: "Education", value: "education" },
-];
+import { verticalSchema } from "~/lib/validation/inputs";
 
 const formSchema = z.object({
   email: z.string().email(),
-  "Backer name": z.string().min(3).max(50),
-  vertical: z
-    .string()
-    .refine((val) => verticals.some(({ value }) => value === val), {
-      message: "Please select a vertical",
-    }),
+  name: z.string().min(3).max(50),
+  vertical: verticalSchema.array(),
   tagline: z.string().min(3).max(50),
   description: z.string().min(30).max(500).optional(),
   image: z.string(),
@@ -59,6 +39,7 @@ export function BackersCreate({ accountId }: { accountId: AccountId }) {
       <h1 className="text-4xl font-bold text-text-black">
         Create a new backer profile
       </h1>
+
       <Form {...form}>
         <form
           className="w-full"
@@ -70,8 +51,7 @@ export function BackersCreate({ accountId }: { accountId: AccountId }) {
               email,
               profile: {
                 ...backer,
-                name: backer["Backer name"],
-                vertical: { [vertical]: "" },
+                vertical: Object.fromEntries(vertical.map((v) => [v, ""])),
                 image: { ipfs_cid: cid },
               },
             });
@@ -79,48 +59,46 @@ export function BackersCreate({ accountId }: { accountId: AccountId }) {
         >
           <TextInput
             control={form.control}
-            name="Backer name"
+            name="name"
+            label="Name"
             placeholder="Enter your name"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
-          <div className="w-3/5">
-            <ComboboxInput
-              control={form.control}
-              name="vertical"
-              placeholder="Select a vertical"
-              rules={{ required: true }}
-              defaultValue=""
-              disabled={false}
-              options={verticals}
-            />
-          </div>
+
+          <MultiSelectInput
+            control={form.control}
+            name="vertical"
+            label="Verticals"
+            placeholder="Select a vertical"
+            rules={{ required: true }}
+            options={verticalSchema.options}
+          />
+
           <TextInput
             control={form.control}
             name="tagline"
+            label="Tagline"
             placeholder="Your tagline or motto"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
+
           <TextAreaInput
             control={form.control}
             name="description"
+            label="Description"
             placeholder="Add a short description"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
             maxLength={500}
           />
+
           <EmailInput
             control={form.control}
             name="email"
+            label="Email"
             placeholder="Email"
             rules={{ required: true }}
-            defaultValue=""
-            disabled={false}
           />
+
           <ImageInput
             name="image"
             control={form.control}
@@ -132,6 +110,7 @@ export function BackersCreate({ accountId }: { accountId: AccountId }) {
             generate
             generateEnabled={form.formState.isValid && form.formState.isDirty}
           />
+
           <div className="mt-6 flex flex-row items-center justify-between">
             <Button variant="destructive">Cancel</Button>
             <ProgressDialog
