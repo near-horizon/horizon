@@ -17,10 +17,18 @@ import Bubble from "./chat/bubble";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Send02Svg } from "~/icons";
 import { cn } from "~/lib/utils";
+import { PROMPTS } from "~/lib/constants/copilot";
+import { CopilotCard } from "./chat/card";
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat();
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    setInput,
+  } = useChat();
 
   // Create a reference to the scroll area
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -45,10 +53,20 @@ export default function Chat() {
           <div className="text-center text-lg text-black">
             <div className="mb-2 font-bold">NEAR Founder Co-Pilot</div>
           </div>
+          <div className="mb-2 flex flex-wrap items-center justify-center gap-2">
+            {/* Call Set Input */}
+            {PROMPTS.map((prompt, index) => (
+              <CopilotCard
+                key={index}
+                prompt={prompt}
+                clickHandler={setInput}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <>
-          <ChatHeader className="border-assistant-background border-b py-2">
+          <ChatHeader className="border-b border-assistant-background py-2">
             {/* <ChatTitle className="text-lg">Chatbot</ChatTitle> */}
             <ChatDescription className="content_width text-center leading-3">
               Powered by NEAR Horizon
@@ -80,8 +98,8 @@ export default function Chat() {
       )}
 
       <ChatFooter className="sticky bottom-0 w-full space-x-2 pt-2">
-        <div className="content_width flex items-center bg-transparent">
-          <form onSubmit={handleSubmit} className="relative">
+        <div className="content_width flex w-full items-center bg-transparent">
+          <form onSubmit={handleSubmit} className="relative w-full">
             <Input
               placeholder="Type your message"
               value={input}

@@ -82,10 +82,10 @@ export default function Bubble({
   return (
     <div
       key={message.id}
-      className={`flex flex-col items-center border-none ${
+      className={`flex flex-col border-none ${
         message.role === "user"
-          ? "bg-human-background text-human-foreground border-b border-gray-900/50"
-          : "bg-assistant-background text-assistant-foreground border-b border-gray-900/50"
+          ? "border-b border-gray-900/50 bg-human-background text-human-foreground"
+          : "border-b border-gray-900/50 bg-assistant-background text-assistant-foreground"
       }`}
     >
       <div className="content_width relative flex flex-1 gap-3 border-none p-6 text-sm">
@@ -139,15 +139,15 @@ export default function Bubble({
         <div className="mt-1 w-full space-y-3">
           <Markdown>{`${messageWithOutSources}`}</Markdown>
 
-          <div className="flex w-full items-center justify-between">
-            <div className="flex w-full items-center space-x-3">
+          <div className="flex w-full justify-between">
+            <div className="flex w-full space-x-3">
               {sources.map((item, index) => (
                 <a
                   key={index}
                   href={item}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-human-background group flex items-center space-x-1 rounded-full border-none py-1 pl-1 pr-2 text-xs"
+                  className="group flex space-x-1 rounded-full border-none bg-human-background py-1 pl-1 pr-2 text-xs"
                 >
                   <span className="rounded-full border-[0.5px] border-gray-600 px-1.5 text-[7px] text-gray-300 group-hover:text-gray-50">
                     {index + 1}

@@ -11,30 +11,32 @@
   display: none;
 }
 
+.custom-prose {
+  max-width: 100%;
+}
+
 @layer base {
   :root {
-    --assistant-background: 229, 11%, 30%;
-    /* #D9D9E3 */
-    --assistant-forground: 240, 5%, 84%;
-    /* #D1D4DA */
-
-    --human-background: 235, 11%, 23%;
-    /* #343541 */
-    --human-forground: 230, 6%, 81%;
-    /* #CCCDD2 */
-
-    --12: linear-gradient(90deg,
-        rgba(33, 214, 204, 1) 0%,
-        rgba(125, 33, 207, 1) 100%);
-    --3: linear-gradient(90deg,
-        rgba(5, 56, 255, 1) 0%,
-        rgba(64, 255, 199, 1) 100%);
-    --dawn: linear-gradient(90deg,
-        rgba(0, 201, 255, 1) 0%,
-        rgba(146, 254, 157, 1) 100%);
-    --dawn-2: linear-gradient(90deg,
-        rgba(0, 201, 255, 1) 0%,
-        rgba(146, 254, 248, 1) 100%);
+    --12: linear-gradient(
+      90deg,
+      rgba(33, 214, 204, 1) 0%,
+      rgba(125, 33, 207, 1) 100%
+    );
+    --3: linear-gradient(
+      90deg,
+      rgba(5, 56, 255, 1) 0%,
+      rgba(64, 255, 199, 1) 100%
+    );
+    --dawn: linear-gradient(
+      90deg,
+      rgba(0, 201, 255, 1) 0%,
+      rgba(146, 254, 157, 1) 100%
+    );
+    --dawn-2: linear-gradient(
+      90deg,
+      rgba(0, 201, 255, 1) 0%,
+      rgba(146, 254, 248, 1) 100%
+    );
     --ui-elements--light: rgba(236, 238, 240, 1);
     --ui-elements--gray: rgba(126, 134, 140, 1);
     --ui-elements--black: rgba(0, 0, 0, 1);
