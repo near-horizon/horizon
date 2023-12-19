@@ -374,7 +374,8 @@ export class NewProject implements NewProjectType {
       stage,
       tagline: data.tagline ?? " ".repeat(20),
       description: data.description
-        ? data.description + " ".repeat(50 - data.description.length)
+        ? data.description +
+          " ".repeat(Math.max(50 - data.description.length, 0))
         : undefined,
       website: data.website ? data.website : "test.com",
       socials,
