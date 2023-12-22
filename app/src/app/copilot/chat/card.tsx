@@ -1,22 +1,21 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 
 export function CopilotCard({
   prompt,
-  clickHandler,
+  onClick,
 }: {
   prompt: string;
-  clickHandler: (prompt: string) => void;
+  onClick: (prompt: string) => void;
   children?: React.ReactNode;
 }) {
   return (
-    <Card
-      className="mr-2 h-32 w-36 rounded bg-blue-500 px-4 py-2 text-center text-white hover:bg-blue-700"
-      onClick={() => clickHandler(prompt)}
+    <Button
+      className="h-auto w-80 justify-start rounded-lg pb-8 pt-4 text-left text-base font-bold transition-all duration-500"
+      onClick={() => onClick(prompt)}
+      variant="outline"
+      type="button"
     >
-      <CardContent className="h-32 w-32 flex-grow text-left text-sm">
-        {prompt}
-      </CardContent>
-    </Card>
+      {prompt}
+    </Button>
   );
 }

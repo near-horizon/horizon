@@ -2,16 +2,10 @@
 
 import React, { useEffect, useRef } from "react";
 
-import {
-  ChatContainer,
-  ChatContent,
-  ChatDescription,
-  ChatFooter,
-  ChatHeader,
-} from "./chat/elements";
+import { ChatContainer, ChatContent, ChatFooter } from "./chat/elements";
 
 import { Input } from "~/components/ui/input";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 import { useChat } from "ai/react";
 import Bubble from "./chat/bubble";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -44,38 +38,27 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <ChatContainer className="flex w-full flex-col">
+    <ChatContainer className="flex h-full w-full flex-grow flex-col">
       {messages.length === 0 ? (
-        <div className="mx-auto mt-[15%] flex w-[300px] flex-grow flex-col space-y-6 sm:w-[600px]">
+        <div className="flex h-full min-h-[60dvh] flex-col items-center justify-center gap-6">
           <div className="text-center text-4xl font-bold text-black">
             NEAR Founder Co-Pilot
           </div>
           <div className="text-center text-lg text-black">
             <div className="mb-2 font-bold">NEAR Founder Co-Pilot</div>
           </div>
-          <div className="mb-2 flex flex-wrap items-center justify-center gap-2">
-            {/* Call Set Input */}
+          <div className="flex w-full flex-wrap items-center justify-center gap-2">
             {PROMPTS.map((prompt, index) => (
-              <CopilotCard
-                key={index}
-                prompt={prompt}
-                clickHandler={setInput}
-              />
+              <CopilotCard key={index} prompt={prompt} onClick={setInput} />
             ))}
           </div>
         </div>
       ) : (
         <>
-          <ChatHeader className="border-b border-assistant-background py-2">
-            {/* <ChatTitle className="text-lg">Chatbot</ChatTitle> */}
-            <ChatDescription className="content_width text-center leading-3">
-              Powered by NEAR Horizon
-            </ChatDescription>
-          </ChatHeader>
-          <ChatContent className="pb-15 flex-grow overflow-y-auto">
+          <ChatContent className="pb-15 flex-grow">
             <ScrollArea
               ref={scrollAreaRef}
-              className="spacy-y-4 h-full w-full overflow-y-auto bg-transparent"
+              className="h-full max-h-[80dvh] w-full space-y-4 overflow-hidden bg-transparent"
             >
               {messages.map((message, i) => (
                 <Bubble key={i} message={{ ...message }} loading={isLoading} />
@@ -92,6 +75,7 @@ export default function Chat() {
                   loading={isLoading}
                 />
               )}
+              <ScrollBar orientation="vertical" />
             </ScrollArea>
           </ChatContent>
         </>
