@@ -1,24 +1,28 @@
 import { z } from "zod";
 import { accountIdSchema } from "./common";
 
+export const profileTypeSchema = z.enum(["project", "contributor", "backer"]);
+
+export type ProfileType = z.infer<typeof profileTypeSchema>;
+
 export const userSchema = z.union([
   z.object({
-    logedIn: z.literal(false),
+    loggedIn: z.literal(false),
   }),
   z.object({
-    logedIn: z.literal(true),
+    loggedIn: z.literal(true),
     accountId: accountIdSchema,
     publicKey: z.string(),
     admin: z.boolean().default(false),
     hasProfile: z.literal(false),
   }),
   z.object({
-    logedIn: z.literal(true),
+    loggedIn: z.literal(true),
     accountId: accountIdSchema,
     publicKey: z.string(),
     admin: z.boolean().default(false),
     hasProfile: z.literal(true),
-    profileType: z.enum(["project", "contributor", "backer"]),
+    profileType: profileTypeSchema,
   }),
 ]);
 

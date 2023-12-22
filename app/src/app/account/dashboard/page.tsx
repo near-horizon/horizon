@@ -31,7 +31,7 @@ import { WelcomeBanner } from "../welcome-banner";
 export default async function Dashboard() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return redirect("/login");
   }
 

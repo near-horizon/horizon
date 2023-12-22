@@ -38,7 +38,7 @@ function useOnboardingRedirect(user: User) {
   const isOnboarding = pathname.includes("/onboarding");
   const isCreate = pathname.includes("/create");
 
-  if (!(isOnboarding || isCreate) && user.logedIn && !user.hasProfile) {
+  if (!(isOnboarding || isCreate) && user.loggedIn && !user.hasProfile) {
     return redirectOnboarding();
   }
 }

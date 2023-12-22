@@ -24,7 +24,7 @@ export function NavLinks() {
   const [, section, sub] = usePathname()?.split("/");
   const user = useUser();
   const { data: isBacker } = useHasBacker(
-    user.logedIn ? user.accountId : undefined,
+    user.loggedIn ? user.accountId : undefined,
   );
 
   return (
@@ -68,7 +68,7 @@ export function NavLinks() {
               </NavigationMenuLink>
             </NavigationMenuItem>
           )}
-          {user.logedIn && user.admin && (
+          {user.loggedIn && user.admin && (
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/admin"
@@ -96,7 +96,7 @@ export function MobileNavLinks() {
   const [, section, sub] = usePathname()?.split("/");
   const user = useUser();
   const { data: isBacker } = useHasBacker(
-    user.logedIn ? user.accountId : undefined,
+    user.loggedIn ? user.accountId : undefined,
   );
 
   return (
@@ -161,7 +161,7 @@ export function MobileNavLinks() {
                 </NavigationMenuItem>
               </>
             )}
-            {user.logedIn && user.admin && (
+            {user.loggedIn && user.admin && (
               <>
                 <Separator className="h-px w-full bg-ui-elements-light" />
                 <NavigationMenuItem>

@@ -1,12 +1,23 @@
+"use client";
+
 import Link from "next/link";
 import { TwitterIcon, YoutubeIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import { useIsOnboarding } from "~/hooks/profile";
+import { cn } from "~/lib/utils";
 
 export function Footer() {
+  const isOnboarding = useIsOnboarding();
+
   return (
     <footer className="bg-ui-elements-white pb-4 pt-16 md:px-8">
       <div className="mx-auto flex max-w-screen-xl flex-col gap-4 md:gap-12">
-        <div className="flex w-full flex-col items-center justify-start gap-2 md:flex-row md:items-start md:gap-6">
+        <div
+          className={cn(
+            "flex w-full flex-col items-center justify-start gap-2 md:flex-row md:items-start md:gap-6",
+            { hidden: isOnboarding },
+          )}
+        >
           <FooterSection
             header={
               <h3 className="text-xl font-semibold text-stone-900">

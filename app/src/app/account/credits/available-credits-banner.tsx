@@ -7,7 +7,7 @@ import { getUserFromSession } from "~/lib/session";
 export default async function AvailableCreditsBanner() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return redirect("/login");
   }
 

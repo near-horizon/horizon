@@ -21,9 +21,9 @@ export async function ProjectProfile({
 }) {
   const project = await getNewProject(accountId);
 
-  const isOwner = user.logedIn && user.accountId === accountId;
+  const isOwner = user.loggedIn && user.accountId === accountId;
   const isBacker =
-    user.logedIn && user.hasProfile && user.profileType === "backer";
+    user.loggedIn && user.hasProfile && user.profileType === "backer";
 
   return (
     <div className="flex w-full flex-col items-start justify-start gap-8">
@@ -74,7 +74,7 @@ export async function ProjectProfile({
         <div className="flex w-full flex-row items-start justify-between">
           <h2 className="text-xl font-bold text-ui-elements-black">Requests</h2>
 
-          {user.logedIn && user.accountId === accountId && (
+          {user.loggedIn && user.accountId === accountId && (
             <div className="flex flex-row items-center justify-end gap-4">
               <Link href="/account/requests">
                 <Button variant="outline" type="button">

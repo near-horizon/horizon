@@ -701,6 +701,81 @@ async fn get_project(
     .map(|p| Json(p.value))
 }
 
+#[derive(Deserialize, Serialize)]
+struct VerificationCode {
+    code: u16,
+}
+
+#[debug_handler(state = AppState)]
+async fn store_verification_code(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+    Json(params): Json<VerificationCode>,
+) -> ApiResult<Json<bool>> {
+    sqlx::query!(
+        r#"
+        UPDATE
+          profiles
+        SET
+          value = jsonb_set(
+            value,
+            '{verification_code}',
+            $2,
+            TRUE
+          )
+        WHERE
+          id = $1
+        "#,
+        account_id,
+        params.code as i32,
+    )
+    .fetch_one(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to update project: {e}"),
+        )
+    })
+    .map(|_| Json(true))
+}
+
+#[debug_handler(state = AppState)]
+async fn get_verification_code(
+    Path(account_id): Path<String>,
+    State(state): State<AppState>,
+) -> ApiResult<Json<Option<u16>>> {
+    let result = sqlx::query!(
+        r#"
+        SELECT
+          value->>'verification_code' as verification_code
+        FROM
+          profiles
+        WHERE
+          id = $1
+        "#,
+        account_id
+    )
+    .fetch_optional(&state.pool)
+    .await
+    .map_err(|e| {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to get code: {e}"),
+        )
+    })?;
+
+    let Some(record) = result else {
+        return Err((StatusCode::NOT_FOUND, "Not found".to_string()));
+    };
+
+    if let Some(code) = record.verification_code {
+        Ok(Json(Some(code.parse::<u16>().unwrap())))
+    } else {
+        Ok(Json(None))
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ChangesResponse {
     pub name: String,
@@ -954,6 +1029,10 @@ pub fn create_router() -> Router<AppState> {
         .route("/completion", get(get_completion))
         .route("/:account_id/similar", get(get_similar_projects))
         .route("/:account_id", put(put_project).get(get_project))
+        .route(
+            "/:account_id/code",
+            put(store_verification_code).get(get_verification_code),
+        )
         .route("/:account_id/changes", get(changes))
         .route(
             "/:account_id/backers-digest",

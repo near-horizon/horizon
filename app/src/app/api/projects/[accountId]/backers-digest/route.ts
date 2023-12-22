@@ -15,7 +15,7 @@ export async function GET(
   const user = await getUserFromSession();
 
   if (
-    !user.logedIn ||
+    !user.loggedIn ||
     user.accountId !== accountId ||
     (await hasBacker(user.accountId))
   ) {
@@ -31,7 +31,7 @@ export async function PUT(
 ) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn || user.accountId !== accountId) {
+  if (!user.loggedIn || user.accountId !== accountId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -62,7 +62,7 @@ export async function POST(
 ) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn || user.accountId !== accountId) {
+  if (!user.loggedIn || user.accountId !== accountId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge";
 import { env } from "~/env.mjs";
 import { fileUploadSchema } from "./validation/fetching";
 import { DATE, NUMBER } from "./format";
+import { z } from "zod";
+import { type AccountId } from "./validation/common";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -118,14 +120,29 @@ export async function uploadImage(file?: File) {
   return fileUploadSchema.parse(await response.json()).cid;
 }
 
+const fileGenerateSchema = z.object({
+  data: z.string(),
+  imageName: z.string().optional(),
+});
+
 export async function generateImage(
+  accountId: AccountId,
   prompt = "Stock image for a anonymous founder in a startup in a blockchain ecosystem. In a cartoonish style - not realistic",
 ) {
   const response = await fetch("/images/generate", {
     method: "POST",
     body: JSON.stringify({ prompt }),
   });
-  return fileUploadSchema.parse(await response.json()).cid;
+
+  const { data, imageName } = fileGenerateSchema.parse(await response.json());
+
+  const file = new File(
+    [toArrayBuffer(Buffer.from(data, "base64"))],
+    `${accountId}-${imageName ?? "image"}.png`,
+    { type: "image/png" },
+  );
+
+  return uploadImage(file);
 }
 
 export function cleanURL(dirtyURL?: string) {

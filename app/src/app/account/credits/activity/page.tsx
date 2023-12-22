@@ -16,7 +16,7 @@ import type { Incentives } from "~/lib/validation/incentives";
 export default async function Page() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return redirect("/login");
   }
 

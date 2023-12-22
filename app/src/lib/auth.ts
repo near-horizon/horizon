@@ -1,54 +1,34 @@
-import { /* getKeyInfo, */ viewCall } from "./client/fetching";
+import { viewCall } from "./client/fetching";
 import { env } from "~/env.mjs";
 import { type AccountId } from "./validation/common";
-import { hasBacker } from "./client/backers";
-import { hasContributor } from "./client/contributors";
-import { hasProject } from "./client/projects";
 import { redirect, RedirectType } from "next/navigation";
 import { type User } from "./validation/user";
+import { getProfileType } from "./server/common";
 
 export async function loginUser(
   accountId: AccountId,
   publicKey: string,
 ): Promise<User> {
-  const [admin, isProject, isContributor, isBacker] = await Promise.all([
+  const [admin, profileType] = await Promise.all([
     viewCall<boolean>(env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID, "check_is_owner", {
       account_id: accountId,
     }),
-    hasProject(accountId),
-    hasContributor(accountId),
-    hasBacker(accountId),
+    getProfileType(accountId),
   ]);
 
   const user: User = {
-    logedIn: true,
+    loggedIn: true,
     accountId,
     publicKey,
     admin,
     hasProfile: false,
   };
 
-  if (isProject) {
+  if (profileType) {
     return {
       ...user,
       hasProfile: true,
-      profileType: "project",
-    };
-  }
-
-  if (isContributor) {
-    return {
-      ...user,
-      hasProfile: true,
-      profileType: "contributor",
-    };
-  }
-
-  if (isBacker) {
-    return {
-      ...user,
-      hasProfile: true,
-      profileType: "backer",
+      profileType,
     };
   }
 

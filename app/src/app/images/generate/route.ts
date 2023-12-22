@@ -3,7 +3,6 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import { getUserFromSession } from "~/lib/session";
-import { toArrayBuffer, uploadImage } from "~/lib/utils";
 
 const imageGenerationSchema = z.object({
   prompt: z.string(),
@@ -13,7 +12,7 @@ const imageGenerationSchema = z.object({
 export async function POST(req: NextRequest) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -31,39 +30,46 @@ export async function POST(req: NextRequest) {
 
   try {
     response = await openAI.images.generate({
-      model: "dall-e-3",
-      size: "256x256",
+      model: "dall-e-2",
+      size: "1024x1024",
       n: 1,
       response_format: "b64_json",
       prompt,
       user: user.accountId,
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Couldn't generate image" },
       { status: 500 },
     );
   }
 
-  if (!response.created || !response.data[0]?.b64_json) {
+  const data = response.data[0]?.b64_json;
+
+  if (!response.created || !data) {
     return NextResponse.json({ error: "No images generated" }, { status: 500 });
   }
 
-  const file = new File(
-    [toArrayBuffer(Buffer.from(response.data[0].b64_json, "base64"))],
-    `${user.accountId}-${imageName ?? "image"}.png`,
-    { type: "image/png" },
-  );
-  let cid;
+  return NextResponse.json({ data, imageName }, { status: 200 });
 
-  try {
-    cid = await uploadImage(file);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Couldn't upload image" },
-      { status: 500 },
-    );
-  }
-
-  return NextResponse.json({ cid }, { status: 200 });
+  // const file = new File(
+  //   [toArrayBuffer(Buffer.from(data, "base64"))],
+  //   `${user.accountId}-${imageName ?? "image"}.png`,
+  //   { type: "image/png" },
+  // );
+  //
+  //
+  // let cid;
+  //
+  // try {
+  //   cid = await uploadImage(file);
+  // } catch (error) {
+  //   return NextResponse.json(
+  //     { error: "Couldn't upload image" },
+  //     { status: 500 },
+  //   );
+  // }
+  //
+  // return NextResponse.json({ cid }, { status: 200 });
 }

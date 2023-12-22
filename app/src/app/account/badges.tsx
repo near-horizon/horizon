@@ -13,14 +13,14 @@ export function ProjectBadge({
 }) {
   const user = useUser();
   const { data, status } = useProjectCompletion(
-    user.logedIn ? user.accountId : undefined,
+    user.loggedIn ? user.accountId : undefined,
   );
 
   if (status === "pending") {
     return <Skeleton className="h-3 w-3 rounded-full" />;
   }
 
-  if (status === "error" || !user.logedIn) {
+  if (status === "error" || !user.loggedIn) {
     return "?%";
   }
 
@@ -34,14 +34,14 @@ export function ContributorBadge({
 }) {
   const user = useUser();
   const { data, status } = useContributorCompletion(
-    user.logedIn ? user.accountId : undefined,
+    user.loggedIn ? user.accountId : undefined,
   );
 
   if (status === "pending") {
     return <Skeleton className="h-3 w-3 rounded-full" />;
   }
 
-  if (status === "error" || !user.logedIn) {
+  if (status === "error" || !user.loggedIn) {
     return "?%";
   }
 

@@ -4,6 +4,7 @@ import deepEqual from "deep-equal";
 import { getChanges } from "~/lib/client/profile";
 import { type AccountId } from "~/lib/validation/common";
 import { removeEmpty } from "~/lib/utils";
+import { usePathname } from "next/navigation";
 
 export function useChanges() {
   return useQuery({
@@ -19,4 +20,8 @@ export function useHasChanges(accountId: AccountId) {
     return false;
   }
   return !deepEqual(removeEmpty(changes), profile);
+}
+
+export function useIsOnboarding() {
+  return usePathname().startsWith("/onboarding");
 }

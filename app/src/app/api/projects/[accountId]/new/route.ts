@@ -18,7 +18,7 @@ export async function PUT(
 ) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return NextResponse.json({ message: "Not logged in" }, { status: 401 });
   }
 

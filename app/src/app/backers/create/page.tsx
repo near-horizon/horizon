@@ -6,7 +6,7 @@ import { BackersCreate } from "./create";
 export default async function BackersCreatePage() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return redirect("/login");
   }
 

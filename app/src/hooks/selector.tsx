@@ -29,7 +29,7 @@ export function useWalletSelectorEffect() {
           // Check the current session by fetching from the server
           const user = await getUser();
           // If the user is already logged in, check if the account is the same
-          if (user.logedIn && user.accountId === account.accountId) {
+          if (user.loggedIn && user.accountId === account.accountId) {
             // If the account is the same, update the user
             setUser(user);
           } else {

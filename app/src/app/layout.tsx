@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import "@near-wallet-selector/modal-ui/styles.css";
 
 import { Footer } from "~/components/footer";
-import { MobileNavbar, Navbar } from "./navbar";
+import { Navbar } from "./navbar";
 import { Providers } from "./providers";
 import { getUserFromSession } from "~/lib/session";
 import { type Metadata } from "next";
@@ -21,12 +21,7 @@ export default async function RootLayout({
       <body className="flex h-[100svh] flex-col">
         <HZNBanner />
         <Providers user={user}>
-          <div className="hidden md:block">
-            <Navbar />
-          </div>
-          <div className="md:hidden">
-            <MobileNavbar />
-          </div>
+          <Navbar />
           <div className="w-full flex-grow bg-background-light">
             <main className="mx-auto h-full w-full max-w-screen-xl flex-grow bg-background-light pb-16 pt-8">
               {children}

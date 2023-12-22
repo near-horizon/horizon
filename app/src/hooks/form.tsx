@@ -22,7 +22,7 @@ export const useHookFormDefaultProps = {
 
 export function useZodForm<Schema extends z.ZodObject<FieldValues>>(
   schema: Schema,
-  props?: UseZodFormParams<Schema>
+  props?: Omit<UseZodFormParams<Schema>, "resolver">,
 ) {
   return useForm<z.infer<Schema>>({
     ...useHookFormDefaultProps,
@@ -37,14 +37,14 @@ export type ZodSubmitHandler<Schema extends z.ZodObject<FieldValues>> =
 export function updateFields<Schema extends z.ZodObject<FieldValues>>(
   form: UseFormReturn<z.infer<Schema>>,
   schema: Schema,
-  fieldsToUpdate: Partial<z.infer<Schema>>
+  fieldsToUpdate: Partial<z.infer<Schema>>,
 ) {
   if (fieldsToUpdate && Object.keys(fieldsToUpdate).length > 0) {
     for (const [key, value] of Object.entries(fieldsToUpdate)) {
       if (key in schema.shape && !!value) {
         form.setValue(
           key as Path<z.infer<Schema>>,
-          value as PathValue<z.infer<Schema>, Path<z.infer<Schema>>>
+          value as PathValue<z.infer<Schema>, Path<z.infer<Schema>>>,
         );
       }
     }

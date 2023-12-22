@@ -19,8 +19,8 @@ export async function POST(req: NextRequest) {
   const user = await loginUser(accountId, publicKey);
 
   const session = await getIronSession<User>(cookies(), ironSessionConfig);
-  session.logedIn = true;
-  if (!session.logedIn || !user.logedIn) {
+  session.loggedIn = true;
+  if (!session.loggedIn || !user.loggedIn) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
@@ -37,15 +37,15 @@ export async function POST(req: NextRequest) {
 export async function PATCH() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
   const newUser = await loginUser(user.accountId, user.publicKey);
 
   const session = await getIronSession<User>(cookies(), ironSessionConfig);
-  session.logedIn = true;
-  if (!session.logedIn) {
+  session.loggedIn = true;
+  if (!session.loggedIn) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 

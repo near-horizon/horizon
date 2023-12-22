@@ -19,7 +19,7 @@ export function ProfileNav() {
 
   let items = PROJECT_MENU;
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return <></>;
   }
 

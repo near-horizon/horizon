@@ -4,7 +4,7 @@ import { getUserFromSession } from "~/lib/session";
 export async function GET() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return NextResponse.json(
       { ok: false },
       {

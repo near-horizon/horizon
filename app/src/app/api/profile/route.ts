@@ -11,7 +11,7 @@ const bodySchema = profileSchema.extend({
 export async function POST(req: NextRequest) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

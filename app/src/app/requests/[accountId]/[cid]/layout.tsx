@@ -23,7 +23,7 @@ export default async function RequestPageLayout({
   children: React.ReactNode;
 }) {
   const user = await getUserFromSession();
-  const isAdmin = user.logedIn && user.accountId === accountId;
+  const isAdmin = user.loggedIn && user.accountId === accountId;
   const request = await getRequest(accountId, cid);
 
   const navigation = isAdmin && (
@@ -53,7 +53,7 @@ export default async function RequestPageLayout({
       />
       <CTA color="gray" icon={<></>} text="Close" />
     </>
-  ) : user.logedIn ? (
+  ) : user.loggedIn ? (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="default">

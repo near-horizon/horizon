@@ -23,15 +23,12 @@ import {
   type ContributorContracts,
 } from "../validation/contracts";
 import deepEqual from "deep-equal";
-import { hasBacker } from "./backers";
-import { headers } from "next/headers";
-import { backersViewFromKey } from "../constants/backers-digest";
-import { type User } from "../validation/user";
 import {
   NewProject,
   newProjectSchema,
   type NewProjectType,
 } from "../validation/project/new";
+import { NUMBER } from "../format";
 
 export const projectsURLQuerySchema = fetchManyURLSchema.extend({
   vertical: z.array(z.string()).optional().or(z.string().optional()),
@@ -346,35 +343,51 @@ export async function addBackersDigestToken(accountId: AccountId) {
   return (await response.json()) as string;
 }
 
-export async function checkBackersDigestPermission(
+export async function storeVerificationCode(
   accountId: AccountId,
-  user: User,
+  code: number,
 ) {
-  if (!user.logedIn) {
+  const response = await fetch(
+    `${env.API_URL}/data/projects/${accountId}/code`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+      body: JSON.stringify({ code }),
+    },
+  );
+
+  if (!response.ok) {
     return false;
   }
 
-  if (user.accountId === accountId) {
-    return true;
+  const parsed = z.boolean().safeParse(await response.json());
+
+  return parsed.success && parsed.data;
+}
+
+export async function getVerificationCode(accountId: AccountId) {
+  const response = await fetch(
+    `${env.API_URL}/data/projects/${accountId}/code`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.API_KEY}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch verification code");
   }
 
-  const [isBacker, backersDigest] = await Promise.all([
-    hasBacker(user.accountId),
-    getBackersDigest(accountId),
-  ]);
+  const parsed = z.number().safeParse(await response.json());
 
-  if (!backersDigest.published) {
-    return false;
+  if (!parsed.success) {
+    throw new Error("Failed to parse verification code");
   }
 
-  if (isBacker) {
-    return true;
-  }
-
-  const list = headers();
-  const referer = list.get("referer");
-
-  const from = referer ? new URL(referer).searchParams.get("from") : null;
-  // const hasToken = !!token && token === backersDigest.token;
-  return !!from && from === backersViewFromKey;
+  return NUMBER.verification(parsed.data);
 }

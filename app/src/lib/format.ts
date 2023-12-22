@@ -67,6 +67,12 @@ export const NUMBER = {
       unitDisplay: "narrow",
     });
   },
+  verification: function (value: number) {
+    return value.toLocaleString("en-US", {
+      minimumIntegerDigits: 6,
+      useGrouping: false,
+    });
+  },
 };
 
 export const STRING = {
