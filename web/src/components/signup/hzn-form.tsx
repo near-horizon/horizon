@@ -46,15 +46,24 @@ export function SignupForm({ redirect }: { redirect: () => void }) {
       <form
         onSubmit={form.handleSubmit(async (data) => {
           setOpenDialog(true);
-          const response = await fetch("/api/hzn/signup", {
-            method: "POST",
-            body: JSON.stringify(data),
-          });
-          if (response.ok) {
-            form.reset({ cohort: "hzn2" });
-            redirect();
-          } else {
-            setDialogTitle("There was an error submitting your application");
+          try {
+            const response = await fetch("/api/hzn/signup", {
+              method: "POST",
+              body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+              form.reset({ cohort: "hzn2" });
+              redirect();
+            } else {
+              setDialogTitle(
+                "There was an error submitting your application, please try again!",
+              );
+            }
+          } catch (e) {
+            setDialogTitle(
+              "There was an error submitting your application, please try again!",
+            );
           }
         })}
         className="space-y-10"
@@ -405,12 +414,12 @@ export function SignupForm({ redirect }: { redirect: () => void }) {
                 "bg-background-light text-ui-elements-gray": isDisabled,
               },
             )}
-            // onClick={(e) => {
-            //   if (isDisabled) {
-            //     e.preventDefault();
-            //     void form.trigger();
-            //   }
-            // }}
+            onClick={(e) => {
+              if (isDisabled) {
+                e.preventDefault();
+                void form.trigger();
+              }
+            }}
           >
             Submit application
             <svg
