@@ -97,6 +97,7 @@ export const POST: APIRoute = async ({ request }) => {
   const parsed = schema.safeParse(body);
 
   if (!parsed.success) {
+    console.error(parsed.error);
     return new Response(JSON.stringify(parsed.error), {
       status: 400,
     });
