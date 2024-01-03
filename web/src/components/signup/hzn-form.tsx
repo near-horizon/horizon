@@ -75,11 +75,14 @@ export function SignupForm() {
             <DialogHeader>
               <DialogTitle>{dialogTitle}</DialogTitle>
             </DialogHeader>
-            <RotateCw className="w-20 h-20 mx-auto text-primary animate-spin" />
+            {form.formState.isSubmitting ? (
+              <RotateCw className="w-20 h-20 mx-auto text-primary animate-spin" />
+            ) : (
+              <DialogFooter>
+                <a href="/signup/thank-you">Ok</a>
+              </DialogFooter>
+            )}
           </DialogContent>
-          <DialogFooter>
-            <a href="/signup/thank-you">Ok</a>
-          </DialogFooter>
         </Dialog>
 
         <FormField
