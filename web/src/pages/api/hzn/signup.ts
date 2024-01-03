@@ -4,13 +4,14 @@ import { z } from "zod";
 const token = import.meta.env.AIRTABLE_TOKEN;
 
 const textAreaLimit = 300;
-const urlValue = z.string().refine((value) => {
-  if (value.startsWith("http://") || value.startsWith("https://")) {
-    return z.string().url().parse(value);
-  }
-
-  return z.string().url().parse(`https://${value}`);
-});
+const urlValue = z.string();
+// .refine((value) => {
+//   if (value.startsWith("http://") || value.startsWith("https://")) {
+//     return z.string().url().parse(value);
+//   }
+//
+//   return z.string().url().parse(`https://${value}`);
+// });
 
 export const schema = z.object({
   cohort: z.enum(["hzn2", "hzn3"]),

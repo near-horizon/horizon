@@ -418,6 +418,7 @@ export function SignupForm({ redirect }: { redirect: () => void }) {
               if (isDisabled) {
                 e.preventDefault();
                 void form.trigger();
+                return;
               }
             }}
           >
