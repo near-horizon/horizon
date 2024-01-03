@@ -15,6 +15,7 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@components/ui/dialog";
@@ -26,7 +27,7 @@ import { TextAreaField } from "@components/inputs/text-area";
 import { SelectField } from "@components/inputs/select";
 import { RotateCw } from "lucide-react";
 
-export function SignupForm({ redirect }: { redirect: () => void }) {
+export function SignupForm() {
   const form = useForm<z.infer<typeof schema>>({
     mode: "onBlur",
     shouldUseNativeValidation: false,
@@ -53,14 +54,15 @@ export function SignupForm({ redirect }: { redirect: () => void }) {
             });
 
             if (response.ok) {
-              form.reset({ cohort: "hzn2" });
-              redirect();
+              setDialogTitle("Your application has been submitted!");
             } else {
+              console.error(response);
               setDialogTitle(
                 "There was an error submitting your application, please try again!",
               );
             }
           } catch (e) {
+            console.error(e);
             setDialogTitle(
               "There was an error submitting your application, please try again!",
             );
@@ -75,6 +77,9 @@ export function SignupForm({ redirect }: { redirect: () => void }) {
             </DialogHeader>
             <RotateCw className="w-20 h-20 mx-auto text-primary animate-spin" />
           </DialogContent>
+          <DialogFooter>
+            <a href="/signup/thank-you">Ok</a>
+          </DialogFooter>
         </Dialog>
 
         <FormField

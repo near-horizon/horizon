@@ -23,12 +23,7 @@ import HZNNav from "@layouts/HZNNav.astro";
     </h2>
 
     <div class="max-w-5xl mx-auto">
-      <SignupForm
-        client:load
-        redirect={() => {
-          Astro.redirect("/signup/thank-you");
-        }}
-      />
+      <SignupForm client:load />
     </div>
   </main>
 </Layout>
