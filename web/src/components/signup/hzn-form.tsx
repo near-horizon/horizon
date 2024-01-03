@@ -79,7 +79,7 @@ export function SignupForm() {
               <RotateCw className="w-20 h-20 mx-auto text-primary animate-spin" />
             ) : (
               <DialogFooter>
-                <a href="/signup/thank-you">Ok</a>
+                <a href="/hzn/thank-you">Ok</a>
               </DialogFooter>
             )}
           </DialogContent>
