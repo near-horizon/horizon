@@ -48,7 +48,7 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
   '@sentry/astro':
-    specifier: ^7.91.0
+    specifier: 7.91.0
     version: 7.91.0(astro@3.5.7)
   '@tailwindcss/container-queries':
     specifier: ^0.1.1
