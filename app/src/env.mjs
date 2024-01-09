@@ -20,8 +20,9 @@ export const env = createEnv({
       .string()
       .optional()
       .default(
-        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work."
+        "Hi, I'm reaching out from Horizon. I'd like to talk to you about your work.",
       ),
+    RESEND_API_KEY: z.string(),
   },
 
   /**
@@ -56,6 +57,7 @@ export const env = createEnv({
     REACHOUT_SUBJECT: process.env.REACHOUT_SUBJECT,
     REACHOUT_BODY: process.env.REACHOUT_BODY,
     NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

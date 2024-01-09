@@ -9,12 +9,13 @@ import {
   storeVerificationCode,
 } from "~/lib/server/projects";
 import { getUserFromSession } from "~/lib/session";
+import { env } from "~/env.mjs";
 
 const bodySchema = z.object({
   email: z.string().email(),
 });
 
-const resend = new Resend();
+const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromSession();
