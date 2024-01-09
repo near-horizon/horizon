@@ -25,7 +25,7 @@ export default function BackerEmail() {
   });
   const router = useRouter();
   const back = () => router.push("/onboarding/backer/email");
-  const next = () => router.push("/onboarding/backer/congrats");
+  const next = () => router.push("/onboarding/backer/create");
 
   return (
     <Form {...form}>

@@ -20,11 +20,7 @@ export async function verifyCode(code: string) {
 
   const parsed = bodySchema.safeParse(await result.json());
 
-  if (!parsed.success) {
-    throw new Error("Failed to verify code");
-  }
-
-  return parsed.data.ok;
+  return parsed.success && parsed.data.ok;
 }
 
 export async function sendCode(email: string) {

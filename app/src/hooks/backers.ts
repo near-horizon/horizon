@@ -59,7 +59,7 @@ export function useHasBacker(accountId?: AccountId) {
   });
 }
 
-export function useCreateBacker(): [
+export function useCreateBacker(onSuccess: () => Promise<void>): [
   progress: Progress,
   mutation: UseMutationResult<
     void,
@@ -70,7 +70,7 @@ export function useCreateBacker(): [
       email: string;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -123,6 +123,7 @@ export function useCreateBacker(): [
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["backers"] });
         await updateSession();
+        await onSuccess();
       },
     }),
   ];
@@ -138,7 +139,7 @@ export function useUpdateBacker(): [
       backer: Backer;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
