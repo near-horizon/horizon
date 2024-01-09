@@ -9,7 +9,6 @@ import {
 import { intoURLSearchParams } from "../utils";
 import { fetchManyURLSchema } from "../validation/fetching";
 import { paymentTypeSchema } from "../validation/requests";
-import { getProfile, viewCall } from "../client/fetching";
 import { getTransactions } from "./transactions";
 import { type AccountId } from "../validation/common";
 import {
@@ -17,6 +16,7 @@ import {
   contractsListSchema,
   type ContributorContracts,
 } from "../validation/contracts";
+import { getProfile, viewCall } from "../fetching";
 
 export const contributorsURLQuerySchema = fetchManyURLSchema.extend({
   verified: z.array(z.string()).optional(),

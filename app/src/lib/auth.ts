@@ -1,9 +1,9 @@
-import { viewCall } from "./client/fetching";
 import { env } from "~/env.mjs";
 import { type AccountId } from "./validation/common";
 import { redirect, RedirectType } from "next/navigation";
 import { type User } from "./validation/user";
 import { getProfileType } from "./server/common";
+import { viewCall } from "./fetching";
 
 export async function loginUser(
   accountId: AccountId,
