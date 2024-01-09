@@ -14,6 +14,7 @@ import { Icon } from "../icon";
 import { MAX_IMAGE_SIZE } from "~/lib/constants/inputs";
 import { NUMBER } from "~/lib/format";
 import { InputBuilder } from "./input-builder";
+import { type AccountId } from "~/lib/validation/common";
 
 export function ImageInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -25,6 +26,7 @@ export function ImageInput<
       cid: string;
       generateEnabled?: boolean;
       generate?: boolean;
+      accountId: AccountId;
     },
 ) {
   const ref = useRef<HTMLInputElement>(null);
@@ -70,7 +72,7 @@ export function ImageInput<
     async (field: ControllerRenderProps<TFieldValues, TName>) => {
       try {
         setUploading(true);
-        const cid = await generateImage();
+        const cid = await generateImage(props.accountId);
         if (cid) {
           props.setCid(cid);
         }

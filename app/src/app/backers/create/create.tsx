@@ -100,6 +100,7 @@ export function BackersCreate({ accountId }: { accountId: AccountId }) {
           />
 
           <ImageInput
+            accountId=""
             name="image"
             control={form.control}
             label="Photo"

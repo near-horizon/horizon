@@ -82,6 +82,7 @@ export function FounderInput({
       </Button>
 
       <ImageInput
+        accountId=""
         control={form.control}
         name={`founders.value.${index}.image` as const}
         label="Photo"

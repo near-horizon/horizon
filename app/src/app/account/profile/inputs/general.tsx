@@ -27,6 +27,7 @@ export function GeneralInput({
   return (
     <div className="flex w-full flex-col items-stretch justify-start gap-4 md:pr-20">
       <ImageInput
+        accountId=""
         name="profile.logo"
         control={form.control}
         label="Project logo"
