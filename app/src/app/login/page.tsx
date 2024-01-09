@@ -8,7 +8,7 @@ export default function LoginPage() {
   const user = useUser();
   const signIn = useSignIn();
 
-  if (user.logedIn && !user.hasProfile) {
+  if (user.loggedIn && !user.hasProfile) {
     return redirectOnboarding();
   }
 

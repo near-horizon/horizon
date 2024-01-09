@@ -16,7 +16,7 @@ import { getUserFromSession } from "~/lib/session";
 export default async function AdminPage() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn || !user.admin) {
+  if (!user.loggedIn || !user.admin) {
     return redirect("/");
   }
 

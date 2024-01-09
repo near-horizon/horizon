@@ -29,5 +29,5 @@ export const userSchema = z.union([
 export type User = z.infer<typeof userSchema>;
 
 export const DEFAULT_USER: User = {
-  logedIn: false,
+  loggedIn: false,
 };

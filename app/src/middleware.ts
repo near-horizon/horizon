@@ -42,29 +42,29 @@ async function handleOnboarding(request: NextRequest) {
     NextResponse.next(),
     ironSessionConfig,
   );
-  const logedInUser = await loginUser(account_id!, public_key!);
+  const loggedInUser = await loginUser(account_id!, public_key!);
 
   session.loggedIn = true;
 
   // Type guard
-  if (!session.loggedIn || !logedInUser.loggedIn) {
+  if (!session.loggedIn || !loggedInUser.loggedIn) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  session.accountId = logedInUser.accountId;
-  session.publicKey = logedInUser.publicKey;
-  session.admin = logedInUser.admin;
+  session.accountId = loggedInUser.accountId;
+  session.publicKey = loggedInUser.publicKey;
+  session.admin = loggedInUser.admin;
 
   // Type guard
-  if (logedInUser.hasProfile) {
+  if (loggedInUser.hasProfile) {
     (session.hasProfile = true) &&
-      (session.profileType = logedInUser.profileType);
+      (session.profileType = loggedInUser.profileType);
   }
 
   await session.save();
 
   // If the new user has a profile then redirect to home
-  if (logedInUser.hasProfile) {
+  if (loggedInUser.hasProfile) {
     const homePageRedirect = new URL("/", request.url);
     homePageRedirect.searchParams.set("account_id", account_id!);
     homePageRedirect.searchParams.set("public_key", public_key!);
