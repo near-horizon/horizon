@@ -11,7 +11,7 @@ export default async function PerksPage() {
   const user = await getUserFromSession();
   let perks;
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     perks = await getPerks("nearhorizon.near");
   } else {
     perks = await getPerks(user.accountId);
@@ -23,7 +23,7 @@ export default async function PerksPage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Perks noButton={!user.logedIn} />
+      <Perks noButton={!user.loggedIn} />
     </HydrationBoundary>
   );
 }

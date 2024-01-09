@@ -19,9 +19,9 @@ export function CTAs({
   accountId: AccountId;
   requests: { cid: string; title: string }[];
 }) {
-  const isOwner = user.logedIn && user.accountId === accountId;
+  const isOwner = user.loggedIn && user.accountId === accountId;
   const isContributor =
-    user.logedIn && user.hasProfile && user.profileType === "contributor";
+    user.loggedIn && user.hasProfile && user.profileType === "contributor";
 
   return (
     <div className="flex w-full flex-row items-center justify-between">

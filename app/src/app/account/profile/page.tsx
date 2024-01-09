@@ -6,7 +6,7 @@ import { getNewProject } from "~/lib/server/projects";
 export default async function Profile() {
   const user = await getUserFromSession();
 
-  if (!user.logedIn) {
+  if (!user.loggedIn) {
     return redirect("/login");
   }
 

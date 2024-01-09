@@ -73,9 +73,9 @@ async function RequestCardAsync({
   const user = await getUserFromSession();
   const request = await getRequest(accountId, cid);
 
-  const isOwner = user.logedIn && user.accountId === accountId;
+  const isOwner = user.loggedIn && user.accountId === accountId;
   const isContributor =
-    user.logedIn &&
+    user.loggedIn &&
     user.hasProfile &&
     user.profileType === "contributor" &&
     !isOwner;

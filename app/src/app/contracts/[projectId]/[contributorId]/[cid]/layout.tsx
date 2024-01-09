@@ -105,9 +105,9 @@ async function CTAs({
 }) {
   const user = await getUserFromSession();
   const contract = await getContract([[projectId, cid], contributorId]);
-  const isProject = user.logedIn && user.accountId === projectId;
-  const isContributor = user.logedIn && user.accountId === contributorId;
-  const nonAdmin = user.logedIn && !isProject && !isContributor;
+  const isProject = user.loggedIn && user.accountId === projectId;
+  const isContributor = user.loggedIn && user.accountId === contributorId;
+  const nonAdmin = user.loggedIn && !isProject && !isContributor;
 
   const isCompleted = Boolean(
     contract &&

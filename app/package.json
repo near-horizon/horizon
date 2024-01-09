@@ -65,7 +65,7 @@
     "cookie": "^0.6.0",
     "date-fns": "^2.30.0",
     "deep-equal": "^2.2.3",
-    "framer-motion": "^10.17.9",
+    "framer-motion": "^10.17.11",
     "iron-session": "^8.0.1",
     "lint-staged": "^15.2.0",
     "lucide-react": "^0.292.0",
