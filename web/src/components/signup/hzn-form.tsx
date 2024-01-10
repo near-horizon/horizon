@@ -102,22 +102,6 @@ export function SignupForm() {
                   <FormItem className="h-28 w-[min(20rem,80svw)] relative space-y-0">
                     <FormControl>
                       <RadioGroupItem
-                        value="hzn2"
-                        className="h-full w-full rounded-xl border-ui-elements-light"
-                      />
-                    </FormControl>
-                    <FormLabel className="inset-0 absolute flex flex-col items-center justify-center gap-2">
-                      <b className="font-bold text-2xl text-ui-elements-black">
-                        HZN2
-                      </b>
-                      <span className="font-semibold text-ui-elements-black">
-                        January - March 2024
-                      </span>
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="h-28 w-[min(20rem,80svw)] relative space-y-0">
-                    <FormControl>
-                      <RadioGroupItem
                         value="hzn3"
                         className="h-full w-full rounded-xl"
                       />
