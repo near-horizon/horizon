@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -32,7 +33,7 @@ export default function BackerLogo() {
     },
   });
   const router = useRouter();
-  const back = () => router.push("/onboarding/backer");
+  const back = "/onboarding/backer";
   const next = () => router.push("/onboarding/backer/email");
   const [cid, setCid] = useState("");
 
@@ -81,17 +82,16 @@ export default function BackerLogo() {
         />
 
         <div className="flex w-full flex-row items-center justify-between pt-6">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => {
-              back();
-            }}
-            className="flex flex-row items-center justify-center gap-2 font-medium text-ui-elements-dark"
-          >
-            <ArrowNarrowLeftSvg className="h-5 w-5" />
-            Back
-          </Button>
+          <Link href={back}>
+            <Button
+              variant="outline"
+              type="button"
+              className="flex flex-row items-center justify-center gap-2 font-medium text-ui-elements-dark"
+            >
+              <ArrowNarrowLeftSvg className="h-5 w-5" />
+              Back
+            </Button>
+          </Link>
 
           <Button
             type="submit"
