@@ -32,7 +32,7 @@ export default function OnboardingLayout({
         <div className="col-span-9">{children}</div>
       </div>
 
-      <div className="relative flex h-full flex-col items-center justify-between md:hidden">
+      <div className="flex h-full flex-col items-center justify-between px-4 md:hidden">
         <div className="w-full">{children}</div>
 
         <MobileDrawer />
@@ -123,7 +123,7 @@ function ProfileItem({
       )}
     >
       <span className="flex flex-row items-center justify-start gap-3">
-        <Label className="text-sm font-bold text-ui-elements-dark">
+        <Label className="text-base font-bold text-ui-elements-dark md:text-sm">
           {label}
         </Label>
         <Link href={href}>
@@ -142,7 +142,12 @@ function MobileDrawer() {
   if (!onboarding || onboarding.type === "none") {
     return (
       <Drawer>
-        <DrawerTrigger className="flex w-full flex-row items-center justify-between gap-2">
+        <DrawerTrigger
+          className={cn(
+            "fixed bottom-8 flex w-full max-w-[calc(100svw-2rem)] flex-row items-center justify-between gap-2",
+            "rounded-lg border border-accent-disabled bg-ui-elements-white p-4 text-lg font-bold",
+          )}
+        >
           Profile summary: <ChevronUpDoubleSvg className="h-5 w-5" />
         </DrawerTrigger>
 
@@ -161,18 +166,71 @@ function MobileDrawer() {
 
   return (
     <Drawer>
-      <DrawerTrigger className="flex w-full flex-row items-center justify-between gap-2">
+      <DrawerTrigger
+        className={cn(
+          "fixed bottom-8 flex w-full max-w-[calc(100svw-2rem)] flex-row items-center justify-between gap-2",
+          "rounded-lg border border-accent-disabled bg-ui-elements-white p-4 text-lg font-bold",
+        )}
+      >
         Profile summary: <ChevronUpDoubleSvg className="h-5 w-5" />
       </DrawerTrigger>
 
       <DrawerContent className="h-full">
-        <DrawerHeader>
+        <DrawerHeader className="p-0 pt-4">
           <DrawerClose>
-            <DrawerTitle className="flex flex-row items-center justify-between">
+            <DrawerTitle
+              className={cn(
+                "flex flex-row items-center justify-between border border-accent-disabled",
+                "rounded-t-lg bg-ui-elements-white px-6 py-4 text-lg font-bold shadow shadow-ui-elements-gray",
+              )}
+            >
               Profile summary: <ChevronDownDoubleSvg className="h-5 w-5" />
             </DrawerTitle>
           </DrawerClose>
         </DrawerHeader>
+
+        <div className="flex h-full w-full flex-col items-start justify-start gap-6 bg-background-light px-6 py-4">
+          <ProfileItem label="Profile" href="/onboarding">
+            <p className="text-sm">{STRING.capitalize(onboarding.type)}</p>
+          </ProfileItem>
+
+          <ProfileItem
+            label="Public name"
+            href={`/onboarding/${onboarding.type}`}
+            show={onboarding.step > 2 && !!onboarding.name}
+          >
+            <p className="text-sm">{STRING.capitalize(onboarding.name!)}</p>
+          </ProfileItem>
+
+          <ProfileItem
+            label="Logo"
+            href={`/onboarding/${onboarding.type}/logo`}
+            show={onboarding.step > 3 && !!onboarding.name}
+          >
+            <Icon
+              className="h-12 w-12"
+              image={onboarding.logo}
+              name={onboarding.name!}
+            />
+          </ProfileItem>
+
+          <ProfileItem
+            label="Email"
+            href={`/onboarding/${onboarding.type}/email`}
+            show={
+              onboarding.step > 4 &&
+              !!onboarding.email &&
+              !!onboarding.email.address
+            }
+          >
+            <p className="text-sm">
+              {onboarding.email?.address}{" "}
+              {!onboarding.email?.verified && (
+                <Badge variant="destructive">Unverified</Badge>
+              )}
+            </p>
+          </ProfileItem>
+        </div>
       </DrawerContent>
     </Drawer>
   );

@@ -61,6 +61,31 @@ export function DesktopNavbar() {
 }
 
 export function MobileNavbar() {
+  const pathname = usePathname();
+  const onboarding = useOnboarding();
+
+  const isOnboarding = pathname.startsWith("/onboarding");
+
+  if (isOnboarding) {
+    return (
+      <header
+        className={cn(
+          "flex w-full flex-col items-center justify-start gap-4",
+          "rounded rounded-b-none border border-b-0 border-ui-elements-light bg-ui-elements-white py-4",
+          "relative shadow",
+        )}
+      >
+        <div className="w-full px-8">
+          <LogoSvg className="h-8" />
+        </div>
+        <Progress
+          value={((onboarding?.step ?? 0) * 100) / 7}
+          className="absolute bottom-0 h-2 rounded-none bg-transparent"
+        />
+      </header>
+    );
+  }
+
   return (
     <header
       className={cn(

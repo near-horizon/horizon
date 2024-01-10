@@ -96,7 +96,7 @@ export function OnboardingImage<
         <div
           className={cn(
             "w-full border border-ui-elements-light bg-ui-elements-white p-7",
-            "flex flex-row items-center justify-start gap-6 rounded-2xl",
+            "flex flex-col items-center justify-start gap-6 rounded-2xl md:flex-row",
           )}
         >
           <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl border border-input bg-background-light shadow shadow-ui-elements-light">
@@ -118,7 +118,7 @@ export function OnboardingImage<
             )}
           </div>
 
-          <div className="flex flex-row items-center justify-start gap-2 md:items-start">
+          <div className="flex flex-col items-center justify-start gap-2 md:flex-row md:items-start">
             <Input
               disabled={field.disabled}
               name={field.name}
@@ -148,7 +148,7 @@ export function OnboardingImage<
               </Button>
             )}
 
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-col items-center gap-2 md:flex-row">
               <Button
                 className="flex flex-row items-center gap-2"
                 variant="outline"

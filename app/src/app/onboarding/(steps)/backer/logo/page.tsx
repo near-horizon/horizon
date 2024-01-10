@@ -47,10 +47,6 @@ export default function BackerLogo() {
     }
   }, [onboarding, form]);
 
-  if (!user.loggedIn) {
-    return;
-  }
-
   return (
     <Form {...form}>
       <form
@@ -76,7 +72,7 @@ export default function BackerLogo() {
           cid={cid}
           generate
           generateEnabled
-          accountId={user.accountId}
+          accountId={user.loggedIn ? user.accountId : ""}
           generatePrompt={promptText(
             onboarding?.name ?? "",
             user.loggedIn ? user.accountId : "",
