@@ -13,14 +13,14 @@ import { getProjects } from "./projects";
 import { getRequest, getRequests } from "./requests";
 
 export async function getImagesAndNames(
-  accountIds: AccountId[]
+  accountIds: AccountId[],
 ): Promise<Record<AccountId, { profile?: Profile }>> {
   const data = await viewCall<Record<AccountId, { profile?: Profile }>>(
     "social.near",
     "get",
     {
       keys: accountIds.map((accountId) => `${accountId}/profile/**`),
-    }
+    },
   );
 
   return data;
@@ -43,26 +43,27 @@ export async function search(query: string): Promise<SearchResult> {
         ...contributors.slice(0, 4),
         ...backers.slice(0, 4),
       ]),
-    ].slice()
+    ].slice(),
   );
 
   const requestsWithDetails = await Promise.all(
-    requests.map(([accountId, cid]) => getRequest(accountId, cid))
+    requests.map(([accountId, cid]) => getRequest(accountId, cid)),
   );
 
   const learningContent = learningResources.reduce((items, category) => {
     if (category.title.toLowerCase().includes(lowerCaseQuery)) {
       items.push(
-        ...category.items.map((item) => ({ ...item, id: category.id }))
+        ...category.items.map((item) => ({ ...item, id: category.id })),
       );
     } else {
       const filteredItems = category.items.filter(
         ({ title, description }) =>
-          title.includes(lowerCaseQuery) || description.includes(lowerCaseQuery)
+          title.includes(lowerCaseQuery) ||
+          description.includes(lowerCaseQuery),
       );
       if (filteredItems.length > 0) {
         items.push(
-          ...filteredItems.map((item) => ({ ...item, id: category.id }))
+          ...filteredItems.map((item) => ({ ...item, id: category.id })),
         );
       }
     }

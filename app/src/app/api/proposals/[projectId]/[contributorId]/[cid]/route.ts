@@ -6,7 +6,7 @@ export async function GET(
   _req: NextRequest,
   {
     params: { projectId, cid, contributorId },
-  }: { params: { projectId: string; cid: string; contributorId: string } }
+  }: { params: { projectId: string; cid: string; contributorId: string } },
 ) {
   const id = proposalIdSchema.parse([[projectId, cid], contributorId]);
   const proposal = await getProposal(id);

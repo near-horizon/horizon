@@ -26,7 +26,7 @@ export default async function BackersProjectsPage() {
           const p = await getProject(accountId);
           return removeEmpty(p);
         },
-      })
+      }),
     ),
   ]);
 

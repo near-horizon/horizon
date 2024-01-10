@@ -7,8 +7,8 @@ import {
 export async function GET(req: NextRequest) {
   const projects = await getProjectsCount(
     projectsURLQuerySchema.parse(
-      Object.fromEntries(req.nextUrl.searchParams.entries())
-    )
+      Object.fromEntries(req.nextUrl.searchParams.entries()),
+    ),
   );
   return NextResponse.json(projects);
 }

@@ -51,7 +51,7 @@ export const contributorSchema = horizonSchema
           category: z.string().optional(),
           tags: z.record(z.string(), z.string()).optional(),
           files: z.record(z.string(), z.string()).optional(),
-        })
+        }),
       )
       .optional(),
     location: z.string().optional(),

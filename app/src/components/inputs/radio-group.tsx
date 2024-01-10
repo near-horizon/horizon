@@ -15,12 +15,12 @@ import { type InputProps } from "~/lib/validation/inputs";
 
 export function RadioGroupInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
   props: UseControllerProps<TFieldValues, TName> &
     InputProps & {
       options: { id: string; text: string }[];
-    }
+    },
 ) {
   const options = props.options.map((item) => (
     <FormItem className="flex items-center space-x-3 space-y-0" key={item.id}>

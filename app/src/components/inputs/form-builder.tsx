@@ -23,7 +23,7 @@ import { cn } from "~/lib/utils";
 import { useEffect } from "react";
 
 type WithFormParam<Schema extends z.ZodObject<FieldValues>> = (
-  form: UseFormReturn<TypeOf<Schema>> & { isDisabled: boolean }
+  form: UseFormReturn<TypeOf<Schema>> & { isDisabled: boolean },
 ) => React.ReactNode;
 
 export function FormBuilder<Schema extends z.ZodObject<FieldValues>>({

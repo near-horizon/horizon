@@ -54,7 +54,7 @@ export const integration = {
 };
 
 export function constObjectKeysIntoZodEnum<T extends string>(
-  obj: Readonly<Record<T, unknown>>
+  obj: Readonly<Record<T, unknown>>,
 ): z.ZodEnum<[T, ...T[]]> {
   const [key, ...keys] = Object.keys(obj) as T[];
   return z.enum([key!, ...keys]);

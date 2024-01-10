@@ -6,7 +6,7 @@ import { intoURLSearchParams } from "../utils";
 import { requestSchema, type RequestsQuery } from "../validation/requests";
 
 export async function getRequests(
-  query: RequestsQuery
+  query: RequestsQuery,
 ): Promise<[string, string][]> {
   const response = await fetch("/api/requests?" + intoURLSearchParams(query));
   const requests = (await response.json()) as [string, string][];
@@ -24,7 +24,7 @@ export function requestsInitialData() {
 
 export async function getPaginatedRequests(pageParam = 0) {
   const result = await fetch(
-    `/api/requests?limit=${pageSize}&from=` + pageParam * pageSize
+    `/api/requests?limit=${pageSize}&from=` + pageParam * pageSize,
   );
   const requests = (await result.json()) as [string, string][];
 
@@ -38,7 +38,7 @@ export function getRequestsForProject(accountId: AccountId) {
   return viewCall<[string, string, string][]>(
     env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
     "get_project_requests",
-    { account_id: accountId }
+    { account_id: accountId },
   );
 }
 

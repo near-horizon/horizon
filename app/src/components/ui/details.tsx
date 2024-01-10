@@ -30,7 +30,7 @@ export function Details({
       <ul
         className={cn(
           "sticky top-4 hidden w-1/6 list-inside list-none flex-col gap-2 pt-4",
-          { "md:flex": links }
+          { "md:flex": links },
         )}
       >
         {sections.map(({ title, id }) => (

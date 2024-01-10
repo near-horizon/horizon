@@ -26,8 +26,8 @@ export async function ProjectsListSectionLoader() {
           const p = await getProject(accountId);
           return removeEmpty(p);
         },
-      })
-    )
+      }),
+    ),
   );
 
   return (

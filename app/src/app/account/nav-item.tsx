@@ -53,7 +53,7 @@ export function NavItem({
           <AccordionTrigger
             className={cn(
               "m-0 w-full p-0 text-sm font-semibold text-ui-elements-dark hover:no-underline",
-              { "text-text-link": isSectionActive }
+              { "text-text-link": isSectionActive },
             )}
           >
             <MenuItem
@@ -99,7 +99,7 @@ function MenuItem({
     <div
       className={cn(
         "flex w-full flex-row items-center justify-start gap-3",
-        isSectionActive ? "[&>svg]:text-text-link" : "[&>svg]:text-text-gray"
+        isSectionActive ? "[&>svg]:text-text-link" : "[&>svg]:text-text-gray",
       )}
     >
       {icon}

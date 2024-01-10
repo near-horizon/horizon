@@ -12,7 +12,7 @@ export function NoData({
     <div
       className={cn(
         "flex h-full w-full flex-col items-center justify-center gap-3 rounded-lg border border-ui-elements-light bg-background-light",
-        className
+        className,
       )}
     >
       <FolderXSvg className="h-10 text-primary-disabled" />
@@ -33,7 +33,7 @@ export function NotAvailable({
     <div
       className={cn(
         "flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg border border-ui-elements-light bg-background-light",
-        className
+        className,
       )}
     >
       <b className="font-bold text-primary-disabled">N/A</b>

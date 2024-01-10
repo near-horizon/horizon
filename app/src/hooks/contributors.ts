@@ -71,7 +71,7 @@ export function useCreateContributor(): [
       email: string;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -139,7 +139,7 @@ export function useUpdateContributor(): [
       contributor: Contributor;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();

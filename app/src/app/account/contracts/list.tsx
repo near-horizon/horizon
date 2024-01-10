@@ -39,7 +39,7 @@ export function List({ accountId }: { accountId: AccountId }) {
             projectId={projectId}
             cid={cid}
             contributorId={contributorId}
-          />
+          />,
         );
 
         return list;

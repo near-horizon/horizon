@@ -19,7 +19,7 @@ export type IncentiveRepeat = z.infer<typeof incentiveRepeatSchema>;
 
 export const incentiveSchema = z.record(
   incentiveTypeSchema,
-  z.tuple([incentiveRepeatSchema, z.number()])
+  z.tuple([incentiveRepeatSchema, z.number()]),
 );
 
 export type Incentives = z.infer<typeof incentiveSchema>;

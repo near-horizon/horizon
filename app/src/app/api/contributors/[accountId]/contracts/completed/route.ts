@@ -4,10 +4,10 @@ import { accountIdSchema } from "~/lib/validation/common";
 
 export async function GET(
   _req: NextRequest,
-  { params: { accountId } }: { params: { accountId: string } }
+  { params: { accountId } }: { params: { accountId: string } },
 ) {
   const contributorContracts = await getContributorCompletedContracts(
-    accountIdSchema.parse(accountId)
+    accountIdSchema.parse(accountId),
   );
   return NextResponse.json(contributorContracts);
 }

@@ -26,8 +26,8 @@ export async function BackersListSectionLoader() {
           const b = await getBacker(accountId);
           return removeEmpty(b);
         },
-      })
-    )
+      }),
+    ),
   );
 
   return (

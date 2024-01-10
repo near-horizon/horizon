@@ -19,7 +19,7 @@ export async function getProjectContracts(accountId: AccountId) {
 
 export async function getContributorCompletedContracts(accountId: AccountId) {
   const contracts = await fetch(
-    `/api/contributors/${accountId}/contracts/completed`
+    `/api/contributors/${accountId}/contracts/completed`,
   );
 
   return contractsListSchema.parse(await contracts.json());
@@ -27,7 +27,7 @@ export async function getContributorCompletedContracts(accountId: AccountId) {
 
 export async function getProjectCompletedContracts(accountId: AccountId) {
   const contracts = await fetch(
-    `/api/projects/${accountId}/contracts/completed`
+    `/api/projects/${accountId}/contracts/completed`,
   );
 
   return contractsListSchema.parse(await contracts.json());
@@ -35,7 +35,7 @@ export async function getProjectCompletedContracts(accountId: AccountId) {
 
 export async function getContract([[projectId, cid], vendorId]: ContractId) {
   const contract = await fetch(
-    `/api/contracts/${projectId}/${vendorId}/${cid}`
+    `/api/contracts/${projectId}/${vendorId}/${cid}`,
   );
 
   return contractSchema.parse(await contract.json());

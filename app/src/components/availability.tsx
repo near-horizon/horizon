@@ -24,7 +24,7 @@ export function Availability({
       <span
         className={cn(
           "-translate-y-px text-sm font-medium text-gray-400",
-          available ? "text-green-500" : "text-red-500"
+          available ? "text-green-500" : "text-red-500",
         )}
       >
         {available ? availableText : unavailableText}

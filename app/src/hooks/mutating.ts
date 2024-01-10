@@ -8,7 +8,7 @@ export function useLocalSaveForm<T extends z.ZodObject<FieldValues>>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<z.infer<T>, any, undefined>,
   schema: T,
-  id: string
+  id: string,
 ) {
   const change = form.watch();
 

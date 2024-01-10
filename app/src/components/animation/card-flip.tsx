@@ -20,7 +20,7 @@ export function CardFlip({
     setHeight(
       (fliped
         ? backRef.current?.getBoundingClientRect().height
-        : frontRef.current?.getBoundingClientRect().height) ?? 0
+        : frontRef.current?.getBoundingClientRect().height) ?? 0,
     );
   }, [fliped, backRef, frontRef]);
 
@@ -35,7 +35,7 @@ export function CardFlip({
         ref={frontRef}
         className={cn(
           "absolute z-10 w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
-          !fliped ? "[transform:rotateY(0deg)]" : "[transform:rotateY(180deg)]"
+          !fliped ? "[transform:rotateY(0deg)]" : "[transform:rotateY(180deg)]",
         )}
       >
         {front}
@@ -44,7 +44,9 @@ export function CardFlip({
         ref={backRef}
         className={cn(
           "absolute w-full transition-transform duration-500 [transform-style:preserve-3d] [backface-visibility:hidden]",
-          !fliped ? "[transform:rotateY(-180deg)]" : "[transform:rotateY(0deg)]"
+          !fliped
+            ? "[transform:rotateY(-180deg)]"
+            : "[transform:rotateY(0deg)]",
         )}
       >
         {back}

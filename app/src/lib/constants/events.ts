@@ -1,7 +1,7 @@
 import { type Event } from "~/lib/validation/events";
 
 export const OFFICE_HOURS_TIME = new Date(
-  "2023-07-28T13:30:00.000Z"
+  "2023-07-28T13:30:00.000Z",
 ).toLocaleString(undefined, {
   weekday: "long",
   hour: "numeric",

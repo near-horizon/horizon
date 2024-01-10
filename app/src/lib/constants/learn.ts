@@ -412,8 +412,8 @@ export const [, tagCategories] = learningResources.reduce(
   },
   [new Array<string>(), new Array<{ value: string; label: string }>()] as [
     string[],
-    { value: string; label: string }[]
-  ]
+    { value: string; label: string }[],
+  ],
 );
 
 export const typeCategories = learningResources.map(({ id, title }) => ({
@@ -423,5 +423,5 @@ export const typeCategories = learningResources.map(({ id, title }) => ({
 
 export const learningResourcesCount = learningResources.reduce(
   (count, { items }) => count + items.length,
-  0
+  0,
 );

@@ -25,7 +25,7 @@ export default async function RequestsPage() {
           const r = await getRequest(accountId, cid);
           return removeEmpty(r);
         },
-      })
+      }),
     ),
   ]);
 

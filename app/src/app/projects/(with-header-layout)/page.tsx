@@ -34,7 +34,7 @@ export default async function ProjectsPage() {
           const p = await getProject(accountId);
           return removeEmpty(p);
         },
-      })
+      }),
     ),
   ]);
 

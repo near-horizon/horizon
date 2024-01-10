@@ -65,7 +65,7 @@ export function useCreateContract(): [
       proposal_id: ProposalId;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -104,7 +104,7 @@ export function useDeclineProposal(): [
       proposal_id: ProposalId;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -143,7 +143,7 @@ export function useAcceptContract(): [
       proposal_id: ProposalId;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -182,7 +182,7 @@ export function useRejectContract(): [
       proposal_id: ProposalId;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -222,7 +222,7 @@ export function useAddContractEvent(): [
       description: string;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -271,7 +271,7 @@ export function useDeliverContract(): [
       proposal_id: ProposalId;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -310,7 +310,7 @@ export function useCompleteContract(): [
       proposal_id: ProposalId;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -350,7 +350,7 @@ export function useAddContractContributorFeedback(): [
       feedback: string;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();
@@ -406,7 +406,7 @@ export function useAddContractProjectFeedback(): [
       feedback: string;
     },
     unknown
-  >
+  >,
 ] {
   const signTx = useSignTx();
   const queryClient = useQueryClient();

@@ -5,7 +5,7 @@ export const NEAR_RPC_URL = "https://rpc.mainnet.near.org";
 type ConnectConfig = Parameters<typeof connect>[0];
 
 export function generateConnectionConfig(
-  keyStore: ConnectConfig["keyStore"]
+  keyStore: ConnectConfig["keyStore"],
 ): ConnectConfig {
   return {
     networkId: "mainnet",

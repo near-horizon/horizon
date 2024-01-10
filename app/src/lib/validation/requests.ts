@@ -42,7 +42,7 @@ export const requestsQuerySchema = fetchManySchema.extend({
 export type RequestsQuery = z.infer<typeof requestsQuerySchema>;
 
 export const projectRequestsSchema = z.array(
-  z.tuple([accountIdSchema, cidSchema, z.string()])
+  z.tuple([accountIdSchema, cidSchema, z.string()]),
 );
 
 export type ProjectRequests = z.infer<typeof projectRequestsSchema>;

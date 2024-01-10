@@ -12,7 +12,7 @@ export async function getContract([[project_id, cid], vendor_id]: ContractId) {
     viewCall<Contract>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
       "get_contribution",
-      { project_id, vendor_id, cid }
+      { project_id, vendor_id, cid },
     ),
     getTransactions({ entity_type: "contributions" }),
   ]);

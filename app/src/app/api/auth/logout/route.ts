@@ -12,6 +12,6 @@ export function POST() {
           maxAge: 0,
         }),
       },
-    }
+    },
   );
 }

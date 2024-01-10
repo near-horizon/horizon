@@ -15,7 +15,7 @@ import { type InputProps } from "~/lib/validation/inputs";
 
 export function SwitchInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: UseControllerProps<TFieldValues, TName> & InputProps) {
   return (
     <FormField

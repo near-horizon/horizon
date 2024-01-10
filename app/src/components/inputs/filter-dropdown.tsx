@@ -36,7 +36,7 @@ export function FilterDropdown({
     Promise.all(options.map(({ value }) => getFilteredCount([value])))
       .then((counts) => {
         setAvailableOptions(
-          options.filter((_, i) => counts[i] && counts[i]! > 0)
+          options.filter((_, i) => counts[i] && counts[i]! > 0),
         );
       })
       .catch(console.error);

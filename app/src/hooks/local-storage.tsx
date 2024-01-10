@@ -3,7 +3,7 @@ import { type z } from "zod";
 
 export function useLocalStorageItem<T, Schema extends z.ZodSchema<T>>(
   key: string,
-  schema: Schema
+  schema: Schema,
 ) {
   const [value, setValue] = useState<z.infer<Schema>>();
 

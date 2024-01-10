@@ -17,7 +17,7 @@ export async function getBackers(query: BackersQuery) {
 
 export async function getPaginatedBackers(pageParam = 0) {
   const result = await fetch(
-    `/api/backers?limit=${pageSize}&from=` + pageParam * pageSize
+    `/api/backers?limit=${pageSize}&from=` + pageParam * pageSize,
   );
   const backers = (await result.json()) as string[];
 
@@ -38,7 +38,7 @@ export async function hasBacker(accountId: AccountId) {
     await viewCall<HorizonBacker>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
       "get_investor",
-      { account_id: accountId }
+      { account_id: accountId },
     );
     return true;
   } catch (e) {

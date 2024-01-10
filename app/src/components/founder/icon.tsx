@@ -29,7 +29,7 @@ export function FounderIcon({
     <div
       className={clsx(
         "overflow-hidden rounded-full",
-        size === "small" ? "h-16 w-16" : "h-24 w-24"
+        size === "small" ? "h-16 w-16" : "h-24 w-24",
       )}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -22,10 +22,10 @@ export function Perks({ noButton = false }: { noButton?: boolean }) {
           category.some((c) => selected.includes(c)) &&
           (name.toLowerCase().includes(search.toLowerCase()) ||
             description.toLowerCase().includes(search.toLowerCase()) ||
-            benefit.toLowerCase().includes(search.toLowerCase()))
+            benefit.toLowerCase().includes(search.toLowerCase())),
       );
     },
-    [data]
+    [data],
   );
 
   return (

@@ -16,12 +16,12 @@ import { type InputProps } from "~/lib/validation/inputs";
 
 export function CheckboxesInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(
   props: UseControllerProps<TFieldValues, TName> &
     InputProps & {
       checkboxes: { id: string; text: string }[];
-    }
+    },
 ) {
   const checkboxes = props.checkboxes.map((item) => (
     <FormField
@@ -41,8 +41,8 @@ export function CheckboxesInput<
                     ? field.onChange([...field.value, item.id])
                     : field.onChange(
                         (field.value as string[]).filter(
-                          (value) => value !== item.id
-                        )
+                          (value) => value !== item.id,
+                        ),
                       );
                 }}
               />

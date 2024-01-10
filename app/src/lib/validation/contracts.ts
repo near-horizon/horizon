@@ -49,7 +49,7 @@ export const contractSchema = z.object({
 export type Contract = z.infer<typeof contractSchema>;
 
 export const contributorContractsSchema = z.array(
-  z.tuple([accountIdSchema, accountIdSchema])
+  z.tuple([accountIdSchema, accountIdSchema]),
 );
 
 export type ContributorContracts = z.infer<typeof contributorContractsSchema>;

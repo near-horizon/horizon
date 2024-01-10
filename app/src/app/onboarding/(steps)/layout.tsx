@@ -3,8 +3,19 @@
 import Link from "next/link";
 import { Icon } from "~/components/icon";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "~/components/ui/drawer";
 import { Label } from "~/components/ui/label";
-import { Edit02Svg } from "~/icons";
+import { ChevronDownDoubleSvg, ChevronUpDoubleSvg, Edit02Svg } from "~/icons";
 import { STRING } from "~/lib/format";
 import { cn } from "~/lib/utils";
 import { useOnboarding } from "~/stores/global";
@@ -15,13 +26,21 @@ export default function OnboardingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative grid h-full grid-cols-12">
-      <div className="col-span-3">
-        <DesktopSidebar />
+    <>
+      <div className="relative hidden h-full grid-cols-12 md:grid">
+        <div className="col-span-3">
+          <DesktopSidebar />
+        </div>
+
+        <div className="col-span-9">{children}</div>
       </div>
 
-      <div className="col-span-9">{children}</div>
-    </div>
+      <div className="relative flex h-full flex-col items-center justify-between md:hidden">
+        <div className="w-full">{children}</div>
+
+        <MobileDrawer />
+      </div>
+    </>
   );
 }
 
@@ -117,5 +136,47 @@ function ProfileItem({
 
       {children}
     </div>
+  );
+}
+
+function MobileDrawer() {
+  const onboarding = useOnboarding();
+
+  if (!onboarding || onboarding.type === "none") {
+    return (
+      <Drawer>
+        <DrawerTrigger className="flex w-full flex-row items-center justify-between gap-2">
+          Profile summary: <ChevronUpDoubleSvg className="h-5 w-5" />
+        </DrawerTrigger>
+
+        <DrawerContent className="h-full">
+          <DrawerHeader>
+            <DrawerClose>
+              <DrawerTitle className="flex flex-row items-center justify-between">
+                Profile summary: <ChevronDownDoubleSvg className="h-5 w-5" />
+              </DrawerTitle>
+            </DrawerClose>
+          </DrawerHeader>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Drawer>
+      <DrawerTrigger className="flex w-full flex-row items-center justify-between gap-2">
+        Profile summary: <ChevronUpDoubleSvg className="h-5 w-5" />
+      </DrawerTrigger>
+
+      <DrawerContent className="h-full">
+        <DrawerHeader>
+          <DrawerClose>
+            <DrawerTitle className="flex flex-row items-center justify-between">
+              Profile summary: <ChevronDownDoubleSvg className="h-5 w-5" />
+            </DrawerTitle>
+          </DrawerClose>
+        </DrawerHeader>
+      </DrawerContent>
+    </Drawer>
   );
 }

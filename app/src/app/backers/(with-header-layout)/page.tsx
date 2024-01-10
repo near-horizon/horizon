@@ -25,7 +25,7 @@ export default async function BackersPage() {
           const c = await getBacker(accountId);
           return removeEmpty(c);
         },
-      })
+      }),
     ),
   ]);
 

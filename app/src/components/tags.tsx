@@ -10,7 +10,7 @@ export function Tags({ tags }: { tags: Record<string, string> | string[] }) {
 
       return [[...tags, tag], length + tag.length];
     },
-    [new Array<string>(), 0]
+    [new Array<string>(), 0],
   );
 
   return (

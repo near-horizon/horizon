@@ -11,7 +11,7 @@ export async function getProposal([
   contributorId,
 ]: ProposalId) {
   const proposal = await fetch(
-    `/api/proposals/${projectId}/${contributorId}/${cid}`
+    `/api/proposals/${projectId}/${contributorId}/${cid}`,
   );
 
   return proposalSchema.parse(await proposal.json());

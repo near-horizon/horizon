@@ -25,7 +25,7 @@ export default async function ContributorsPage() {
           const c = await getContributor(accountId);
           return removeEmpty(c);
         },
-      })
+      }),
     ),
   ]);
 

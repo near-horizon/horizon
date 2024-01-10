@@ -24,7 +24,7 @@ export default async function ContractDetails({
       getRequest(projectId, cid),
       getProject(projectId),
       getContributor(contributorId),
-    ]
+    ],
   );
 
   return (

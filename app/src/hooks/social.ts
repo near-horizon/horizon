@@ -20,7 +20,7 @@ export function useSocialSet(): [
       profile: Partial<Profile>;
     },
     unknown
-  >
+  >,
 ] {
   const signTxs = useSignTxs();
   const queryClient = useQueryClient();

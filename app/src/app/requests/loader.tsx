@@ -26,8 +26,8 @@ export async function RequestsListSectionLoader() {
           const r = await getRequest(projectId, cid);
           return removeEmpty(r);
         },
-      })
-    )
+      }),
+    ),
   );
 
   return (

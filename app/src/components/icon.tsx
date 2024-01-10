@@ -27,7 +27,7 @@ export function Icon({
     <div
       className={cn(
         "relative h-24 w-24 overflow-hidden rounded-xl border border-gray-300",
-        className
+        className,
       )}
     >
       {url ? (

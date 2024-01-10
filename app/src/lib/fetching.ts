@@ -14,7 +14,7 @@ export function encodeArgs(args: Record<string, unknown>) {
 export async function viewCall<T>(
   contract: string,
   method: string,
-  args: Record<string, unknown>
+  args: Record<string, unknown>,
 ) {
   const response = await fetch(NEAR_RPC_URL, {
     method: "POST",
@@ -41,7 +41,7 @@ export async function viewCall<T>(
 
   if ("error" in s.result) {
     throw new Error(
-      `${s.result.error as string}: ${method} ${JSON.stringify(args)}`
+      `${s.result.error as string}: ${method} ${JSON.stringify(args)}`,
     );
   }
 

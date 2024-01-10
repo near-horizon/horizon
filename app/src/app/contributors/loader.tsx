@@ -26,8 +26,8 @@ export async function ContributorsListSectionLoader() {
           const c = await getContributor(accountId);
           return removeEmpty(c);
         },
-      })
-    )
+      }),
+    ),
   );
 
   return (

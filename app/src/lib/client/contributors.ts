@@ -18,7 +18,7 @@ export async function getContributors(query: ContributorsQuery) {
 
 export async function getPaginatedContributors(pageParam = 0) {
   const result = await fetch(
-    `/api/contributors?limit=${pageSize}&from=` + pageParam * pageSize
+    `/api/contributors?limit=${pageSize}&from=` + pageParam * pageSize,
   );
   const contributors = (await result.json()) as string[];
 
@@ -39,7 +39,7 @@ export async function hasContributor(accountId: AccountId) {
     await viewCall<HorizonContributor>(
       env.NEXT_PUBLIC_CONTRACT_ACCOUNT_ID,
       "get_vendor",
-      { account_id: accountId }
+      { account_id: accountId },
     );
     return true;
   } catch (e) {

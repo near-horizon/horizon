@@ -24,7 +24,7 @@ export function SearchInput({
       className={cn(
         "relative flex flex-row items-center justify-start gap-1 rounded-3xl border border-text-gray",
         "px-4 shadow-sm shadow-text-gray focus-within:ring-2",
-        className
+        className,
       )}
     >
       <SearchSmSvg className="h-5 w-5 text-ui-elements-gray" />
@@ -34,7 +34,7 @@ export function SearchInput({
         className={cn(
           "rounded-3xl border-none",
           "focus-visible:border-none focus-visible:ring-0 focus-visible:ring-offset-0",
-          inputClassName
+          inputClassName,
         )}
         value={value}
         onChange={({ target: { value } }) => setValue(value)}

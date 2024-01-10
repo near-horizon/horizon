@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   }
   if (request.nextUrl.searchParams.has("entity_type")) {
     query.entity_type = request.nextUrl.searchParams.get(
-      "entity_type"
+      "entity_type",
     ) as TransactionQuery["entity_type"];
   }
   const transactions = await getTransactions(query);

@@ -36,7 +36,7 @@ export function useUnlockPerk(): [
       id: string;
     },
     unknown
-  >
+  >,
 ] {
   const queryClient = useQueryClient();
   const [progress, setProgress] = useState<Progress>({ value: 0, label: "" });
