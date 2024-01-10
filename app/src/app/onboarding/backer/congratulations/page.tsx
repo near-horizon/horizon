@@ -14,7 +14,7 @@ export default function CongratulationsPage() {
         Your profile has been created successfully
       </p>
 
-      <div className="flex w-full flex-row items-center justify-center gap-4">
+      <div className="flex w-full flex-col-reverse items-center justify-center gap-4 md:flex-row">
         <Link href="/account">
           <Button variant="outline">Go to your profile</Button>
         </Link>
