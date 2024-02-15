@@ -28,7 +28,7 @@ export function HZNBanner() {
           </p>
         </div>
         <div className="flex flex-row-reverse items-center justify-start gap-3 md:flex-row">
-          <a href="https://hzn.xyz/hzn/signup">
+          <a href="https://hzn.xyz/hzn">
             <Button className="flex flex-row items-center justify-center gap-2 px-3 py-2 text-sm font-medium">
               <Send01Svg className="h-4 w-4" />
               Apply to HZN
