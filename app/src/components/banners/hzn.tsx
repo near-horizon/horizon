@@ -24,7 +24,7 @@ export function HZNBanner() {
           </svg>
           <p className="text-center font-bold text-white">
             Next HZN Cohort Starts in{" "}
-            <span className="text-primary">January 2024.</span> Apply now!
+            <span className="text-primary">May 2024.</span> Apply now!
           </p>
         </div>
         <div className="flex flex-row-reverse items-center justify-start gap-3 md:flex-row">
