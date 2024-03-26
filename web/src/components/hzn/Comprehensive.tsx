@@ -29,19 +29,9 @@ const benefits = [
     text: "Claim valuable offers from our 20+ vendor partners, including discounts, credits, and free trials tailored to Web3 startups.",
   },
   {
-    icon: <Earn className="w-8 h-8" />,
-    heading: "Earn Horizon Credits",
-    text: "Earn Horizon Credits by contributing to the community and participating in events and exchange them for essential services, resources, and access to premier industry experts.",
-  },
-  {
     icon: <Product className="w-8 h-8" />,
     heading: "Product Audits from UX Experts",
     text: "These audits will assess the quality of your user research, product design, and provide valuable recommendations to enhance your user journey.",
-  },
-  {
-    icon: <Marketplace className="w-8 h-8" />,
-    heading: "Access to a Vetted Marketplace",
-    text: "This marketplace facilitates reliable access to key services — from legal counsel and marketing specialists to UX and technology consultants",
   },
   {
     icon: <Curated className="w-8 h-8" />,
