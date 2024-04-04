@@ -119,12 +119,12 @@ return (
     <Hero>
       <h2>Join HZN2 and get from idea to Mainnet in 90 days</h2>
       <p>
-        <b>HZN2</b> will be kicking off in <b>January 2024</b>, applications are
+        <b>HZN3</b> will be kicking off in <b>May 2024</b>, applications are
         considered on a rolling basis.
       </p>
       <div>
         <ApplyButton
-          href="https://airtable.com/appFoIqAoY0ikoVIb/shrst8Tt4PUtYTSvD"
+          href="https://airtable.com/appc0ZVhbKj8hMLvH/pagVX3hSxzIj4Y680/form"
           target="_blank"
         >
           Apply for HZN2
